@@ -173,3 +173,32 @@ user_data_fields = [
 # 	"mosyr.auth.validate"
 # ]
 
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in", [
+				"Company-company_name_in_arabic",
+
+				"Address-address_in_arabic",
+
+				"Sales Invoice-qr_code",
+
+				"Payment Entry-customer_gstin",
+				"Payment Entry-customer_address",
+				"Payment Entry-place_of_supply",
+				"Payment Entry-company_gstin",
+				"Payment Entry-company_address",
+				"Payment Entry-gst_section",
+
+				"Branch-location",
+
+				"Loan Application-workflow_state",
+				
+				"Leave Application-workflow_state",
+            ]]
+        ]
+    }
+]
+
+
