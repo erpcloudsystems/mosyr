@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include mosyr *.css
+recursive-include mosyr *.csv
+recursive-include mosyr *.html
+recursive-include mosyr *.ico
+recursive-include mosyr *.js
+recursive-include mosyr *.json
+recursive-include mosyr *.md
+recursive-include mosyr *.png
+recursive-include mosyr *.py
+recursive-include mosyr *.svg
+recursive-include mosyr *.txt
+recursive-exclude mosyr *.pyc
