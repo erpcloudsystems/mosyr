@@ -198,6 +198,31 @@ fixtures = [
 				"Leave Application-workflow_state",
             ]]
         ]
+    },
+	{
+		"dt": "Workflow State",
+		"filters": [
+            ["name", "in", [
+				"Open", "Cancelled", "First Approved", "First Approval", "Last Approval",
+				"Approved by HR User", "Approved by HR Manager", "Rejected by HR User"
+            ]]
+        ]
+	},
+	{
+		"dt": "Workflow Action Master",
+		"filters": [
+            ["name", "in", [
+				"Cancel"
+            ]]
+        ]
+	},
+	{
+        "dt": "Workflow",
+        "filters": [
+            ["name", "in", [
+				"Loan Approval", "Leave Approval"
+            ]]
+        ]
     }
 ]
 
