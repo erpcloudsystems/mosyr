@@ -5,6 +5,7 @@ import frappe
 import requests
 from frappe.model.document import Document
 from datetime import datetime
+from frappe import _
 
 
 class MoysrDataImport(Document):
@@ -47,13 +48,14 @@ class MoysrDataImport(Document):
 			data = []
 		
 		for d in data:
-			if not frappe.db.exists("Branch",d['branch_name']):
-				branch = frappe.new_doc("Branch")
-				branch.branch=d['branch_name']
-				branch.save()
-				sucess += 1
-			else:
-				exists += 1
+			d = self.get_clean_data(d)
+			bn = d.get('branch_name','')
+			if bn != '' :
+				if not frappe.db.exists("Branch",bn):
+					self.check_link_data('Branch',bn,'branch')
+					sucess += 1
+				else:
+					exists += 1
 		frappe.db.commit()
 		frappe.msgprint(f"""
 		<table class="table table-bordered">
@@ -116,29 +118,48 @@ class MoysrDataImport(Document):
 			data = []
 		
 		for d in data:
+			d = self.get_clean_data(d)
 			if not frappe.db.exists("Employee",d['employee_no']):
 				emp = frappe.new_doc("Employee")
-				emp.first_name = d['fullname_ar']
-				emp.employee_number = d['employee_no']
-				emp.status = values_lookup[d['employee_status']]
-				emp.branch = d['branch_name']
+				emp.first_name = d.get('fullname_ar','')
+				emp.full_name_en = d.get('fullname_en','')
+				emp.employee_number = d.get('employee_no','')
+				emp.status = values_lookup[d.get('employee_status','')]
 				emp.salary_mode = 'Bank'
-				emp.bank_name = d['Bank']	
-				emp.date_of_birth = '2021-01-02'
-				# emp.birth_date_h = d['birth_date_h']
-				emp.current_address = d['employee_address']
-				emp.bank_ac_no = d['IBAN']
-				emp.birth_place = d['birth_place']
-				emp.gender = d['gender']
-				emp.handicap = d['handicap']
+				emp.bank_name = d.get('Bank','')
+				emp.paymnet_type=d.get('payment_type','')
+				emp.date_of_birth = d.get('birth_date_g','2021-01-02')
+				emp.birth_date_hijri = d.get('birth_date_h','')
+				emp.current_address = d.get('employee_address','')
+				emp.bank_ac_no = d.get('IBAN','')
+				emp.birth_place = d.get('birth_place','')
+				emp.handicap = d.get('handicap','')
 				emp.date_of_joining = '2022-01-02'
-				# emp.designation = d['job_title']
-				emp.marital_status = d['marital_status']
-				emp.cell_number = d['mobile']
-				emp.religion = d['religion']
-				emp.nationality = d['nationality']
-				print(values_lookup[d['employee_status']])
-				print("______________________________________________________________")
+				emp.marital_status = d.get('marital_status','')
+				emp.cell_number = d.get('mobile','')
+				emp.religion = d.get('religion','')
+				emp.nationality = d.get('nationality','')
+				emp.health_insurance_no = d.get('insurance_card_number','')
+				emp.nid	= d.get('nid','')
+				emp.self_service = d.get('Self_service','')
+
+				employee_branch = d.get('branch_name', '')
+				if employee_branch != '':
+					emp.branch = self.check_link_data("Branch",employee_branch,'branch')
+				
+				employee_health_insurance_provider = d.get('insurance_card_company', '')
+				if employee_health_insurance_provider != '':
+					emp.health_insurance_provider = self.check_link_data("Employee Health Insurance",employee_health_insurance_provider,'health_insurance_name')
+
+				employee_designation = d.get('job_title', '')
+				if employee_designation != '':
+					emp.designation = self.check_link_data("Designation",employee_designation,'designation_name')
+					
+				employee_gender = d.get('gender', '')
+				if employee_gender != '':
+					emp.gender = self.check_link_data("Gender",employee_gender,'gender')
+
+
 				emp.save()
 				sucess += 1
 			else:
@@ -163,3 +184,28 @@ class MoysrDataImport(Document):
 		</table>
 		""",title=f'{len(data)} Employess Imported',indicator='Cs')
 		
+	
+	def check_link_data(self,doctype,value,filed):
+		exist = frappe.db.exists(doctype, value)
+		if not exist:
+			new_doc = frappe.new_doc(doctype)
+			new_doc.update({
+				f'{filed}': value
+			})
+			new_doc.save()
+			frappe.db.commit()
+			exist=value
+		return exist
+
+	def get_clean_data(self,data):
+		clear_data = {}
+		for k, v in data.items():
+			if isinstance(v, list):
+				if len(v) == 1 or len(v) ==0:
+					if v[0] == '':
+						clear_data[f'{k}'] = ''
+				else:
+					clear_data[f'{k}'] = v
+			else:
+				clear_data[f'{k}'] = v
+		return clear_data

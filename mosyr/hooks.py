@@ -200,7 +200,11 @@ fixtures = [
 				"Employee-handicap",
 				"Employee-birth_place",
 				"Employee-nationality",
-				"Employee-birth_date_h"
+				"Employee-birth_date_hijri",
+				"Employee-full_name_en",
+				"Employee-payment_type",
+				"Employee-self_service",
+				"Employee-nid"
 
             ]]
         ]
