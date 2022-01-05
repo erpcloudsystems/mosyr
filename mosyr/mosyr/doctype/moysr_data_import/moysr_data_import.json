@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_rename": 1,
+ "creation": "2022-01-04 19:36:39.377731",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company_id",
+  "import_branches",
+  "import_employees"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_id",
+   "fieldtype": "Data",
+   "label": "Company ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_branches",
+   "fieldtype": "Button",
+   "label": "Import Branches"
+  },
+  {
+   "fieldname": "import_employees",
+   "fieldtype": "Button",
+   "label": "Import Employees"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-01-04 20:32:58.103426",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Moysr Data Import",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -196,6 +196,12 @@ fixtures = [
 				"Loan Application-workflow_state",
 				
 				"Leave Application-workflow_state",
+
+				"Employee-handicap",
+				"Employee-birth_place",
+				"Employee-nationality",
+				"Employee-birth_date_h"
+
             ]]
         ]
     },
