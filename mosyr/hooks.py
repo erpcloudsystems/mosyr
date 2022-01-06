@@ -204,7 +204,19 @@ fixtures = [
 				"Employee-full_name_en",
 				"Employee-payment_type",
 				"Employee-self_service",
-				"Employee-nid"
+				"Employee-nid",
+				"Employee-from_api",
+				"Employee-valid_data",
+				"Employee-from_api",
+				"Employee-direct_manager",
+				"Employee-moyser_employee_status"
+				"Employee-branch_working_place",
+				"Employee-health_certificate",
+				"Employee-payroll_card_number",
+				"Employee-insurance_card_expire",
+				"Employee-insurance_card_class",
+				"Employee-employee_class",
+
 
             ]]
         ]

@@ -128,7 +128,7 @@ class MoysrDataImport(Document):
 				emp.salary_mode = 'Bank'
 				emp.bank_name = d.get('Bank','')
 				emp.paymnet_type=d.get('payment_type','')
-				emp.date_of_birth = d.get('birth_date_g','2021-01-02')
+				emp.date_of_birth = d.get('birth_date_g') or '2021-01-02'
 				emp.birth_date_hijri = d.get('birth_date_h','')
 				emp.current_address = d.get('employee_address','')
 				emp.bank_ac_no = d.get('IBAN','')
@@ -142,6 +142,21 @@ class MoysrDataImport(Document):
 				emp.health_insurance_no = d.get('insurance_card_number','')
 				emp.nid	= d.get('nid','')
 				emp.self_service = d.get('Self_service','')
+				emp.moyser_employee_status=d.get('employee_status')
+
+				emp.branch_working_place = d.get('branch_working_place')
+				emp.direct_manager = d.get('direct_manager')
+				emp.employee_class = d.get('employee_class')
+				emp.personal_email = d.get('employee_email')
+				emp.employee_photo = d.get('employee_photo')
+				emp.insurance_card_class = d.get('insurance_card_class')
+				emp.insurance_card_expire = d.get('insurance_card_expire')
+				emp.payroll_card_number = d.get('payroll_card_no')
+				emp.health_certificate = d.get('health_certificate')
+
+
+				emp.from_api = 1
+				emp.valid_data = 1
 
 				employee_branch = d.get('branch_name', '')
 				if employee_branch != '':
