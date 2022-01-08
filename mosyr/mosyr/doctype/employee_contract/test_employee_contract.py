@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestMosyrContracts(unittest.TestCase):
+class TestEmployeeContract(unittest.TestCase):
 	pass
