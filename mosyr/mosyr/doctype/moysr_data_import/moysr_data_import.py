@@ -227,6 +227,15 @@ class MoysrDataImport(Document):
 		sucess=0
 		exists=0
 		data=[]
+
+		values_lookup={
+			'selfspouse1dep': 'Employee & Spouse',
+			'travelticketsself': 'Employee Only',
+			'selfspouse2dep': 'Family with 2 Dependant',
+			'selfspouse3dep': 'Family with 3 Dependant',
+			'no': 'No',
+			'' : ''
+		}
 		
 		if not company_id:
 			company_id = frappe.conf.company_id or False
@@ -254,10 +263,122 @@ class MoysrDataImport(Document):
 			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
 			frappe.msgprint(err_msg + err_name_html)
 			data = []
-		print(data)
 		for d in data:
-			pass
+			d = self.get_clean_data(d)
+			if not frappe.db.exists("Employee Contract",{'nid':d.get('nid')}):
+				contract = frappe.new_doc("Employee Contract")	
+				### Info
+				contract.hiring_start_date_g = d.get('hiring_start_date')###
+				contract.commision = d.get('commision').capitalize()###
+				contract.contract_type = d.get('contract_type').capitalize()###
+				contract.vacation_period = d.get('vacation_period')###
+				contract.contract_start_g = d.get('contract_start_date')###
+				contract.commision_at_end_of_contract = d.get('commision_at_end_of_contract').capitalize()###
+				contract.contract_status_section = d.get('contract_status')###
+				contract.vacation_travel_tickets = values_lookup[d.get('vacation_travel_tickets')]###
+				contract.contract_end_g = d.get('contract_end_date')###
+				contract.commision_precentage = d.get('commision_precentage')###
+				contract.leaves_consumer_balance = d.get('leaves_consumed_balance')###
+				contract.over_time_included = d.get('over_time_included').capitalize()###
+				contract.job_description_file = d.get('job_description_file')###
+				contract.notes = d.get('notes')###
+				contract.hiring_letter = d.get('hiring_letter')###
+
+				### Contract Financial Details
+				contract.basic_salary = d.get('basic_salary')###
+				contract.allowance_transportations = d.get('allowance_trans').capitalize()###
+				contract.allowance_housing = d.get('allowance_housing').capitalize()###
+				contract.allowance_phone = d.get('allowance_phone').capitalize()###
+				contract.nature_of_work_allowance = d.get('allowance_worknatural').capitalize()###
+				contract.allowance_other = d.get('allowance_other').capitalize()###
+				contract.allowance_feeding = d.get('allowance_living').capitalize()#$$$
+
+				### Allowance Transportations
+				contract.trans_start_date_g = d.get('allowance_trans_start_date')###
+				contract.trans_end_date_g = d.get('allowance_trans_end_date')###
+				contract.allowance_period = d.get('allowance_period')###
+				if contract.allowance_period == 'One Time':
+					contract.allowance_trans_schdl_1 == d.get('allowance_trans_schdl_1')
+				elif contract.allowance_period == 'Two Time':
+					contract.allowance_trans_schdl_1 == d.get('allowance_trans_schdl_1')
+					contract.allowance_trans_schdl_2 == d.get('allowance_trans_schdl_2')
+				contract.trans_amount_type = d.get('allowance_trans_amount_type').capitalize()###
+				contract.trans_amount_value = d.get('allowance_trans_value')###
+
+				### Allowance House
+				contract.housing_start_g = d.get('allowance_housing_start_date')###
+				contract.housing_end_date_g = d.get('allowance_housing_end_date')###
+				contract.house_schdls = d.get('allowance_housing_schedule').capitalize()###
+				if contract.house_schdls == 'One Time':
+					contract.allowance_house_schdl_1 == d.get('allowance_housing_schdl_1')
+				elif contract.house_schdls == 'Two Time':
+					contract.allowance_house_schdl_1 == d.get('allowance_housing_schdl_1')
+					contract.allowance_house_schdl_2 == d.get('allowance_housing_schdl_2')
+				# contract.house_amount_type = d.get('allowance_housing_amount').capitalize()#$$$
+				contract.house_amount_value = d.get('allowance_housing_value')###
+
+				### Allowance Phone
+				contract.phone_start_date_g = d.get('allowance_phone_start_date')###
+				contract.phone_end_date_g = d.get('allowance_phone_end_date')###
+				contract.phone_schdls = d.get('allowance_phone_schedule').capitalize()###
+				if contract.phone_schdls == 'One Time':
+					contract.allowance_phone_schdl_1 == d.get('allowance_phone_schdl_1')
+				elif contract.phone_schdls == 'Two Time':
+					contract.allowance_phone_schdl_1 == d.get('allowance_phone_schdl_1')
+					contract.allowance_phone_schdl_2 == d.get('allowance_phone_schdl_2')
+				contract.phone_amount_type = d.get('allowance_phone_amount_type').capitalize()###
+				contract.phone_amount_value = d.get('allowance_phone_value')###
+
+				### Allowance Natureow
+				contract.natureow_start_date_g = d.get('allowance_worknatural_start_date')###
+				contract.natureow_end_date_g = d.get('allowance_worknatural_end_date"')###
+				contract.natureow_schdls = d.get('allowance_worknatural_schedule').capitalize()###
+				if contract.natureow_schdls == 'One Time':
+					contract.allowance_natow_schdl_1 == d.get('allowance_worknatural_schdl_1')
+				elif contract.natureow_schdls == 'Two Time':
+					contract.allowance_natow_schdl_1 == d.get('allowance_worknatural_schdl_1')
+					contract.allowance_natow_schdl_2 == d.get('allowance_worknatural_schdl_2')
+				contract.natureow_amount_type = d.get('allowance_worknatural_amount_type').capitalize()###
+				contract.natureow_amount_value = d.get('allowance_worknatural_value')###
+
+				### Allowance Feeding
+				contract.feeding_start_date_g = d.get('allowance_living_start_date')#$$$
+				contract.feeding_end_date_g = d.get('allowance_living_end_date')#$$$
+				contract.feed_schdls = d.get('allowance_living_schedule').capitalize()#$$$
+				if contract.feed_schdls == 'One Time':
+					contract.allowance_feed_schdl_1 == d.get('allowance_living_schdl_1')
+				elif contract.feed_schdls == 'Two Time':
+					contract.allowance_feed_schdl_1 == d.get('allowance_living_schdl_1')
+					contract.allowance_feed_schdl_2 == d.get('allowance_living_schdl_2')
+				# contract.feed_amount_type = d.get('allowance_living_amount')#$$$
+				contract.feed_amount_value = d.get('allowance_living_value')#$$$
+
+				### Allowance Other
+				contract.other_start_date_g = d.get('allowance_other_start_date')###
+				contract.other_end_date_g = d.get('allowance_other_end_date')###
+				contract.other_schdls = d.get('allowance_other_schedule').capitalize()###
+				if contract.other_schdls == 'One Time':
+					contract.allowance_other_schdl_1 == d.get('allowance_other_schdl_1')
+				elif contract.other_schdls == 'Two Time':
+					contract.allowance_other_schdl_1 == d.get('allowance_other_schdl_1')
+					contract.allowance_other_schdl_2 == d.get('allowance_other_schdl_2')
+				contract.other_amount_type = d.get('allowance_other_amount_type').capitalize()###
+				contract.other_amount_value = d.get('allowance_other_value')###
+				contract.from_api = 1
+				contract.nid = d.get('nid')###
+				contract.comment = d.get('comments')###
+
+
+				employee_number = frappe.get_value("Employee",{'nid':contract.nid},'name')
+				if employee_number != None:
+					contract.save()
+					sucess += 1
+				else:
+					errors += 1
+			else:
+				exists += 1 
 		frappe.db.commit()
+
 		frappe.msgprint(f"""
 		<table class="table table-bordered">
 		<tbody>
@@ -293,9 +414,12 @@ class MoysrDataImport(Document):
 		clear_data = {}
 		for k, v in data.items():
 			if isinstance(v, list):
-				if len(v) == 1 or len(v) ==0:
+				if len(v) == 1:
 					if v[0] == '':
 						clear_data[f'{k}'] = ''
+				elif len(v) ==0:
+					clear_data[f'{k}'] = ''
+
 				else:
 					clear_data[f'{k}'] = v
 			else:

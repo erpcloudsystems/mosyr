@@ -169,13 +169,13 @@
    "fieldname": "contract_type",
    "fieldtype": "Select",
    "label": " Contract Type",
-   "options": "\nMarried\nNot Married\nTemporary\nLump\nThe indefinite"
+   "options": "\nMarried\nNotmarried\nTemporary\nLump\nThe indefinite\nFixed term"
   },
   {
    "fieldname": "contract_status_section",
    "fieldtype": "Select",
    "label": " Contract Status",
-   "options": "\nValid\nNot Valid"
+   "options": "\nvalid\nnot-valid"
   },
   {
    "fieldname": "over_time_included",
@@ -275,7 +275,7 @@
    "fieldname": "trans_amount_type",
    "fieldtype": "Select",
    "label": "Trans Amount Type",
-   "options": "Fixed Amount\nPercentage"
+   "options": "Fixed\nPercentage"
   },
   {
    "fieldname": "column_break_34",
@@ -327,7 +327,7 @@
    "fieldname": "house_amount_type",
    "fieldtype": "Select",
    "label": "House Amount Type",
-   "options": "Fixed Amount\nPercentage\nMonths"
+   "options": "Fixed\nPercentage\nMonths"
   },
   {
    "fieldname": "column_break_44",
@@ -379,7 +379,7 @@
    "fieldname": "phone_amount_type",
    "fieldtype": "Select",
    "label": "Phone Amount Type",
-   "options": "Fixed Amount\nPercentage"
+   "options": "Fixed\nPercentage"
   },
   {
    "fieldname": "column_break_54",
@@ -431,7 +431,7 @@
    "fieldname": "natureow_amount_type",
    "fieldtype": "Select",
    "label": "Natureow Amount Type",
-   "options": "Fixed Amount\nPercentage"
+   "options": "Fixed\nPercentage"
   },
   {
    "fieldname": "column_break_64",
@@ -477,7 +477,7 @@
    "fieldname": "feed_amount_type",
    "fieldtype": "Select",
    "label": "Feed Amount Type",
-   "options": "Fixed Amount\nPercentage"
+   "options": "Fixed\nPercentage"
   },
   {
    "fieldname": "column_break_74",
@@ -529,7 +529,7 @@
    "fieldname": "other_amount_type",
    "fieldtype": "Select",
    "label": "Other Amount Type",
-   "options": "Fixed Amount\nPercentage"
+   "options": "Fixed\nPercentage"
   },
   {
    "fieldname": "column_break_84",
@@ -594,7 +594,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-09 03:40:27.158194",
+ "modified": "2022-01-09 22:52:11.209724",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",
