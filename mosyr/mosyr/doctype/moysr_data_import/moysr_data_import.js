@@ -2,8 +2,8 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Moysr Data Import', {
-	refresh: function(frm) {
-		$('.control-input button').addClass('col-md-6 col-xs-12 btn-primary').removeClass('btn-default')
+    refresh: function(frm) {
+        $('.control-input button').addClass('col-md-6 col-xs-12 btn-primary').removeClass('btn-default')
         $('div[data-fieldname="import_branches"]').css({
             'margin-top': '25px'
         })
@@ -24,8 +24,8 @@ frappe.ui.form.on('Moysr Data Import', {
             freeze: true,
             freeze_message: __("Get Company id"),
         })
-	},
-	data_import_call(frm, methode, msg = "") {
+    },
+    data_import_call(frm, methode, msg = "") {
         frappe.call({
             doc: frm.doc,
             method: methode,
@@ -39,10 +39,11 @@ frappe.ui.form.on('Moysr Data Import', {
     import_branches(frm) {
         frm.events.data_import_call(frm, 'import_branches', "Start fetch Branches")
     },
-	import_employees(frm) {
+    import_employees(frm) {
         frm.events.data_import_call(frm, 'import_employees', "Start fetch Employee")
+    },
+    import_contracts(frm) {
+        frm.events.data_import_call(frm, 'import_contracts', "Start fetch Contracts")
     }
 
 });
-
-

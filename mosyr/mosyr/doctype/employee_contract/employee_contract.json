@@ -1,0 +1,630 @@
+{
+ "actions": [],
+ "autoname": "EC-.YYYY.-.MM.-.##",
+ "creation": "2022-01-07 22:13:59.215448",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "info",
+  "employee",
+  "vacation_period",
+  "vacation_travel_tickets",
+  "over_time_included",
+  "hiring_letter",
+  "column_break_6",
+  "hiring_start_date_g",
+  "contract_start_g",
+  "contract_end_g",
+  "job_description_file",
+  "column_break_12",
+  "commision",
+  "commision_at_end_of_contract",
+  "commision_precentage",
+  "notes",
+  "column_break_14",
+  "contract_type",
+  "contract_status_section",
+  "leaves_consumer_balance",
+  "contract_financial_details_section",
+  "basic_salary",
+  "allowance_phone",
+  "allowance_feeding",
+  "column_break_25",
+  "allowance_transportations",
+  "nature_of_work_allowance",
+  "column_break_28",
+  "allowance_housing",
+  "allowance_other",
+  "allowance_transportations_section",
+  "trans_start_date_g",
+  "trans_amount_type",
+  "column_break_34",
+  "trans_end_date_g",
+  "trans_amount_value",
+  "column_break_37",
+  "allowance_period",
+  "allowance_trans_schdl_1",
+  "allowance_trans_schdl_2",
+  "allowance_house_section",
+  "housing_start_g",
+  "house_amount_type",
+  "column_break_44",
+  "housing_end_date_g",
+  "house_amount_value",
+  "column_break_47",
+  "house_schdls",
+  "allowance_house_schdl_1",
+  "allowance_house_schdl_2",
+  "allowance_phone_section",
+  "phone_start_date_g",
+  "phone_amount_type",
+  "column_break_54",
+  "phone_end_date_g",
+  "phone_amount_value",
+  "column_break_57",
+  "phone_schdls",
+  "allowance_phone_schdl_1",
+  "allowance_phone_schdl_2",
+  "allowance_natureow_section",
+  "natureow_start_date_g",
+  "natureow_amount_type",
+  "column_break_64",
+  "natureow_end_date_g",
+  "natureow_amount_value",
+  "column_break_67",
+  "natureow_schdls",
+  "allowance_natow_schdl_1",
+  "allowance_natow_schdl_2",
+  "allowance_feeding_section",
+  "feeding_start_date_g",
+  "feed_amount_type",
+  "column_break_74",
+  "feeding_end_date_g",
+  "feed_amount_value",
+  "column_break_77",
+  "feed_schdls",
+  "allowance_feed_schdl_1",
+  "allowance_feed_schdl_2",
+  "allowance_other_section",
+  "other_start_date_g",
+  "other_amount_type",
+  "comment",
+  "column_break_84",
+  "other_end_date_g",
+  "other_amount_value",
+  "column_break_87",
+  "other_schdls",
+  "allowance_other_schdl_1",
+  "allowance_other_schdl_2",
+  "from_api",
+  "nid"
+ ],
+ "fields": [
+  {
+   "fieldname": "commision",
+   "fieldtype": "Select",
+   "label": "Commision",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "commision_at_end_of_contract",
+   "fieldtype": "Select",
+   "label": " Commision at end of Contract? ",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "hiring_letter",
+   "fieldtype": "Attach",
+   "label": "Hiring Letter"
+  },
+  {
+   "fieldname": "job_description_file",
+   "fieldtype": "Attach",
+   "label": "Job Description file"
+  },
+  {
+   "fieldname": "vacation_period",
+   "fieldtype": "Data",
+   "label": "Vacation Period"
+  },
+  {
+   "fieldname": "vacation_travel_tickets",
+   "fieldtype": "Select",
+   "label": " Vacation Travel Tickets ",
+   "options": "\nNo\nEmployee Only\nEmployee & Spouse\nFamily with 1 Dependant\nFamily with 2 Dependant\nFamily with 3 Dependant\nFamily with 4 Dependant\nAll Family"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "info",
+   "fieldtype": "Section Break",
+   "label": "Info"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hiring_start_date_g",
+   "fieldtype": "Date",
+   "label": "Hiring Start Date G"
+  },
+  {
+   "fieldname": "contract_end_g",
+   "fieldtype": "Date",
+   "label": "Contract End G"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Select",
+   "label": " Contract Type",
+   "options": "\nMarried\nNot Married\nTemporary\nLump\nThe indefinite"
+  },
+  {
+   "fieldname": "contract_status_section",
+   "fieldtype": "Select",
+   "label": " Contract Status",
+   "options": "\nValid\nNot Valid"
+  },
+  {
+   "fieldname": "over_time_included",
+   "fieldtype": "Select",
+   "label": "Over Time Included",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "column_break_14",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contract_start_g",
+   "fieldtype": "Date",
+   "label": "Contract Start G"
+  },
+  {
+   "fieldname": "commision_precentage",
+   "fieldtype": "Percent",
+   "label": " Commision Precentage "
+  },
+  {
+   "fieldname": "leaves_consumer_balance",
+   "fieldtype": "Int",
+   "label": "leaves Consumer balance"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "contract_financial_details_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Financial Details"
+  },
+  {
+   "fieldname": "basic_salary",
+   "fieldtype": "Float",
+   "label": "Basic Salary"
+  },
+  {
+   "fieldname": "allowance_phone",
+   "fieldtype": "Select",
+   "label": "Allowance Phone",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "allowance_feeding",
+   "fieldtype": "Select",
+   "label": "Allowance Feeding",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "column_break_25",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "allowance_transportations",
+   "fieldtype": "Select",
+   "label": "Allowance Transportations",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "nature_of_work_allowance",
+   "fieldtype": "Select",
+   "label": "Nature of Work Allowance",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "column_break_28",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "allowance_housing",
+   "fieldtype": "Select",
+   "label": "Allowance Housing",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "allowance_other",
+   "fieldtype": "Select",
+   "label": "Allowance Other",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "allowance_transportations_section",
+   "fieldtype": "Section Break",
+   "label": "Allowance Transportations"
+  },
+  {
+   "fieldname": "trans_start_date_g",
+   "fieldtype": "Date",
+   "label": "Trans Start Date G"
+  },
+  {
+   "fieldname": "trans_amount_type",
+   "fieldtype": "Select",
+   "label": "Trans Amount Type",
+   "options": "Fixed Amount\nPercentage"
+  },
+  {
+   "fieldname": "column_break_34",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trans_end_date_g",
+   "fieldtype": "Date",
+   "label": "Trans End Date G"
+  },
+  {
+   "fieldname": "trans_amount_value",
+   "fieldtype": "Float",
+   "label": "Trans Amount Value"
+  },
+  {
+   "fieldname": "column_break_37",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "allowance_period",
+   "fieldtype": "Select",
+   "label": "Allowance Period",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "depends_on": "eval:doc.allowance_period!='Monthly'",
+   "fieldname": "allowance_trans_schdl_1",
+   "fieldtype": "Data",
+   "label": "allowance_trans_schdl_1"
+  },
+  {
+   "depends_on": "eval:doc.allowance_period=='Two Times'",
+   "fieldname": "allowance_trans_schdl_2",
+   "fieldtype": "Data",
+   "label": "allowance_trans_schdl_2"
+  },
+  {
+   "fieldname": "allowance_house_section",
+   "fieldtype": "Section Break",
+   "label": "Allowance House"
+  },
+  {
+   "fieldname": "housing_start_g",
+   "fieldtype": "Date",
+   "label": "Housing Start G"
+  },
+  {
+   "fieldname": "house_amount_type",
+   "fieldtype": "Select",
+   "label": "House Amount Type",
+   "options": "Fixed Amount\nPercentage\nMonths"
+  },
+  {
+   "fieldname": "column_break_44",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "housing_end_date_g",
+   "fieldtype": "Date",
+   "label": "Housing End Date G"
+  },
+  {
+   "fieldname": "house_amount_value",
+   "fieldtype": "Float",
+   "label": "House Amount Value"
+  },
+  {
+   "fieldname": "column_break_47",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "house_schdls",
+   "fieldtype": "Select",
+   "label": "House schdls",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "depends_on": "eval: doc.house_schdls != 'Monthly'",
+   "fieldname": "allowance_house_schdl_1",
+   "fieldtype": "Data",
+   "label": "allowance_house_schdl_1"
+  },
+  {
+   "depends_on": "eval: doc.house_schdls=='Two Times'",
+   "fieldname": "allowance_house_schdl_2",
+   "fieldtype": "Data",
+   "label": "allowance_house_schdl_2"
+  },
+  {
+   "fieldname": "allowance_phone_section",
+   "fieldtype": "Section Break",
+   "label": "Allowance Phone"
+  },
+  {
+   "fieldname": "phone_start_date_g",
+   "fieldtype": "Date",
+   "label": "Phone Start Date G"
+  },
+  {
+   "fieldname": "phone_amount_type",
+   "fieldtype": "Select",
+   "label": "Phone Amount Type",
+   "options": "Fixed Amount\nPercentage"
+  },
+  {
+   "fieldname": "column_break_54",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone_end_date_g",
+   "fieldtype": "Date",
+   "label": "Phone End Date G"
+  },
+  {
+   "fieldname": "phone_amount_value",
+   "fieldtype": "Float",
+   "label": "Phone Amount Value"
+  },
+  {
+   "fieldname": "column_break_57",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone_schdls",
+   "fieldtype": "Select",
+   "label": "Phone schdls",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "depends_on": "eval:doc.phone_schdls!='Monthly'",
+   "fieldname": "allowance_phone_schdl_1",
+   "fieldtype": "Data",
+   "label": "allowance_phone_schdl_1"
+  },
+  {
+   "depends_on": "eval:doc.phone_schdls=='Two Times'",
+   "fieldname": "allowance_phone_schdl_2",
+   "fieldtype": "Data",
+   "label": "allowance_phone_schdl_2"
+  },
+  {
+   "fieldname": "allowance_natureow_section",
+   "fieldtype": "Section Break",
+   "label": "Allowance Natureow"
+  },
+  {
+   "fieldname": "natureow_start_date_g",
+   "fieldtype": "Date",
+   "label": "Natureow Start Date G"
+  },
+  {
+   "fieldname": "natureow_amount_type",
+   "fieldtype": "Select",
+   "label": "Natureow Amount Type",
+   "options": "Fixed Amount\nPercentage"
+  },
+  {
+   "fieldname": "column_break_64",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "natureow_end_date_g",
+   "fieldtype": "Date",
+   "label": "Natureow End Date G"
+  },
+  {
+   "fieldname": "natureow_amount_value",
+   "fieldtype": "Float",
+   "label": "Natureow Amount Value"
+  },
+  {
+   "fieldname": "column_break_67",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "natureow_schdls",
+   "fieldtype": "Select",
+   "label": "Natureow schdls",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "depends_on": "eval:doc.natureow_schdls!='Monthly'",
+   "fieldname": "allowance_natow_schdl_1",
+   "fieldtype": "Data",
+   "label": "allowance_natow_schdl_1"
+  },
+  {
+   "fieldname": "allowance_feeding_section",
+   "fieldtype": "Section Break",
+   "label": "Allowance Feeding"
+  },
+  {
+   "fieldname": "feeding_start_date_g",
+   "fieldtype": "Date",
+   "label": "Feeding Start Date G"
+  },
+  {
+   "fieldname": "feed_amount_type",
+   "fieldtype": "Select",
+   "label": "Feed Amount Type",
+   "options": "Fixed Amount\nPercentage"
+  },
+  {
+   "fieldname": "column_break_74",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "feeding_end_date_g",
+   "fieldtype": "Date",
+   "label": "Feeding End Date G"
+  },
+  {
+   "fieldname": "feed_amount_value",
+   "fieldtype": "Float",
+   "label": "Feed Amount Value"
+  },
+  {
+   "fieldname": "column_break_77",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "feed_schdls",
+   "fieldtype": "Select",
+   "label": "Feed schdls",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "depends_on": "eval:doc.feed_schdls!='Monthly'",
+   "fieldname": "allowance_feed_schdl_1",
+   "fieldtype": "Data",
+   "label": "allowance_feed_schdl_1"
+  },
+  {
+   "depends_on": "eval:doc.feed_schdls=='Two Times'",
+   "fieldname": "allowance_feed_schdl_2",
+   "fieldtype": "Data",
+   "label": "allowance_feed_schdl_2"
+  },
+  {
+   "fieldname": "allowance_other_section",
+   "fieldtype": "Section Break",
+   "label": "Allowance Other"
+  },
+  {
+   "fieldname": "other_start_date_g",
+   "fieldtype": "Date",
+   "label": "Other Start Date G"
+  },
+  {
+   "fieldname": "other_amount_type",
+   "fieldtype": "Select",
+   "label": "Other Amount Type",
+   "options": "Fixed Amount\nPercentage"
+  },
+  {
+   "fieldname": "column_break_84",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_end_date_g",
+   "fieldtype": "Date",
+   "label": "Other End Date G"
+  },
+  {
+   "fieldname": "other_amount_value",
+   "fieldtype": "Float",
+   "label": "Other Amount Value"
+  },
+  {
+   "fieldname": "column_break_87",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_schdls",
+   "fieldtype": "Select",
+   "label": "Other schdls",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Small Text",
+   "label": "Comment"
+  },
+  {
+   "depends_on": "eval:doc.other_schdls!='Monthly'",
+   "fieldname": "allowance_other_schdl_1",
+   "fieldtype": "Data",
+   "label": "allowance_other_schdl_1"
+  },
+  {
+   "depends_on": "eval:doc.other_schdls=='Two Times'",
+   "fieldname": "allowance_other_schdl_2",
+   "fieldtype": "Data",
+   "label": "allowance_other_schdl_2"
+  },
+  {
+   "depends_on": "eval:doc.natureow_schdls=='Two Times'",
+   "fieldname": "allowance_natow_schdl_2",
+   "fieldtype": "Data",
+   "label": "allowance_natow_schdl_2"
+  },
+  {
+   "default": "0",
+   "fieldname": "from_api",
+   "fieldtype": "Check",
+   "label": "from_api",
+   "read_only": 1
+  },
+  {
+   "fieldname": "nid",
+   "fieldtype": "Data",
+   "label": "nid",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-01-09 03:40:27.158194",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Employee Contract",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
