@@ -13,6 +13,7 @@ class MoysrDataImport(Document):
 	def get_company_id(self):
 		return frappe.conf.company_id or False
 
+
 	@frappe.whitelist()
 	def import_branches(self,company_id):
 		errors=0
@@ -75,7 +76,8 @@ class MoysrDataImport(Document):
 		</tbody>
 		</table>
 		""",title=f'{len(data)} Branches Imported',indicator='Cs')
-		
+
+
 	@frappe.whitelist()
 	def import_employees(self,company_id):
 		errors=0
@@ -221,12 +223,12 @@ class MoysrDataImport(Document):
 		{error_msgs}
 		""",title=f'{len(data)} Employess Imported',indicator='Cs')
 	
+
 	@frappe.whitelist()
 	def import_contracts(self,company_id):
 		errors=0
 		sucess=0
 		exists=0
-		data=[]
 
 		values_lookup={
 			'selfspouse1dep': 'Employee & Spouse',
@@ -398,6 +400,94 @@ class MoysrDataImport(Document):
 		</table>
 		""",title=f'{len(data)} Contracts Imported',indicator='Cs')
 	
+
+	@frappe.whitelist()
+	def import_benefits(self,company_id):
+		errors=0
+		sucess=0
+		exists=0
+		data=[]
+
+		lookup_value={
+			"backPay": "Back Pay",
+			"bonus": "Bonus",
+			"businessTrip": "Business Trip",
+			"OverTime": "Overtime",
+			"commission": "Commission"
+
+		}
+
+		if not company_id:
+			company_id = frappe.conf.company_id or False
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-benefits.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+
+		for d in data:
+			d = self.get_clean_data(d)
+			if not frappe.db.exists("Employee Benefits",{'nid':d.get('nid')}):
+				benefits = frappe.new_doc("Employee Benefits")	
+				benefits.date = d.get('date')
+				benefits.addition_type = lookup_value[d.get('addition_type')]
+				benefits.payroll_month = d.get('payroll_month')
+				benefits.amount = d.get('amount')
+				benefits.details = d.get('details')
+				benefits.notes = d.get('notes')
+				benefits.nid = d.get('nid')
+				benefits.from_api = 1
+
+				employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
+				print(d.get('nid'))
+				if employee_number != None:
+					benefits.save()
+					sucess += 1
+				else:
+					errors += 1 
+			else:
+				exists +=1
+
+		frappe.db.commit()
+
+		frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		""",title=f'{len(data)} Benefits Imported',indicator='Cs')
+
+
 	def check_link_data(self,doctype,value,filed):
 		exist = frappe.db.exists(doctype, value)
 		if not exist:
@@ -409,6 +499,7 @@ class MoysrDataImport(Document):
 			frappe.db.commit()
 			exist=value
 		return exist
+
 
 	def get_clean_data(self,data):
 		clear_data = {}

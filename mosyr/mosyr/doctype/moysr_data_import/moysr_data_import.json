@@ -10,7 +10,8 @@
   "company_id",
   "import_branches",
   "import_employees",
-  "import_contracts"
+  "import_contracts",
+  "import_benefits"
  ],
  "fields": [
   {
@@ -33,13 +34,18 @@
    "fieldname": "import_contracts",
    "fieldtype": "Button",
    "label": "Import Contracts"
+  },
+  {
+   "fieldname": "import_benefits",
+   "fieldtype": "Button",
+   "label": "Import Benefits"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-09 04:12:38.853092",
+ "modified": "2022-01-10 21:25:58.426962",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",
