@@ -11,7 +11,8 @@
   "import_branches",
   "import_employees",
   "import_contracts",
-  "import_benefits"
+  "import_benefits",
+  "import_deductions"
  ],
  "fields": [
   {
@@ -39,13 +40,18 @@
    "fieldname": "import_benefits",
    "fieldtype": "Button",
    "label": "Import Benefits"
+  },
+  {
+   "fieldname": "import_deductions",
+   "fieldtype": "Button",
+   "label": "Import Deductions"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-10 21:25:58.426962",
+ "modified": "2022-01-10 22:18:20.270221",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",

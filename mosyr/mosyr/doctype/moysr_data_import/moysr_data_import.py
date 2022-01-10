@@ -371,7 +371,7 @@ class MoysrDataImport(Document):
 				contract.comment = d.get('comments')###
 
 
-				employee_number = frappe.get_value("Employee",{'nid':contract.nid},'name')
+				employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
 				if employee_number != None:
 					contract.save()
 					sucess += 1
@@ -486,6 +486,88 @@ class MoysrDataImport(Document):
 		</tbody>
 		</table>
 		""",title=f'{len(data)} Benefits Imported',indicator='Cs')
+
+
+	@frappe.whitelist()
+	def import_deductions(self,company_id):
+		errors=0
+		sucess=0
+		exists=0
+		data=[]
+
+
+		if not company_id:
+			company_id = frappe.conf.company_id or False
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-deductions.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+
+		for d in data:
+			d = self.get_clean_data(d)
+			print(d.get('nid'))
+			if not frappe.db.exists("Employee Deductions",{'nid':d.get('nid')}):
+				deduction = frappe.new_doc("Employee Deductions")	
+				deduction.date = d.get('date')
+				deduction.payroll_month = d.get('payroll_month')
+				deduction.amount = d.get('amount')
+				deduction.details = d.get('details')
+				deduction.notes = d.get('notes')
+				deduction.date = d.get('date')
+				deduction.days = d.get('days')
+				deduction.hours = d.get('hours')
+				deduction.minutes = d.get('minutes')
+				deduction.nid = d.get('nid')
+				deduction.from_api = 1
+
+				employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
+				if employee_number != None:
+					deduction.save()
+					sucess += 1
+				else:
+					errors += 1 
+			else:
+				exists +=1
+
+		frappe.db.commit()
+
+		frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		""",title=f'{len(data)} Deductions Imported',indicator='Cs')
 
 
 	def check_link_data(self,doctype,value,filed):
