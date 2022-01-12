@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EB-.YYYY.-.MM.-.##",
+ "creation": "2022-01-10 21:13:27.362899",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_number",
+  "details",
+  "nid",
+  "column_break_3",
+  "name1",
+  "date",
+  "column_break_6",
+  "addition_type",
+  "amount",
+  "column_break_9",
+  "payroll_month",
+  "notes",
+  "from_api"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee_number",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee Number",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Data",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee_number.first_name",
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "addition_type",
+   "fieldtype": "Select",
+   "label": "Addition Type",
+   "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "format: 01/2022",
+   "fieldname": "payroll_month",
+   "fieldtype": "Data",
+   "label": "Payroll Month"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Long Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "nid",
+   "fieldtype": "Data",
+   "label": "NID",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "from_api",
+   "fieldtype": "Check",
+   "label": "From API",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-01-12 17:58:02.910081",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Employee Benefits",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

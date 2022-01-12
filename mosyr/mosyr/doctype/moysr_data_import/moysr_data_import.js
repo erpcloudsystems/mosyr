@@ -44,6 +44,12 @@ frappe.ui.form.on('Moysr Data Import', {
     },
     import_contracts(frm) {
         frm.events.data_import_call(frm, 'import_contracts', "Start fetch Contracts")
+    },
+    import_benefits(frm) {
+        frm.events.data_import_call(frm, 'import_benefits', "Start fetch Benefits")
+    },
+    import_deductions(frm) {
+        frm.events.data_import_call(frm, 'import_deductions', "Start fetch Deductions")
     }
 
 });
