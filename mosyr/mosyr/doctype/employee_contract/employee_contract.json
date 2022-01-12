@@ -140,8 +140,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Employee",
-   "options": "Employee",
-   "reqd": 1
+   "options": "Employee"
   },
   {
    "fieldname": "info",
@@ -606,7 +605,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-12 17:21:07.837758",
+ "modified": "2022-01-12 18:22:23.733382",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",

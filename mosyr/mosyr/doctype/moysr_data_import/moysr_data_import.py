@@ -267,6 +267,7 @@ class MoysrDataImport(Document):
 			data = []
 		for d in data:
 			d = self.get_clean_data(d)
+			print(d)
 			if not frappe.db.exists("Employee Contract", {'nid':d.get('nid')}):
 				contract = frappe.new_doc("Employee Contract")	
 				### Info
@@ -338,7 +339,7 @@ class MoysrDataImport(Document):
 				contract.feed_schdls = d.get('allowance_living_schedule', '').capitalize()#$$$
 				contract.allowance_feed_schdl_1 == d.get('allowance_living_schdl_1', '')
 				contract.allowance_feed_schdl_2 == d.get('allowance_living_schdl_2', '')
-				contract.feed_amount_type = d.get('allowance_living_amount', '')#$$$
+				# contract.feed_amount_type = d.get('allowance_living_amount', '')#$$$
 				contract.feed_amount_value = d.get('allowance_living_value', '')#$$$
 
 				### Allowance Other
@@ -352,7 +353,9 @@ class MoysrDataImport(Document):
 				contract.other_amount_value = d.get('allowance_other_value')###
 				contract.from_api = 1
 				contract.nid = d.get('nid')###
-				contract.comment = d.get('comments')###
+				contract.comment = d.get('comments')###	
+				contract.save()
+				sucess+=1
 				
 			else:
 				exists += 1 
