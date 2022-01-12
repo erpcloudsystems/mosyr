@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "ED-.YYYY.-.MM.-.##",
  "creation": "2022-01-10 22:35:11.647182",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -110,7 +111,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-10 22:39:35.901771",
+ "modified": "2022-01-12 17:57:24.929594",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Deductions",

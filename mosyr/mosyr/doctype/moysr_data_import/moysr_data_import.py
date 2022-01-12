@@ -267,7 +267,7 @@ class MoysrDataImport(Document):
 			data = []
 		for d in data:
 			d = self.get_clean_data(d)
-			if not frappe.db.exists("Employee Contract",{'nid':d.get('nid')}):
+			if not frappe.db.exists("Employee Contract", {'nid':d.get('nid')}):
 				contract = frappe.new_doc("Employee Contract")	
 				### Info
 				contract.hiring_start_date_g = d.get('hiring_start_date')###
@@ -276,7 +276,7 @@ class MoysrDataImport(Document):
 				contract.vacation_period = d.get('vacation_period')###
 				contract.contract_start_g = d.get('contract_start_date')###
 				contract.commision_at_end_of_contract = d.get('commision_at_end_of_contract').capitalize()###
-				contract.contract_status_section = d.get('contract_status')###
+				contract.contract_status= d.get('contract_status')###
 				contract.vacation_travel_tickets = values_lookup[d.get('vacation_travel_tickets')]###
 				contract.contract_end_g = d.get('contract_end_date')###
 				contract.commision_precentage = d.get('commision_precentage')###
@@ -299,11 +299,8 @@ class MoysrDataImport(Document):
 				contract.trans_start_date_g = d.get('allowance_trans_start_date')###
 				contract.trans_end_date_g = d.get('allowance_trans_end_date')###
 				contract.allowance_period = d.get('allowance_period')###
-				if contract.allowance_period == 'One Time':
-					contract.allowance_trans_schdl_1 == d.get('allowance_trans_schdl_1')
-				elif contract.allowance_period == 'Two Time':
-					contract.allowance_trans_schdl_1 == d.get('allowance_trans_schdl_1')
-					contract.allowance_trans_schdl_2 == d.get('allowance_trans_schdl_2')
+				contract.allowance_trans_schdl_1 == d.get('allowance_trans_schdl_1')
+				contract.allowance_trans_schdl_2 == d.get('allowance_trans_schdl_2')
 				contract.trans_amount_type = d.get('allowance_trans_amount_type').capitalize()###
 				contract.trans_amount_value = d.get('allowance_trans_value')###
 
@@ -311,11 +308,8 @@ class MoysrDataImport(Document):
 				contract.housing_start_g = d.get('allowance_housing_start_date')###
 				contract.housing_end_date_g = d.get('allowance_housing_end_date')###
 				contract.house_schdls = d.get('allowance_housing_schedule').capitalize()###
-				if contract.house_schdls == 'One Time':
-					contract.allowance_house_schdl_1 == d.get('allowance_housing_schdl_1')
-				elif contract.house_schdls == 'Two Time':
-					contract.allowance_house_schdl_1 == d.get('allowance_housing_schdl_1')
-					contract.allowance_house_schdl_2 == d.get('allowance_housing_schdl_2')
+				contract.allowance_house_schdl_1 == d.get('allowance_housing_schdl_1')
+				contract.allowance_house_schdl_2 == d.get('allowance_housing_schdl_2')
 				# contract.house_amount_type = d.get('allowance_housing_amount').capitalize()#$$$
 				contract.house_amount_value = d.get('allowance_housing_value')###
 
@@ -323,60 +317,43 @@ class MoysrDataImport(Document):
 				contract.phone_start_date_g = d.get('allowance_phone_start_date')###
 				contract.phone_end_date_g = d.get('allowance_phone_end_date')###
 				contract.phone_schdls = d.get('allowance_phone_schedule').capitalize()###
-				if contract.phone_schdls == 'One Time':
-					contract.allowance_phone_schdl_1 == d.get('allowance_phone_schdl_1')
-				elif contract.phone_schdls == 'Two Time':
-					contract.allowance_phone_schdl_1 == d.get('allowance_phone_schdl_1')
-					contract.allowance_phone_schdl_2 == d.get('allowance_phone_schdl_2')
+				contract.allowance_phone_schdl_1 == d.get('allowance_phone_schdl_1')
+				contract.allowance_phone_schdl_1 == d.get('allowance_phone_schdl_1')
+				contract.allowance_phone_schdl_2 == d.get('allowance_phone_schdl_2')
 				contract.phone_amount_type = d.get('allowance_phone_amount_type').capitalize()###
 				contract.phone_amount_value = d.get('allowance_phone_value')###
 
 				### Allowance Natureow
 				contract.natureow_start_date_g = d.get('allowance_worknatural_start_date')###
-				contract.natureow_end_date_g = d.get('allowance_worknatural_end_date"')###
+				contract.natureow_end_date_g = d.get('allowance_worknatural_end_date')###
 				contract.natureow_schdls = d.get('allowance_worknatural_schedule').capitalize()###
-				if contract.natureow_schdls == 'One Time':
-					contract.allowance_natow_schdl_1 == d.get('allowance_worknatural_schdl_1')
-				elif contract.natureow_schdls == 'Two Time':
-					contract.allowance_natow_schdl_1 == d.get('allowance_worknatural_schdl_1')
-					contract.allowance_natow_schdl_2 == d.get('allowance_worknatural_schdl_2')
+				contract.allowance_natow_schdl_1 == d.get('allowance_worknatural_schdl_1')
+				contract.allowance_natow_schdl_2 == d.get('allowance_worknatural_schdl_2')
 				contract.natureow_amount_type = d.get('allowance_worknatural_amount_type').capitalize()###
 				contract.natureow_amount_value = d.get('allowance_worknatural_value')###
 
 				### Allowance Feeding
-				contract.feeding_start_date_g = d.get('allowance_living_start_date')#$$$
-				contract.feeding_end_date_g = d.get('allowance_living_end_date')#$$$
-				contract.feed_schdls = d.get('allowance_living_schedule').capitalize()#$$$
-				if contract.feed_schdls == 'One Time':
-					contract.allowance_feed_schdl_1 == d.get('allowance_living_schdl_1')
-				elif contract.feed_schdls == 'Two Time':
-					contract.allowance_feed_schdl_1 == d.get('allowance_living_schdl_1')
-					contract.allowance_feed_schdl_2 == d.get('allowance_living_schdl_2')
-				# contract.feed_amount_type = d.get('allowance_living_amount')#$$$
-				contract.feed_amount_value = d.get('allowance_living_value')#$$$
+				contract.feeding_start_date_g = d.get('allowance_living_start_date', '')#$$$
+				contract.feeding_end_date_g = d.get('allowance_living_end_date', '')#$$$
+				contract.feed_schdls = d.get('allowance_living_schedule', '').capitalize()#$$$
+				contract.allowance_feed_schdl_1 == d.get('allowance_living_schdl_1', '')
+				contract.allowance_feed_schdl_2 == d.get('allowance_living_schdl_2', '')
+				contract.feed_amount_type = d.get('allowance_living_amount', '')#$$$
+				contract.feed_amount_value = d.get('allowance_living_value', '')#$$$
 
 				### Allowance Other
 				contract.other_start_date_g = d.get('allowance_other_start_date')###
 				contract.other_end_date_g = d.get('allowance_other_end_date')###
 				contract.other_schdls = d.get('allowance_other_schedule').capitalize()###
-				if contract.other_schdls == 'One Time':
-					contract.allowance_other_schdl_1 == d.get('allowance_other_schdl_1')
-				elif contract.other_schdls == 'Two Time':
-					contract.allowance_other_schdl_1 == d.get('allowance_other_schdl_1')
-					contract.allowance_other_schdl_2 == d.get('allowance_other_schdl_2')
+				contract.allowance_other_schdl_1 == d.get('allowance_other_schdl_1')
+				contract.allowance_other_schdl_1 == d.get('allowance_other_schdl_1')
+				contract.allowance_other_schdl_2 == d.get('allowance_other_schdl_2')
 				contract.other_amount_type = d.get('allowance_other_amount_type').capitalize()###
 				contract.other_amount_value = d.get('allowance_other_value')###
 				contract.from_api = 1
 				contract.nid = d.get('nid')###
 				contract.comment = d.get('comments')###
-
-
-				employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
-				if employee_number != None:
-					contract.save()
-					sucess += 1
-				else:
-					errors += 1
+				
 			else:
 				exists += 1 
 		frappe.db.commit()
@@ -445,26 +422,24 @@ class MoysrDataImport(Document):
 
 		for d in data:
 			d = self.get_clean_data(d)
-			if not frappe.db.exists("Employee Benefits",{'nid':d.get('nid')}):
-				benefits = frappe.new_doc("Employee Benefits")	
-				benefits.date = d.get('date')
-				benefits.addition_type = lookup_value[d.get('addition_type')]
-				benefits.payroll_month = d.get('payroll_month')
-				benefits.amount = d.get('amount')
-				benefits.details = d.get('details')
-				benefits.notes = d.get('notes')
-				benefits.nid = d.get('nid')
-				benefits.from_api = 1
+			benefits = frappe.new_doc("Employee Benefits")	
+			benefits.date = d.get('date')
+			benefits.addition_type = lookup_value[d.get('addition_type')]
+			benefits.payroll_month = d.get('payroll_month')
+			benefits.amount = d.get('amount')
+			benefits.details = d.get('details')
+			benefits.notes = d.get('notes')
+			benefits.nid = d.get('nid')
+			benefits.from_api = 1
 
-				employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
-				print(d.get('nid'))
-				if employee_number != None:
-					benefits.save()
-					sucess += 1
-				else:
-					errors += 1 
+			employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
+			print(d.get('nid'))
+			if employee_number != None:
+				benefits.save()
+				sucess += 1
 			else:
-				exists +=1
+				errors += 1 
+			
 
 		frappe.db.commit()
 
@@ -524,29 +499,26 @@ class MoysrDataImport(Document):
 
 		for d in data:
 			d = self.get_clean_data(d)
-			print(d.get('nid'))
-			if not frappe.db.exists("Employee Deductions",{'nid':d.get('nid')}):
-				deduction = frappe.new_doc("Employee Deductions")	
-				deduction.date = d.get('date')
-				deduction.payroll_month = d.get('payroll_month')
-				deduction.amount = d.get('amount')
-				deduction.details = d.get('details')
-				deduction.notes = d.get('notes')
-				deduction.date = d.get('date')
-				deduction.days = d.get('days')
-				deduction.hours = d.get('hours')
-				deduction.minutes = d.get('minutes')
-				deduction.nid = d.get('nid')
-				deduction.from_api = 1
 
-				employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
-				if employee_number != None:
-					deduction.save()
-					sucess += 1
-				else:
-					errors += 1 
+			deduction = frappe.new_doc("Employee Deductions")	
+			deduction.date = d.get('date')
+			deduction.payroll_month = d.get('payroll_month')
+			deduction.amount = d.get('amount')
+			deduction.details = d.get('details')
+			deduction.notes = d.get('notes')
+			deduction.date = d.get('date')
+			deduction.days = d.get('days')
+			deduction.hours = d.get('hours')
+			deduction.minutes = d.get('minutes')
+			deduction.nid = d.get('nid')
+			deduction.from_api = 1
+
+			employee_number = frappe.get_value("Employee",{'nid':d.get('nid')},'name')
+			if employee_number != None:
+				deduction.save()
+				sucess += 1
 			else:
-				exists +=1
+				errors += 1 
 
 		frappe.db.commit()
 

@@ -24,7 +24,7 @@
   "notes",
   "column_break_14",
   "contract_type",
-  "contract_status_section",
+  "contract_status",
   "leaves_consumer_balance",
   "contract_financial_details_section",
   "basic_salary",
@@ -98,7 +98,8 @@
   "allowance_other_schdl_1",
   "allowance_other_schdl_2",
   "from_api",
-  "nid"
+  "nid",
+  "amended_from"
  ],
  "fields": [
   {
@@ -154,7 +155,8 @@
   {
    "fieldname": "hiring_start_date_g",
    "fieldtype": "Date",
-   "label": "Hiring Start Date G"
+   "label": "Hiring Start Date G",
+   "reqd": 1
   },
   {
    "fieldname": "contract_end_g",
@@ -170,12 +172,6 @@
    "fieldtype": "Select",
    "label": " Contract Type",
    "options": "\nMarried\nNotmarried\nTemporary\nLump\nThe indefinite\nFixed term"
-  },
-  {
-   "fieldname": "contract_status_section",
-   "fieldtype": "Select",
-   "label": " Contract Status",
-   "options": "\nvalid\nnot-valid"
   },
   {
    "fieldname": "over_time_included",
@@ -590,11 +586,27 @@
    "fieldtype": "Data",
    "label": "nid",
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Contract",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "contract_status",
+   "fieldtype": "Select",
+   "label": " Contract Status",
+   "options": "\nvalid\nnot-valid"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-01-09 22:52:11.209724",
+ "modified": "2022-01-12 17:21:07.837758",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",

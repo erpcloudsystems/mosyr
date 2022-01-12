@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "EB-.YYYY.-.MM.-.##",
  "creation": "2022-01-10 21:13:27.362899",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -96,7 +97,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-10 22:07:29.916322",
+ "modified": "2022-01-12 17:58:02.910081",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Benefits",
