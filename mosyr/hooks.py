@@ -14,7 +14,7 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/mosyr/css/mosyr.css"
-# app_include_js = "/assets/mosyr/js/mosyr.js"
+app_include_js = "/assets/mosyr/js/mosyr.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/mosyr/css/mosyr.css"
@@ -57,7 +57,7 @@ app_license = "MIT"
 # ------------
 
 # before_install = "mosyr.install.before_install"
-# after_install = "mosyr.install.after_install"
+after_install = "mosyr.install.after_install"
 
 # Desk Notifications
 # ------------------
@@ -200,7 +200,6 @@ fixtures = [
 				"Employee-handicap",
 				"Employee-birth_place",
 				"Employee-nationality",
-				"Employee-birth_date_hijri",
 				"Employee-full_name_en",
 				"Employee-payment_type",
 				"Employee-self_service",
@@ -209,13 +208,41 @@ fixtures = [
 				"Employee-valid_data",
 				"Employee-from_api",
 				"Employee-direct_manager",
-				"Employee-moyser_employee_status"
 				"Employee-branch_working_place",
 				"Employee-health_certificate",
 				"Employee-payroll_card_number",
 				"Employee-insurance_card_expire",
 				"Employee-insurance_card_class",
-				"Employee-employee_class",
+				"Employee-employee_status",
+				"Employee-passport",
+				"Employee-employee_passport",
+				"Employee-identity",
+				"Employee-employee_identity",
+				"Employee-dependent",
+				"Employee-employee_dependent",
+				"Employee-moyser_employee_status",
+				"Employee-employee_signature",
+
+				"Employee Education-attachment",
+				"Employee Education-qualification_location",
+				"Employee Education-qualification_institute",
+				"Employee Education-gpa_rate",
+				"Employee Education-qualification_mark",
+				"Employee Education-qualification_held_date",
+				"Employee Education-qualification_attendance_date",
+				"Employee Education-specialty",
+				"Employee Education-qualification_degree",
+				"Employee Education-key",
+
+				"Employee External Work History-note",
+				"Employee External Work History-certificate_experience",
+				"Employee External Work History-reason_of_termination",
+				"Employee External Work History-end_date_g",
+				"Employee External Work History-start_date_g",
+				"Employee External Work History-key",
+
+
+
 
 
             ]]
