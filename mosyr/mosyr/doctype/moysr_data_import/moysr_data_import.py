@@ -982,6 +982,133 @@ class MoysrDataImport(Document):
 
 
 	@frappe.whitelist()
+	def import_employee_qualifications(self,company_id):
+		errors = 0
+		sucess = 0
+		data = []
+		error_msgs = ''
+		if not company_id:
+			company_id = self.get_company_id()
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-employee-qualifications.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+		for d in data:
+			d = self.get_clean_data(d)
+			nid = d.get('nid','')
+			first_name = d.get('name', '')
+			if nid:
+				employees = frappe.get_list("Employee",filters={"nid":nid})
+				if len(employees) == 0:
+					msg = "Employee is not exist in system"
+					error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+					errors += 1
+					continue
+				employee = employees[0].name
+				employee = frappe.get_doc('Employee', employee)
+				qualification_attendance_date = d.get('attendance_date', '')
+				qualification_held_date = d.get('issue_date', '')
+				attendance = datetime.strptime(qualification_attendance_date,("%d-%m-%Y"))
+				held = datetime.strptime(qualification_held_date,("%d-%m-%Y"))
+				attendance_date = attendance.strftime ("%Y-%m-%d")
+				held_date = held.strftime ("%Y-%m-%d")
+				api_key = d.get('key', '')
+				lookup_value = {
+					'training' : 'Training Certificate'
+				}
+				degree = d.get('degree', '')
+				api_key_exists = False
+				api_key_exists_at = -1
+
+				if api_key != '':
+					for k in employee.education:
+						mosyr_key = k.key
+						if mosyr_key:
+							if api_key == mosyr_key:
+								api_key_exists = True
+								api_key_exists_at = k.idx
+				if api_key_exists:	
+					if api_key_exists_at != -1:
+						current_data = employee.education[api_key_exists_at-1]
+						current_data.qualification_degree = lookup_value[degree]
+						current_data.specialty = d.get('specialization', '')
+						current_data.qualification_attendance_date = attendance_date
+						current_data.certificate_experience = d.get('certificate_experience', '')
+						current_data.qualification_held_date = held_date
+						current_data.qualification_mark = d.get('qualification_mark', '')
+						current_data.gpa_rate = d.get('GPA_rate', '')
+						current_data.qualification_institute = d.get('issue_institute', '')
+						current_data.qualification_location = d.get('issue_place', '')
+						sucess += 1
+				else:	
+					employee.append('education', {
+							'qualification_degree':lookup_value[degree],
+							'specialty': d.get('specialization', ''),
+							'qualification_attendance_date': attendance_date,
+							'certificate_experience':d.get('certificate_experience', ''),
+							'qualification_held_date':held_date,
+							'qualification_mark':d.get('qualification_mark', ''),
+							'gpa_rate':d.get('GPA_rate', ''),
+							'qualification_institute':d.get('issue_institute', ''),
+							'qualification_location':d.get('issue_place', ''),
+							# 'attachment':d.get('attachement', ''),
+							'key':api_key
+						})
+				employee.flags.ignore_mandatory = True
+				employee.save()
+				sucess += 1
+			else:
+				msg = "Employee is not exist in system"
+				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				errors += 1
+					
+		frappe.db.commit()
+		if len(error_msgs) > 0:
+			error_msgs = f'''<table class="table table-bordered">
+							<thead>
+							<tr>
+							<th>Employee NID.</th>
+							<th>Name</th>
+							<th>Error</th>
+							</tr></thead>
+							<tbody>{error_msgs}</tbody></table>'''	
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} qualifications Imported',indicator='Cs')
+
+
+	@frappe.whitelist()
 	def import_experiences(self,company_id):
 		errors = 0
 		sucess = 0
