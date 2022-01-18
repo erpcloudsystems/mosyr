@@ -446,6 +446,211 @@ class MoysrDataImport(Document):
 
 		self.table_status_imported(data,sucess,exists,errors,"Benefits",error_msgs)
 
+	@frappe.whitelist()
+	def import_deductions(self,company_id):
+		errors = 0
+		sucess = 0
+		exists = 0
+		data = []
+		error_msgs = ''
+
+
+		if not company_id:
+			company_id = self.get_company_id()
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-deductions.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+
+		for d in data:
+			d = self.get_clean_data(d)
+			employee_name = d.get('name')
+			nid = d.get('nid')
+			deduction = frappe.new_doc("Employee Deductions")	
+			deduction.date = d.get('date')
+			deduction.payroll_month = d.get('payroll_month')
+			deduction.amount = d.get('amount')
+			deduction.details = d.get('details')
+			deduction.notes = d.get('notes')
+			deduction.date = d.get('date')
+			deduction.days = d.get('days')
+			deduction.hours = d.get('hours')
+			deduction.minutes = d.get('minutes')
+			deduction.nid = d.get('nid')
+			deduction.from_api = 1
+
+			if frappe.db.exists("Employee", {'nid':d.get('nid')}):
+				if frappe.db.exists("Employee Contract", {'nid': d.get('nid')}):
+
+					deduction.save()
+					sucess += 1
+				else:
+					msg = "Employee does not have Contract"
+					error_msgs += f'<tr><th>{nid}</th><td>{employee_name}</td><td>{msg}</td></tr>'
+					errors += 1 
+			else:
+				msg = "Employee is not defined in System"
+				error_msgs += f'<tr><th>{nid}</th><td>{employee_name}</td><td>{msg}</td></tr>'
+				errors += 1 
+
+		frappe.db.commit()
+
+		if len(error_msgs) > 0:
+			error_msgs = f'''<table class="table table-bordered">
+								<thead>
+								<tr>
+								<th>Employee NID.</th>
+								<th>Name</th>
+								<th>Error</th>
+								</tr></thead>
+								<tbody>{error_msgs}</tbody></table>'''
+
+		self.table_status_imported(data,sucess,exists,errors,"Deductions",error_msgs)
+
+	@frappe.whitelist()
+	def import_identity(self,company_id):
+		errors = 0
+		sucess = 0
+		data = []
+		error_msgs = ''
+		if not company_id:
+			company_id = self.get_company_id()
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-ids.json?company_id={company_id}'
+		res = False
+		lookup_value = {
+			'nationalid': 'National ID',
+			'displacedtribalscard': 'Displaced tribals card',
+			'gccstatesidentity': 'GCC States Identity',
+			'bordersentrynumber': 'Borders Entry Number',
+			'number': 'Number',
+			'drivinglicense': 'Driving License',
+			'iqama': 'Iqama'
+		}
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+		for d in data:
+			d = self.get_clean_data(d)
+			nid = d.get('nid', '')
+			first_name = d.get('name', '')
+			if nid:
+				employees = frappe.get_list("Employee",filters={"nid":nid})
+				if len(employees) == 0:
+					msg = "Employee is not exist in system"
+					error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+					errors += 1
+					continue
+				employee = employees[0].name
+				employee = frappe.get_doc('Employee', employee)
+
+				api_key = d.get('key', '')
+				api_key_exists = False
+				api_key_exists_at = -1
+				if api_key != '':
+					for k in employee.identity:
+						mosyr_key = k.key
+						if mosyr_key:
+							if api_key == mosyr_key:
+								api_key_exists = True
+								api_key_exists_at = k.idx
+				if api_key_exists:
+					if api_key_exists_at != -1:
+						current_data = employee.identity[api_key_exists_at-1]
+						current_data.id_type = lookup_value[d.get('id_type', '')] 
+						current_data.nautional_id_number = d.get('id_number', '')
+						current_data.id_issue_place_english = d.get('issue_place_english', '')
+						current_data.status_date_g = d.get('issue_date', '')
+						current_data.id_expire_date_g = d.get('expire_date', '')
+						current_data.border_entry_port = d.get('border_entry_port', '')
+						current_data.borders_entry_date_g = d.get('border_entry_date', '')
+						current_data.border_entry_number = d.get('border_entry_number', '')
+						current_data.id_photo = d.get('id_photo', '')
+						sucess += 1
+				else:
+					employee.flags.ignore_mandatory = True
+					employee.append('identity', {
+						'id_type':lookup_value[d.get('id_type', '')] ,
+						'nautional_id_number': d.get('id_number', ''),
+						'id_issue_place_english': d.get('issue_place_english', ''),
+						'id_issue_date_g':d.get('issue_date', ''),
+						'id_expire_date_g':d.get('expire_date', ''),
+						'border_entry_port':d.get('border_entry_port', ''),
+						'borders_entry_date_g':d.get('border_entry_date', ''),
+						'border_entry_number':d.get('border_entry_number', ''),
+						'id_photo':d.get('id_photo', ''),
+						'key': api_key
+					})
+					employee.flags.ignore_mandatory = True
+					employee.save()
+					sucess += 1
+			else:
+					msg = "Employee is not exist in system"
+					error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+					errors += 1
+		frappe.db.commit()
+		if len(error_msgs) > 0:
+			error_msgs = f'''<table class="table table-bordered">
+							<thead>
+							<tr>
+							<th>Employee NID.</th>
+							<th>Name</th>
+							<th>Error</th>
+							</tr></thead>
+							<tbody>{error_msgs}</tbody></table>'''	
+		
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Identity Imported',indicator='Cs')
+
 		
 	def check_link_data(self,doctype,value,filed):
 		""" Check if the records in the system
