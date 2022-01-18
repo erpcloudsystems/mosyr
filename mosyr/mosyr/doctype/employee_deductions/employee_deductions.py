@@ -8,7 +8,8 @@ class EmployeeDeductions(Document):
 	def validate(self):
 		if self.from_api:
 			if self.nid:
-				employee_number = frappe.get_value("Employee",{'nid':self.nid},['name','first_name'])
-				self.employee_number = employee_number[0]
-				self.name1 = employee_number[1]
+				if frappe.db.exists("Employee", {'nid':self.nid}):
+					employee_number = frappe.get_value("Employee",{'nid':self.nid},['name','first_name']) or False
+					self.employee_number = employee_number[0]
+					self.name1 = employee_number[1]
 
