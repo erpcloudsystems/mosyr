@@ -980,7 +980,118 @@ class MoysrDataImport(Document):
 		{'' if error_msgs is None else error_msgs}
 		""",title=f'{len(data)} Employee Imported',indicator='Cs')
 
+
+	@frappe.whitelist()
+	def import_experiences(self,company_id):
+		errors = 0
+		sucess = 0
+		data = []
+		error_msgs = ''
+		if not company_id:
+			company_id = self.get_company_id()
 		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-employee-experiences.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+		for d in data:
+			d = self.get_clean_data(d)
+			nid = d.get('nid','')
+			first_name = d.get('name', '')
+			if nid:
+				employees = frappe.get_list("Employee",filters={"nid":nid})
+				if len(employees) == 0:
+					msg = "Employee is not exist in system"
+					error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+					errors += 1
+					continue
+				employee = employees[0].name
+				employee = frappe.get_doc('Employee', employee)
+				api_key = d.get('key', '')
+				
+				api_key_exists = False
+				api_key_exists_at = -1
+
+				if api_key != '':
+					for k in employee.external_work_history:
+						mosyr_key = k.key
+						if mosyr_key:
+							if api_key == mosyr_key:
+								api_key_exists = True
+								api_key_exists_at = k.idx
+				if api_key_exists:
+					if api_key_exists_at != -1:
+						current_data = employee.external_work_history[api_key_exists_at-1]
+						current_data.start_date_g = d.get('start_date_g', '')
+						current_data.end_date_g = d.get('end_date_g', '')
+						current_data.reason_of_termination = d.get('reason_of_termination', '')
+						current_data.certificate_experience = d.get('certificate_experience', '')
+						current_data.note = d.get('note', '')
+						sucess += 1
+				else:
+					
+					employee.append('external_work_history', {
+							'start_date_g':d.get('start_date_g', ''),
+							'end_date_g': d.get('end_date_g', ''),
+							'reason_of_termination': d.get('reason_of_termination', ''),
+							'certificate_experience':d.get('certificate_experience', ''),
+							'note':d.get('note', ''),
+							'key':api_key
+						})
+					employee.flags.ignore_mandatory = True
+					employee.save()
+					sucess += 1
+			else:
+				msg = "Employee is not exist in system"
+				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				errors += 1
+					
+		frappe.db.commit()
+		if len(error_msgs) > 0:
+			error_msgs = f'''<table class="table table-bordered">
+							<thead>
+							<tr>
+							<th>Employee NID.</th>
+							<th>Name</th>
+							<th>Error</th>
+							</tr></thead>
+							<tbody>{error_msgs}</tbody></table>'''	
+		
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Experince Imported',indicator='Cs')
+
+
 	def check_link_data(self,doctype,value,filed):
 		""" Check if the records in the system
 		if there is no value we creat a new value
