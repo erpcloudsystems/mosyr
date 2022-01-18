@@ -1,0 +1,5 @@
+{
+    "mosyr/js/hijri-date.min.js":[
+        "public/js/mosyr.js"
+    ]
+}
