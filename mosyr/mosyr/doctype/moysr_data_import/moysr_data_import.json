@@ -8,11 +8,22 @@
  "engine": "InnoDB",
  "field_order": [
   "company_id",
+  "section_break_2",
+  "master_data",
   "import_branches",
   "import_employees",
   "import_contracts",
   "import_benefits",
-  "import_deductions"
+  "column_break_8",
+  "employee_data",
+  "import_deductions",
+  "import_identity",
+  "import_passport",
+  "import_dependents",
+  "import_employee_status",
+  "column_break_15",
+  "import_experiences",
+  "import_employee_qualifications"
  ],
  "fields": [
   {
@@ -45,13 +56,65 @@
    "fieldname": "import_deductions",
    "fieldtype": "Button",
    "label": "Import Deductions"
+  },
+  {
+   "fieldname": "import_identity",
+   "fieldtype": "Button",
+   "label": "Import Identity"
+  },
+  {
+   "fieldname": "import_passport",
+   "fieldtype": "Button",
+   "label": "Import PassPort"
+  },
+  {
+   "fieldname": "import_dependents",
+   "fieldtype": "Button",
+   "label": "Import dependent"
+  },
+  {
+   "fieldname": "import_employee_status",
+   "fieldtype": "Button",
+   "label": "Import Employee Status"
+  },
+  {
+   "fieldname": "import_experiences",
+   "fieldtype": "Button",
+   "label": "Import Experiences"
+  },
+  {
+   "fieldname": "import_employee_qualifications",
+   "fieldtype": "Button",
+   "label": "Import Qualifications"
+  },
+  {
+   "fieldname": "master_data",
+   "fieldtype": "HTML",
+   "label": "Master Data"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_data",
+   "fieldtype": "HTML",
+   "label": "Employee Data"
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-10 22:18:20.270221",
+ "modified": "2022-01-18 17:15:06.579234",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",
