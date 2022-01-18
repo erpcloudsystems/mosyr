@@ -363,6 +363,90 @@ class MoysrDataImport(Document):
 		self.table_status_imported(data,sucess,exists,errors,"Contracts",error_msgs)
 	
 
+	@frappe.whitelist()
+	def import_benefits(self,company_id):
+		errors = 0
+		sucess = 0
+		exists = 0 
+		data = []
+		error_msgs = ''
+
+		lookup_value={
+			"backPay": "Back Pay",
+			"bonus": "Bonus",
+			"businessTrip": "Business Trip",
+			"OverTime": "Overtime",
+			"commission": "Commission"
+		}
+		if not company_id:
+			company_id = self.get_company_id()
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-benefits.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+
+		for d in data:
+			d = self.get_clean_data(d)
+			employee_name = d.get('name')
+			nid = d.get('nid')
+			benefits = frappe.new_doc("Employee Benefits")	
+			benefits.date = d.get('date')
+			benefits.addition_type = lookup_value[d.get('addition_type')]
+			benefits.payroll_month = d.get('payroll_month')
+			benefits.amount = d.get('amount')
+			benefits.details = d.get('details')
+			benefits.notes = d.get('notes')
+			benefits.nid = nid
+			benefits.from_api = 1
+
+			if frappe.db.exists("Employee", {'nid':d.get('nid')}):
+				if frappe.db.exists("Employee Contract", {'nid': d.get('nid')}):
+
+					benefits.save()
+					sucess += 1
+				else:
+					msg = "Employee does not have Contract"
+					error_msgs += f'<tr><th>{nid}</th><td>{employee_name}</td><td>{msg}</td></tr>'
+					errors += 1 
+			else:
+				msg = "Employee is not defined in System"
+				error_msgs += f'<tr><th>{nid}</th><td>{employee_name}</td><td>{msg}</td></tr>'
+				errors += 1 
+			
+
+		frappe.db.commit()
+		if len(error_msgs) > 0:
+			error_msgs = f'''<table class="table table-bordered">
+								<thead>
+								<tr>
+								<th>Employee NID.</th>
+								<th>Name</th>
+								<th>Error</th>
+								</tr></thead>
+								<tbody>{error_msgs}</tbody></table>'''
+
+		self.table_status_imported(data,sucess,exists,errors,"Benefits",error_msgs)
+
+		
 	def check_link_data(self,doctype,value,filed):
 		""" Check if the records in the system
 		if there is no value we creat a new value
