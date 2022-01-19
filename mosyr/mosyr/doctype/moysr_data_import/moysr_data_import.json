@@ -11,19 +11,20 @@
   "section_break_2",
   "master_data",
   "import_branches",
-  "import_employees",
-  "import_contracts",
-  "import_benefits",
+  "import_employee_class",
   "column_break_8",
   "employee_data",
-  "import_deductions",
+  "import_employees",
+  "import_contracts",
   "import_identity",
-  "import_passport",
   "import_dependents",
   "import_employee_status",
-  "column_break_15",
   "import_experiences",
-  "import_employee_qualifications"
+  "import_passport",
+  "import_employee_qualifications",
+  "column_break_15",
+  "import_benefits",
+  "import_deductions"
  ],
  "fields": [
   {
@@ -88,6 +89,11 @@
    "label": "Import Qualifications"
   },
   {
+   "fieldname": "import_employee_class",
+   "fieldtype": "Button",
+   "label": "Import Debarments"
+  },
+  {
    "fieldname": "master_data",
    "fieldtype": "HTML",
    "label": "Master Data"
@@ -114,7 +120,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-18 17:15:06.579234",
+ "modified": "2022-01-19 15:52:11.988516",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",

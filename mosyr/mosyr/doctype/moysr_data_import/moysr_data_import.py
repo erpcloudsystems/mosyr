@@ -3,6 +3,7 @@
 
 from cgitb import lookup
 from operator import le
+from signal import pthread_kill
 import frappe
 import requests
 from frappe.model.document import Document
@@ -61,7 +62,25 @@ class MoysrDataImport(Document):
 					exists += 1
 		frappe.db.commit()
 
-		self.table_status_imported(data,sucess,exists,errors,"Branches",False)
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		""",title=f'{len(data)} Branches Imported',indicator='Cs')
+
 
 	@frappe.whitelist()
 	def import_employees(self,company_id):
@@ -123,42 +142,41 @@ class MoysrDataImport(Document):
 					continue
 				
 				emp = frappe.new_doc("Employee")
-				emp.date_of_birth = d.get('birth_date_g')
-				emp.first_name = d.get('fullname_ar','')
-				emp.full_name_en = d.get('fullname_en','')
+				emp.date_of_birth = d.get('birth_date_g', '')
+				emp.first_name = d.get('fullname_ar', '')
+				emp.full_name_en = d.get('fullname_en', '')
 				emp.employee_number = employee_number
 				emp.salary_mode = 'Bank'
-				emp.bank_name = d.get('Bank','')
-				emp.paymnet_type=d.get('payment_type','')
-				emp.current_address = d.get('employee_address','')
-				emp.bank_ac_no = d.get('IBAN','')
-				emp.birth_place = d.get('birth_place','')
-				emp.handicap = d.get('handicap','')
-				emp.marital_status = d.get('marital_status','')
-				emp.cell_number = d.get('mobile','')
-				emp.religion = d.get('religion','')
+				emp.bank_name = d.get('Bank', '')
+				emp.paymnet_type=d.get('payment_type', '')
+				emp.current_address = d.get('employee_address', '')
+				emp.bank_ac_no = d.get('IBAN', '')
+				emp.birth_place = d.get('birth_place', '')
+				emp.handicap = d.get('handicap', '')
+				emp.marital_status = d.get('marital_status', '')
+				emp.cell_number = d.get('mobile', '')
+				emp.religion = d.get('religion', '')
 
 				
-				emp.health_insurance_no = d.get('insurance_card_number','')
-				emp.self_service = d.get('Self_service','')
+				emp.health_insurance_no = d.get('insurance_card_number', '')
+				emp.self_service = d.get('Self_service', '')
 
-				emp.branch_working_place = d.get('branch_working_place')
-				emp.direct_manager = d.get('direct_manager')
-				emp.department = d.get('employee_class')
-				emp.personal_email = d.get('employee_email')
-				emp.employee_photo = d.get('employee_photo')
-				emp.insurance_card_class = d.get('insurance_card_class')
-				emp.insurance_card_expire = d.get('insurance_card_expire')
-				emp.payroll_card_number = d.get('payroll_card_no')
-				emp.health_certificate = d.get('health_certificate')
+				emp.branch_working_place = d.get('branch_working_place', '')
+				emp.direct_manager = d.get('direct_manager', '')
+				emp.department = d.get('employee_class', '')
+				emp.personal_email = d.get('employee_email', '')
+				emp.employee_photo = d.get('employee_photo', '')
+				emp.insurance_card_class = d.get('insurance_card_class', '')
+				emp.insurance_card_expire = d.get('insurance_card_expire', '')
+				emp.payroll_card_number = d.get('payroll_card_no', '')
+				emp.health_certificate = d.get('health_certificate', '')
 
 				emp.from_api = 1
 				emp.valid_data = 0
 				
-				# emp.date_of_joining = '2022-01-02'
 				emp.flags.ignore_mandatory = True
 
-				emp.birth_date_hijri = d.get('birth_date_h','')
+				emp.birth_date_hijri = d.get('birth_date_h', '')
 				emp.moyser_employee_status=d.get('employee_status', '')
 				emp.status = 'Inactive' #values_lookup[d.get('employee_status','')]
 				emp.nid = nid
@@ -202,9 +220,104 @@ class MoysrDataImport(Document):
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
-							<tbody>{error_msgs}</tbody></table>'''			
-		self.table_status_imported(data,sucess,exists,errors,"Employess",error_msgs,False)
+							<tbody>{error_msgs}</tbody></table>'''
 
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Employess Imported',indicator='Cs')
+
+	@frappe.whitelist()
+	def import_employee_class(self,company_id):
+		errors = 0
+		sucess = 0
+		exists = 0 
+		data = []
+		error_msgs = ''
+
+		if not company_id:
+			company_id = self.get_company_id()
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+		url = f'https://www.mosyr.io/en/api/migration-classes.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import contracts Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.msgprint(err_msg + err_name_html)
+			data = []
+
+		for d in data:
+			d = self.get_clean_data(d)
+			debartment_class = d.get('name')
+			mosyr_key = d.get('key')
+			if mosyr_key :
+				if debartment_class:
+					if frappe.db.exists("Department", {"mosyr_key":mosyr_key}):
+						exists += 1
+					else:
+						self.check_link_data("Department",debartment_class,"department_name",mosyr_key)
+						sucess +=1
+				else:
+					msg = f"dosen't have Employee class"
+					error_msgs += f'<tr><th>{mosyr_key}</th><td>{msg}</td></tr>'
+					errors +=1
+		if len(error_msgs) > 0:
+			error_msgs = f'''<table class="table table-bordered">
+								<thead>
+								<tr>
+								<th>Mosyr Key.</th>
+								<th>Error</th>
+								</tr></thead>
+								<tbody>{error_msgs}</tbody></table>'''
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Debartment Imported',indicator='Cs')
 
 	@frappe.whitelist()
 	def import_contracts(self,company_id):
@@ -360,14 +473,30 @@ class MoysrDataImport(Document):
 							</tr></thead>
 							<tbody>{error_msgs}</tbody></table>'''
 
-		self.table_status_imported(data,sucess,exists,errors,"Contracts",error_msgs)
-	
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Contracts Imported',indicator='Cs')	
 
 	@frappe.whitelist()
 	def import_benefits(self,company_id):
 		errors = 0
 		sucess = 0
-		exists = 0 
 		data = []
 		error_msgs = ''
 
@@ -417,10 +546,8 @@ class MoysrDataImport(Document):
 			benefits.notes = d.get('notes')
 			benefits.nid = nid
 			benefits.from_api = 1
-
 			if frappe.db.exists("Employee", {'nid':d.get('nid')}):
 				if frappe.db.exists("Employee Contract", {'nid': d.get('nid')}):
-
 					benefits.save()
 					sucess += 1
 				else:
@@ -431,8 +558,7 @@ class MoysrDataImport(Document):
 				msg = "Employee is not defined in System"
 				error_msgs += f'<tr><th>{nid}</th><td>{employee_name}</td><td>{msg}</td></tr>'
 				errors += 1 
-			
-
+		
 		frappe.db.commit()
 		if len(error_msgs) > 0:
 			error_msgs = f'''<table class="table table-bordered">
@@ -444,13 +570,26 @@ class MoysrDataImport(Document):
 								</tr></thead>
 								<tbody>{error_msgs}</tbody></table>'''
 
-		self.table_status_imported(data,sucess,exists,errors,"Benefits",error_msgs)
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Benefits Imported',indicator='Cs')	
 
 	@frappe.whitelist()
 	def import_deductions(self,company_id):
 		errors = 0
 		sucess = 0
-		exists = 0
 		data = []
 		error_msgs = ''
 
@@ -500,7 +639,6 @@ class MoysrDataImport(Document):
 
 			if frappe.db.exists("Employee", {'nid':d.get('nid')}):
 				if frappe.db.exists("Employee Contract", {'nid': d.get('nid')}):
-
 					deduction.save()
 					sucess += 1
 				else:
@@ -524,7 +662,22 @@ class MoysrDataImport(Document):
 								</tr></thead>
 								<tbody>{error_msgs}</tbody></table>'''
 
-		self.table_status_imported(data,sucess,exists,errors,"Deductions",error_msgs)
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		{'' if error_msgs is None else error_msgs}
+		""",title=f'{len(data)} Deductions Imported',indicator='Cs')
+
 
 	@frappe.whitelist()
 	def import_identity(self,company_id):
@@ -569,6 +722,7 @@ class MoysrDataImport(Document):
 		for d in data:
 			d = self.get_clean_data(d)
 			nid = d.get('nid', '')
+			api_key= d.get('key', '')
 			first_name = d.get('name', '')
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
@@ -604,7 +758,6 @@ class MoysrDataImport(Document):
 						current_data.id_photo = d.get('id_photo', '')
 						sucess += 1
 				else:
-					employee.flags.ignore_mandatory = True
 					employee.append('identity', {
 						'id_type':lookup_value[d.get('id_type', '')] ,
 						'nautional_id_number': d.get('id_number', ''),
@@ -622,14 +775,14 @@ class MoysrDataImport(Document):
 					sucess += 1
 			else:
 					msg = "Employee is not exist in system"
-					error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+					error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 					errors += 1
 		frappe.db.commit()
 		if len(error_msgs) > 0:
 			error_msgs = f'''<table class="table table-bordered">
 							<thead>
 							<tr>
-							<th>Employee NID.</th>
+							<th>Employee Key.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
@@ -687,6 +840,7 @@ class MoysrDataImport(Document):
 		for d in data:
 			d = self.get_clean_data(d)
 			nid = d.get('nid', '')
+			api_key = d.get('key', '')
 			first_name = d.get('name', '')
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
@@ -734,7 +888,7 @@ class MoysrDataImport(Document):
 					sucess += 1
 			else:
 				msg = "Employee is not exist in system"
-				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1
 					
 		frappe.db.commit()
@@ -743,7 +897,7 @@ class MoysrDataImport(Document):
 			error_msgs = f'''<table class="table table-bordered">
 							<thead>
 							<tr>
-							<th>Employee NID.</th>
+							<th>Employee Key.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
@@ -800,6 +954,7 @@ class MoysrDataImport(Document):
 		for d in data:
 			d = self.get_clean_data(d)
 			nid = d.get('nid','')
+			api_key = d.get('key','')
 			first_name = d.get('name', '')
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
@@ -845,14 +1000,14 @@ class MoysrDataImport(Document):
 					sucess += 1
 			else:
 				msg = "Employee is not exist in system"
-				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1			
 		frappe.db.commit()
 		if len(error_msgs) > 0:
 			error_msgs = f'''<table class="table table-bordered">
 							<thead>
 							<tr>
-							<th>Employee NID.</th>
+							<th>Employee Key.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
@@ -909,6 +1064,7 @@ class MoysrDataImport(Document):
 			d = self.get_clean_data(d)
 			nid = d.get('nid','')
 			first_name = d.get('name', '')
+			api_key = d.get('key', '')
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
 				if len(employees) == 0:
@@ -951,7 +1107,7 @@ class MoysrDataImport(Document):
 					employee.save()
 			else:
 				msg = "Employee is not exist in system"
-				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1
 					
 		frappe.db.commit()
@@ -959,7 +1115,7 @@ class MoysrDataImport(Document):
 			error_msgs = f'''<table class="table table-bordered">
 							<thead>
 							<tr>
-							<th>Employee NID.</th>
+							<th>Employee Key.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
@@ -1016,6 +1172,7 @@ class MoysrDataImport(Document):
 			d = self.get_clean_data(d)
 			nid = d.get('nid','')
 			first_name = d.get('name', '')
+			api_key = d.get('key', '')
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
 				if len(employees) == 0:
@@ -1078,7 +1235,7 @@ class MoysrDataImport(Document):
 				sucess += 1
 			else:
 				msg = "Employee is not exist in system"
-				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1
 					
 		frappe.db.commit()
@@ -1086,7 +1243,7 @@ class MoysrDataImport(Document):
 			error_msgs = f'''<table class="table table-bordered">
 							<thead>
 							<tr>
-							<th>Employee NID.</th>
+							<th>Employee Key.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
@@ -1143,6 +1300,7 @@ class MoysrDataImport(Document):
 			d = self.get_clean_data(d)
 			nid = d.get('nid','')
 			first_name = d.get('name', '')
+			api_key = d.get('key', '')
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
 				if len(employees) == 0:
@@ -1188,7 +1346,7 @@ class MoysrDataImport(Document):
 					sucess += 1
 			else:
 				msg = "Employee is not exist in system"
-				error_msgs += f'<tr><th>{nid}</th><td>{first_name}</td><td>{msg}</td></tr>'
+				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1
 					
 		frappe.db.commit()
@@ -1196,7 +1354,7 @@ class MoysrDataImport(Document):
 			error_msgs = f'''<table class="table table-bordered">
 							<thead>
 							<tr>
-							<th>Employee NID.</th>
+							<th>Employee Key.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
@@ -1219,18 +1377,9 @@ class MoysrDataImport(Document):
 		""",title=f'{len(data)} Experince Imported',indicator='Cs')
 
 
-	def check_link_data(self,doctype,value,filed):
-		""" Check if the records in the system
-		if there is no value we creat a new value
-		else return the name of the docype in the system
-
-		doctype: Frappe Doctype Name
-		value: record that we check
-		field: field name in the doctype
-		"""
+	def check_link_data(self,doctype,value,filed,key):
+		
 		company = frappe.defaults.get_global_default('company')
-		
-		
 		company = frappe.get_doc('Company', company)
 		abbr = company.abbr
 
@@ -1245,14 +1394,14 @@ class MoysrDataImport(Document):
 			args = {
 				f'{filed}': value
 			}
-
 			# if dictype has company field
 			if doctype in ['Department']:
 				args.update({
 					f'{filed}': value,
-					'company': company.name
+					'company': company.name,
+					'from_api':1,
+					'mosyr_key':key
 				})
-
 			new_doc = frappe.new_doc(doctype)
 			new_doc.update(args)
 			new_doc.save()
@@ -1278,25 +1427,25 @@ class MoysrDataImport(Document):
 		return clear_data
 
 
-	def table_status_imported(self,data,sucess,exists, errors,doctype_name,error_msgs = None, child_table=False):
-		msg = frappe.msgprint(f"""
-		<table class="table table-bordered">
-		<tbody>
-			<tr>
-			<th scope="row"><span class="indicator green"></span>Sucess</th>
-			<td>{sucess}</td>
-			</tr>
-			<tr>
-			<th scope="row"><span class="indicator orange"></span>Exists</th>
-			<td>{exists}</td>
-			</tr>
-			<tr>
-			<th scope="row"><span class="indicator red"></span>Errors</th>
-			<td>{errors}</td>
-			</tr>
-		</tbody>
-		</table>
-		{'' if error_msgs is None else error_msgs}
-		""",title=f'{len(data)} {doctype_name} Imported',indicator='Cs')
+	# def table_status_imported(self,data,sucess,exists, errors,doctype_name,error_msgs = None, child_table=False):
+		# msg = frappe.msgprint(f"""
+		# <table class="table table-bordered">
+		# <tbody>
+		# 	<tr>
+		# 	<th scope="row"><span class="indicator green"></span>Sucess</th>
+		# 	<td>{sucess}</td>
+		# 	</tr>
+		# 	<tr>
+		# 	<th scope="row"><span class="indicator orange"></span>Exists</th>
+		# 	<td>{exists}</td>
+		# 	</tr>
+		# 	<tr>
+		# 	<th scope="row"><span class="indicator red"></span>Errors</th>
+		# 	<td>{errors}</td>
+		# 	</tr>
+		# </tbody>
+		# </table>
+		# {'' if error_msgs is None else error_msgs}
+		# """,title=f'{len(data)} {doctype_name} Imported',indicator='Cs')
 
-		return msg
+		# return msg
