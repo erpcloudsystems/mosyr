@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-01-18 15:39:40.511766",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "passport_number",
+  "passport_issue_place",
+  "job_in_passport",
+  "passport_issue_date_g",
+  "passport_expire_date_g",
+  "passport_photo",
+  "key"
+ ],
+ "fields": [
+  {
+   "fieldname": "passport_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Passport Number"
+  },
+  {
+   "fieldname": "passport_issue_place",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Passport Issue Place"
+  },
+  {
+   "fieldname": "job_in_passport",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Job in Passport"
+  },
+  {
+   "fieldname": "passport_issue_date_g",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Passport Issue Date G"
+  },
+  {
+   "fieldname": "passport_expire_date_g",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Passport Expire Date G"
+  },
+  {
+   "fieldname": "passport_photo",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Passport Photo"
+  },
+  {
+   "fieldname": "key",
+   "fieldtype": "Read Only",
+   "label": "Key"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-01-18 15:39:40.511766",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Passport",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

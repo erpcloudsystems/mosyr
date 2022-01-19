@@ -6,12 +6,12 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import cint
 
-class EmployeeContract(Document):
+class EmployeeContract(Document): 	
 	def validate(self):
 		if self.from_api:
 			if self.nid:
-				emo_name = frappe.get_value("Employee", {'nid':self.nid}, 'name') or False
-				if emo_name: self.employee = emo_name
+				emp_name = frappe.get_value("Employee", {'nid':self.nid}) or False
+				if emp_name: self.employee = emp_name
 	
 	def on_submit(self):
 		if self.from_api:
@@ -20,4 +20,6 @@ class EmployeeContract(Document):
 				employee.date_of_joining = self.hiring_start_date_g
 				employee.valid_data = 1
 				employee.from_api = 0
-				employee.status = employee.moyser_employee_status
+				employee.status = employee.moyser_employee_status.capitalize()
+				employee.save()
+				frappe.db.commit()

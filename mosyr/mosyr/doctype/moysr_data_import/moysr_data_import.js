@@ -4,6 +4,8 @@
 frappe.ui.form.on('Moysr Data Import', {
     refresh: function(frm) {
         $('.control-input button').addClass('col-md-6 col-xs-12 btn-primary').removeClass('btn-default')
+        $(`div[data-fieldname="master_data"]`).html(`<h3>${__("Master Data")}</h3>`)
+        $(`div[data-fieldname="employee_data"]`).html(`<h3>${__("Employee Data")}</h3>`)
         $('div[data-fieldname="import_branches"]').css({
             'margin-top': '25px'
         })
@@ -50,6 +52,27 @@ frappe.ui.form.on('Moysr Data Import', {
     },
     import_deductions(frm) {
         frm.events.data_import_call(frm, 'import_deductions', "Start fetch Deductions")
+    },
+    import_identity(frm) {
+        frm.events.data_import_call(frm, 'import_identity', "Start fetch identity")
+    },
+    import_passport(frm) {
+        frm.events.data_import_call(frm, 'import_passport', "Start fetch passport")
+    },
+    import_dependents(frm) {
+        frm.events.data_import_call(frm, 'import_dependents', "Start fetch dependents")
+    },
+    import_employee_status(frm) {
+        frm.events.data_import_call(frm, 'import_employee_status', "Start fetch employee status")
+    },
+    import_experiences(frm) {
+        frm.events.data_import_call(frm, 'import_experiences', "Start fetch experiences")
+    },
+    import_identity(frm) {
+        frm.events.data_import_call(frm, 'import_identity', "Start fetch identity")
+    },
+    import_employee_qualifications(frm) {
+        frm.events.data_import_call(frm, 'import_employee_qualifications', "Start fetch qualifications")
     }
 
 });
