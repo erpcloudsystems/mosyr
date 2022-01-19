@@ -241,10 +241,8 @@ fixtures = [
 				"Employee External Work History-start_date_g",
 				"Employee External Work History-key",
 
-
-
-
-
+				"Department-mosyr_key",
+				"Department-from_api",
             ]]
         ]
     },
