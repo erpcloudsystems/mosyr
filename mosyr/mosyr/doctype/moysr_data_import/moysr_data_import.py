@@ -1222,9 +1222,9 @@ class MoysrDataImport(Document):
 							# 'attachment':d.get('attachement', ''),
 							'key':api_key
 						})
+					sucess += 1
 				employee.flags.ignore_mandatory = True
 				employee.save()
-				sucess += 1
 			else:
 				msg = "Employee is not exist in system"
 				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
