@@ -246,7 +246,6 @@ class MoysrDataImport(Document):
 	def import_employee_class(self,company_id):
 		errors = 0
 		sucess = 0
-		exists = 0 
 		data = []
 		error_msgs = ''
 
@@ -282,11 +281,8 @@ class MoysrDataImport(Document):
 			mosyr_key = d.get('key')
 			if mosyr_key :
 				if debartment_class:
-					if frappe.db.exists("Department", {"mosyr_key":mosyr_key}):
-						exists += 1
-					else:
-						self.check_link_data("Department",debartment_class,"department_name",mosyr_key)
-						sucess +=1
+					self.check_link_data("Department",debartment_class,"department_name")
+					sucess +=1
 				else:
 					msg = f"dosen't have Employee class"
 					error_msgs += f'<tr><th>{mosyr_key}</th><td>{msg}</td></tr>'
@@ -305,10 +301,6 @@ class MoysrDataImport(Document):
 			<tr>
 			<th scope="row"><span class="indicator green"></span>Sucess</th>
 			<td>{sucess}</td>
-			</tr>
-			<tr>
-			<th scope="row"><span class="indicator orange"></span>Exists</th>
-			<td>{exists}</td>
 			</tr>
 			<tr>
 			<th scope="row"><span class="indicator red"></span>Errors</th>
@@ -1377,7 +1369,7 @@ class MoysrDataImport(Document):
 		""",title=f'{len(data)} Experince Imported',indicator='Cs')
 
 
-	def check_link_data(self,doctype,value,filed,key):
+	def check_link_data(self,doctype,value,filed):
 		
 		company = frappe.defaults.get_global_default('company')
 		company = frappe.get_doc('Company', company)
@@ -1398,9 +1390,7 @@ class MoysrDataImport(Document):
 			if doctype in ['Department']:
 				args.update({
 					f'{filed}': value,
-					'company': company.name,
-					'from_api':1,
-					'mosyr_key':key
+					'company': company.name
 				})
 			new_doc = frappe.new_doc(doctype)
 			new_doc.update(args)
