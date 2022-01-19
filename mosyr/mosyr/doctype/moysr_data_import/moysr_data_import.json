@@ -91,7 +91,7 @@
   {
    "fieldname": "import_employee_class",
    "fieldtype": "Button",
-   "label": "Import Debarments"
+   "label": "Import Department"
   },
   {
    "fieldname": "master_data",
@@ -120,7 +120,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-19 15:52:11.988516",
+ "modified": "2022-01-19 15:58:44.072905",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",
