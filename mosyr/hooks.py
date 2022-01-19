@@ -14,7 +14,7 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/mosyr/css/mosyr.css"
-app_include_js = "/assets/mosyr/js/mosyr.js"
+# app_include_js = "/assets/mosyr/js/mosyr.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/mosyr/css/mosyr.css"
