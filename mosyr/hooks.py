@@ -220,6 +220,7 @@ fixtures = [
 				"Employee-employee_identity",
 				"Employee-dependent",
 				"Employee-employee_dependent",
+				"Employee-mosyr_employee_status",
 				"Employee-moyser_employee_status",
 				"Employee-employee_signature",
 
