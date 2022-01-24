@@ -16,7 +16,6 @@ class MoysrDataImport(Document):
 	def get_company_id(self):
 		return frappe.conf.company_id or False
 
-
 	@frappe.whitelist()
 	def import_branches(self,company_id):
 		errors=0
@@ -48,7 +47,7 @@ class MoysrDataImport(Document):
 			err = frappe.log_error(f"{e}", f'Import branches Faield. {status_code}!')
 			err_msg = _('An Error occurred while Import branches  see')
 			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
-			frappe.msgprint(err_msg + err_name_html)
+			frappe.throw(err_msg + err_name_html)
 			data = []
 		
 		for d in data:
@@ -80,7 +79,6 @@ class MoysrDataImport(Document):
 		</tbody>
 		</table>
 		""",title=f'{len(data)} Branches Imported',indicator='Cs')
-
 
 	@frappe.whitelist()
 	def import_employees(self,company_id):
@@ -213,14 +211,16 @@ class MoysrDataImport(Document):
 		frappe.db.commit()
 
 		if len(error_msgs) > 0:
-			error_msgs = f'''<table class="table table-bordered">
+			error_msgs = f'''<table id = "table" class="table table-bordered">
 							<thead>
 							<tr>
 							<th>Employee No.</th>
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
-							<tbody>{error_msgs}</tbody></table>'''
+							<button id = "excel" onclick="exportReportToExcel" type="button" class="btn btn-success">download Excel</button>
+							<tbody>{error_msgs}</tbody>
+							</table>'''
 
 		msg = frappe.msgprint(f"""
 		<table class="table table-bordered">
@@ -312,6 +312,73 @@ class MoysrDataImport(Document):
 		""",title=f'{len(data)} Debartment Imported',indicator='Cs')
 
 	@frappe.whitelist()
+	def import_leave(self,company_id):
+		errors=0
+		sucess=0
+		exists=0
+		data=[]
+		
+		if not company_id:
+			company_id = self.get_company_id()
+		
+		if not company_id:
+			msg = _(f"Set Company id please")
+			frappe.throw(f"{msg}.!")
+			
+		url = f'https://www.mosyr.io/en/api/migration-leaves.json?company_id={company_id}'
+		res = False
+		try:
+			res = requests.get(url)
+			res.raise_for_status()
+
+			if res.ok and res.status_code == 200:
+				data = res.json()
+		except Exception as e:
+			status_code = ''
+			errors += 1
+			if res:
+				status_code = res.status_code
+				status_code = f"error code {status_code}"
+			err = frappe.log_error(f"{e}", f'Import branches Faield. {status_code}!')
+			err_msg = _('An Error occurred while Import branches  see')
+			err_name_html = f' <a href="/app/error-log/{err.name}"><b>{err.name}</b></a>'
+			frappe.throw(err_msg + err_name_html)
+			data = []
+
+		for d in data:
+			d = self.get_clean_data(d)
+			leave_type = d.get('leave_type')
+			if frappe.db.exists('Leave Type', leave_type):
+				exists +=1
+				continue
+			else:
+				leave = frappe.new_doc("Leave Type")
+				leave.leave_type_name = leave_type
+				leave.save()
+				sucess += 1
+		frappe.db.commit()
+
+		msg = frappe.msgprint(f"""
+		<table class="table table-bordered">
+		<tbody>
+			<tr>
+			<th scope="row"><span class="indicator green"></span>Sucess</th>
+			<td>{sucess}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator orange"></span>Exists</th>
+			<td>{exists}</td>
+			</tr>
+			<tr>
+			<th scope="row"><span class="indicator red"></span>Errors</th>
+			<td>{errors}</td>
+			</tr>
+		</tbody>
+		</table>
+		""",title=f'{len(data)} Branches Imported',indicator='Cs')
+
+
+	@frappe.whitelist()
 	def import_contracts(self,company_id):
 		errors = 0
 		sucess = 0
@@ -333,7 +400,6 @@ class MoysrDataImport(Document):
 		if not company_id:
 			msg = _(f"Set Company id please")
 			frappe.throw(f"{msg}.!")
-			
 		url = f'https://www.mosyr.io/en/api/migration-contracts.json?company_id={company_id}'
 		res = False
 		try:
@@ -357,6 +423,7 @@ class MoysrDataImport(Document):
 			d = self.get_clean_data(d)
 			if not frappe.db.exists("Employee Contract", {'nid':d.get('nid')}):
 				contract = frappe.new_doc("Employee Contract")	
+				employee_name_from_employee = frappe.get_value("Employee", {'nid': d.get('nid')},'first_name')
 				### Info
 				contract.hiring_start_date_g = d.get('hiring_start_date', '')
 				contract.commision = d.get('commision', '').capitalize()
@@ -373,6 +440,7 @@ class MoysrDataImport(Document):
 				contract.job_description_file = d.get('job_description_file', '')
 				contract.notes = d.get('notes', '')
 				contract.hiring_letter = d.get('hiring_letter', '')
+				contract.employee_name = employee_name_from_employee
 
 				### Contract Financial Details
 				contract.basic_salary = d.get('basic_salary', '')
@@ -1415,27 +1483,3 @@ class MoysrDataImport(Document):
 			else:
 				clear_data[f'{k}'] = v
 		return clear_data
-
-
-	# def table_status_imported(self,data,sucess,exists, errors,doctype_name,error_msgs = None, child_table=False):
-		# msg = frappe.msgprint(f"""
-		# <table class="table table-bordered">
-		# <tbody>
-		# 	<tr>
-		# 	<th scope="row"><span class="indicator green"></span>Sucess</th>
-		# 	<td>{sucess}</td>
-		# 	</tr>
-		# 	<tr>
-		# 	<th scope="row"><span class="indicator orange"></span>Exists</th>
-		# 	<td>{exists}</td>
-		# 	</tr>
-		# 	<tr>
-		# 	<th scope="row"><span class="indicator red"></span>Errors</th>
-		# 	<td>{errors}</td>
-		# 	</tr>
-		# </tbody>
-		# </table>
-		# {'' if error_msgs is None else error_msgs}
-		# """,title=f'{len(data)} {doctype_name} Imported',indicator='Cs')
-
-		# return msg
