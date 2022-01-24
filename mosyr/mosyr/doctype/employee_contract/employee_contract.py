@@ -23,3 +23,4 @@ class EmployeeContract(Document):
 				employee.status = employee.moyser_employee_status.capitalize()
 				employee.save()
 				frappe.db.commit()
+	
