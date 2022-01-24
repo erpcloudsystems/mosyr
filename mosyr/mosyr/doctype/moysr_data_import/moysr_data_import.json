@@ -24,7 +24,8 @@
   "column_break_15",
   "import_benefits",
   "import_deductions",
-  "import_contracts"
+  "import_contracts",
+  "import_leave"
  ],
  "fields": [
   {
@@ -114,13 +115,18 @@
   {
    "fieldname": "column_break_15",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_leave",
+   "fieldtype": "Button",
+   "label": "Import Leave"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-19 16:37:11.178825",
+ "modified": "2022-01-20 15:42:10.137256",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",
