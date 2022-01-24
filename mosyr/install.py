@@ -2,7 +2,7 @@ import frappe
 
 def after_install():
     create_salary_components()
-    create_salary_structure()
+    # create_salary_structure()
     frappe.db.commit()
 
 def create_salary_components():
@@ -29,7 +29,6 @@ def create_salary_components():
             salary_component_doc.save()
 
 def create_salary_structure():
-    print('[*] Add Salary Structure')
     components = [
         {'component': 'Housing',               'abbr': 'H'},
         {'component': 'Allowance Housing',     'abbr':'AH'},
