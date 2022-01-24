@@ -606,7 +606,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": " Contract Status",
-   "options": "\nvalid\nnot-valid"
+   "options": "\nValid\nNot Valid"
   },
   {
    "fetch_from": "employee.first_name",
@@ -618,7 +618,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-20 17:30:14.859451",
+ "modified": "2022-01-24 13:57:05.177311",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",
