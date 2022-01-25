@@ -100,7 +100,8 @@
   "allowance_other_schdl_2",
   "from_api",
   "nid",
-  "amended_from"
+  "amended_from",
+  "contract_file"
  ],
  "fields": [
   {
@@ -613,12 +614,17 @@
    "fieldname": "employee_name",
    "fieldtype": "Read Only",
    "label": "Employee Name"
+  },
+  {
+   "fieldname": "contract_file",
+   "fieldtype": "Attach",
+   "label": "Contract File"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-24 13:57:05.177311",
+ "modified": "2022-01-24 17:31:00.377119",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",
