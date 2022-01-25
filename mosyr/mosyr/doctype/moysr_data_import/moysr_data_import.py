@@ -1,15 +1,15 @@
 # Copyright (c) 2022, AnvilERP and contributors
 # For license information, please see license.txt
 
-from cgitb import lookup
-from ftplib import error_temp
-from operator import le
-from signal import pthread_kill
-from tkinter.messagebox import NO
+import csv
+import os
 import frappe
 import requests
 from frappe.model.document import Document
 from datetime import datetime
+from frappe import _
+from frappe.utils.data import cint, cstr
+import frappe
 from frappe import _
 
 class MoysrDataImport(Document):
@@ -250,6 +250,7 @@ class MoysrDataImport(Document):
 				contract.notes = d.get('notes', '')
 				contract.hiring_letter = d.get('hiring_letter', '')
 				contract.employee_name = employee_name_from_employee
+				# contract.contract_file = d.get('attached_documents')
 
 				### Contract Financial Details
 				contract.basic_salary = d.get('basic_salary', '')
@@ -318,6 +319,10 @@ class MoysrDataImport(Document):
 				contract.from_api = 1
 				contract.nid = d.get('nid', '')
 				contract.comment = d.get('comments', '')
+				contract_name = contract.name
+				# print(d.get('hiring_letter'))
+				if d.get('hiring_letter'):
+					self.upload_file("Employee Contract", contract_name, 'hiring_letter', d.get('hiring_letter'), d.get('nid'),d.get('hiring_letter'))
 
 				msg = _('Employee is not defined in system')
 				if not frappe.db.exists("Employee", {'nid': d.get('nid')}) :
@@ -905,6 +910,7 @@ class MoysrDataImport(Document):
 			data = []
 		return data ,errors
 
+	@frappe.whitelist(allow_guest=True)
 	def handle_error(self,error_msgs,sucess,errors,data,exists):
 		if exists:
 			exists =f'<tr><th scope="row"><span class="indicator orange"></span>Exists</th><td>{exists}</td></tr>'
@@ -918,11 +924,10 @@ class MoysrDataImport(Document):
 							<th>Name</th>
 							<th>Error</th>
 							</tr></thead>
-							<button id = "excel" onclick="exportReportToExcel" type="button" class="btn btn-success">download Excel</button>
 							<tbody>{error_msgs}</tbody>
-							</table>'''
-
-		frappe.msgprint(f"""
+							</table>
+							'''
+		msg = f"""
 		<table class="table table-bordered">
 		<tbody>
 			<tr>
@@ -937,4 +942,55 @@ class MoysrDataImport(Document):
 		</tbody>
 		</table>
 		{'' if error_msgs is None else error_msgs}
-		""",title=f'{len(data)} Employess Imported',indicator='Cs')
+		"""
+		frappe.msgprint(msg,title=f'{len(data)} Employess Imported',indicator='Cs',
+		primary_action={
+					'label': _('Export Error Log'),
+					'server_action': 'mosyr.mosyr.doctype.moysr_data_import.moysr_data_import.write_xlsx',
+					'args': {
+						'data': [['A', 'B'], ['errra', 'errb']]
+					}
+				}
+		)
+
+		# self.write_xlsx(msg,"test")
+
+	@frappe.whitelist(allow_guest=True)
+	def upload_file(self,doctype_name,_docname,_filed_name,url,file_name,_content):
+		files = []
+		is_private = 0
+		doctype = doctype_name
+		docname = _docname
+		fieldname = _filed_name
+		file_url = url
+		folder = 'Home'
+		filename = file_name
+		content = _content
+
+		frappe.local.uploaded_file = content
+		frappe.local.uploaded_filename = filename
+
+		ret = frappe.get_doc({
+			"doctype": "File",
+			"attached_to_doctype": doctype,
+			"attached_to_name": docname,
+			"attached_to_field": fieldname,
+			"folder": folder,
+			"file_name": filename,
+			"file_url": file_url,
+			"is_private": cint(is_private),
+			"content": content
+		})
+		ret.save()
+		# return ret
+
+@frappe.whitelist()
+def write_xlsx(args):
+	import json
+	from frappe.utils.xlsxutils import build_xlsx_response
+	from frappe.core.doctype.data_import.data_import import download_template
+	args = json.loads(args)
+	data = args.get('data', [])
+	filename = 'error_log'
+	build_xlsx_response(data, filename)
+	download_template("Employee")
