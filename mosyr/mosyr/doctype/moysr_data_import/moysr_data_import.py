@@ -331,7 +331,7 @@ class MoysrDataImport(Document):
 							r = requests.get(file_url)
 							with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
 								outfile.write(r.content)
-							self.upload_file("Employee Contract", contract_name, 'contract_file', file_output_name, file_output_name)
+							# self.upload_file("Employee Contract", contract_name, 'contract_file', file_output_name, file_output_name)
 						except Exception as e:
 							print(e)
 
@@ -342,7 +342,7 @@ class MoysrDataImport(Document):
 						r = requests.get(file_url)
 						with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
 							outfile.write(r.content)
-						self.upload_file("Employee Contract", contract_name, 'job_description_file', file_output_name, file_output_name)
+						# self.upload_file("Employee Contract", contract_name, 'job_description_file', file_output_name, file_output_name)
 					except Exception as e:
 						print(e)
 
@@ -353,7 +353,7 @@ class MoysrDataImport(Document):
 						r = requests.get(file_url)
 						with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
 							outfile.write(r.content)
-						self.upload_file("Employee Contract", contract_name, 'hiring_letter', file_output_name, file_output_name)
+						# self.upload_file("Employee Contract", contract_name, 'hiring_letter', file_output_name, file_output_name)
 					except Exception as e:
 						print(e)
 
@@ -510,7 +510,7 @@ class MoysrDataImport(Document):
 								r = requests.get(file_url)
 								with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
 									outfile.write(r.content)
-									self.upload_file("Employee", employee.name, 'id_photo', file_output_name, file_output_name)
+									# self.upload_file("Employee", employee.name, 'id_photo', file_output_name, file_output_name)
 							except Exception as e:
 								print(e)		
 					if api_key_exists_at != -1:
