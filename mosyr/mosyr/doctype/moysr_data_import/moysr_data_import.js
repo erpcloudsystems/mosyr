@@ -80,6 +80,9 @@ frappe.ui.form.on('Moysr Data Import', {
     },
     import_leave(frm) {
         frm.events.data_import_call(frm, 'import_leave', "Start fetch leave")
+    },
+    import_letter(frm) {
+        frm.events.data_import_call(frm, 'import_letter', "Start fetch letter")
     }
 
 });
