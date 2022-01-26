@@ -1,16 +1,15 @@
 # Copyright (c) 2022, AnvilERP and contributors
 # For license information, please see license.txt
 
-import csv
-import os
 import frappe
 import requests
 from frappe.model.document import Document
 from datetime import datetime
 from frappe import _
-from frappe.utils.data import cint, cstr
 import frappe
 from frappe import _
+import os
+
 
 class MoysrDataImport(Document):
 
@@ -246,11 +245,9 @@ class MoysrDataImport(Document):
 				contract.commision_precentage = d.get('commision_precentage', '')
 				contract.leaves_consumer_balance = d.get('leaves_consumed_balance', '')
 				contract.over_time_included = d.get('over_time_included', '').capitalize()
-				contract.job_description_file = d.get('job_description_file', '')
 				contract.notes = d.get('notes', '')
 				contract.hiring_letter = d.get('hiring_letter', '')
 				contract.employee_name = employee_name_from_employee
-				# contract.contract_file = d.get('attached_documents')
 
 				### Contract Financial Details
 				contract.basic_salary = d.get('basic_salary', '')
@@ -320,9 +317,45 @@ class MoysrDataImport(Document):
 				contract.nid = d.get('nid', '')
 				contract.comment = d.get('comments', '')
 				contract_name = contract.name
-				# print(d.get('hiring_letter'))
-				if d.get('hiring_letter'):
-					self.upload_file("Employee Contract", contract_name, 'hiring_letter', d.get('hiring_letter'), d.get('nid'),d.get('hiring_letter'))
+				contract.job_description_file = d.get('job_description_file', '')
+				contract.contract_file = d.get('attached_documents')
+
+				if d.get('attached_documents') != None:
+					for idx,co in enumerate(d.get('attached_documents')):
+						contract.append('contract_files',{
+						'contract_file':co
+						})
+						try:
+							file_url = co
+							file_output_name = f'{idx}-{employee_name_from_employee}-contract_file.pdf'
+							r = requests.get(file_url)
+							with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
+								outfile.write(r.content)
+							self.upload_file("Employee Contract", contract_name, 'contract_file', file_output_name, file_output_name)
+						except Exception as e:
+							print(e)
+
+				if d.get('job_description_file') != [""]:
+					try:
+						file_url = d.get('job_description_file')
+						file_output_name = f'{employee_name_from_employee}-job_description_file.pdf'
+						r = requests.get(file_url)
+						with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
+							outfile.write(r.content)
+						self.upload_file("Employee Contract", contract_name, 'job_description_file', file_output_name, file_output_name)
+					except Exception as e:
+						print(e)
+
+				if d.get('hiring_letter') != [""]:
+					try:
+						file_url = d.get('hiring_letter')
+						file_output_name = f'{employee_name_from_employee}-hiring_letter.pdf'
+						r = requests.get(file_url)
+						with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
+							outfile.write(r.content)
+						self.upload_file("Employee Contract", contract_name, 'hiring_letter', file_output_name, file_output_name)
+					except Exception as e:
+						print(e)
 
 				msg = _('Employee is not defined in system')
 				if not frappe.db.exists("Employee", {'nid': d.get('nid')}) :
@@ -466,6 +499,20 @@ class MoysrDataImport(Document):
 								api_key_exists = True
 								api_key_exists_at = k.idx
 				if api_key_exists:
+					photo  = ''
+					if d.get('id_photo') != None :
+						for ph in d.get('id_photo') :
+							print(ph)  
+							photo = ph.get('uri')
+							try:
+								file_url = ph.get('uri')
+								file_output_name = f'{employee.name}-id_photo.pdf'
+								r = requests.get(file_url)
+								with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
+									outfile.write(r.content)
+									self.upload_file("Employee", employee.name, 'id_photo', file_output_name, file_output_name)
+							except Exception as e:
+								print(e)		
 					if api_key_exists_at != -1:
 						current_data = employee.identity[api_key_exists_at-1]
 						current_data.id_type = lookup_value[d.get('id_type', '')] 
@@ -476,9 +523,23 @@ class MoysrDataImport(Document):
 						current_data.border_entry_port = d.get('border_entry_port', '')
 						current_data.borders_entry_date_g = d.get('border_entry_date', '')
 						current_data.border_entry_number = d.get('border_entry_number', '')
-						current_data.id_photo = d.get('id_photo', '')
+						current_data.id_photo = photo
 						sucess += 1
 				else:
+					photo  = ''
+					if d.get('id_photo') != None :
+						for ph in d.get('id_photo') : 
+							photo = ph.get('uri')
+							print(photo)  
+							try:
+								file_url = ph.get('uri')
+								file_output_name = f'{employee.name}-id_photo.pdf'
+								r = requests.get(file_url)
+								with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
+									outfile.write(r.content)
+									self.upload_file("Employee", employee.name, 'id_photo', file_output_name, file_output_name)
+							except Exception as e:
+								print(e)		
 					employee.append('identity', {
 						'id_type':lookup_value[d.get('id_type', '')] ,
 						'nautional_id_number': d.get('id_number', ''),
@@ -488,9 +549,21 @@ class MoysrDataImport(Document):
 						'border_entry_port':d.get('border_entry_port', ''),
 						'borders_entry_date_g':d.get('border_entry_date', ''),
 						'border_entry_number':d.get('border_entry_number', ''),
-						'id_photo':d.get('id_photo', ''),
+						'id_photo':photo,
 						'key': api_key
 					})
+					if d.get('id_photo', '') != None:
+							for ph in d.get('id_photo', ''):
+								try:
+									file_url = ph.get('uri')
+									file_output_name = f'{employee.name}-id_photo.pdf'
+									r = requests.get(file_url)
+									with open(os.path.join('/workspace/development/frappe-bench/sites/mosyr.localhost/private/files',file_output_name), 'wb') as outfile:
+										outfile.write(r.content)
+									self.upload_file("Employee", employee.name, 'id_photo', file_output_name, file_output_name)
+								except Exception as e:
+									print(e)
+
 					employee.flags.ignore_mandatory = True
 					employee.save()
 					sucess += 1
@@ -834,6 +907,58 @@ class MoysrDataImport(Document):
 		frappe.db.commit()
 		self.handle_error(error_msgs,sucess,errors,data,exists=None)
 
+	@frappe.whitelist()
+	def import_letter(self,company_id):
+		errors=0
+		sucess=0
+		exists=0
+		error_msgs=''
+		lookup_value = {
+			'yes' : 'Yes',
+			'no'  : 'No',
+			'definition' : 'Definition',
+			'letter of disclaimer':'Letter of Disclaimer',
+			'letter final clearance':'Letter final Clearance',
+			'experience certificate':'Experience Certificate',
+			'alert 1':'Alert 1',
+			'alert 2':'Alert 2',
+			'alert 3':'Alert 3',
+			'bo' : 'Both',
+			'both' : 'Both'
+		}
+		
+		path = 'https://www.mosyr.io/en/api/migration-letters.json?company_id='
+		data,errors = self.call_api(path,company_id,'Letter',errors)
+		for d in data:
+			nid = d.get('nid')
+			d = self.get_clean_data(d)
+			if frappe.db.exists("Employee", {"nid":nid}):
+				employee = frappe.get_doc("Employee",{'nid':nid})
+				letter = frappe.new_doc("Letter")
+				letter.the_purpose_of_the_letter = d.get('name','')
+				letter.employee = employee.name
+				letter.employee_name = employee.first_name or employee.full_name_en
+				letter.letter_date = d.get('Letter Date G','')
+				letter.letter_to = d.get('letter_to','')
+				letter.number = d.get('letter_number','')
+				letter.letter_type = lookup_value[d.get('letter_type','')]
+				letter.letterhead = lookup_value[d.get('letter_head','')]
+				letter.language_type = lookup_value[d.get('language_type','')]
+				letter.include_salary = lookup_value[d.get('include_salary','')]
+				attach = d.get('attachement','')
+				if attach != '':
+					letter.attachment = attach.get('uri')
+				sucess += 1
+				letter.save()
+				frappe.db.commit()
+			else:
+				msg = _('This user is not exist in system')
+				error_msgs += f'<tr><th>{nid}</th><td>{msg}</td></tr>'
+				errors += 1
+				continue
+		frappe.db.commit()
+		self.handle_error(error_msgs,sucess,errors,data,exists)
+
 	def check_link_data(self,doctype,value,filed):
 		
 		company = frappe.defaults.get_global_default('company')
@@ -910,7 +1035,7 @@ class MoysrDataImport(Document):
 			data = []
 		return data ,errors
 
-	@frappe.whitelist(allow_guest=True)
+	@frappe.whitelist()
 	def handle_error(self,error_msgs,sucess,errors,data,exists):
 		if exists:
 			exists =f'<tr><th scope="row"><span class="indicator orange"></span>Exists</th><td>{exists}</td></tr>'
@@ -953,33 +1078,17 @@ class MoysrDataImport(Document):
 				}
 		)
 
-		# self.write_xlsx(msg,"test")
-
-	@frappe.whitelist(allow_guest=True)
-	def upload_file(self,doctype_name,_docname,_filed_name,url,file_name,_content):
-		files = []
-		is_private = 0
-		doctype = doctype_name
-		docname = _docname
-		fieldname = _filed_name
-		file_url = url
-		folder = 'Home'
-		filename = file_name
-		content = _content
-
-		frappe.local.uploaded_file = content
-		frappe.local.uploaded_filename = filename
-
+	@frappe.whitelist()
+	def upload_file(self,doctype_name,_docname,_filed_name,url,file_name):
 		ret = frappe.get_doc({
 			"doctype": "File",
-			"attached_to_doctype": doctype,
-			"attached_to_name": docname,
-			"attached_to_field": fieldname,
-			"folder": folder,
-			"file_name": filename,
-			"file_url": file_url,
-			"is_private": cint(is_private),
-			"content": content
+			"attached_to_doctype": doctype_name,
+			"attached_to_name": _docname,
+			"attached_to_field": _filed_name,
+			"folder": "Home",
+			"file_name": file_name,
+			"file_url": url,
+			"is_private": 1
 		})
 		ret.save()
 		# return ret
