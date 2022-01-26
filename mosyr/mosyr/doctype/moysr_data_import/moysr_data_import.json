@@ -25,7 +25,8 @@
   "import_benefits",
   "import_deductions",
   "import_contracts",
-  "import_leave"
+  "import_leave",
+  "import_letter"
  ],
  "fields": [
   {
@@ -120,13 +121,18 @@
    "fieldname": "import_leave",
    "fieldtype": "Button",
    "label": "Import Leave"
+  },
+  {
+   "fieldname": "import_letter",
+   "fieldtype": "Button",
+   "label": "Import Letter"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-20 15:42:10.137256",
+ "modified": "2022-01-26 15:31:35.391206",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",
