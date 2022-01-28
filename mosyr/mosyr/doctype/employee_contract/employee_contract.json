@@ -9,6 +9,7 @@
   "info",
   "employee",
   "vacation_period",
+  "employee_name",
   "vacation_travel_tickets",
   "over_time_included",
   "hiring_letter",
@@ -99,7 +100,9 @@
   "allowance_other_schdl_2",
   "from_api",
   "nid",
-  "amended_from"
+  "amended_from",
+  "contract_files_section",
+  "contract_files"
  ],
  "fields": [
   {
@@ -155,13 +158,13 @@
   {
    "fieldname": "hiring_start_date_g",
    "fieldtype": "Date",
-   "label": "Hiring Start Date G",
+   "label": "Hiring Start Date",
    "reqd": 1
   },
   {
    "fieldname": "contract_end_g",
    "fieldtype": "Date",
-   "label": "Contract End G"
+   "label": "Contract End"
   },
   {
    "fieldname": "column_break_12",
@@ -170,8 +173,10 @@
   {
    "fieldname": "contract_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": " Contract Type",
-   "options": "\nMarried\nNotmarried\nTemporary\nLump\nThe indefinite\nFixed term"
+   "options": "\nMarried\nNotmarried\nTemporary\nLump\nThe indefinite\nFixed term",
+   "reqd": 1
   },
   {
    "fieldname": "over_time_included",
@@ -186,7 +191,7 @@
   {
    "fieldname": "contract_start_g",
    "fieldtype": "Date",
-   "label": "Contract Start G"
+   "label": "Contract Start"
   },
   {
    "fieldname": "commision_precentage",
@@ -265,7 +270,7 @@
   {
    "fieldname": "trans_start_date_g",
    "fieldtype": "Date",
-   "label": "Trans Start Date G"
+   "label": "Trans Start Date"
   },
   {
    "fieldname": "trans_amount_type",
@@ -280,7 +285,7 @@
   {
    "fieldname": "trans_end_date_g",
    "fieldtype": "Date",
-   "label": "Trans End Date G"
+   "label": "Trans End Date"
   },
   {
    "fieldname": "trans_amount_value",
@@ -317,7 +322,7 @@
   {
    "fieldname": "housing_start_g",
    "fieldtype": "Date",
-   "label": "Housing Start G"
+   "label": "Housing Start"
   },
   {
    "fieldname": "house_amount_type",
@@ -332,7 +337,7 @@
   {
    "fieldname": "housing_end_date_g",
    "fieldtype": "Date",
-   "label": "Housing End Date G"
+   "label": "Housing End Date"
   },
   {
    "fieldname": "house_amount_value",
@@ -369,7 +374,7 @@
   {
    "fieldname": "phone_start_date_g",
    "fieldtype": "Date",
-   "label": "Phone Start Date G"
+   "label": "Phone Start Date"
   },
   {
    "fieldname": "phone_amount_type",
@@ -384,7 +389,7 @@
   {
    "fieldname": "phone_end_date_g",
    "fieldtype": "Date",
-   "label": "Phone End Date G"
+   "label": "Phone End Date"
   },
   {
    "fieldname": "phone_amount_value",
@@ -421,7 +426,7 @@
   {
    "fieldname": "natureow_start_date_g",
    "fieldtype": "Date",
-   "label": "Natureow Start Date G"
+   "label": "Natureow Start Date"
   },
   {
    "fieldname": "natureow_amount_type",
@@ -436,7 +441,7 @@
   {
    "fieldname": "natureow_end_date_g",
    "fieldtype": "Date",
-   "label": "Natureow End Date G"
+   "label": "Natureow End Date"
   },
   {
    "fieldname": "natureow_amount_value",
@@ -467,7 +472,7 @@
   {
    "fieldname": "feeding_start_date_g",
    "fieldtype": "Date",
-   "label": "Feeding Start Date G"
+   "label": "Feeding Start Date"
   },
   {
    "fieldname": "feed_amount_type",
@@ -482,7 +487,7 @@
   {
    "fieldname": "feeding_end_date_g",
    "fieldtype": "Date",
-   "label": "Feeding End Date G"
+   "label": "Feeding End Date"
   },
   {
    "fieldname": "feed_amount_value",
@@ -519,7 +524,7 @@
   {
    "fieldname": "other_start_date_g",
    "fieldtype": "Date",
-   "label": "Other Start Date G"
+   "label": "Other Start Date"
   },
   {
    "fieldname": "other_amount_type",
@@ -534,7 +539,7 @@
   {
    "fieldname": "other_end_date_g",
    "fieldtype": "Date",
-   "label": "Other End Date G"
+   "label": "Other End Date"
   },
   {
    "fieldname": "other_amount_value",
@@ -578,12 +583,14 @@
    "default": "0",
    "fieldname": "from_api",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "from_api",
    "read_only": 1
   },
   {
    "fieldname": "nid",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "nid",
    "read_only": 1
   },
@@ -599,14 +606,32 @@
   {
    "fieldname": "contract_status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": " Contract Status",
-   "options": "\nvalid\nnot-valid"
+   "options": "\nValid\nNot Valid"
+  },
+  {
+   "fetch_from": "employee.first_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "contract_files",
+   "fieldtype": "Table",
+   "label": "Contract Files",
+   "options": "Contract Files"
+  },
+  {
+   "fieldname": "contract_files_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Files"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-13 11:56:23.110903",
+ "modified": "2022-01-26 13:43:22.091324",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",

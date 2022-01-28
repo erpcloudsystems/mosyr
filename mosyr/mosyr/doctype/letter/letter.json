@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{letter} - {#####}",
+ "creation": "2022-01-26 15:06:49.680385",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "the_purpose_of_the_letter",
+  "number",
+  "include_salary",
+  "column_break_4",
+  "letter_to",
+  "letter_date",
+  "include_detailes_salary",
+  "column_break_8",
+  "employee",
+  "employee_name",
+  "letterhead",
+  "column_break_12",
+  "letter_type",
+  "language_type",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "the_purpose_of_the_letter",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "The purpose of the Letter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "number",
+   "fieldtype": "Int",
+   "label": "Number"
+  },
+  {
+   "fieldname": "include_salary",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Include Salary",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "letter_to",
+   "fieldtype": "Data",
+   "label": "Letter To"
+  },
+  {
+   "fieldname": "letter_date",
+   "fieldtype": "Date",
+   "label": "Letter Date"
+  },
+  {
+   "fieldname": "include_detailes_salary",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Include Detailes Salary",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "letterhead",
+   "fieldtype": "Select",
+   "label": "Letterhead",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "letter_type",
+   "fieldtype": "Select",
+   "label": " Letter Type",
+   "options": "\nDefinition\nLetter of Disclaimer\nLetter final Clearance\nExperience Certificate\nAlert 1\nAlert 2\nAlert 3",
+   "reqd": 1
+  },
+  {
+   "fieldname": "language_type",
+   "fieldtype": "Select",
+   "label": "Language Type",
+   "options": "\nArabic\nEnglish\nBoth",
+   "reqd": 1
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-01-26 15:45:56.331336",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Letter",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
