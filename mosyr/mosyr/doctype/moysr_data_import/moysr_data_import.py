@@ -204,21 +204,30 @@ class MoysrDataImport(Document):
 		path = 'https://www.mosyr.io/en/api/migration-leaves.json?company_id='
 		data,errors = self.call_api(path,company_id,'Leave Type',errors)
 
-		for d in data:
-			d = self.get_clean_data(d)
-			leave_type = d.get('leave_type')
-			key = d.get('key')
-			if frappe.db.exists('Leave Type', leave_type):
-				exists +=1
-				continue
-			else:
-				leave = frappe.new_doc("Leave Type")
-				leave.leave_type_name = leave_type
-				leave.key = key
-				leave.save()
-				sucess += 1
+		leave_type_set = set()
+		if len(data) >0:
+			for d in data:
+				d = self.get_clean_data(d)
+				leave_type = d.get('leave_type')
+				leave_type_set.add(leave_type)
+				key = d.get('key')
+			for s in leave_type_set:
+				if frappe.db.exists('Leave Type', s):
+					exists +=1
+					continue
+				else:
+					if s in('annual_vacation'):
+						is_lwp = 1
+					else:
+						is_lwp = 0
+					leave = frappe.new_doc("Leave Type")
+					leave.leave_type_name = s
+					leave.key = key
+					leave.is_lwp = is_lwp
+					leave.save()
+					sucess += 1
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists)
+		self.handle_error(error_msgs,sucess,errors,leave_type_set,exists)
 
 	@frappe.whitelist()
 	def import_contracts(self,company_id):
@@ -1021,6 +1030,64 @@ class MoysrDataImport(Document):
 				error_msgs += f'<tr><th>{nid}</th><td>{msg}</td></tr>'
 				errors += 1
 				continue
+		frappe.db.commit()
+		self.handle_error(error_msgs,sucess,errors,data,exists)
+
+	@frappe.whitelist()
+	def import_leave_application(self,company_id):
+		errors=0
+		sucess=0
+		exists=0
+		error_msgs = ''
+		path = 'https://www.mosyr.io/en/api/migration-leaves.json?company_id='
+		data,errors = self.call_api(path,company_id,'Leave Application',errors)
+
+		for d in data:
+			d = self.get_clean_data(d)
+			key = d.get('key')
+			nid = d.get('nid')
+			leave_attachments = ''
+			from_date = d.get('leave_start_date','')
+			to_date = d.get('leave_end_date','')
+			leave_type = d.get('leave_type','')
+			employee_name_from_mosyr = d.get('name')
+			if d.get('leave_attachments') not in (None, '', []):
+				x = d.get('leave_attachments')
+				splitted = x.split()
+				str_match = [s for s in splitted if "href=" in s][0]
+				split1 = str_match.split('"',-1)[1]
+				leave_attachments = split1
+			else:
+				continue
+			if nid:
+				employees = frappe.get_list("Employee",filters={"nid":nid})
+				if len(employees) > 0:
+					employees = employees[0]
+					if employees.get('status') == 'Active':
+						name,employee_name = frappe.db.get_value('Employee', {'nid': nid}, ['name', 'employee_name'])
+						if len(employees) == 0:
+							msg = "Employee is not exist in system"
+							error_msgs += f'<tr><th>{nid}</th><td>{employee_name_from_mosyr}</td><td>{msg}</td></tr>'
+							errors += 1
+							continue
+						else:
+							if frappe.db.exists('Leave Application', {'key':key}):
+								exists +=1
+								continue
+							else:
+								leave = frappe.new_doc("Leave Application")
+								leave.leave_type_name = leave_type
+								leave.employee = name
+								leave.employee_name = employee_name
+								leave.from_date = from_date
+								leave.to_date = to_date
+								leave.key = key
+								leave.status = "Approved"
+								leave.leave_attachments = leave_attachments
+								file_output_name = f'{name}-leave application'
+								self.upload_file("Leave Application",'', 'leave_attachments', file_output_name, leave_attachments)
+								leave.save()
+								sucess += 1
 		frappe.db.commit()
 		self.handle_error(error_msgs,sucess,errors,data,exists)
 
