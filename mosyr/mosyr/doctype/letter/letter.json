@@ -21,7 +21,8 @@
   "column_break_12",
   "letter_type",
   "language_type",
-  "attachment"
+  "attachment",
+  "key"
  ],
  "fields": [
   {
@@ -112,11 +113,18 @@
    "fieldname": "attachment",
    "fieldtype": "Attach",
    "label": "Attachment"
+  },
+  {
+   "fieldname": "key",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Key",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-26 15:45:56.331336",
+ "modified": "2022-01-30 12:15:44.746763",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Letter",
