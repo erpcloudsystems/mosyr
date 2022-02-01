@@ -246,6 +246,9 @@ fixtures = [
 
 				"Department-mosyr_key",
 				"Department-from_api",
+
+				"Leave Application-key",
+				"Leave Application-leave_attachments",
             ]]
         ]
     },
