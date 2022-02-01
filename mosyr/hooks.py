@@ -196,6 +196,7 @@ fixtures = [
 				"Loan Application-workflow_state",
 				
 				"Leave Application-workflow_state",
+				"Leave Type-key",
 
 				"Employee-handicap",
 				"Employee-birth_place",
@@ -223,6 +224,7 @@ fixtures = [
 				"Employee-mosyr_employee_status",
 				"Employee-moyser_employee_status",
 				"Employee-employee_signature",
+				"Employee-key",
 
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
