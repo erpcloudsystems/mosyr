@@ -21,7 +21,8 @@
   "column_break_3",
   "date",
   "notes",
-  "from_api"
+  "from_api",
+  "key"
  ],
  "fields": [
   {
@@ -109,11 +110,18 @@
    "hidden": 1,
    "label": "From API",
    "read_only": 1
+  },
+  {
+   "fieldname": "key",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Key",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-20 17:27:23.626517",
+ "modified": "2022-01-30 12:12:39.373709",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Deductions",
