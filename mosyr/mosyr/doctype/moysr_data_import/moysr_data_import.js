@@ -79,7 +79,10 @@ frappe.ui.form.on('Moysr Data Import', {
         frm.events.data_import_call(frm, 'import_employee_class', "Start fetch employee classes")
     },
     import_leave(frm) {
-        frm.events.data_import_call(frm, 'import_leave', "Start fetch leave")
+        frm.events.data_import_call(frm, 'import_leave', "Start fetch leave Type")
+    },
+    import_leave_application(frm) {
+        frm.events.data_import_call(frm, 'import_leave_application', "Start fetch leave")
     },
     import_letter(frm) {
         frm.events.data_import_call(frm, 'import_letter', "Start fetch letter")
