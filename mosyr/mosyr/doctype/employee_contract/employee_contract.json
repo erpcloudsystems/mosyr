@@ -100,6 +100,7 @@
   "allowance_other_schdl_2",
   "from_api",
   "nid",
+  "key",
   "amended_from",
   "contract_files_section",
   "contract_files"
@@ -626,12 +627,19 @@
    "fieldname": "contract_files_section",
    "fieldtype": "Section Break",
    "label": "Contract Files"
+  },
+  {
+   "fieldname": "key",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Key",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-26 13:43:22.091324",
+ "modified": "2022-01-30 12:07:40.992817",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",

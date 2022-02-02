@@ -54,13 +54,15 @@
   {
    "fieldname": "key",
    "fieldtype": "Read Only",
-   "label": "Key"
+   "hidden": 1,
+   "label": "Key",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-01-18 15:39:40.511766",
+ "modified": "2022-02-01 16:10:44.667470",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Passport",

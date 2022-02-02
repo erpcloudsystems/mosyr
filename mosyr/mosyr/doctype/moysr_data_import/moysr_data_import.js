@@ -6,6 +6,7 @@ frappe.ui.form.on('Moysr Data Import', {
         $('.control-input button').addClass('col-md-6 col-xs-12 btn-primary').removeClass('btn-default')
         $(`div[data-fieldname="master_data"]`).html(`<h3>${__("Master Data")}</h3>`)
         $(`div[data-fieldname="employee_data"]`).html(`<h3>${__("Employee Data")}</h3>`)
+        $(`div[data-fieldname="leave_data"]`).html(`<h3>${__("Leave Data")}</h3>`)
         // $(`div[data-fieldname="employee_details"]`).html(`<h3>${__("Employee Details")}</h3>`)
         // $('div[data-fieldname="import_branches"]').css({
         //     'margin-top': '25px'
@@ -79,7 +80,10 @@ frappe.ui.form.on('Moysr Data Import', {
         frm.events.data_import_call(frm, 'import_employee_class', "Start fetch employee classes")
     },
     import_leave(frm) {
-        frm.events.data_import_call(frm, 'import_leave', "Start fetch leave")
+        frm.events.data_import_call(frm, 'import_leave', "Start fetch leave Type")
+    },
+    import_leave_application(frm) {
+        frm.events.data_import_call(frm, 'import_leave_application', "Start fetch leave")
     },
     import_letter(frm) {
         frm.events.data_import_call(frm, 'import_letter', "Start fetch letter")
