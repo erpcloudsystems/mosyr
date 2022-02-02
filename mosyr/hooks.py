@@ -283,18 +283,9 @@ fixtures = [
 			"filters": [
 				["name", "in", [
 					"Employee-employee_name-hidden",
-					"Employee-employee_name-in_global_search",
-					"Employee-employee_name-in_standard_filter",
-					"Employee-employee_name-in_list_view",
-					"Employee-last_name-allow_in_quick_entry",
 					"Employee-last_name-hidden",
-					"Employee-middle_name-allow_in_quick_entry",
 					"Employee-middle_name-hidden",
-					"Employee-first_name-label",
-					"Employee-employee_number-reqd",
-					"Employee-employee_number-hidden",
-					"Employee-naming_series-hidden",
-					"Employee-naming_series-reqd"
+					"Employee-first_name-label"
 				]]
 			]
 	},
