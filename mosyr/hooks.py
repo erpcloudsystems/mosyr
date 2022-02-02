@@ -226,6 +226,20 @@ fixtures = [
 				"Employee-employee_signature",
 				"Employee-key",
 
+				"Employee-employee_name-hidden",
+				"Employee-employee_name-in_global_search",
+				"Employee-employee_name-in_standard_filter",
+				"Employee-employee_name-in_list_view",
+				"Employee-last_name-allow_in_quick_entry",
+				"Employee-last_name-hidden",
+				"Employee-middle_name-allow_in_quick_entry",
+				"Employee-middle_name-hidden",
+				"Employee-first_name-label",
+				"Employee-employee_number-reqd",
+				"Employee-employee_number-hidden",
+				"Employee-naming_series-hidden",
+				"Employee-naming_series-reqd",
+
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
 				"Employee Education-qualification_institute",
@@ -236,6 +250,7 @@ fixtures = [
 				"Employee Education-specialty",
 				"Employee Education-qualification_degree",
 				"Employee Education-key",
+
 
 				"Employee External Work History-note",
 				"Employee External Work History-certificate_experience",
