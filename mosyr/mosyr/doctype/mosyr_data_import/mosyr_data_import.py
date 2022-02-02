@@ -1205,7 +1205,7 @@ class MosyrDataImport(Document):
 		frappe.msgprint(msg,title=f'{len(data)} Employess Imported',indicator='Cs',
 		primary_action={
 					'label': _('Export Error Log'),
-					'server_action': 'mosyr.mosyr.doctype.moysr_data_import.moysr_data_import.write_xlsx',
+					'client_action': 'mosyr.utils.download_errors',
 					'args': {
 						'data': [['A', 'B'], ['errra', 'errb']]
 					}
@@ -1226,12 +1226,24 @@ class MosyrDataImport(Document):
 		ret.save(ignore_permissions=True)
 
 @frappe.whitelist()
-def write_xlsx(args):
+def download_errors(data):
 	import json
-	from frappe.utils.xlsxutils import build_xlsx_response
-	from frappe.core.doctype.data_import.data_import import download_template
-	args = json.loads(args)
-	data = args.get('data', [])
-	filename = 'error_log'
-	build_xlsx_response(data, filename)
-	download_template("Employee")
+	from frappe.utils.xlsxutils import make_xlsx
+
+	data = json.loads(data)
+	print("##########################")
+	print("##########################")
+	print("##########################")
+	# # data = args.get('data', [])
+	# filename = 'error_log'
+
+	# xlsx_file = make_xlsx(data, filename)
+	# # write out response as a xlsx type
+	# frappe.local.response.filename = filename + '.xlsx'
+	# frappe.local.response.filecontent = xlsx_file.getvalue()
+	# frappe.local.response.type = "binary"
+	# print(frappe.local.response.filecontent)
+	print(data)
+	from frappe.utils.csvutils import build_csv_response
+	build_csv_response(data, 'dddd.csv')
+	return
