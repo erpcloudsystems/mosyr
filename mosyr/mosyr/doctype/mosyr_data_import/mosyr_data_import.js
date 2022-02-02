@@ -1,16 +1,16 @@
 // Copyright (c) 2022, AnvilERP and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Moysr Data Import', {
+frappe.ui.form.on('Mosyr Data Import', {
     refresh: function(frm) {
         $('.control-input button').addClass('col-md-6 col-xs-12 btn-primary').removeClass('btn-default')
         $(`div[data-fieldname="master_data"]`).html(`<h3>${__("Master Data")}</h3>`)
         $(`div[data-fieldname="employee_data"]`).html(`<h3>${__("Employee Data")}</h3>`)
         $(`div[data-fieldname="leave_data"]`).html(`<h3>${__("Leave Data")}</h3>`)
-        // $(`div[data-fieldname="employee_details"]`).html(`<h3>${__("Employee Details")}</h3>`)
-        // $('div[data-fieldname="import_branches"]').css({
-        //     'margin-top': '25px'
-        // })
+            // $(`div[data-fieldname="employee_details"]`).html(`<h3>${__("Employee Details")}</h3>`)
+            // $('div[data-fieldname="import_branches"]').css({
+            //     'margin-top': '25px'
+            // })
         frm.disable_form()
         frappe.call({
             doc: frm.doc,

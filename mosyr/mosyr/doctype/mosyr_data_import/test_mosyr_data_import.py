@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestMoysrDataImport(unittest.TestCase):
+class TestMosyrDataImport(unittest.TestCase):
 	pass

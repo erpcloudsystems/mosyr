@@ -16,7 +16,7 @@ import os
 # from frappe.utils.data import cint
 
 
-class MoysrDataImport(Document):
+class MosyrDataImport(Document):
 
 	@frappe.whitelist()
 	def get_company_id(self):
