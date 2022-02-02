@@ -687,7 +687,7 @@ class MoysrDataImport(Document):
 						current_data.first_name_ar = d.get('fullname_ar', '')
 						current_data.first_name_en = d.get('fullname_en', '')
 						current_data.birth_date_g = d.get('birth_date_g', '')
-						current_data.dependant_relationship = d.get('relationship', '')
+						current_data.dependent_relationship = d.get('relationship', '')
 
 						if d.get('attachement') not in(None,' ','',[""]) :
 							for idx,url in enumerate(d.get('attachement')):
@@ -707,7 +707,7 @@ class MoysrDataImport(Document):
 							'first_name_en': d.get('fullname_en', ''),
 							'birth_date_g': d.get('birth_date_g', ''),
 							'attachement':(url,''),
-							'dependant_relationship':d.get('relationship', ''),
+							'dependent_relationship':d.get('relationship', ''),
 							'key':api_key
 						})
 					employee.flags.ignore_mandatory = True
