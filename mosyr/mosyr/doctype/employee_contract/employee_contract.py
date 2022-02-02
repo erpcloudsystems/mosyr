@@ -99,20 +99,20 @@ class EmployeeContract(Document):
 				employee.save()
 				frappe.db.commit()
 
-	def set_indicator(self):
-		if self.contract_status == "Valid":
-			self.indicator_color = "green"
-		elif self.contract_status == "Not Valid":
-			self.indicator_color = "gray"
-		else:
-			self.contract_status = "Pinding"
-			self.indicator_color = "Orange"
+	# def set_indicator(self):
+	# 	if self.contract_status == "Valid":
+	# 		self.indicator_color = "green"
+	# 	elif self.contract_status == "Not Valid":
+	# 		self.indicator_color = "gray"
+	# 	else:
+	# 		self.contract_status = "Pinding"
+	# 		self.indicator_color = "Orange"
 	
-	def set_status(self, update=False, status=None, update_modified=True):
-		if self.contract_status == "Valid":
-			self.docstatus = 1
-			self.status = 'Valid'
-		elif self.contract_status == "Not Valid":
-			self.docstatus = 2
-			self.status = 'Not Valid'
-		return
+	# def set_status(self, update=False, status=None, update_modified=True):
+	# 	if self.contract_status == "Valid":
+	# 		self.docstatus = 1
+	# 		self.status = 'Valid'
+	# 	elif self.contract_status == "Not Valid":
+	# 		self.docstatus = 2
+	# 		self.status = 'Not Valid'
+	# 	return
