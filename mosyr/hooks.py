@@ -236,7 +236,7 @@ fixtures = [
 				"Employee Education-specialty",
 				"Employee Education-qualification_degree",
 				"Employee Education-key",
-
+				"Employee Education-column_break_7",
 
 				"Employee External Work History-note",
 				"Employee External Work History-certificate_experience",
@@ -244,7 +244,8 @@ fixtures = [
 				"Employee External Work History-end_date_g",
 				"Employee External Work History-start_date_g",
 				"Employee External Work History-key",
-
+				"Employee External Work History-column_break_5",
+				
 				"Department-mosyr_key",
 				"Department-from_api",
 
