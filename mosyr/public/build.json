@@ -1,0 +1,8 @@
+{
+    "mosyr/js/mosyr.min.js": [
+        "public/js/utils.js"
+    ],
+    "mosyr/css/mosyr.min.css": [
+        "public/css/mosyr.css"
+    ]
+}
