@@ -22,12 +22,14 @@
   "import_passport",
   "import_employee_qualifications",
   "column_break_15",
+  "leave_data",
+  "import_leave",
+  "import_leave_application",
+  "column_break_19",
   "import_benefits",
   "import_deductions",
   "import_contracts",
-  "import_leave",
-  "import_letter",
-  "import_leave_application"
+  "import_letter"
  ],
  "fields": [
   {
@@ -132,13 +134,22 @@
    "fieldname": "import_leave_application",
    "fieldtype": "Button",
    "label": "Import Leave"
+  },
+  {
+   "fieldname": "leave_data",
+   "fieldtype": "HTML",
+   "label": "leave Data"
+  },
+  {
+   "fieldname": "column_break_19",
+   "fieldtype": "Column Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-02-01 17:04:45.281268",
+ "modified": "2022-02-02 11:14:25.174544",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Moysr Data Import",
