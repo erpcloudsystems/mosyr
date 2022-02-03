@@ -477,6 +477,7 @@ class MosyrDataImport(Document):
 	def import_identity(self,company_id):
 		errors = 0
 		sucess = 0
+		exists = 0
 		error_msgs = ''
 		path = 'https://www.mosyr.io/en/api/migration-ids.json?company_id='
 		data,errors = self.call_api(path,company_id,'Employee Identity',errors)
@@ -503,7 +504,6 @@ class MosyrDataImport(Document):
 					continue
 				employee = employees[0].name
 				employee = frappe.get_doc('Employee', employee)
-				api_key = d.get('key', '')
 
 				api_key_exists = False
 				api_key_exists_at = -1
@@ -517,34 +517,16 @@ class MosyrDataImport(Document):
 									api_key_exists_at = k.idx
 				if api_key_exists:
 					if api_key_exists_at != -1:
-						current_data = employee.identity[api_key_exists_at-1]
-						current_data.id_type = lookup_value[d.get('id_type', '')] 
-						current_data.nautional_id_number = d.get('id_number', '')
-						current_data.id_issue_place_english = d.get('issue_place_english', '')
-						current_data.status_date_g = d.get('issue_date', '')
-						current_data.id_expire_date_g = d.get('expire_date', '')
-						current_data.border_entry_port = d.get('border_entry_port', '')
-						current_data.borders_entry_date_g = d.get('border_entry_date', '')
-						current_data.border_entry_number = d.get('border_entry_number', '')
-						photo  = ''
-						if len(d.get('id_photo')) > 0 :
-							for ph in d.get('id_photo'):
-								photo = ph.get('uri')
-							photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
-							file_output_name = f'{employee.name}-id_photo'
-							self.upload_file("Employee", employee.name, 'id_photo', file_output_name, photo_url)
-							current_data.id_photo = photo_url
-						employee.flags.ignore_mandatory = True
-						employee.save()
-						sucess += 1
+						exists += 1
+						continue
 				else:
-					photo  = ''
-					if len(d.get('id_photo')) > 0:
-						for ph in d.get('id_photo') :
-							photo = ph.get('uri')
-						photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
-						file_output_name = f'{employee.name}-id_photo.pdf'
-						self.upload_file("Employee", employee.name, 'id_photo', file_output_name, photo_url)
+					# photo  = ''
+					# if len(d.get('id_photo')) > 0:
+					# 	for ph in d.get('id_photo') :
+					# 		photo = ph.get('uri')
+					# 	photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
+					# 	file_output_name = f'{employee.name}-id_photo.pdf'
+					# 	self.upload_file("Employee", employee.name, 'id_photo', file_output_name, photo_url)
 					employee.append('identity', {
 						'id_type':lookup_value[d.get('id_type', '')] ,
 						'nautional_id_number': d.get('id_number', ''),
@@ -554,7 +536,7 @@ class MosyrDataImport(Document):
 						'border_entry_port':d.get('border_entry_port', ''),
 						'borders_entry_date_g':d.get('border_entry_date', ''),
 						'border_entry_number':d.get('border_entry_number', ''),
-						'id_photo':photo_url,
+						# 'id_photo':photo_url,
 						'key': api_key
 					})
 					employee.flags.ignore_mandatory = True
@@ -565,12 +547,13 @@ class MosyrDataImport(Document):
 					error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 					errors += 1
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists=None)
+		self.handle_error(error_msgs,sucess,errors,data,exists)
 	
 	@frappe.whitelist()
 	def import_passport(self,company_id):
 		errors = 0
 		sucess = 0
+		exists = 0
 		error_msgs = ''
 		path = 'https://www.mosyr.io/en/api/migration-passports.json?company_id='
 		data,errors = self.call_api(path,company_id,'Eployee Passport',errors)
@@ -604,31 +587,21 @@ class MosyrDataImport(Document):
 								api_key_exists_at = k.idx
 				if api_key_exists:
 					if api_key_exists_at != -1:
-						current_data = employee.passport[api_key_exists_at-1]
-						current_data.passport_number = d.get('passport_number', '')
-						current_data.passport_issue_place = d.get('passport_issue_place', '')
-						current_data.passport_expire_date_g = d.get('passport_expire', '')
-						current_data.job_in_passport = jop_title
-						photo  = ''
-						if len(d.get('passport_photo')) > 0 :
-							passport = d.get('passport_photo')
-							photo = passport.get('uri')
-							photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
-							file_output_name = f'{employee.name}-passport_photo'
-							self.upload_file("Employee", employee.name, 'passport_photo', file_output_name, photo_url)
-							current_data.passport_photo = photo_url
-						employee.flags.ignore_mandatory = True
-						employee.save()
-						sucess += 1
+						exists += 1
+						continue
+
 				else:
 					photo  = ''
+					photo_url = ''
 					if len(d.get('passport_photo')) > 0 :
 						passport = d.get('passport_photo')
 						photo = passport.get('uri')
 						photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
 						file_output_name = f'{employee.name}-passport_photo'
 						self.upload_file("Employee", employee.name, 'passport_photo', file_output_name, photo_url)
-						current_data.passport_photo = photo_url
+						if api_key_exists_at != -1:
+							current_data = employee.passport[api_key_exists_at-1]
+							current_data.passport_photo = photo_url
 					employee.append('passport', {
 							'passport_number':d.get('passport_number', ''),
 							'passport_issue_place': d.get('passport_issue_place', ''),
@@ -646,12 +619,13 @@ class MosyrDataImport(Document):
 				errors += 1
 					
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists=None)
+		self.handle_error(error_msgs,sucess,errors,data,exists)
 
 	@frappe.whitelist()
 	def import_dependents(self,company_id):
 		errors = 0
 		sucess = 0
+		exists = 0
 		error_msgs = ''
 		path = 'https://www.mosyr.io/en/api/migration-employee-dependents.json?company_id='
 		data,errors = self.call_api(path,company_id,'Employee Debendents',errors)
@@ -683,30 +657,18 @@ class MosyrDataImport(Document):
 								api_key_exists_at = k.idx
 				if api_key_exists:
 					if api_key_exists_at != -1:
-						current_data = employee.dependent[api_key_exists_at-1]
-						current_data.first_name_ar = d.get('fullname_ar', '')
-						current_data.first_name_en = d.get('fullname_en', '')
-						current_data.birth_date_g = d.get('birth_date_g', '')
-						current_data.dependent_relationship = d.get('relationship', '')
-
-						if d.get('attachement') not in(None,' ','',[""]) :
-							for idx,url in enumerate(d.get('attachement')):
-								file_output_name = f'{idx}-{employee.name}-dependents_file.pdf'
-							self.upload_file("Employee", employee.name, 'dependents_file', file_output_name, url)
-						current_data.attachement = url
-						employee.flags.ignore_mandatory = True
-						employee.save()
-						sucess += 1 
+						exists += 1 
+						continue
 				else:
-					if d.get('attachement') not in(None,' ','',[""]) :
-						for idx,url in enumerate(d.get('attachement')):
-							file_output_name = f'{idx}-{employee.name}-dependents_file.pdf'
-						self.upload_file("Employee", employee.name, 'dependents_file', file_output_name, url)
+					# if d.get('attachement') not in(None,' ','',[""]) :
+					# 	for idx,url in enumerate(d.get('attachement')):
+					# 		file_output_name = f'{idx}-{employee.name}-dependents_file.pdf'
+					# 	self.upload_file("Employee", employee.name, 'dependents_file', file_output_name, url)
 					employee.append('dependent', {
 							'first_name_ar':d.get('fullname_ar', ''),
 							'first_name_en': d.get('fullname_en', ''),
 							'birth_date_g': d.get('birth_date_g', ''),
-							'attachement':(url,''),
+							# 'attachement':(url,''),
 							'dependent_relationship':d.get('relationship', ''),
 							'key':api_key
 						})
@@ -718,12 +680,13 @@ class MosyrDataImport(Document):
 				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1			
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists=None)
+		self.handle_error(error_msgs,sucess,errors,data,exists)
 		
 	@frappe.whitelist()
 	def import_employee_status(self,company_id):
 		errors = 0
 		sucess = 0
+		exists = 0
 		error_msgs = ''
 		path = 'https://www.mosyr.io/en/api/migration-employee-status.json?company_id='
 		data,errors = self.call_api(path,company_id,'Employee Debendents',errors)
@@ -760,50 +723,37 @@ class MosyrDataImport(Document):
 								api_key_exists_at = k.idx
 				if api_key_exists:
 					if api_key_exists_at != -1:
-						url = ''
-						current_data = employee.mosyr_employee_status[api_key_exists_at-1]
-						current_data.status_date_g = d.get('status_date', '')
-						current_data.status_reason = d.get('status_reason', '')
-						current_data.status = lookup_value[d.get('status', '')]
-
-						if d.get('attachement') not in(None,' ','',[""]) :
-							for idx,url in enumerate(d.get('attachement')):
-								file_output_name = f'{idx}-{employee.name}-status_file.pdf'
-						self.upload_file("Employee", employee.name, 'status_file', file_output_name, url)
-						current_data.attachment = url
-						employee.flags.ignore_mandatory = True
-						employee.save()
-						sucess += 1
+						exists += 1
+						continue
 				else:
-					url = ''
-					if d.get('attachement') not in(None,' ','',[""]) :
-						for idx,url in enumerate(d.get('attachement')):
-							file_output_name = f'{idx}-{employee.name}-status_file.pdf'
-						self.upload_file("Employee", employee.name, 'status_file', file_output_name, url)
-
+					# url = ''
+					# if d.get('attachement') not in(None,' ','',[""]) :
+					# 	for idx,url in enumerate(d.get('attachement')):
+					# 		file_output_name = f'{idx}-{employee.name}-status_file.pdf'
+					# 	self.upload_file("Employee", employee.name, 'status_file', file_output_name, url)
 					employee.append('mosyr_employee_status', {
 							'status': lookup_value[d.get('status', '')],
 							'status_date_g': d.get('status_date', ''),
 							'status_reason': d.get('status_reason', ''),
-							'attachment':url,
-							'mosyr_key':d.get('key')
+							'key':d.get('key')
+							# 'attachment':url,
 						})
-
-					sucess += 1
 					employee.flags.ignore_mandatory = True
 					employee.save()
+					sucess += 1
 			else:
 				msg = "Employee is not exist in system"
 				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
 				errors += 1
 					
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists=None)
+		self.handle_error(error_msgs,sucess,errors,data,exists)
 
 	@frappe.whitelist()
 	def import_employee_qualifications(self,company_id):
 		errors = 0
 		sucess = 0
+		exists = 0
 		error_msgs = ''
 		path = 'https://www.mosyr.io/en/api/migration-employee-qualifications.json?company_id='
 		data,errors = self.call_api(path,company_id,'Employee Debendents',errors)
@@ -826,12 +776,12 @@ class MosyrDataImport(Document):
 				attendance = datetime.strptime(qualification_attendance_date,("%d-%m-%Y"))
 				held = datetime.strptime(qualification_held_date,("%d-%m-%Y"))
 				attendance_date = attendance.strftime ("%Y-%m-%d")
-				held_date = held.strftime ("%Y-%m-%d")
+				held = held.strftime ("%Y-%m-%d")
 				api_key = d.get('key', '')
+				degree = d.get('degree', '')
 				lookup_value = {
 					'training' : 'Training Certificate'
 				}
-				degree = d.get('degree', '')
 				api_key_exists = False
 				api_key_exists_at = -1
 
@@ -842,46 +792,29 @@ class MosyrDataImport(Document):
 							if api_key == mosyr_key:
 								api_key_exists = True
 								api_key_exists_at = k.idx
-				if api_key_exists:	
+				if api_key_exists:		
 					if api_key_exists_at != -1:
-						current_data = employee.education[api_key_exists_at-1]
-						current_data.qualification_degree = lookup_value[degree]
-						current_data.specialty = d.get('specialization', '')
-						current_data.qualification_attendance_date = attendance_date
-						current_data.certificate_experience = d.get('certificate_experience', '')
-						current_data.qualification_held_date = held_date
-						current_data.qualification_mark = d.get('qualification_mark', '')
-						current_data.gpa_rate = d.get('GPA_rate', '')
-						current_data.qualification_institute = d.get('issue_institute', '')
-						current_data.qualification_location = d.get('issue_place', '')
-						photo  = ''
-						if len(d.get('attachement')) > 0 :
-							qualifications = d.get('attachement')
-							photo = qualifications.get('uri')
-							photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
-							file_output_name = f'{employee.name}-qualification_photo'
-							self.upload_file("Employee", employee.name, 'qualification_photo', file_output_name, photo_url)
-						current_data.attachment = (photo_url,'')
-						sucess += 1
+						exists += 1
+						continue
 				else:	
-					photo  = ''
-					if len(d.get('attachement')) > 0 :
-						qualifications = d.get('attachement')
-						photo = qualifications.get('uri')
-						photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
-						file_output_name = f'{employee.name}-qualification_photo'
-						self.upload_file("Employee", employee.name, 'qualification_photo', file_output_name, photo_url)
+					# photo  = ''
+					# if len(d.get('attachement')) > 0 :
+					# 	qualifications = d.get('attachement')
+					# 	photo = qualifications.get('uri')
+					# 	photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
+					# 	file_output_name = f'{employee.name}-qualification_photo'
+					# 	self.upload_file("Employee", employee.name, 'qualification_photo', file_output_name, photo_url)
 					employee.append('education', {
 							'qualification_degree':lookup_value[degree],
 							'specialty': d.get('specialization', ''),
 							'qualification_attendance_date': attendance_date,
 							'certificate_experience':d.get('certificate_experience', ''),
-							'qualification_held_date':held_date,
+							'qualification_held_date':held,
 							'qualification_mark':d.get('qualification_mark', ''),
 							'gpa_rate':d.get('GPA_rate', ''),
 							'qualification_institute':d.get('issue_institute', ''),
 							'qualification_location':d.get('issue_place', ''),
-							'attachment':(photo_url,''),
+							# 'attachment':(photo_url,''),
 							'key':api_key
 						})
 					sucess += 1
@@ -890,15 +823,15 @@ class MosyrDataImport(Document):
 			else:
 				msg = "Employee is not exist in system"
 				error_msgs += f'<tr><th>{api_key}</th><td>{first_name}</td><td>{msg}</td></tr>'
-				errors += 1
-					
+				errors += 1					
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists=None)
+		self.handle_error(error_msgs,sucess,errors,data,exists)
 		
 	@frappe.whitelist()
 	def import_experiences(self,company_id):
 		errors = 0
 		sucess = 0
+		exists = 0
 		error_msgs = ''
 		path = 'https://www.mosyr.io/en/api/migration-employee-experiences.json?company_id='
 		data,errors = self.call_api(path,company_id,'Employee Debendents',errors)
@@ -916,8 +849,6 @@ class MosyrDataImport(Document):
 					continue
 				employee = employees[0].name
 				employee = frappe.get_doc('Employee', employee)
-				api_key = d.get('key', '')
-				
 				api_key_exists = False
 				api_key_exists_at = -1
 
@@ -930,33 +861,19 @@ class MosyrDataImport(Document):
 								api_key_exists_at = k.idx
 				if api_key_exists:
 					if api_key_exists_at != -1:
-						current_data = employee.external_work_history[api_key_exists_at-1]
-						current_data.start_date_g = d.get('start_date', '')
-						current_data.end_date_g = d.get('end_date', '')
-						current_data.reason_of_termination = d.get('reason_of_termination', '')
-						current_data.note = d.get('notes', '')
-						current_data.company_name = d.get('company', '') 
-						url = ''
-					if d.get('certificate_experience_file') not in(None,' ','',[""]) :
-						for idx,url in enumerate(d.get('certificate_experience_file')):
-							file_output_name = f'{idx}-{employee.name}-experience_file.pdf'
-						self.upload_file("Employee", employee.name, 'experience_file', file_output_name, url)
-
-						current_data.certificate_experience = d.get('certificate_experience', '')
-						sucess += 1
-						employee.save()
+						exists += 1
+						continue
 				else:
-					url = ''
-					if d.get('certificate_experience_file') not in(None,' ','',[""]) :
-						for idx,url in enumerate(d.get('certificate_experience_file')):
-							file_output_name = f'{idx}-{employee.name}-experience_file.pdf'
-						self.upload_file("Employee", employee.name, 'experience_file', file_output_name, url)
-
+					# url = ''
+					# if d.get('certificate_experience_file') not in(None,' ','',[""]) :
+					# 	for idx,url in enumerate(d.get('certificate_experience_file')):
+					# 		file_output_name = f'{idx}-{employee.name}-experience_file.pdf'
+					# 	self.upload_file("Employee", employee.name, 'experience_file', file_output_name, url)
 					employee.append('external_work_history', {
 							'start_date_g':d.get('start_date', ''),
 							'end_date_g': d.get('end_date', ''),
 							'reason_of_termination': d.get('reason_of_termination', ''),
-							'certificate_experience':url,
+							# 'certificate_experience':url,
 							'company_name':d.get('company', ''),
 							'note':d.get('notes', ''),
 							'key':api_key
@@ -970,7 +887,7 @@ class MosyrDataImport(Document):
 				errors += 1
 					
 		frappe.db.commit()
-		self.handle_error(error_msgs,sucess,errors,data,exists=None)
+		self.handle_error(error_msgs,sucess,errors,data,exists)
 
 	@frappe.whitelist()
 	def import_letter(self,company_id):
@@ -1013,14 +930,14 @@ class MosyrDataImport(Document):
 					letter.language_type = lookup_value[d.get('language_type','')]
 					letter.include_salary = lookup_value[d.get('include_salary','')]
 					letter.include_detailes_salary = lookup_value[d.get('include_details_salary','')]
-					photo_url = ''
-					if len(d.get('attachement')) > 0:
-						letter_attach =  d.get('attachement')
-						photo = letter_attach.get('uri')
-						photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
-						file_output_name = f'{employee.name}-letter'
-						self.upload_file("Letter",'', 'attachment', file_output_name, photo_url)
-					letter.attachment = photo_url
+					# photo_url = ''
+					# if len(d.get('attachement')) > 0:
+					# 	letter_attach =  d.get('attachement')
+					# 	photo = letter_attach.get('uri')
+					# 	photo_url = (f'https://www.mosyr.io/sites/default/files/{photo[9:]}')
+					# 	file_output_name = f'{employee.name}-letter'
+					# 	self.upload_file("Letter",'', 'attachment', file_output_name, photo_url)
+					# letter.attachment = photo_url
 					sucess += 1
 					letter.save()
 				else:
@@ -1057,37 +974,45 @@ class MosyrDataImport(Document):
 				str_match = [s for s in splitted if "href=" in s][0]
 				split1 = str_match.split('"',-1)[1]
 				leave_attachments = split1
-			else:
-				continue
 			if nid:
 				employees = frappe.get_list("Employee",filters={"nid":nid})
 				if len(employees) > 0:
 					employees = employees[0]
-					if employees.get('status') == 'Active':
+					emp = frappe.get_doc("Employee",employees.name)
+					if emp.status in ("Active"):
+						print(emp.status)
 						name,employee_name = frappe.db.get_value('Employee', {'nid': nid}, ['name', 'employee_name'])
-						if len(employees) == 0:
-							msg = "Employee is not exist in system"
-							error_msgs += f'<tr><th>{nid}</th><td>{employee_name_from_mosyr}</td><td>{msg}</td></tr>'
-							errors += 1
+						if frappe.db.exists('Leave Application', {'key':key}):
+							exists +=1
 							continue
 						else:
-							if frappe.db.exists('Leave Application', {'key':key}):
-								exists +=1
-								continue
-							else:
-								leave = frappe.new_doc("Leave Application")
-								leave.leave_type_name = leave_type
-								leave.employee = name
-								leave.employee_name = employee_name
-								leave.from_date = from_date
-								leave.to_date = to_date
-								leave.key = key
-								leave.status = "Approved"
-								leave.leave_attachments = leave_attachments
-								file_output_name = f'{name}-leave application'
-								self.upload_file("Leave Application",'', 'leave_attachments', file_output_name, leave_attachments)
-								leave.save()
-								sucess += 1
+							leave = frappe.new_doc("Leave Application")
+							leave.leave_type_name = leave_type
+							leave.employee = name
+							leave.employee_name = employee_name
+							leave.from_date = from_date
+							leave.to_date = to_date
+							leave.key = key
+							leave.status = "Approved"
+							leave.leave_attachments = leave_attachments
+							file_output_name = f'{name}-leave application'
+							leave.save()
+							leave_name = frappe.get_value("Leave Application", {'key',key}, ['name'])
+							self.upload_file("Leave Application",leave_name, 'leave_attachments', file_output_name, leave_attachments)
+							leave.save()
+							frappe.db.commit()
+							sucess += 1
+					else:
+						msg = "Employee is not Active in System"
+						error_msgs += f'<tr><th>{nid}</th><td>{employee_name_from_mosyr}</td><td>{msg}</td></tr>'
+						errors += 1
+						continue
+
+				else:
+					msg = "Employee is not exist in system"
+					error_msgs += f'<tr><th>{nid}</th><td>{employee_name_from_mosyr}</td><td>{msg}</td></tr>'
+					errors += 1
+					continue
 		frappe.db.commit()
 		self.handle_error(error_msgs,sucess,errors,data,exists)
 
