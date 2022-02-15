@@ -7,54 +7,54 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_number",
-  "details",
-  "nid",
+  "employee_section",
+  "employee",
   "column_break_3",
   "name1",
-  "date",
-  "column_break_6",
+  "amount_details_section",
   "addition_type",
+  "column_break_7",
   "amount",
-  "column_break_9",
+  "column_break_10",
   "payroll_month",
+  "more_details_section",
+  "date",
+  "created_at",
+  "column_break_9",
+  "details",
   "notes",
-  "from_api",
-  "key"
+  "key",
+  "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "employee_number",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Employee Number",
-   "options": "Employee",
-   "reqd": 1
+   "fieldname": "employee_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
   },
   {
-   "fieldname": "details",
-   "fieldtype": "Data",
-   "label": "Details"
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee_number.first_name",
+   "fetch_from": "employee.first_name",
    "fieldname": "name1",
-   "fieldtype": "Data",
-   "label": "Name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name",
    "read_only": 1
   },
   {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date"
-  },
-  {
-   "fieldname": "column_break_6",
-   "fieldtype": "Column Break"
+   "fieldname": "amount_details_section",
+   "fieldtype": "Section Break",
+   "label": "Amount Details"
   },
   {
    "fieldname": "addition_type",
@@ -63,39 +63,49 @@
    "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission"
   },
   {
-   "fieldname": "amount",
-   "fieldtype": "Currency",
-   "label": "Amount"
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_9",
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_10",
    "fieldtype": "Column Break"
   },
   {
    "description": "format: 01/2022",
    "fieldname": "payroll_month",
    "fieldtype": "Data",
-   "label": "Payroll Month"
+   "label": "Payroll Month",
+   "reqd": 1
+  },
+  {
+   "fieldname": "more_details_section",
+   "fieldtype": "Section Break",
+   "label": "Benefits Details"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Small Text",
+   "label": "Details"
   },
   {
    "fieldname": "notes",
-   "fieldtype": "Long Text",
+   "fieldtype": "Small Text",
    "label": "Notes"
-  },
-  {
-   "fieldname": "nid",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "NID",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "from_api",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "From API",
-   "read_only": 1
   },
   {
    "fieldname": "key",
@@ -103,14 +113,29 @@
    "hidden": 1,
    "label": "Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Benefit",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_at",
+   "fieldtype": "Date",
+   "label": "Created At"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-01-30 12:09:46.453569",
+ "modified": "2022-02-15 18:01:37.348787",
  "modified_by": "Administrator",
  "module": "Mosyr",
- "name": "Employee Benefits",
+ "name": "Employee Benefit",
  "owner": "Administrator",
  "permissions": [
   {

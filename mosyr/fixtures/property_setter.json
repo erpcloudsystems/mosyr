@@ -5,23 +5,6 @@
   "docstatus": 0,
   "doctype": "Property Setter",
   "doctype_or_field": "DocField",
-  "field_name": "first_name",
-  "modified": "2022-02-02 10:55:44.837717",
-  "name": "Employee-first_name-label",
-  "parent": null,
-  "parentfield": null,
-  "parenttype": null,
-  "property": "label",
-  "property_type": "Data",
-  "row_name": null,
-  "value": "Full Name AR"
- },
- {
-  "default_value": null,
-  "doc_type": "Employee",
-  "docstatus": 0,
-  "doctype": "Property Setter",
-  "doctype_or_field": "DocField",
   "field_name": "middle_name",
   "modified": "2022-02-02 10:55:45.139419",
   "name": "Employee-middle_name-hidden",
@@ -66,5 +49,22 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Employee",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "first_name",
+  "modified": "2022-02-09 15:19:24.328078",
+  "name": "Employee-first_name-label",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "label",
+  "property_type": "Data",
+  "row_name": null,
+  "value": "Arabic Full Name"
  }
 ]

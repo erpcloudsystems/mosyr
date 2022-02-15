@@ -1,0 +1,9 @@
+.control-input-wrapper .btn {
+    min-width: 210px;
+}
+
+.form-section.card-section,
+.form-dashboard-section {
+    margin-bottom: 0;
+    border-radius: 0 !important;
+}

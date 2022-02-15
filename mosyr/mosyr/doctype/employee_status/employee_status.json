@@ -7,7 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "status",
-  "status_date_g",
+  "status_date",
   "column_break_3",
   "status_reason",
   "attachment",
@@ -20,12 +20,6 @@
    "in_list_view": 1,
    "label": "Status",
    "options": "\nActive\nOn Leave\nEscaped\nFinal Exit\nNeed Sponsorship Transmission\nDead\nTermination\nExit and return with no show\nSponsored only (Kafala)\nOn Sponsorship Transmission\nStop Working\nNot active\nAssignment\nOn a job\nIn Training\nResigned\nContract Expired"
-  },
-  {
-   "fieldname": "status_date_g",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Status Date G"
   },
   {
    "fieldname": "status_reason",
@@ -49,12 +43,18 @@
    "hidden": 1,
    "label": "Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "status_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Status Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-02-02 14:52:29.714274",
+ "modified": "2022-02-14 15:02:52.866127",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Status",

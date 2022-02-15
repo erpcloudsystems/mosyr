@@ -3,14 +3,6 @@
 
 frappe.ui.form.on('Mosyr Data Import', {
     refresh: function(frm) {
-        $('.control-input button').addClass('col-md-6 col-xs-12 btn-primary').removeClass('btn-default')
-        $(`div[data-fieldname="master_data"]`).html(`<h3>${__("Master Data")}</h3>`)
-        $(`div[data-fieldname="employee_data"]`).html(`<h3>${__("Employee Data")}</h3>`)
-        $(`div[data-fieldname="leave_data"]`).html(`<h3>${__("Leave Data")}</h3>`)
-            // $(`div[data-fieldname="employee_details"]`).html(`<h3>${__("Employee Details")}</h3>`)
-            // $('div[data-fieldname="import_branches"]').css({
-            //     'margin-top': '25px'
-            // })
         frm.disable_form()
         frappe.call({
             doc: frm.doc,
@@ -41,52 +33,51 @@ frappe.ui.form.on('Mosyr Data Import', {
         })
     },
     import_branches(frm) {
-        frm.events.data_import_call(frm, 'import_branches', "Start fetch Branches")
+        frm.events.data_import_call(frm, 'import_branches', "Start Branches Importing")
+    },
+    import_departments(frm) {
+        frm.events.data_import_call(frm, 'import_departments', "Start Departments Importing")
     },
     import_employees(frm) {
-        frm.events.data_import_call(frm, 'import_employees', "Start fetch Employee")
-    },
-    import_contracts(frm) {
-        frm.events.data_import_call(frm, 'import_contracts', "Start fetch Contracts")
-    },
-    import_benefits(frm) {
-        frm.events.data_import_call(frm, 'import_benefits', "Start fetch Benefits")
-    },
-    import_deductions(frm) {
-        frm.events.data_import_call(frm, 'import_deductions', "Start fetch Deductions")
+        frm.events.data_import_call(frm, 'import_employees', "Start Employees Importing")
     },
     import_identity(frm) {
-        frm.events.data_import_call(frm, 'import_identity', "Start fetch identity")
-    },
-    import_passport(frm) {
-        frm.events.data_import_call(frm, 'import_passport', "Start fetch passport")
+        frm.events.data_import_call(frm, 'import_identity', "Start Employee Identities Importing")
     },
     import_dependents(frm) {
-        frm.events.data_import_call(frm, 'import_dependents', "Start fetch dependents")
+        frm.events.data_import_call(frm, 'import_dependents', "Start Employee Dependents Importing")
     },
     import_employee_status(frm) {
-        frm.events.data_import_call(frm, 'import_employee_status', "Start fetch employee status")
+        frm.events.data_import_call(frm, 'import_employee_status', "Start Employee Statuses Importing")
     },
     import_experiences(frm) {
-        frm.events.data_import_call(frm, 'import_experiences', "Start fetch experiences")
+        frm.events.data_import_call(frm, 'import_experiences', "Start Employee Experiences Importing")
     },
-    import_identity(frm) {
-        frm.events.data_import_call(frm, 'import_identity', "Start fetch identity")
+    import_passport(frm) {
+        frm.events.data_import_call(frm, 'import_passport', "Start Employee Passports Importing")
     },
     import_employee_qualifications(frm) {
-        frm.events.data_import_call(frm, 'import_employee_qualifications', "Start fetch qualifications")
+        frm.events.data_import_call(frm, 'import_employee_qualifications', "Start Employee Qualifications Importing")
     },
-    import_employee_class(frm) {
-        frm.events.data_import_call(frm, 'import_employee_class', "Start fetch employee classes")
+    import_letters(frm) {
+        frm.events.data_import_call(frm, 'import_letters', "Start Letters Importing")
+    },
+    import_deductions(frm) {
+        frm.events.data_import_call(frm, 'import_deductions', "Start Employee Deductions Importing")
+    },
+    import_benefits(frm) {
+        frm.events.data_import_call(frm, 'import_benefits', "Start Employee Benefits Importing")
+    },
+
+
+    import_contracts(frm) {
+        frm.events.data_import_call(frm, 'import_contracts', "Start fetch Contracts")
     },
     import_leave(frm) {
         frm.events.data_import_call(frm, 'import_leave', "Start fetch leave Type")
     },
     import_leave_application(frm) {
         frm.events.data_import_call(frm, 'import_leave_application', "Start fetch leave")
-    },
-    import_letter(frm) {
-        frm.events.data_import_call(frm, 'import_letter', "Start fetch letter")
     }
 
 });

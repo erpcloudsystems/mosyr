@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestBorders(unittest.TestCase):
+class TestEmployeeDeduction(unittest.TestCase):
 	pass

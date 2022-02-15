@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestEmployeeDeductions(unittest.TestCase):
+class TestReligion(unittest.TestCase):
 	pass
