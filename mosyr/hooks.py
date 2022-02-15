@@ -178,26 +178,6 @@ fixtures = [
         "dt": "Custom Field",
         "filters": [
             ["name", "in", [
-				"Company-company_name_in_arabic",
-
-				"Address-address_in_arabic",
-
-				"Sales Invoice-qr_code",
-
-				"Payment Entry-customer_gstin",
-				"Payment Entry-customer_address",
-				"Payment Entry-place_of_supply",
-				"Payment Entry-company_gstin",
-				"Payment Entry-company_address",
-				"Payment Entry-gst_section",
-
-				"Branch-location",
-
-				"Loan Application-workflow_state",
-				
-				"Leave Application-workflow_state",
-				"Leave Type-key",
-
 				"Employee-full_name_en",
 				"Employee-from_api",
 				"Employee-key",
@@ -226,8 +206,6 @@ fixtures = [
 				"Employee-mosyr_employee_status",
 				"Employee-moyser_employee_status",
 				
-				
-
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
 				"Employee Education-qualification_institute",
@@ -246,37 +224,8 @@ fixtures = [
 				"Employee External Work History-key",
 				"Employee External Work History-column_break_7",
 				
-				
-				"Department-mosyr_key",
-				"Department-from_api",
-
 				"Leave Application-key",
 				"Leave Application-leave_attachments",
-            ]]
-        ]
-    },	
-	{
-		"dt": "Workflow State",
-		"filters": [
-            ["name", "in", [
-				"Open", "Cancelled", "First Approved", "First Approval", "Last Approval",
-				"Approved by HR User", "Approved by HR Manager", "Rejected by HR User"
-            ]]
-        ]
-	},
-	{
-		"dt": "Workflow Action Master",
-		"filters": [
-            ["name", "in", [
-				"Cancel"
-            ]]
-        ]
-	},
-	{
-        "dt": "Workflow",
-        "filters": [
-            ["name", "in", [
-				"Loan Approval", "Leave Approval"
             ]]
         ]
     },
