@@ -13,8 +13,8 @@ app_license = "MIT"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/mosyr/css/mosyr.css"
-# app_include_js = "public/js/moyser_data_import.js"
+app_include_css = "/assets/mosyr/css/mosyr.min.css"
+app_include_js = "/assets/mosyr/js/mosyr.min.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/mosyr/css/mosyr.css"
@@ -31,7 +31,7 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"Employee" : "public/js/employee.js"}
+doctype_js = {"Employee" : "public/js/employee.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -198,22 +198,24 @@ fixtures = [
 				"Leave Application-workflow_state",
 				"Leave Type-key",
 
-				"Employee-handicap",
-				"Employee-birth_place",
-				"Employee-nationality",
 				"Employee-full_name_en",
-				"Employee-payment_type",
-				"Employee-self_service",
-				"Employee-nid",
 				"Employee-from_api",
+				"Employee-key",
 				"Employee-valid_data",
-				"Employee-from_api",
+				"Employee-employee_signature",
+				"Employee-api_employee_status",
+				"Employee-birth_place",
 				"Employee-direct_manager",
+				"Employee-nationality",
+				"Employee-payment_type",
+				"Employee-religion",
 				"Employee-branch_working_place",
-				"Employee-health_certificate",
+				"Employee-handicap",
+				"Employee-self_service",
 				"Employee-payroll_card_number",
 				"Employee-insurance_card_expire",
 				"Employee-insurance_card_class",
+				"Employee-health_certificate",
 				"Employee-employee_status",
 				"Employee-passport",
 				"Employee-employee_passport",
@@ -223,42 +225,28 @@ fixtures = [
 				"Employee-employee_dependent",
 				"Employee-mosyr_employee_status",
 				"Employee-moyser_employee_status",
-				"Employee-employee_signature",
-				"Employee-key",
-
-				"Employee-employee_name-hidden",
-				"Employee-employee_name-in_global_search",
-				"Employee-employee_name-in_standard_filter",
-				"Employee-employee_name-in_list_view",
-				"Employee-last_name-allow_in_quick_entry",
-				"Employee-last_name-hidden",
-				"Employee-middle_name-allow_in_quick_entry",
-				"Employee-middle_name-hidden",
-				"Employee-first_name-label",
-				"Employee-employee_number-reqd",
-				"Employee-employee_number-hidden",
-				"Employee-naming_series-hidden",
-				"Employee-naming_series-reqd",
+				
+				
 
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
 				"Employee Education-qualification_institute",
 				"Employee Education-gpa_rate",
-				"Employee Education-qualification_mark",
 				"Employee Education-qualification_held_date",
 				"Employee Education-qualification_attendance_date",
-				"Employee Education-specialty",
 				"Employee Education-qualification_degree",
 				"Employee Education-key",
+				"Employee Education-column_break_7",
 
-
-				"Employee External Work History-note",
-				"Employee External Work History-certificate_experience",
 				"Employee External Work History-reason_of_termination",
-				"Employee External Work History-end_date_g",
-				"Employee External Work History-start_date_g",
+				"Employee External Work History-end_date",
+				"Employee External Work History-start_date",
+				"Employee External Work History-notes",
+				"Employee External Work History-certificate_experience",
 				"Employee External Work History-key",
-
+				"Employee External Work History-column_break_7",
+				
+				
 				"Department-mosyr_key",
 				"Department-from_api",
 
@@ -266,7 +254,7 @@ fixtures = [
 				"Leave Application-leave_attachments",
             ]]
         ]
-    },
+    },	
 	{
 		"dt": "Workflow State",
 		"filters": [
@@ -291,7 +279,18 @@ fixtures = [
 				"Loan Approval", "Leave Approval"
             ]]
         ]
-    }
+    },
+	{
+	"dt": "Property Setter",
+			"filters": [
+				["name", "in", [
+					"Employee-employee_name-hidden",
+					"Employee-last_name-hidden",
+					"Employee-middle_name-hidden",
+					"Employee-first_name-label"
+				]]
+			]
+	},
 ]
 
 

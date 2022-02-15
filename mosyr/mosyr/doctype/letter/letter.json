@@ -1,19 +1,18 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "format:{letter} - {#####}",
+ "autoname": "L-.YYYY.MM.DD.###",
  "creation": "2022-01-26 15:06:49.680385",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "the_purpose_of_the_letter",
+  "purpose",
   "number",
   "include_salary",
   "column_break_4",
   "letter_to",
   "letter_date",
-  "include_detailes_salary",
+  "include_details_salary",
   "column_break_8",
   "employee",
   "employee_name",
@@ -26,15 +25,8 @@
  ],
  "fields": [
   {
-   "fieldname": "the_purpose_of_the_letter",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "The purpose of the Letter",
-   "reqd": 1
-  },
-  {
    "fieldname": "number",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "label": "Number"
   },
   {
@@ -60,14 +52,6 @@
    "label": "Letter Date"
   },
   {
-   "fieldname": "include_detailes_salary",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Include Detailes Salary",
-   "options": "\nYes\nNo",
-   "reqd": 1
-  },
-  {
    "fieldname": "column_break_8",
    "fieldtype": "Column Break"
   },
@@ -80,6 +64,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "employee.first_name",
    "fieldname": "employee_name",
    "fieldtype": "Read Only",
    "label": "Employee Name"
@@ -120,11 +105,26 @@
    "hidden": 1,
    "label": "Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Letter Purpose",
+   "reqd": 1
+  },
+  {
+   "fieldname": "include_details_salary",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Include Details Salary",
+   "options": "\nYes\nNo",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-30 12:15:44.746763",
+ "modified": "2022-02-15 17:00:08.496054",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Letter",
@@ -144,5 +144,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "purpose"
 }

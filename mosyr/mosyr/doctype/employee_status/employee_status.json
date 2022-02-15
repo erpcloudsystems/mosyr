@@ -7,10 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "status",
-  "status_date_g",
+  "status_date",
+  "column_break_3",
   "status_reason",
   "attachment",
-  "mosyr_key"
+  "key"
  ],
  "fields": [
   {
@@ -21,14 +22,8 @@
    "options": "\nActive\nOn Leave\nEscaped\nFinal Exit\nNeed Sponsorship Transmission\nDead\nTermination\nExit and return with no show\nSponsored only (Kafala)\nOn Sponsorship Transmission\nStop Working\nNot active\nAssignment\nOn a job\nIn Training\nResigned\nContract Expired"
   },
   {
-   "fieldname": "status_date_g",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Status Date G"
-  },
-  {
    "fieldname": "status_reason",
-   "fieldtype": "Long Text",
+   "fieldtype": "Text",
    "in_list_view": 1,
    "label": "Status Reason"
   },
@@ -39,17 +34,27 @@
    "label": "Attachment"
   },
   {
-   "fieldname": "mosyr_key",
-   "fieldtype": "Read Only",
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "key",
+   "fieldtype": "Data",
    "hidden": 1,
    "label": "Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "status_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Status Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-02-01 16:11:29.768749",
+ "modified": "2022-02-14 15:02:52.866127",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Status",

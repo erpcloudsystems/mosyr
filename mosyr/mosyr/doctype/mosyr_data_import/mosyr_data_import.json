@@ -9,27 +9,30 @@
  "field_order": [
   "company_id",
   "section_break_2",
-  "master_data",
   "import_branches",
-  "import_employee_class",
-  "column_break_8",
-  "employee_data",
+  "column_break_4",
+  "import_departments",
+  "employee_data_section",
   "import_employees",
-  "import_identity",
   "import_dependents",
   "import_employee_status",
-  "import_experiences",
+  "column_break_9",
+  "import_identity",
   "import_passport",
+  "column_break_12",
   "import_employee_qualifications",
-  "column_break_15",
-  "leave_data",
-  "import_leave",
-  "import_leave_application",
-  "column_break_19",
-  "import_benefits",
-  "import_deductions",
+  "import_experiences",
+  "cl",
   "import_contracts",
-  "import_letter"
+  "column_break_17",
+  "import_letters",
+  "section_break_19",
+  "import_benefits",
+  "column_break_19",
+  "import_deductions",
+  "leaves_details_section",
+  "import_leave",
+  "import_leave_application"
  ],
  "fields": [
   {
@@ -66,17 +69,12 @@
   {
    "fieldname": "import_identity",
    "fieldtype": "Button",
-   "label": "Import Identity"
-  },
-  {
-   "fieldname": "import_passport",
-   "fieldtype": "Button",
-   "label": "Import PassPort"
+   "label": "Import Employee Identities"
   },
   {
    "fieldname": "import_dependents",
    "fieldtype": "Button",
-   "label": "Import dependent"
+   "label": "Import Employee Dependents"
   },
   {
    "fieldname": "import_employee_status",
@@ -86,39 +84,17 @@
   {
    "fieldname": "import_experiences",
    "fieldtype": "Button",
-   "label": "Import Experiences"
+   "label": "Import Employee Experiences"
   },
   {
    "fieldname": "import_employee_qualifications",
    "fieldtype": "Button",
-   "label": "Import Qualifications"
-  },
-  {
-   "fieldname": "import_employee_class",
-   "fieldtype": "Button",
-   "label": "Import Department"
-  },
-  {
-   "fieldname": "master_data",
-   "fieldtype": "HTML",
-   "label": "Master Data"
+   "label": "Import Employee Qualifications"
   },
   {
    "fieldname": "section_break_2",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_8",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "employee_data",
-   "fieldtype": "HTML",
-   "label": "Employee Data"
-  },
-  {
-   "fieldname": "column_break_15",
-   "fieldtype": "Column Break"
+   "fieldtype": "Section Break",
+   "label": "Branches & Departments"
   },
   {
    "fieldname": "import_leave",
@@ -126,33 +102,74 @@
    "label": "Import Leave Type"
   },
   {
-   "fieldname": "import_letter",
-   "fieldtype": "Button",
-   "label": "Import Letter"
-  },
-  {
    "fieldname": "import_leave_application",
    "fieldtype": "Button",
    "label": "Import Leave"
   },
   {
-   "fieldname": "leave_data",
-   "fieldtype": "HTML",
-   "label": "leave Data"
-  },
-  {
    "fieldname": "column_break_19",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_departments",
+   "fieldtype": "Button",
+   "label": "Import Departments"
+  },
+  {
+   "fieldname": "employee_data_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cl",
+   "fieldtype": "Section Break",
+   "label": "Contracts & Letters"
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break",
+   "label": "Benefits & Deductions"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_passport",
+   "fieldtype": "Button",
+   "label": "Import Employee Passports"
+  },
+  {
+   "fieldname": "import_letters",
+   "fieldtype": "Button",
+   "label": "Import Letters"
+  },
+  {
+   "fieldname": "leaves_details_section",
+   "fieldtype": "Section Break",
+   "label": "Leaves Details"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-02-02 11:14:25.174544",
+ "modified": "2022-02-15 17:33:46.669952",
  "modified_by": "Administrator",
  "module": "Mosyr",
- "name": "Moysr Data Import",
+ "name": "Mosyr Data Import",
  "owner": "Administrator",
  "permissions": [
   {

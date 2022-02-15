@@ -6,29 +6,32 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "dependant_relationship",
-  "first_name_ar",
-  "first_name_en",
+  "relationship",
+  "column_break_2",
   "birth_date_g",
-  "dependant_ar",
-  "father_name_ar",
-  "father_name_en",
-  "dependant_en",
-  "grand_father_name_ar",
-  "grand_father_name_en",
-  "family_name_ar",
-  "family_name_en",
+  "column_break_4",
   "attachment",
+  "section_break_2",
+  "first_name_ar",
+  "father_name_ar",
+  "grand_father_name_ar",
+  "family_name_ar",
+  "full_name_ar",
+  "column_break_8",
+  "first_name_en",
+  "father_name_en",
+  "grand_father_name_en",
+  "family_name_en",
+  "dependant_en",
+  "health_insurance_section",
+  "insurance_card_company",
+  "insurance_card_number",
+  "column_break_21",
+  "insurance_card_class",
+  "insurance_card_expire",
   "key"
  ],
  "fields": [
-  {
-   "fieldname": "dependant_relationship",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Dependant Relationship",
-   "options": "\nson\ndaughter\nfather\nmother\nspouse\nbrother\nsister"
-  },
   {
    "fieldname": "first_name_ar",
    "fieldtype": "Data",
@@ -45,13 +48,7 @@
    "fieldname": "birth_date_g",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Birth Date G"
-  },
-  {
-   "fieldname": "dependant_ar",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Dependant Ar"
+   "label": "Birth Date"
   },
   {
    "fieldname": "father_name_ar",
@@ -69,7 +66,7 @@
    "fieldname": "dependant_en",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Dependant En"
+   "label": "Full Name En"
   },
   {
    "fieldname": "grand_father_name_ar",
@@ -102,17 +99,76 @@
    "label": " Attachment"
   },
   {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "key",
-   "fieldtype": "Read Only",
+   "fieldtype": "Data",
    "hidden": 1,
    "label": "Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "relationship",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Relationship",
+   "options": "\nson\ndaughter\nfather\nmother\nspouse\nbrother\nsister"
+  },
+  {
+   "fieldname": "full_name_ar",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name Ar"
+  },
+  {
+   "fieldname": "health_insurance_section",
+   "fieldtype": "Section Break",
+   "label": "Health Insurance"
+  },
+  {
+   "fieldname": "insurance_card_number",
+   "fieldtype": "Data",
+   "label": "Insurance Card Number"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "insurance_card_class",
+   "fieldtype": "Data",
+   "label": "Insurance Card Class"
+  },
+  {
+   "fieldname": "insurance_card_expire",
+   "fieldtype": "Date",
+   "label": "Insurance Card Expire"
+  },
+  {
+   "fieldname": "insurance_card_company",
+   "fieldtype": "Link",
+   "label": "Insurance Company",
+   "options": "Employee Health Insurance"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-02-01 16:11:09.409802",
+ "modified": "2022-02-14 14:36:34.423999",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Dependent",
