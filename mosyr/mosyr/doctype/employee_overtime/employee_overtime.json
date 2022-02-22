@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "OT-.YY.MM.DD.####",
+ "creation": "2022-02-21 17:32:24.973295",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "hour_rate",
+  "column_break_4",
+  "overtime_hours_by_1_5",
+  "overtime_hours_by_2",
+  "payroll_month",
+  "section_break_8",
+  "amount",
+  "column_break_10",
+  "notes",
+  "amended_from",
+  "key",
+  "nid",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "key",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Key",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Overtime",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "overtime_hours_by_1_5",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Overtime Hours ( 1.5 hour )"
+  },
+  {
+   "default": "0",
+   "fieldname": "overtime_hours_by_2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Overtime Hours ( 2 hours )"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "nid",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Nid",
+   "read_only": 1
+  },
+  {
+   "default": "Not Applied",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Applied\nApplied In System",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "hour_rate",
+   "fieldtype": "Currency",
+   "label": "Hour Rate",
+   "reqd": 1
+  },
+  {
+   "description": "Format: YYYY-MM ( 2022-01 )",
+   "fieldname": "payroll_month",
+   "fieldtype": "Data",
+   "label": "Payroll Month"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-02-22 18:46:15.083171",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Employee Overtime",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "employee_name"
+}
