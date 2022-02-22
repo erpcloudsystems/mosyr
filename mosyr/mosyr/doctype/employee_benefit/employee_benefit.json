@@ -10,7 +10,8 @@
   "employee_section",
   "employee",
   "column_break_3",
-  "name1",
+  "employee_name",
+  "status",
   "amount_details_section",
   "addition_type",
   "column_break_7",
@@ -35,7 +36,6 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -45,13 +45,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.first_name",
-   "fieldname": "name1",
-   "fieldtype": "Read Only",
-   "label": "Employee Name",
-   "read_only": 1
-  },
-  {
    "fieldname": "amount_details_section",
    "fieldtype": "Section Break",
    "label": "Amount Details"
@@ -59,6 +52,7 @@
   {
    "fieldname": "addition_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Addition Type",
    "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission"
   },
@@ -77,7 +71,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "format: 01/2022",
    "fieldname": "payroll_month",
    "fieldtype": "Data",
    "label": "Payroll Month",
@@ -126,13 +119,30 @@
   {
    "fieldname": "created_at",
    "fieldtype": "Date",
-   "label": "Created At"
+   "label": "Apply At"
+  },
+  {
+   "default": "Not Applied",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Status",
+   "options": "Not Applied\nApplied In System",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.first_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-15 18:01:37.348787",
+ "modified": "2022-02-22 16:34:47.734020",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Benefit",
@@ -164,5 +174,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "employee_name"
 }
