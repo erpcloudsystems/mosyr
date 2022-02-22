@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "company_id",
+  "psc",
   "section_break_2",
   "import_branches",
   "column_break_4",
@@ -28,6 +29,7 @@
   "import_letters",
   "section_break_19",
   "import_benefits",
+  "import_overtime",
   "column_break_19",
   "import_deductions",
   "leaves_details_section",
@@ -160,13 +162,23 @@
    "fieldname": "leaves_details_section",
    "fieldtype": "Section Break",
    "label": "Leaves Details"
+  },
+  {
+   "fieldname": "import_overtime",
+   "fieldtype": "Button",
+   "label": "Import Employee Overtime"
+  },
+  {
+   "fieldname": "psc",
+   "fieldtype": "Button",
+   "label": "Prepare Salary Components"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-02-15 17:33:46.669952",
+ "modified": "2022-02-21 18:13:56.841644",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Data Import",
