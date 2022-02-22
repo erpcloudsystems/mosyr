@@ -8,7 +8,7 @@ from datetime import datetime
 from frappe import _
 import os
 import json
-from frappe.utils import cint, getdate
+from frappe.utils import cint, getdate, flt
 
 doctypes_with_abbr = ['Department']
 doctypes_with_company_field = ['Department']
@@ -16,9 +16,11 @@ doctypes_with_company_field = ['Department']
 class MosyrDataImport(Document):
 
     def download_mosyr_file(self, doctype, docname, filed_name, source_path, filename):
+        frappe.db.commit()
         source_path = f"{source_path}{filename}"
         try:
             r = requests.get(source_path, allow_redirects=True)
+            r.raise_for_status()
             content = r.content
             _file = frappe.new_doc("File")
             _file.update({
@@ -37,7 +39,7 @@ class MosyrDataImport(Document):
                 doc.set(filed_name, _file.file_url)
                 doc.flags.ignore_mandatory = True
                 doc.save()
-            frappe.db.commit()
+                frappe.db.commit()
             return True, _file.as_dict()
         except Exception as e:
             return False, {}
@@ -86,6 +88,80 @@ class MosyrDataImport(Document):
             exist = new_value
             is_new = True
         return is_new, exist
+
+    @frappe.whitelist()
+    def psc(self):
+        base_components = [
+            {'component': 'Basic',                 'abbr': 'B'},
+            {'component': 'Allowance Housing',     'abbr':'AH'},
+            {'component': 'Allowance Worknatural', 'abbr':'AW'},
+            {'component': 'Allowance Other',       'abbr':'AO'},
+            {'component': 'Allowance Phone',       'abbr':'AP'},
+            {'component': 'Allowance Trans',       'abbr':'AT'},
+            {'component': 'Allowance Living',      'abbr':'AL'}]
+            # Benefit Components
+        benefit_components = [
+            {'component': 'Back Pay',              'abbr':'BP'},
+            {'component': 'Bonus',                 'abbr':'BO'},
+            {'component': 'Overtime',              'abbr':'OT'},
+            {'component': 'Business Trip',         'abbr':'BT'},
+            {'component': 'Commission',            'abbr':'COM'}]
+        
+        deduction_components = [
+            {'component': 'Deduction',              'abbr':'DD'}]
+        
+        company = frappe.defaults.get_global_default('company') or None
+        for component in base_components:
+            salary_component = component['component']
+            if not frappe.db.exists('Salary Component', salary_component):
+                salary_component_abbr = component['abbr']
+                component_type = "Earning"
+                salary_component_doc = frappe.new_doc("Salary Component")
+                salary_component_doc.update({
+                    'salary_component': salary_component,
+                    'salary_component_abbr': salary_component_abbr,
+                    'type': component_type})
+                if company:
+                    salary_component_doc.append('accounts', {
+                        'company': company
+                    })
+                salary_component_doc.save()
+        
+        for component in benefit_components:
+            salary_component = component['component']
+            if not frappe.db.exists('Salary Component', salary_component):
+                salary_component_abbr = component['abbr']
+                component_type = "Earning"
+                salary_component_doc = frappe.new_doc("Salary Component")
+                salary_component_doc.update({
+                    'salary_component': salary_component,
+                    'salary_component_abbr': salary_component_abbr,
+                    'type': component_type,
+                    'is_flexible_benefit': 1
+                })
+                if company:
+                    salary_component_doc.append('accounts', {
+                        'company': company
+                    })
+                salary_component_doc.save()
+        
+        for component in deduction_components:
+            salary_component = component['component']
+            if not frappe.db.exists('Salary Component', salary_component):
+                salary_component_abbr = component['abbr']
+                component_type = "Deduction"
+                salary_component_doc = frappe.new_doc("Salary Component")
+                salary_component_doc.update({
+                    'salary_component': salary_component,
+                    'salary_component_abbr': salary_component_abbr,
+                    'type': component_type
+                })
+                if company:
+                    salary_component_doc.append('accounts', {
+                        'company': company
+                    })
+                salary_component_doc.save()
+        frappe.db.commit()
 
     @frappe.whitelist()
     def get_company_id(self):
@@ -209,10 +285,10 @@ class MosyrDataImport(Document):
         self.show_import_status('Branch', total_data, success, existed, errors, headers, error_msgs, log_name)
     
     @frappe.whitelist()
-    def import_departments(self, company_id):
+    def import_grades(self, company_id):
         path = 'https://www.mosyr.io/en/api/migration-classes.json?company_id={}'
-        data = self.call_api(path, company_id, 'Department')
-        headers = [_('Department Id'), _('Error')]
+        data = self.call_api(path, company_id, 'Employee Grade')
+        headers = [_('Employee Class Id'), _('Error')]
         error_msgs = []
         total_data = len(data)
         errors = 0
@@ -224,16 +300,16 @@ class MosyrDataImport(Document):
             dn = d.get('name', '')
             did = d.get('key', '')
             if dn != '':
-                is_new, exist = self.check_link_data('Department', dn, 'department_name')
+                is_new, exist = self.check_link_data('Employee Grade', dn, '__newname')
                 if is_new:
                     success += 1
                 else:
                     existed += 1
             else:
                 errors += 1
-                error_msgs.append([did, _('Missing Department Name')])
-        log_name = self.create_import_log('Department', total_data, success, existed, errors, headers, error_msgs)
-        self.show_import_status('Department', total_data, success, existed, errors, headers, error_msgs, log_name)
+                error_msgs.append([did, _('Missing Class Value')])
+        log_name = self.create_import_log('Employee Grade', total_data, success, existed, errors, headers, error_msgs)
+        self.show_import_status('Employee Grade', total_data, success, existed, errors, headers, error_msgs, log_name)
 
     @frappe.whitelist()
     def import_employees(self, company_id):
@@ -266,6 +342,7 @@ class MosyrDataImport(Document):
             'employee_no': 'employee_number',
             'fullname_en': 'full_name_en'
         }
+        date_fields = ['date_of_birth', 'birth_date_g', 'insurance_card_expire']
         link_fields = []
         args = {
             'status': 'Inactive',
@@ -313,7 +390,9 @@ class MosyrDataImport(Document):
                                 "path": "https://www.mosyr.io/sites/default/files/",
                                 "name": filename
                             })
-                
+                if k in date_fields and v != '':
+                    v = getdate(v)
+
                 if k == 'designation' and v != '':
                     is_new, v = self.check_link_data('Designation', v, 'designation_name')
                 if k == 'department' and v != '':
@@ -856,6 +935,204 @@ class MosyrDataImport(Document):
         self.show_import_status('Employee Qualification', total_data, success, existed, errors, headers, error_msgs, log_name)
 
     @frappe.whitelist()
+    def import_contracts(self, company_id):
+        path = 'https://www.mosyr.io/en/api/migration-contracts.json?company_id={}'
+        data = self.call_api(path, company_id, 'Employee Contract')
+        headers = [_('Contract Key'), _('Error')]
+        error_msgs = []
+        total_data = len(data)
+        errors = 0
+        success = 0
+        existed = 0
+
+        attachment_field = ['attached_documents', 'job_description_file', 'hiring_letter']
+        ignored_fields = ['nid', 'name']
+        date_fields = [
+            'contract_start_date', 'contract_end_date', 'hiring_start_date', 'allowance_living_end_date',
+            'allowance_living_start_date', 'allowance_housing_end_date', 'allowance_housing_start_date',
+            'allowance_worknatural_end_date', 'allowance_worknatural_start_date', 'allowance_other_end_date',
+            'allowance_other_start_date', 'allowance_phone_end_date', 'allowance_phone_start_date',
+            'allowance_trans_end_date', 'allowance_trans_start_date'
+        ]
+        mapped_fields = {}
+
+        finan_values_lookup = {
+            'none': 'None',
+            'covered': 'Covered',
+            'cash': 'Cash'
+        }
+        finan_fields = [
+            'allowance_phone', 'allowance_living', 'allowance_trans', 
+            'allowance_worknatural', 'allowance_housing', 'allowance_other']
+
+        yes_no_lookup = {
+            'no': 'No',
+            'yes': 'Yes',
+            'travelticketsself': 'Employee Only',
+            'selfspouse': 'Employee & Spouse',
+            'selfspouse1dep': 'Family with 1 Dependant',
+            'selfspouse2dep': 'Family with 2 Dependant',
+            'selfspouse3dep': 'Family with 3 Dependant',
+            'selfspouse4dep': 'Family with 4 Dependant',
+            'family': 'All Family'
+        }
+        yes_no_fields = ['commision', 'commision_at_end_of_contract', 'vacation_travel_tickets', 'over_time_included']
+
+        ctype_lookup = {
+            'married': 'Married',
+            'notmarried': 'Not Married',
+            'temporary': 'Temporary',
+            'lump': 'Lump',
+            'theindefinite': 'The Indefinite',
+            'fixed term': 'Fixed Term',
+        }
+        cstatus_lookup = {
+            'valid': 'Valid',
+            'not-valid': 'Not Valid',
+        }
+        values_lookup = {
+            'fixed': 'Fixed',
+            'percentage': 'Percentage',
+            'monthly': 'Monthly',
+            'onetime': 'One Time',
+            'twotimes': 'Two Times',
+        }
+
+        link_fields = []
+        for d in data:
+            d = self.get_clean_data(d)
+            key = d.get('key', '')
+            nid = d.get('nid', False)
+            if not nid:
+                errors += 1
+                error_msgs.append([key, _('Missing Employee nid')])
+                continue
+
+            employees_with_nid = frappe.get_list('Employee', filters={'key': nid})
+            if len(employees_with_nid) == 0:
+                errors += 1
+                error_msgs.append([key, _(f'Employee <b>{nid}</b> not found')])
+                continue
+            
+            contract_type = d.get('contract_type', False)
+            if not contract_type:
+                errors += 1
+                error_msgs.append([key, _('Missing Contract Type')])
+                continue
+
+            contract_status = d.get('contract_status', False)
+            if not contract_status:
+                errors += 1
+                error_msgs.append([key, _('Missing Contract Status')])
+                continue
+            
+            nid = employees_with_nid[0].name
+            args = {
+                'employee': nid
+            }
+
+            new_cont = frappe.new_doc("Employee Contract")
+            con_with_same_key = frappe.get_list('Employee Contract', filters={'key': key})
+            if len(con_with_same_key) > 0:
+                existed += 1
+                new_cont = frappe.get_doc('Employee Contract', con_with_same_key[0].name)
+                if new_cont.docstatus == 1:
+                    errors += 1
+                    error_msgs.append([key, _('Employee Deduction is Submited')])
+                    continue
+            
+            attachments_data = []
+            for k, v in d.items():
+                k = f'{k}'.lower()
+                k = mapped_fields.get(k, k)
+                if k == 'attached_documents' and v != '':
+                    if isinstance(v, list): attachments_data = attachments_data  + v
+                    else: attachments_data.append(v)
+                    continue
+                
+                if k in attachment_field: continue
+                if k in ignored_fields: continue
+                
+                v = values_lookup.get(f'{v}', v)
+                if k in finan_fields:
+                    v = finan_values_lookup.get(v, 'None')
+                
+                if k in yes_no_fields:
+                    v = yes_no_lookup.get(v, 'No')
+                
+                if k in date_fields and (v != '' or isinstance(v, list)):
+                    v = getdate(v)
+                
+                if k == 'contract_type':
+                    v = ctype_lookup.get(v, 'Temporary')
+                
+                if k == 'contract_status':
+                    v = cstatus_lookup.get(v, 'Not Valid')
+                
+                
+                if k in ['basic_salary', 'leaves_consumed_balance']:
+                    v = flt(v)
+                
+                if k == 'vacation_period':
+                    v = cint(v)
+                if k == 'commision_precentage':
+                    v = f'{v}'.replace('%', '')
+                    v = flt(v)
+
+                args.update({f'{k}': v})
+            
+            new_cont.update(args)
+            new_cont.save()
+            success += 1
+            frappe.db.commit()
+            
+            
+            new_cont = frappe.get_doc('Employee Contract', new_cont.name)
+            hiring_letter = d.get('hiring_letter', '')
+            if len(hiring_letter) > 0:
+                file_name = hiring_letter.split('/')[-1]
+                source_path = '/'.join(hiring_letter.split('/')[:-1])
+                source_path = f'{source_path}/'
+                is_downloaded, _file  = self.download_mosyr_file('Employee Contract', new_cont.name, 'hiring_letter', source_path, file_name)
+                if is_downloaded:
+                    new_cont = frappe.get_doc('Employee Contract', new_cont.name)
+                    new_cont.hiring_letter = _file['file_url']
+                    new_cont.save()
+                    frappe.db.commit()
+            
+            job_description_file = d.get('job_description_file', '')
+            if len(job_description_file) > 0:
+                file_name = job_description_file.split('/')[-1]
+                source_path = '/'.join(job_description_file.split('/')[:-1])
+                source_path = f'{source_path}/'
+                is_downloaded, _file  = self.download_mosyr_file('Employee Contract', new_cont.name, 'job_description_file', source_path, file_name)
+                if is_downloaded:
+                    new_cont = frappe.get_doc('Employee Contract', new_cont.name)
+                    new_cont.job_description_file = _file['file_url']
+                    new_cont.save()
+                    frappe.db.commit()
+            attached_documents = d.get('attached_documents', [])
+            if isinstance(attached_documents, list):
+                for ad in attached_documents:
+                    print(ad)
+                    file_name = ad.split('/')[-1]
+                    source_path = '/'.join(ad.split('/')[:-1])
+                    source_path = f'{source_path}/'
+                    is_downloaded, _file  = self.download_mosyr_file('Employee Contract', new_cont.name, 'attachment', source_path, file_name)
+                    if is_downloaded:
+                        new_cont = frappe.get_doc('Employee Contract', new_cont.name)
+                        new_cont.append('attachments', {
+                            'attachment': _file['file_url']
+                        })
+                        new_cont.save()
+                        frappe.db.commit()
+            frappe.db.commit()
+
+            
+        log_name = self.create_import_log('Employee Contract', total_data, success, existed, errors, headers, error_msgs)
+        self.show_import_status('Employee Contract', total_data, success, existed, errors, headers, error_msgs, log_name)
+    
+    @frappe.whitelist()
     def import_letters(self, company_id):
         path = 'https://www.mosyr.io/en/api/migration-letters.json?company_id={}'
         data = self.call_api(path, company_id, 'Letter')
@@ -1008,7 +1285,7 @@ class MosyrDataImport(Document):
                 error_msgs.append([key, _('Missing Employee nid')])
                 continue
             
-            amount = cint(d.get('amount', False))
+            amount = flt(d.get('amount', False))
             if not amount or amount == 0:
                 errors += 1
                 error_msgs.append([key, _('Missing Amount Value')])
@@ -1047,7 +1324,7 @@ class MosyrDataImport(Document):
             new_ed.update(args)
             new_ed.save()
             frappe.db.commit()
-            new_ed.submit()
+            # new_ed.submit()
             success += 1
             
         log_name = self.create_import_log('Employee Deduction', total_data, success, existed, errors, headers, error_msgs)
@@ -1090,7 +1367,7 @@ class MosyrDataImport(Document):
                 error_msgs.append([key, _('Missing Employee nid')])
                 continue
             
-            amount = cint(d.get('amount', False))
+            amount = flt(d.get('amount', False))
             if not amount or amount == 0:
                 errors += 1
                 error_msgs.append([key, _('Missing Amount Value')])
@@ -1137,12 +1414,114 @@ class MosyrDataImport(Document):
             
             new_eb.update(args)
             new_eb.save()
+            # new_eb.submit()
             frappe.db.commit()
-            new_eb.submit()
             success += 1
             
         log_name = self.create_import_log('Employee Benefit', total_data, success, existed, errors, headers, error_msgs)
         self.show_import_status('Employee Benefit', total_data, success, existed, errors, headers, error_msgs, log_name)
+
+    @frappe.whitelist()
+    def import_overtime(self, company_id):
+        path = 'https://www.mosyr.io/en/api/migration-overtime.json?company_id={}'
+        data = self.call_api(path, company_id, 'Employee Overtime')
+        headers = [_('Overtime Id'), _('Error')]
+        error_msgs = []
+        total_data = len(data)
+        errors = 0
+        success = 0
+        existed = 0
+        
+
+        attachment_field = []
+        ignored_fields = ['nid', 'name']
+        date_fields = ['created_at']
+        mapped_fields = {
+            'overtime_hours_by_1.5': 'overtime_hours_by_1_5'
+        }
+        
+        link_fields = []
+        for d in data:
+            d = self.get_clean_data(d)
+            key = d.get('key', '')
+            
+            nid = d.get('nid', False)
+            if isinstance(nid, dict):
+                nid = nid.get('target_id', False)
+            else:
+                nid = False
+            
+            if not nid:
+                errors += 1
+                error_msgs.append([key, _('Missing Employee nid')])
+                continue
+            
+            amount = flt(d.get('amount', 0))
+            if not amount or amount == 0:
+                errors += 1
+                error_msgs.append([key, _('Missing Amount Value')])
+                continue
+
+            payroll_month = d.get('payroll_month', False)
+            if not payroll_month:
+                errors += 1
+                error_msgs.append([key, _('Missing Payroll Month Value')])
+                continue
+
+            employees_with_nid = frappe.get_list('Employee', filters={'key': nid})
+            if len(employees_with_nid) == 0:
+                errors += 1
+                error_msgs.append([key, _('Employee Not Found')])
+                continue
+
+            by_2 = flt(d.get('overtime_hours_by_2', 0))
+            by_1_5 = flt(d.get('overtime_hours_by_1.5', 0))
+            hour_rate = 0
+            if (by_2+by_1_5) == 0:
+                errors += 1
+                error_msgs.append([key, _('Overtime Hours are 0')])
+                continue
+
+            hour_rate = flt(amount) / (by_2*2+by_1_5*1.5)
+
+            nid = employees_with_nid[0].name
+
+            new_eb = frappe.new_doc("Employee Overtime")
+            ed_with_same_key = frappe.get_list('Employee Overtime', filters={'key': key})
+            if len(ed_with_same_key) > 0:
+                existed += 1
+                new_eb = frappe.get_doc('Employee Overtime', ed_with_same_key[0].name)
+                if new_eb.docstatus == 1:
+                    errors += 1
+                    error_msgs.append([key, _('Employee Overtime is Submited')])
+                    continue
+            
+            attachments_data = []
+            args = {'employee': nid}
+            
+            for k, v in d.items():
+                k = f'{k}'.lower()
+                k = mapped_fields.get(k, k)
+                
+                if k in ignored_fields: continue
+                if k in attachment_field: continue
+                if k in date_fields and v != '':
+                    v = getdate(v)
+                if k in ['overtime_hours_by_1_5', 'overtime_hours_by_2', 'amount']:
+                    v = flt(v)
+                
+                args.update({f'{k}': v})
+            args.update({
+                'hour_rate': hour_rate
+            })
+            new_eb.update(args)
+            new_eb.save()
+            frappe.db.commit()
+            # new_eb.submit()
+            success += 1
+            
+        log_name = self.create_import_log('Employee Overtime', total_data, success, existed, errors, headers, error_msgs)
+        self.show_import_status('Employee Overtime', total_data, success, existed, errors, headers, error_msgs, log_name)
 
 
     @frappe.whitelist()
@@ -1178,213 +1557,6 @@ class MosyrDataImport(Document):
                     sucess += 1
         frappe.db.commit()
         self.handle_error(error_msgs, sucess, errors, leave_type_set, exists)
-
-    @frappe.whitelist()
-    def import_contracts(self, company_id):
-        errors = 0
-        sucess = 0
-        exists = 0
-        error_msgs = ''
-        path = 'https://www.mosyr.io/en/api/migration-contracts.json?company_id='
-        data, errors = self.call_api(
-            path, company_id, 'Employee Contract', errors)
-
-        values_lookup = {
-            'selfspouse1dep': 'Employee & Spouse',
-            'travelticketsself': 'Employee Only',
-            'selfspouse2dep': 'Family with 2 Dependant',
-            'selfspouse3dep': 'Family with 3 Dependant',
-            'no': 'No',
-            '': '',
-                'valid': 'Valid',
-                'Not-valid': 'Not Valid',
-                'not-valid': 'Not Valid'
-        }
-        for d in data:
-            d = self.get_clean_data(d)
-            if frappe.db.exists("Employee", {'nid': d.get('nid')}):
-                if not frappe.db.exists("Employee Contract", {'key': d.get('key')}):
-                    contract = frappe.new_doc("Employee Contract")
-                    employee_name_from_employee = frappe.get_value(
-                        "Employee", {'nid': d.get('nid')}, 'first_name')
-                    # Info
-                    contract.key = d.get('key', '')
-                    contract.hiring_start_date_g = d.get(
-                        'hiring_start_date', '')
-                    contract.commision = d.get('commision', '').capitalize()
-                    contract.contract_type = d.get(
-                        'contract_type', '').capitalize()
-                    contract.vacation_period = d.get('vacation_period', '')
-                    contract.contract_start_g = d.get(
-                        'contract_start_date', '')
-                    contract.commision_at_end_of_contract = d.get(
-                        'commision_at_end_of_contract', '').capitalize()
-                    contract.contract_status = values_lookup[d.get(
-                        'contract_status', '')]
-                    contract.vacation_travel_tickets = values_lookup[d.get(
-                        'vacation_travel_tickets')]
-                    contract.contract_end_g = d.get('contract_end_date', '')
-                    contract.commision_precentage = d.get(
-                        'commision_precentage', '')
-                    contract.leaves_consumer_balance = d.get(
-                        'leaves_consumed_balance', '')
-                    contract.over_time_included = d.get(
-                        'over_time_included', '').capitalize()
-                    contract.notes = d.get('notes', '')
-                    contract.hiring_letter = d.get('hiring_letter', '')
-                    contract.employee_name = employee_name_from_employee
-
-                    # ### Contract Financial Details
-                    contract.basic_salary = d.get('basic_salary', '')
-                    contract.allowance_transportations = d.get(
-                        'allowance_trans', '').capitalize()
-                    contract.allowance_housing = d.get(
-                        'allowance_housing', '').capitalize()
-                    contract.allowance_phone = d.get(
-                        'allowance_phone', '').capitalize()
-                    contract.nature_of_work_allowance = d.get(
-                        'allowance_worknatural', '').capitalize()
-                    contract.allowance_other = d.get(
-                        'allowance_other', '').capitalize()
-                    contract.allowance_feeding = d.get(
-                        'allowance_living', '').capitalize()  # $$$
-
-                    # ### Allowance Transportations
-                    contract.trans_start_date_g = d.get(
-                        'allowance_trans_start_date', '')
-                    contract.trans_end_date_g = d.get(
-                        'allowance_trans_end_date', '')
-                    contract.allowance_period = d.get('allowance_period', '')
-                    contract.allowance_trans_schdl_1 == d.get(
-                        'allowance_trans_schdl_1', '')
-                    contract.allowance_trans_schdl_2 == d.get(
-                        'allowance_trans_schdl_2', '')
-                    contract.trans_amount_type = d.get(
-                        'allowance_trans_amount_type', '').capitalize()
-                    contract.trans_amount_value = d.get(
-                        'allowance_trans_value', '')
-
-                    # ### Allowance House
-                    contract.housing_start_g = d.get(
-                        'allowance_housing_start_date', '')
-                    contract.housing_end_date_g = d.get(
-                        'allowance_housing_end_date', '')
-                    contract.house_schdls = d.get(
-                        'allowance_housing_schedule', '').capitalize()
-                    contract.allowance_house_schdl_1 == d.get(
-                        'allowance_housing_schdl_1', '')
-                    contract.allowance_house_schdl_2 == d.get(
-                        'allowance_housing_schdl_2', '')
-                    # contract.house_amount_type = d.get('allowance_housing_amount').capitalize()#$$$
-                    contract.house_amount_value = d.get(
-                        'allowance_housing_value', '')
-
-                    # ### Allowance Phone
-                    contract.phone_start_date_g = d.get(
-                        'allowance_phone_start_date', '')
-                    contract.phone_end_date_g = d.get(
-                        'allowance_phone_end_date', '')
-                    contract.phone_schdls = d.get(
-                        'allowance_phone_schedule', '').capitalize()
-                    contract.allowance_phone_schdl_1 == d.get(
-                        'allowance_phone_schdl_1', '')
-                    contract.allowance_phone_schdl_1 == d.get(
-                        'allowance_phone_schdl_1', '')
-                    contract.allowance_phone_schdl_2 == d.get(
-                        'allowance_phone_schdl_2', '')
-                    contract.phone_amount_type = d.get(
-                        'allowance_phone_amount_type', '').capitalize()
-                    contract.phone_amount_value = d.get(
-                        'allowance_phone_value', '')
-
-                    # ### Allowance Natureow
-                    contract.natureow_start_date_g = d.get(
-                        'allowance_worknatural_start_date', '')
-                    contract.natureow_end_date_g = d.get(
-                        'allowance_worknatural_end_date', '')
-                    contract.natureow_schdls = d.get(
-                        'allowance_worknatural_schedule').capitalize()
-                    contract.allowance_natow_schdl_1 == d.get(
-                        'allowance_worknatural_schdl_1', '')
-                    contract.allowance_natow_schdl_2 == d.get(
-                        'allowance_worknatural_schdl_2', '')
-                    contract.natureow_amount_type = d.get(
-                        'allowance_worknatural_amount_type', '').capitalize()
-                    contract.natureow_amount_value = d.get(
-                        'allowance_worknatural_value', '')
-
-                    # ### Allowance Feeding
-                    contract.feeding_start_date_g = d.get(
-                        'allowance_living_start_date', '')  # $$$
-                    contract.feeding_end_date_g = d.get(
-                        'allowance_living_end_date', '')  # $$$
-                    contract.feed_schdls = d.get(
-                        'allowance_living_schedule', '').capitalize()  # $$$
-                    contract.allowance_feed_schdl_1 == d.get(
-                        'allowance_living_schdl_1', '')
-                    contract.allowance_feed_schdl_2 == d.get(
-                        'allowance_living_schdl_2', '')
-                    # contract.feed_amount_type = d.get('allowance_living_amount', '')#$$$
-                    contract.feed_amount_value = d.get(
-                        'allowance_living_value', '')  # $$$
-
-                    # ### Allowance Other
-                    contract.other_start_date_g = d.get(
-                        'allowance_other_start_date', '')
-                    contract.other_end_date_g = d.get(
-                        'allowance_other_end_date', '')
-                    contract.other_schdls = d.get(
-                        'allowance_other_schedule', '').capitalize()
-                    contract.allowance_other_schdl_1 == d.get(
-                        'allowance_other_schdl_1', '')
-                    contract.allowance_other_schdl_1 == d.get(
-                        'allowance_other_schdl_1', '')
-                    contract.allowance_other_schdl_2 == d.get(
-                        'allowance_other_schdl_2', '')
-                    contract.other_amount_type = d.get(
-                        'allowance_other_amount_type', '').capitalize()
-                    contract.other_amount_value = d.get(
-                        'allowance_other_value', '')
-                    contract.from_api = 1
-                    contract.nid = d.get('nid', '')
-                    contract.comment = d.get('comments', '')
-                    contract.save()
-                    sucess += 1
-                    contract_name = contract.name
-                    contract.job_description_file = d.get(
-                        'job_description_file', '')
-
-                    if d.get('attached_documents') not in (None, ' ', ''):
-                        for idx, url in enumerate(d.get('attached_documents')):
-                            file_output_name = f'{idx}-{employee_name_from_employee}-contract_file.pdf'
-                            contract.append('contract_files', {
-                                'contract_file': url
-                            })
-                        self.upload_file(
-                            "Employee Contract", contract_name, 'contract_file', file_output_name, url)
-
-                    if d.get('job_description_file') not in (None, '', ' ', []):
-                        url = d.get('job_description_file')
-                        file_output_name = f'{employee_name_from_employee}-job_description_file.pdf'
-                        self.upload_file(
-                            "Employee Contract", contract_name, 'job_description_file', file_output_name, url)
-
-                    if d.get('hiring_letter') not in (None, '', ' ', []):
-                        url = d.get('hiring_letter')
-                        file_output_name = f'{employee_name_from_employee}-hiring_letter.pdf'
-                        self.upload_file(
-                            "Employee Contract", contract_name, 'hiring_letter', file_output_name, url)
-                else:
-                    exists += 1
-            else:
-                employee_name = d.get('name')
-                nid = d.get('nid')
-                msg = _('Employee is not defined in system')
-                error_msgs += f'<tr><th>{nid}</th><td>{employee_name}</td><td>{msg}</td></tr>'
-                errors += 1
-                continue
-        frappe.db.commit()
-        self.handle_error(error_msgs, sucess, errors, data, exists)
 
     @frappe.whitelist()
     def import_leave_application(self, company_id):

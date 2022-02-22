@@ -32,11 +32,14 @@ frappe.ui.form.on('Mosyr Data Import', {
             freeze_message: __(msg),
         })
     },
+    psc(frm) {
+        frm.events.data_import_call(frm, 'psc', "Start Salary Components Preparing")
+    },
     import_branches(frm) {
         frm.events.data_import_call(frm, 'import_branches', "Start Branches Importing")
     },
     import_departments(frm) {
-        frm.events.data_import_call(frm, 'import_departments', "Start Departments Importing")
+        frm.events.data_import_call(frm, 'import_grades', "Start Employee Classes Importing")
     },
     import_employees(frm) {
         frm.events.data_import_call(frm, 'import_employees', "Start Employees Importing")
@@ -59,8 +62,14 @@ frappe.ui.form.on('Mosyr Data Import', {
     import_employee_qualifications(frm) {
         frm.events.data_import_call(frm, 'import_employee_qualifications', "Start Employee Qualifications Importing")
     },
+    import_contracts(frm) {
+        frm.events.data_import_call(frm, 'import_contracts', "Start Employee Contracts Importing")
+    },
     import_letters(frm) {
-        frm.events.data_import_call(frm, 'import_letters', "Start Letters Importing")
+        frm.events.data_import_call(frm, 'import_letters', "Start Employee Letters Importing")
+    },
+    import_overtime(frm) {
+        frm.events.data_import_call(frm, 'import_overtime', "Start Employee Overtime Importing")
     },
     import_deductions(frm) {
         frm.events.data_import_call(frm, 'import_deductions', "Start Employee Deductions Importing")
@@ -69,10 +78,6 @@ frappe.ui.form.on('Mosyr Data Import', {
         frm.events.data_import_call(frm, 'import_benefits', "Start Employee Benefits Importing")
     },
 
-
-    import_contracts(frm) {
-        frm.events.data_import_call(frm, 'import_contracts', "Start fetch Contracts")
-    },
     import_leave(frm) {
         frm.events.data_import_call(frm, 'import_leave', "Start fetch leave Type")
     },

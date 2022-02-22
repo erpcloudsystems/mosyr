@@ -6,117 +6,110 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "status",
   "info",
   "employee",
-  "vacation_period",
   "employee_name",
-  "vacation_travel_tickets",
-  "over_time_included",
-  "hiring_letter",
-  "column_break_6",
-  "hiring_start_date_g",
-  "contract_start_g",
-  "contract_end_g",
+  "notes",
   "job_description_file",
   "column_break_12",
-  "commision",
-  "commision_at_end_of_contract",
-  "commision_precentage",
-  "notes",
-  "column_break_14",
   "contract_type",
   "contract_status",
-  "leaves_consumer_balance",
+  "contract_start_date",
+  "contract_end_date",
+  "hiring_start_date",
+  "hiring_letter",
+  "column_break_14",
+  "commission",
+  "commision_at_end_of_contract",
+  "commision_precentage",
+  "vacation_travel_tickets",
+  "vacation_period",
+  "over_time_included",
+  "leaves_consumed_balance",
   "contract_financial_details_section",
   "basic_salary",
   "allowance_phone",
-  "allowance_feeding",
+  "allowance_living",
   "column_break_25",
-  "allowance_transportations",
-  "nature_of_work_allowance",
+  "allowance_trans",
+  "allowance_worknatural",
   "column_break_28",
   "allowance_housing",
   "allowance_other",
   "allowance_transportations_section",
-  "trans_start_date_g",
-  "trans_amount_type",
+  "allowance_trans_start_date",
+  "allowance_trans_amount_type",
   "column_break_34",
-  "trans_end_date_g",
-  "trans_amount_value",
+  "allowance_trans_end_date",
+  "allowance_trans_value",
   "column_break_37",
   "allowance_period",
   "allowance_trans_schdl_1",
   "allowance_trans_schdl_2",
   "allowance_house_section",
-  "housing_start_g",
+  "allowance_housing_start_date",
   "house_amount_type",
   "column_break_44",
-  "housing_end_date_g",
-  "house_amount_value",
+  "allowance_housing_end_date",
+  "allowance_housing_value",
   "column_break_47",
-  "house_schdls",
-  "allowance_house_schdl_1",
-  "allowance_house_schdl_2",
+  "allowance_housing_schedule",
+  "allowance_housing_schdl_1",
+  "allowance_housing_schdl_2",
   "allowance_phone_section",
-  "phone_start_date_g",
-  "phone_amount_type",
+  "allowance_phone_start_date",
+  "allowance_phone_amount_type",
   "column_break_54",
-  "phone_end_date_g",
-  "phone_amount_value",
+  "allowance_phone_end_date",
+  "allowance_phone_value",
   "column_break_57",
-  "phone_schdls",
+  "allowance_phone_schedule",
   "allowance_phone_schdl_1",
   "allowance_phone_schdl_2",
   "allowance_natureow_section",
-  "natureow_start_date_g",
-  "natureow_amount_type",
+  "allowance_worknatural_start_date",
+  "allowance_worknatural_amount_type",
   "column_break_64",
-  "natureow_end_date_g",
-  "natureow_amount_value",
+  "allowance_worknatural_end_date",
+  "allowance_worknatural_value",
   "column_break_67",
-  "natureow_schdls",
-  "allowance_natow_schdl_1",
-  "allowance_natow_schdl_2",
+  "allowance_worknatural_schedule",
+  "allowance_worknatural_schdl_1",
+  "allowance_worknatural_schdl_2",
   "allowance_feeding_section",
-  "feeding_start_date_g",
-  "feed_amount_type",
+  "allowance_living_start_date",
+  "field_allowance_feed_amount_typ",
   "column_break_74",
-  "feeding_end_date_g",
-  "feed_amount_value",
+  "allowance_living_end_date",
+  "allowance_living_value",
   "column_break_77",
-  "feed_schdls",
-  "allowance_feed_schdl_1",
-  "allowance_feed_schdl_2",
+  "allowance_living_schedule",
+  "allowance_living_schdl_1",
+  "allowance_living_schdl_2",
   "allowance_other_section",
-  "other_start_date_g",
-  "other_amount_type",
-  "comment",
+  "allowance_other_start_date",
+  "allowance_other_amount_type",
+  "comments",
   "column_break_84",
-  "other_end_date_g",
-  "other_amount_value",
+  "allowance_other_end_date",
+  "allowance_other_value",
   "column_break_87",
-  "other_schdls",
+  "allowance_other_schedule",
   "allowance_other_schdl_1",
   "allowance_other_schdl_2",
-  "from_api",
-  "nid",
+  "attachments_section",
+  "attachments",
   "key",
-  "amended_from",
-  "contract_files_section",
-  "contract_files"
+  "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "commision",
-   "fieldtype": "Select",
-   "label": "Commision",
-   "options": "\nYes\nNo"
-  },
-  {
+   "default": "No",
    "fieldname": "commision_at_end_of_contract",
    "fieldtype": "Select",
    "label": " Commision at end of Contract? ",
-   "options": "\nYes\nNo"
+   "options": "No\nYes"
   },
   {
    "fieldname": "hiring_letter",
@@ -129,20 +122,21 @@
    "label": "Job Description file"
   },
   {
+   "default": "30",
    "fieldname": "vacation_period",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Vacation Period"
   },
   {
+   "default": "No",
    "fieldname": "vacation_travel_tickets",
    "fieldtype": "Select",
    "label": " Vacation Travel Tickets ",
-   "options": "\nNo\nEmployee Only\nEmployee & Spouse\nFamily with 1 Dependant\nFamily with 2 Dependant\nFamily with 3 Dependant\nFamily with 4 Dependant\nAll Family"
+   "options": "No\nEmployee Only\nEmployee & Spouse\nFamily with 1 Dependant\nFamily with 2 Dependant\nFamily with 3 Dependant\nFamily with 4 Dependant\nAll Family"
   },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -153,21 +147,6 @@
    "label": "Info"
   },
   {
-   "fieldname": "column_break_6",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "hiring_start_date_g",
-   "fieldtype": "Date",
-   "label": "Hiring Start Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "contract_end_g",
-   "fieldtype": "Date",
-   "label": "Contract End"
-  },
-  {
    "fieldname": "column_break_12",
    "fieldtype": "Column Break"
   },
@@ -176,33 +155,17 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": " Contract Type",
-   "options": "\nMarried\nNotmarried\nTemporary\nLump\nThe indefinite\nFixed term",
+   "options": "\nMarried\nNot Married\nTemporary\nLump\nThe Indefinite\nFixed Term",
    "reqd": 1
-  },
-  {
-   "fieldname": "over_time_included",
-   "fieldtype": "Select",
-   "label": "Over Time Included",
-   "options": "\nYes\nNo"
   },
   {
    "fieldname": "column_break_14",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "contract_start_g",
-   "fieldtype": "Date",
-   "label": "Contract Start"
-  },
-  {
    "fieldname": "commision_precentage",
    "fieldtype": "Percent",
    "label": " Commision Precentage "
-  },
-  {
-   "fieldname": "leaves_consumer_balance",
-   "fieldtype": "Int",
-   "label": "leaves Consumer balance"
   },
   {
    "fieldname": "notes",
@@ -217,7 +180,8 @@
   {
    "fieldname": "basic_salary",
    "fieldtype": "Float",
-   "label": "Basic Salary"
+   "label": "Basic Salary",
+   "reqd": 1
   },
   {
    "fieldname": "allowance_phone",
@@ -226,26 +190,8 @@
    "options": "None\nCovered\nCash"
   },
   {
-   "fieldname": "allowance_feeding",
-   "fieldtype": "Select",
-   "label": "Allowance Feeding",
-   "options": "None\nCovered\nCash"
-  },
-  {
    "fieldname": "column_break_25",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "allowance_transportations",
-   "fieldtype": "Select",
-   "label": "Allowance Transportations",
-   "options": "None\nCovered\nCash"
-  },
-  {
-   "fieldname": "nature_of_work_allowance",
-   "fieldtype": "Select",
-   "label": "Nature of Work Allowance",
-   "options": "None\nCovered\nCash"
   },
   {
    "fieldname": "column_break_28",
@@ -269,29 +215,8 @@
    "label": "Allowance Transportations"
   },
   {
-   "fieldname": "trans_start_date_g",
-   "fieldtype": "Date",
-   "label": "Trans Start Date"
-  },
-  {
-   "fieldname": "trans_amount_type",
-   "fieldtype": "Select",
-   "label": "Trans Amount Type",
-   "options": "Fixed\nPercentage"
-  },
-  {
    "fieldname": "column_break_34",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "trans_end_date_g",
-   "fieldtype": "Date",
-   "label": "Trans End Date"
-  },
-  {
-   "fieldname": "trans_amount_value",
-   "fieldtype": "Float",
-   "label": "Trans Amount Value"
   },
   {
    "fieldname": "column_break_37",
@@ -304,16 +229,20 @@
    "options": "Monthly\nOne Time\nTwo Times"
   },
   {
+   "default": "1",
    "depends_on": "eval:doc.allowance_period!='Monthly'",
    "fieldname": "allowance_trans_schdl_1",
-   "fieldtype": "Data",
-   "label": "allowance_trans_schdl_1"
+   "fieldtype": "Select",
+   "label": "First Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
   },
   {
+   "default": "6",
    "depends_on": "eval:doc.allowance_period=='Two Times'",
    "fieldname": "allowance_trans_schdl_2",
-   "fieldtype": "Data",
-   "label": "allowance_trans_schdl_2"
+   "fieldtype": "Select",
+   "label": "Second Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
   },
   {
    "fieldname": "allowance_house_section",
@@ -321,14 +250,9 @@
    "label": "Allowance House"
   },
   {
-   "fieldname": "housing_start_g",
-   "fieldtype": "Date",
-   "label": "Housing Start"
-  },
-  {
    "fieldname": "house_amount_type",
    "fieldtype": "Select",
-   "label": "House Amount Type",
+   "label": "Amount Type",
    "options": "Fixed\nPercentage\nMonths"
   },
   {
@@ -336,36 +260,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "housing_end_date_g",
-   "fieldtype": "Date",
-   "label": "Housing End Date"
-  },
-  {
-   "fieldname": "house_amount_value",
-   "fieldtype": "Float",
-   "label": "House Amount Value"
-  },
-  {
    "fieldname": "column_break_47",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "house_schdls",
-   "fieldtype": "Select",
-   "label": "House schdls",
-   "options": "Monthly\nOne Time\nTwo Times"
-  },
-  {
-   "depends_on": "eval: doc.house_schdls != 'Monthly'",
-   "fieldname": "allowance_house_schdl_1",
-   "fieldtype": "Data",
-   "label": "allowance_house_schdl_1"
-  },
-  {
-   "depends_on": "eval: doc.house_schdls=='Two Times'",
-   "fieldname": "allowance_house_schdl_2",
-   "fieldtype": "Data",
-   "label": "allowance_house_schdl_2"
   },
   {
    "fieldname": "allowance_phone_section",
@@ -373,51 +269,28 @@
    "label": "Allowance Phone"
   },
   {
-   "fieldname": "phone_start_date_g",
-   "fieldtype": "Date",
-   "label": "Phone Start Date"
-  },
-  {
-   "fieldname": "phone_amount_type",
-   "fieldtype": "Select",
-   "label": "Phone Amount Type",
-   "options": "Fixed\nPercentage"
-  },
-  {
    "fieldname": "column_break_54",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "phone_end_date_g",
-   "fieldtype": "Date",
-   "label": "Phone End Date"
-  },
-  {
-   "fieldname": "phone_amount_value",
-   "fieldtype": "Float",
-   "label": "Phone Amount Value"
   },
   {
    "fieldname": "column_break_57",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "phone_schdls",
-   "fieldtype": "Select",
-   "label": "Phone schdls",
-   "options": "Monthly\nOne Time\nTwo Times"
-  },
-  {
-   "depends_on": "eval:doc.phone_schdls!='Monthly'",
+   "default": "1",
+   "depends_on": "eval:doc.allowance_phone_schedule!='Monthly'",
    "fieldname": "allowance_phone_schdl_1",
-   "fieldtype": "Data",
-   "label": "allowance_phone_schdl_1"
+   "fieldtype": "Select",
+   "label": "First Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
   },
   {
-   "depends_on": "eval:doc.phone_schdls=='Two Times'",
+   "default": "6",
+   "depends_on": "eval:doc.allowance_phone_schedule=='Two Times'",
    "fieldname": "allowance_phone_schdl_2",
-   "fieldtype": "Data",
-   "label": "allowance_phone_schdl_2"
+   "fieldtype": "Select",
+   "label": "Second Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
   },
   {
    "fieldname": "allowance_natureow_section",
@@ -425,45 +298,12 @@
    "label": "Allowance Natureow"
   },
   {
-   "fieldname": "natureow_start_date_g",
-   "fieldtype": "Date",
-   "label": "Natureow Start Date"
-  },
-  {
-   "fieldname": "natureow_amount_type",
-   "fieldtype": "Select",
-   "label": "Natureow Amount Type",
-   "options": "Fixed\nPercentage"
-  },
-  {
    "fieldname": "column_break_64",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "natureow_end_date_g",
-   "fieldtype": "Date",
-   "label": "Natureow End Date"
-  },
-  {
-   "fieldname": "natureow_amount_value",
-   "fieldtype": "Float",
-   "label": "Natureow Amount Value"
-  },
-  {
    "fieldname": "column_break_67",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "natureow_schdls",
-   "fieldtype": "Select",
-   "label": "Natureow schdls",
-   "options": "Monthly\nOne Time\nTwo Times"
-  },
-  {
-   "depends_on": "eval:doc.natureow_schdls!='Monthly'",
-   "fieldname": "allowance_natow_schdl_1",
-   "fieldtype": "Data",
-   "label": "allowance_natow_schdl_1"
   },
   {
    "fieldname": "allowance_feeding_section",
@@ -471,51 +311,12 @@
    "label": "Allowance Feeding"
   },
   {
-   "fieldname": "feeding_start_date_g",
-   "fieldtype": "Date",
-   "label": "Feeding Start Date"
-  },
-  {
-   "fieldname": "feed_amount_type",
-   "fieldtype": "Select",
-   "label": "Feed Amount Type",
-   "options": "Fixed\nPercentage"
-  },
-  {
    "fieldname": "column_break_74",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "feeding_end_date_g",
-   "fieldtype": "Date",
-   "label": "Feeding End Date"
-  },
-  {
-   "fieldname": "feed_amount_value",
-   "fieldtype": "Float",
-   "label": "Feed Amount Value"
-  },
-  {
    "fieldname": "column_break_77",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "feed_schdls",
-   "fieldtype": "Select",
-   "label": "Feed schdls",
-   "options": "Monthly\nOne Time\nTwo Times"
-  },
-  {
-   "depends_on": "eval:doc.feed_schdls!='Monthly'",
-   "fieldname": "allowance_feed_schdl_1",
-   "fieldtype": "Data",
-   "label": "allowance_feed_schdl_1"
-  },
-  {
-   "depends_on": "eval:doc.feed_schdls=='Two Times'",
-   "fieldname": "allowance_feed_schdl_2",
-   "fieldtype": "Data",
-   "label": "allowance_feed_schdl_2"
   },
   {
    "fieldname": "allowance_other_section",
@@ -523,77 +324,28 @@
    "label": "Allowance Other"
   },
   {
-   "fieldname": "other_start_date_g",
-   "fieldtype": "Date",
-   "label": "Other Start Date"
-  },
-  {
-   "fieldname": "other_amount_type",
-   "fieldtype": "Select",
-   "label": "Other Amount Type",
-   "options": "Fixed\nPercentage"
-  },
-  {
    "fieldname": "column_break_84",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "other_end_date_g",
-   "fieldtype": "Date",
-   "label": "Other End Date"
-  },
-  {
-   "fieldname": "other_amount_value",
-   "fieldtype": "Float",
-   "label": "Other Amount Value"
   },
   {
    "fieldname": "column_break_87",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "other_schdls",
-   "fieldtype": "Select",
-   "label": "Other schdls",
-   "options": "Monthly\nOne Time\nTwo Times"
-  },
-  {
-   "fieldname": "comment",
-   "fieldtype": "Small Text",
-   "label": "Comment"
-  },
-  {
-   "depends_on": "eval:doc.other_schdls!='Monthly'",
+   "default": "1",
+   "depends_on": "eval:doc.allowance_other_schedule!='Monthly'",
    "fieldname": "allowance_other_schdl_1",
-   "fieldtype": "Data",
-   "label": "allowance_other_schdl_1"
+   "fieldtype": "Select",
+   "label": "First Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
   },
   {
-   "depends_on": "eval:doc.other_schdls=='Two Times'",
+   "default": "6",
+   "depends_on": "eval:doc.allowance_other_schedule=='Two Times'",
    "fieldname": "allowance_other_schdl_2",
-   "fieldtype": "Data",
-   "label": "allowance_other_schdl_2"
-  },
-  {
-   "depends_on": "eval:doc.natureow_schdls=='Two Times'",
-   "fieldname": "allowance_natow_schdl_2",
-   "fieldtype": "Data",
-   "label": "allowance_natow_schdl_2"
-  },
-  {
-   "default": "0",
-   "fieldname": "from_api",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "from_api",
-   "read_only": 1
-  },
-  {
-   "fieldname": "nid",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "nid",
-   "read_only": 1
+   "fieldtype": "Select",
+   "label": "Second Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
   },
   {
    "fieldname": "amended_from",
@@ -609,24 +361,15 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": " Contract Status",
-   "options": "\nValid\nNot Valid"
+   "options": "\nValid\nNot Valid",
+   "reqd": 1
   },
   {
    "fetch_from": "employee.first_name",
    "fieldname": "employee_name",
    "fieldtype": "Read Only",
+   "in_list_view": 1,
    "label": "Employee Name"
-  },
-  {
-   "fieldname": "contract_files",
-   "fieldtype": "Table",
-   "label": "Contract Files",
-   "options": "Contract Files"
-  },
-  {
-   "fieldname": "contract_files_section",
-   "fieldtype": "Section Break",
-   "label": "Contract Files"
   },
   {
    "fieldname": "key",
@@ -634,12 +377,292 @@
    "hidden": 1,
    "label": "Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "attachments_section",
+   "fieldtype": "Section Break",
+   "label": "Attachments"
+  },
+  {
+   "fieldname": "attachments",
+   "fieldtype": "Table",
+   "label": "Attachments",
+   "options": "Contract Attachment"
+  },
+  {
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Contract Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Contract End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hiring_start_date",
+   "fieldtype": "Date",
+   "label": "Hiring Start Date",
+   "reqd": 1
+  },
+  {
+   "default": "No",
+   "fieldname": "commission",
+   "fieldtype": "Select",
+   "label": "Commission",
+   "options": "No\nYes"
+  },
+  {
+   "fieldname": "allowance_trans",
+   "fieldtype": "Select",
+   "label": "Allowance Transportation",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "allowance_worknatural",
+   "fieldtype": "Select",
+   "label": "Nature of Work Allowance",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "default": "No",
+   "fieldname": "over_time_included",
+   "fieldtype": "Select",
+   "label": "Overtime Included",
+   "options": "No\nYes"
+  },
+  {
+   "fieldname": "leaves_consumed_balance",
+   "fieldtype": "Float",
+   "label": "Leaves Consumed balance"
+  },
+  {
+   "fieldname": "allowance_trans_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "allowance_trans_amount_type",
+   "fieldtype": "Select",
+   "label": "Amount Type",
+   "options": "Fixed\nPercentage"
+  },
+  {
+   "fieldname": "allowance_trans_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Small Text",
+   "label": "Comments"
+  },
+  {
+   "fieldname": "allowance_other_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "allowance_other_amount_type",
+   "fieldtype": "Select",
+   "label": "Amount Type",
+   "options": "Fixed\nPercentage"
+  },
+  {
+   "fieldname": "allowance_other_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "allowance_other_value",
+   "fieldtype": "Float",
+   "label": "Amount Value"
+  },
+  {
+   "fieldname": "allowance_other_schedule",
+   "fieldtype": "Select",
+   "label": "Payment scheduling",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "fieldname": "allowance_worknatural_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "allowance_worknatural_amount_type",
+   "fieldtype": "Select",
+   "label": "Amount Type",
+   "options": "Fixed\nPercentage"
+  },
+  {
+   "fieldname": "allowance_worknatural_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "allowance_worknatural_value",
+   "fieldtype": "Float",
+   "label": "Amount Value"
+  },
+  {
+   "fieldname": "allowance_worknatural_schedule",
+   "fieldtype": "Select",
+   "label": "Payment scheduling",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.allowance_worknatural_schedule!='Monthly'",
+   "fieldname": "allowance_worknatural_schdl_1",
+   "fieldtype": "Select",
+   "label": "First Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
+  },
+  {
+   "default": "6",
+   "depends_on": "eval:doc.allowance_worknatural_schedule=='Two Times'",
+   "fieldname": "allowance_worknatural_schdl_2",
+   "fieldtype": "Select",
+   "label": "Second Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
+  },
+  {
+   "fieldname": "allowance_phone_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "allowance_phone_amount_type",
+   "fieldtype": "Select",
+   "label": "Amount Type",
+   "options": "Fixed\nPercentage"
+  },
+  {
+   "fieldname": "allowance_phone_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "allowance_phone_value",
+   "fieldtype": "Float",
+   "label": "Amount Value"
+  },
+  {
+   "fieldname": "allowance_phone_schedule",
+   "fieldtype": "Select",
+   "label": "Payment scheduling",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "fieldname": "allowance_housing_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "allowance_housing_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "allowance_housing_value",
+   "fieldtype": "Float",
+   "label": "Amount Value"
+  },
+  {
+   "fieldname": "allowance_housing_schedule",
+   "fieldtype": "Select",
+   "label": "Payment scheduling",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval: doc.allowance_housing_schedule != 'Monthly'",
+   "fieldname": "allowance_housing_schdl_1",
+   "fieldtype": "Select",
+   "label": "First Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
+  },
+  {
+   "default": "6",
+   "depends_on": "eval: doc.allowance_housing_schedule=='Two Times'",
+   "fieldname": "allowance_housing_schdl_2",
+   "fieldtype": "Select",
+   "label": "Second Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
+  },
+  {
+   "fieldname": "allowance_living",
+   "fieldtype": "Select",
+   "label": "Allowance Living",
+   "options": "None\nCovered\nCash"
+  },
+  {
+   "fieldname": "allowance_trans_value",
+   "fieldtype": "Float",
+   "label": "Amount Value"
+  },
+  {
+   "fieldname": "allowance_living_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "allowance_living_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "allowance_living_value",
+   "fieldtype": "Float",
+   "label": "Amount Value"
+  },
+  {
+   "fieldname": "allowance_living_schedule",
+   "fieldtype": "Select",
+   "label": "Payment scheduling",
+   "options": "Monthly\nOne Time\nTwo Times"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.allowance_living_schedule!='Monthly'",
+   "fieldname": "allowance_living_schdl_1",
+   "fieldtype": "Select",
+   "label": "First Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
+  },
+  {
+   "default": "6",
+   "depends_on": "eval:doc.allowance_living_schedule=='Two Times'",
+   "fieldname": "allowance_living_schdl_2",
+   "fieldtype": "Select",
+   "label": "Second Installment Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12"
+  },
+  {
+   "fieldname": "field_allowance_feed_amount_typ",
+   "fieldtype": "Select",
+   "label": "Amount Type",
+   "options": "Fixed\nPercentage"
+  },
+  {
+   "default": "Not Applied",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Status",
+   "options": "Not Applied\nApplied In System",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-30 12:07:40.992817",
+ "modified": "2022-02-22 16:44:16.548608",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",
@@ -671,5 +694,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "employee_name"
 }
