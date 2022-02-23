@@ -12,15 +12,20 @@ class EmployeeContract(Document):
 		if self.contract_start_date > self.contract_end_date:
 			frappe.throw(_("The end date of the contract must be after the start date"))
 			return
-
-		if self.hiring_start_date < self.contract_start_date or self.hiring_start_date > self.contract_end_date:
-			frappe.throw(_(f"Hiring Date must be in {self.contract_start_date} and {self.contract_end_date}"))
-			return
 		
 		previous_contracts = frappe.get_list('Employee Contract', filters={'employee': self.employee, 'docstatus' :1, 'contract_status': 'Valid', 'contract_start_date': ["<=", self.contract_end_date]})
 		if len(previous_contracts) > 0:
 			frappe.throw(_("Employee {} has Valid contract within {} and {}".format(self.employee_name, self.contract_start_date, self.contract_end_date)))
 			return
+		
+		if self.hiring_start_date < self.contract_start_date or self.hiring_start_date > self.contract_end_date:
+			if self.key:
+				frappe.msgprint(_(f"Hiring Date in contract {} is out of range {} and {}".format(self.key, self.contract_start_date, self.contract_end_date)))
+			elif self.name:
+				frappe.msgprint(_(f"Hiring Date in contract {} is out of range {} and {}".format(self.name, self.contract_start_date, self.contract_end_date)))
+			else:
+				frappe.msgprint(_(f"Hiring Date is out of range {} and {}".format(self.contract_start_date, self.contract_end_date)))
+
 	
 	@frappe.whitelist()
 	def apply_in_system(self):
