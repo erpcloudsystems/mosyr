@@ -20,11 +20,11 @@ class EmployeeContract(Document):
 		
 		if self.hiring_start_date < self.contract_start_date or self.hiring_start_date > self.contract_end_date:
 			if self.key:
-				frappe.msgprint(_(f"Hiring Date in contract {} is out of range {} and {}".format(self.key, self.contract_start_date, self.contract_end_date)))
+				frappe.msgprint(_("Hiring Date in contract {} is out of range {} and {}".format(self.key, self.contract_start_date, self.contract_end_date)))
 			elif self.name:
-				frappe.msgprint(_(f"Hiring Date in contract {} is out of range {} and {}".format(self.name, self.contract_start_date, self.contract_end_date)))
+				frappe.msgprint(_("Hiring Date in contract {} is out of range {} and {}".format(self.name, self.contract_start_date, self.contract_end_date)))
 			else:
-				frappe.msgprint(_(f"Hiring Date is out of range {} and {}".format(self.contract_start_date, self.contract_end_date)))
+				frappe.msgprint(_("Hiring Date is out of range {} and {}".format(self.contract_start_date, self.contract_end_date)))
 
 	
 	@frappe.whitelist()
