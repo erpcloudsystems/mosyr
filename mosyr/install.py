@@ -1,6 +1,6 @@
 import frappe
 
-def after_install():
+def after_install(): pass
     # create_salary_components()
     # create_salary_structure()
     # frappe.db.commit()
