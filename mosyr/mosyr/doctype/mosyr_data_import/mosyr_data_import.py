@@ -368,7 +368,9 @@ class MosyrDataImport(Document):
             'insurance_card_number':'health_insurance_no',
             'insurance_card_company': 'health_insurance_provider',
             'employee_no': 'employee_number',
-            'fullname_en': 'full_name_en'
+            'fullname_en': 'full_name_en',
+            'bank': 'bank_name',
+            'Bank': 'bank_name'
         }
         date_fields = ['date_of_birth', 'birth_date_g', 'insurance_card_expire']
         link_fields = []
