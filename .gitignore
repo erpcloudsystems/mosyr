@@ -4,3 +4,5 @@
 *.swp
 tags
 mosyr/docs/current
+*.min.js
+*.min.js.map
