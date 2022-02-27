@@ -27,10 +27,8 @@ frappe.ui.form.on('Employee', {
         frm.add_custom_button(__('Salary'), function() {
             frm.scroll_to_field('payroll_card_number');
         }, __('Jump to'));
-        frm.add_custom_button(__('Leave'), function() {
-            frm.scroll_to_field('mosyr_employee_status');
-        }, __('Jump to'));
+        // frm.add_custom_button(__('Leave'), function() {
+        //     frm.scroll_to_field('mosyr_employee_status');
+        // }, __('Jump to'));
     }
-
-
 });
