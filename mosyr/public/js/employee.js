@@ -25,7 +25,7 @@ frappe.ui.form.on('Employee', {
             frm.scroll_to_field('health_insurance_provider');
         }, __('Jump to'));
         frm.add_custom_button(__('Salary'), function() {
-            frm.scroll_to_field('salary_information');
+            frm.scroll_to_field('salary_mode');
         }, __('Jump to'));
         // frm.add_custom_button(__('Leave'), function() {
         //     frm.scroll_to_field('mosyr_employee_status');
