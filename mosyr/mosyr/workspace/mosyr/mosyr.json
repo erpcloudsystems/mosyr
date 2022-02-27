@@ -1,5 +1,5 @@
 {
- "cards_label": "Masters & Reports",
+ "cards_label": "",
  "category": "Modules",
  "charts": [],
  "creation": "2022-02-27 15:16:13.719050",
@@ -164,7 +164,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-02-27 15:58:22.611319",
+ "modified": "2022-02-27 16:01:27.114528",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr",
