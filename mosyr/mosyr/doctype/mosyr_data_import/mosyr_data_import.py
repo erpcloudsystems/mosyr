@@ -1515,7 +1515,7 @@ class MosyrDataImport(Document):
             by_2 = flt(d.get('overtime_hours_by_2', 0))
             by_1_5 = flt(d.get('overtime_hours_by_1.5', 0))
             hour_rate = 0
-            args = {'employee': nid}
+            args = {'employee': employees_with_nid[0].name}
             if (by_2+by_1_5) == 0:
                 # errors += 1
                 # error_msgs.append([key, _('Overtime Hours are 0')])
