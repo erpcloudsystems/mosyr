@@ -312,6 +312,34 @@ class MosyrDataImport(Document):
         self.show_import_status('Employee Grade', total_data, success, existed, errors, headers, error_msgs, log_name)
 
     @frappe.whitelist()
+    def import_departments(self, company_id):
+        path = 'https://www.mosyr.io/en/api/migration-classes.json?company_id={}'
+        data = self.call_api(path, company_id, 'Department')
+        headers = [_('Employee Class Id'), _('Error')]
+        error_msgs = []
+        total_data = len(data)
+        errors = 0
+        success = 0
+        existed = 0
+
+        for d in data:
+            d = self.get_clean_data(d)
+            dn = d.get('name', '')
+            did = d.get('key', '')
+            if dn != '':
+                is_new, exist = self.check_link_data('Department', dn, 'department_name')
+                if is_new:
+                    success += 1
+                else:
+                    existed += 1
+            else:
+                errors += 1
+                error_msgs.append([did, _('Missing Class Value')])
+        log_name = self.create_import_log('Department', total_data, success, existed, errors, headers, error_msgs)
+        self.show_import_status('Department', total_data, success, existed, errors, headers, error_msgs, log_name)
+
+
+    @frappe.whitelist()
     def import_employees(self, company_id):
         path = 'https://www.mosyr.io/en/api/migration-employees.json?company_id={}'
         data = self.call_api(path, company_id, 'Employee')
