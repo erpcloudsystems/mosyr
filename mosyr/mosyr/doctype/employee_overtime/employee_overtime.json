@@ -9,6 +9,7 @@
  "field_order": [
   "employee",
   "employee_name",
+  "from_biometric",
   "hour_rate",
   "column_break_4",
   "overtime_hours_by_1_5",
@@ -62,17 +63,21 @@
   },
   {
    "default": "0",
+   "depends_on": "eval: doc.from_biometric==0",
    "fieldname": "overtime_hours_by_1_5",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Overtime Hours ( 1.5 hour )"
+   "label": "Overtime Hours ( 1.5 hour )",
+   "mandatory_depends_on": "eval: doc.from_biometric==0"
   },
   {
    "default": "0",
+   "depends_on": "eval: doc.from_biometric==0",
    "fieldname": "overtime_hours_by_2",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Overtime Hours ( 2 hours )"
+   "label": "Overtime Hours ( 2 hours )",
+   "mandatory_depends_on": "eval: doc.from_biometric==0"
   },
   {
    "fieldname": "notes",
@@ -98,10 +103,11 @@
    "reqd": 1
   },
   {
+   "depends_on": "eval: doc.from_biometric==0",
    "fieldname": "hour_rate",
    "fieldtype": "Currency",
    "label": "Hour Rate",
-   "reqd": 1
+   "mandatory_depends_on": "eval: doc.from_biometric==0"
   },
   {
    "description": "Format: YYYY-MM ( 2022-01 )",
@@ -116,17 +122,24 @@
   {
    "fieldname": "amount",
    "fieldtype": "Float",
-   "label": "Amount"
+   "label": "Amount",
+   "mandatory_depends_on": "eval: doc.from_biometric==1"
   },
   {
    "fieldname": "column_break_10",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "from_biometric",
+   "fieldtype": "Check",
+   "label": "From Biometric"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-22 18:46:15.083171",
+ "modified": "2022-02-27 16:16:49.125199",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Overtime",

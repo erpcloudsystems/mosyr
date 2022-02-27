@@ -1502,18 +1502,6 @@ class MosyrDataImport(Document):
                 error_msgs.append([key, _('Employee Not Found')])
                 continue
 
-            by_2 = flt(d.get('overtime_hours_by_2', 0))
-            by_1_5 = flt(d.get('overtime_hours_by_1.5', 0))
-            hour_rate = 0
-            if (by_2+by_1_5) == 0:
-                errors += 1
-                error_msgs.append([key, _('Overtime Hours are 0')])
-                continue
-
-            hour_rate = flt(amount) / (by_2*2+by_1_5*1.5)
-
-            nid = employees_with_nid[0].name
-
             new_eb = frappe.new_doc("Employee Overtime")
             ed_with_same_key = frappe.get_list('Employee Overtime', filters={'key': key})
             if len(ed_with_same_key) > 0:
@@ -1524,8 +1512,29 @@ class MosyrDataImport(Document):
                     error_msgs.append([key, _('Employee Overtime is Submited')])
                     continue
             
-            attachments_data = []
+            by_2 = flt(d.get('overtime_hours_by_2', 0))
+            by_1_5 = flt(d.get('overtime_hours_by_1.5', 0))
+            hour_rate = 0
             args = {'employee': nid}
+            if (by_2+by_1_5) == 0:
+                # errors += 1
+                # error_msgs.append([key, _('Overtime Hours are 0')])
+                # continue
+                args.update({
+                    'overtime_hours_by_2': 0,
+                    'overtime_hours_by_1.5': 0,
+                    'from_biometric': 1,
+                    'hour_rate': 0
+                })
+            else:
+                hour_rate = flt(amount) / (by_2*2+by_1_5*1.5)
+                args.update({
+                    'hour_rate': hour_rate
+                })
+
+            nid = employees_with_nid[0].name
+            attachments_data = []
+            
             
             for k, v in d.items():
                 k = f'{k}'.lower()
@@ -1539,9 +1548,7 @@ class MosyrDataImport(Document):
                     v = flt(v)
                 
                 args.update({f'{k}': v})
-            args.update({
-                'hour_rate': hour_rate
-            })
+            
             new_eb.update(args)
             new_eb.save()
             frappe.db.commit()

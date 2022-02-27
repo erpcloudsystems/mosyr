@@ -4,7 +4,7 @@ import datetime
 
 import frappe
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt, cint
 
 from frappe.model.document import Document
 
@@ -15,9 +15,10 @@ class EmployeeOvertime(Document):
         except ValueError:
             frappe.throw(_("Incorrect data format, should be YYYY-MM"))
             return
-        by_1_5 = flt(self.hour_rate) * 1.5 * flt(self.overtime_hours_by_1_5)
-        by_2 = flt(self.hour_rate) * 2 * flt(self.overtime_hours_by_2)
-        self.amount = by_1_5 + by_2
+        if (self.from_biometric) == 0:
+            by_1_5 = flt(self.hour_rate) * 1.5 * flt(self.overtime_hours_by_1_5)
+            by_2 = flt(self.hour_rate) * 2 * flt(self.overtime_hours_by_2)
+            self.amount = by_1_5 + by_2
 
     @frappe.whitelist()
     def apply_in_system(self):
