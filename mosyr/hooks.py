@@ -188,6 +188,7 @@ fixtures = [
 				"Employee-from_api",
 				"Employee-key",
 				"Employee-valid_data",
+				"Employee-hijri_date_of_birth",
 				"Employee-employee_signature",
 				"Employee-api_employee_status",
 				"Employee-birth_place",
