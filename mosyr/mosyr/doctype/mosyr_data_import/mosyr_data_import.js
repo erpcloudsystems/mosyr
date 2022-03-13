@@ -41,6 +41,9 @@ frappe.ui.form.on('Mosyr Data Import', {
     import_departments(frm) {
         frm.events.data_import_call(frm, 'import_departments', "Start Employee Classes Importing")
     },
+    import_grades(frm) {
+        frm.events.data_import_call(frm, 'import_grades', "Start Grade Importing")
+    },
     import_employees(frm) {
         frm.events.data_import_call(frm, 'import_employees', "Start Employees Importing")
     },

@@ -314,7 +314,8 @@ class MosyrDataImport(Document):
 
     @frappe.whitelist()
     def import_departments(self, company_id):
-        path = 'https://www.mosyr.io/en/api/migration-classes.json?company_id={}'
+        path = 'https://www.mosyr.io/en/api/migration-departments.json?company_id={}'
+                
         data = self.call_api(path, company_id, 'Department')
         headers = [_('Employee Class Id'), _('Error')]
         error_msgs = []
