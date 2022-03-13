@@ -20,7 +20,7 @@
 }
 
 .calendars-popup {
-    z-index: 1000;
+    z-index: 9999;
     /* top: 225px !important; */
 }
 

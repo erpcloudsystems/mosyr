@@ -12,12 +12,15 @@
   "section_break_4",
   "issue_place",
   "issue_date",
+  "issue_date_h",
   "column_break_7",
   "issue_place_english",
   "expire_date",
+  "expire_date_h",
   "section_break_10",
   "border_entry_port",
   "border_entry_date",
+  "border_entry_date_h",
   "border_entry_number",
   "section_break_14",
   "identity_name",
@@ -123,12 +126,30 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Border Entry Date"
+  },
+  {
+   "fieldname": "issue_date_h",
+   "fieldtype": "Data",
+   "label": "Issue Hijri Date",
+   "options": "Hijri Date"
+  },
+  {
+   "fieldname": "expire_date_h",
+   "fieldtype": "Data",
+   "label": "Expire Hijri Date",
+   "options": "Hijri Date"
+  },
+  {
+   "fieldname": "border_entry_date_h",
+   "fieldtype": "Data",
+   "label": "Border Entry Hijri Date",
+   "options": "Hijri Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-02-14 13:53:41.638311",
+ "modified": "2022-03-13 12:56:42.890721",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Identity",
