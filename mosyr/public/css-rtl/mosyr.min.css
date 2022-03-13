@@ -1,3 +1,4 @@
-div[data-fieldtype="Attach"] .btn {
+div[data-fieldtype="Attach"] .btn,
+div[data-fieldtype="Attach Image"] .btn {
     background-color: rgb(244, 245, 246) !important;
 }

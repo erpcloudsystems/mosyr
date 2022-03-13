@@ -6,3 +6,4 @@ tags
 mosyr/docs/current
 *.min.js
 *.min.js.map
+*.min.css
