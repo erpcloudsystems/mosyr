@@ -4,5 +4,16 @@
     ],
     "mosyr/css/mosyr.min.css": [
         "public/css/mosyr.css"
+    ],
+    "mosyr/js/hcalendar.min.js": [
+        "public/js/jquery.calendars.js",
+        "public/js/jquery.calendars.plus.js",
+        "public/js/jquery.plugin.js",
+        "public/js/jquery.calendars.picker.js",
+        "public/js/jquery.calendars.islamic.js",
+        "public/js/jquery.calendars.islamic-ar.js"
+    ],
+    "mosyr/css/hcalendar.min.css": [
+        "public/css/smoothness.calendars.picker.css"
     ]
 }

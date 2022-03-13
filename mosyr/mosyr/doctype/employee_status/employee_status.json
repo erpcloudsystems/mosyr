@@ -8,6 +8,7 @@
  "field_order": [
   "status",
   "status_date",
+  "status_date_h",
   "column_break_3",
   "status_reason",
   "attachment",
@@ -49,12 +50,18 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Status Date"
+  },
+  {
+   "fieldname": "status_date_h",
+   "fieldtype": "Data",
+   "label": "Status Hijri Date",
+   "options": "Hijri Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-02-14 15:02:52.866127",
+ "modified": "2022-03-13 12:51:48.535495",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Status",

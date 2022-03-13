@@ -371,7 +371,8 @@ class MosyrDataImport(Document):
             'employee_no': 'employee_number',
             'fullname_en': 'full_name_en',
             'bank': 'bank_name',
-            'Bank': 'bank_name'
+            'Bank': 'bank_name',
+            'birth_date_h': 'hijri_date_of_birth'
         }
         date_fields = ['date_of_birth', 'birth_date_g', 'insurance_card_expire']
         link_fields = []
@@ -440,6 +441,12 @@ class MosyrDataImport(Document):
                     is_new, v = self.check_link_data('Gender', v, 'gender')
                 if k == 'self_service':
                     v = cint(v)
+                if k == 'hijri_date_of_birth' and v != '':
+                    temp_v = f'{v}'.split('-')
+                    if len(temp_v) == 3:
+                        if cint(temp_v[0]) > cint(temp_v[-1]):
+                            temp_v.reverse()
+                            v = '-'.join(temp_v)
                 args.update({f'{k}': v})
                 if k == 'bank':
                     args.update({
@@ -526,6 +533,13 @@ class MosyrDataImport(Document):
                 
                 if k in date_fields and v != '':
                     v = getdate(v)
+                
+                if k in ['issue_date_h', 'expire_date_h', 'border_entry_date_h'] and v != '':
+                    temp_v = f'{v}'.split('-')
+                    if len(temp_v) == 3:
+                        if cint(temp_v[0]) > cint(temp_v[-1]):
+                            temp_v.reverse()
+                            v = '-'.join(temp_v)
                 args.update({f'{k}': v})
             
             is_new = True
@@ -613,6 +627,12 @@ class MosyrDataImport(Document):
                     v = ""
                 if k in date_fields and v != '':
                     v = getdate(v)
+                if k == 'birth_date_h' and v != '':
+                    temp_v = f'{v}'.split('-')
+                    if len(temp_v) == 3:
+                        if cint(temp_v[0]) > cint(temp_v[-1]):
+                            temp_v.reverse()
+                            v = '-'.join(temp_v)
                 args.update({f'{k}': v})
             
             if len(employee.dependent) > 0:
@@ -700,7 +720,12 @@ class MosyrDataImport(Document):
                     v = status_lookup_value.get('status', 'Not active')
                 if k in date_fields and v != '':
                     v = getdate(v)
-                
+                if k == 'status_date_h' and v != '':
+                    temp_v = f'{v}'.split('-')
+                    if len(temp_v) == 3:
+                        if cint(temp_v[0]) > cint(temp_v[-1]):
+                            temp_v.reverse()
+                            v = '-'.join(temp_v)
                 args.update({f'{k}': v})
             
             if len(employee.mosyr_employee_status) > 0:
@@ -830,6 +855,12 @@ class MosyrDataImport(Document):
 
                 if k in date_fields and v != '':
                     v = getdate(v)
+                if k in ['passport_expire_h', 'passport_issue_date_h'] and v != '':
+                    temp_v = f'{v}'.split('-')
+                    if len(temp_v) == 3:
+                        if cint(temp_v[0]) > cint(temp_v[-1]):
+                            temp_v.reverse()
+                            v = '-'.join(temp_v)
                 args.update({f'{k}': v})
             
             is_new = True
