@@ -1,7 +1,6 @@
 # Copyright (c) 2022, AnvilERP and contributors
 # For license information, please see license.txt
 
-from typing_extensions import Self
 import frappe
 import requests
 from frappe.model.document import Document
