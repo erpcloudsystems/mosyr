@@ -13,6 +13,8 @@
   "import_branches",
   "column_break_4",
   "import_departments",
+  "column_break_7",
+  "import_grades",
   "employee_data_section",
   "import_employees",
   "import_dependents",
@@ -172,13 +174,22 @@
    "fieldname": "psc",
    "fieldtype": "Button",
    "label": "Prepare Salary Components"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_grades",
+   "fieldtype": "Button",
+   "label": "Import Grades"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-02-21 18:13:56.841644",
+ "modified": "2022-03-12 23:02:59.728048",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Data Import",

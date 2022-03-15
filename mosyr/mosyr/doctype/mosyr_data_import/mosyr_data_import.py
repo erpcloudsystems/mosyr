@@ -313,7 +313,8 @@ class MosyrDataImport(Document):
 
     @frappe.whitelist()
     def import_departments(self, company_id):
-        path = 'https://www.mosyr.io/en/api/migration-classes.json?company_id={}'
+        path = 'https://www.mosyr.io/en/api/migration-departments.json?company_id={}'
+                
         data = self.call_api(path, company_id, 'Department')
         headers = [_('Employee Class Id'), _('Error')]
         error_msgs = []
@@ -1594,47 +1595,42 @@ class MosyrDataImport(Document):
 
     @frappe.whitelist()
     def import_leave(self, company_id):
+        path = 'https://www.mosyr.io/en/api/migration-leaves.json?company_id={}'
+        data = self.call_api(path, company_id, 'Leave Type')        
+        headers = [_('Leave Type'), _('Error')]
+        error_msgs = []
+        total_data = len(data)
         errors = 0
-        sucess = 0
-        exists = 0
-        error_msgs = ''
-        path = 'https://www.mosyr.io/en/api/migration-leaves.json?company_id='
-        data, errors = self.call_api(path, company_id, 'Leave Type', errors)
-
-        leave_type_set = set()
-        if len(data) > 0:
-            for d in data:
-                d = self.get_clean_data(d)
-                leave_type = d.get('leave_type')
-                leave_type_set.add(leave_type)
-                key = d.get('key')
-            for s in leave_type_set:
-                if frappe.db.exists('Leave Type', s):
-                    exists += 1
-                    continue
+        success = 0
+        existed = 0
+        mapped_fields = {
+            'leave_type': 'leave_type_name'
+        }
+        for d in data:
+            d = self.get_clean_data(d)
+            ltname = d.get('leave_type', '')
+            if ltname != '':
+                is_new, exist = self.check_link_data('Leave Type', ltname, 'leave_type_name')
+                if is_new:
+                    success += 1
                 else:
-                    if s in ('annual_vacation'):
-                        is_lwp = 1
-                    else:
-                        is_lwp = 0
-                    leave = frappe.new_doc("Leave Type")
-                    leave.leave_type_name = s
-                    leave.key = key
-                    leave.is_lwp = is_lwp
-                    leave.save()
-                    sucess += 1
-        frappe.db.commit()
-        self.handle_error(error_msgs, sucess, errors, leave_type_set, exists)
-
+                    existed += 1
+            else:
+                errors += 1
+                error_msgs.append([ltname, _('Missing Leave Type Name')])
+        log_name = self.create_import_log('Leave Type', total_data, success, existed, errors, headers, error_msgs)
+        self.show_import_status('Leave Type', total_data, success, existed, errors, headers, error_msgs, log_name)
+    
     @frappe.whitelist()
     def import_leave_application(self, company_id):
         errors = 0
         sucess = 0
         exists = 0
         error_msgs = ''
-        path = 'https://www.mosyr.io/en/api/migration-leaves.json?company_id='
-        data, errors = self.call_api(
-            path, company_id, 'Leave Application', errors)
+        path = 'https://www.mosyr.io/en/api/migration-leaves.json?company_id={}'
+        data = self.call_api(path, company_id, 'Leave Application')
+        mapped_fields = {
+        }
 
         for d in data:
             d = self.get_clean_data(d)
@@ -1652,13 +1648,13 @@ class MosyrDataImport(Document):
                 split1 = str_match.split('"', -1)[1]
                 leave_attachments = split1
             if nid:
-                employees = frappe.get_list("Employee", filters={"nid": nid})
+                employees = frappe.get_list("Employee", filters={'key': nid})
                 if len(employees) > 0:
                     employees = employees[0]
                     emp = frappe.get_doc("Employee", employees.name)
                     if emp.status in ("Active"):
                         name, employee_name = frappe.db.get_value(
-                            'Employee', {'nid': nid}, ['name', 'employee_name'])
+                            'Employee', {'key': nid}, ['name', 'employee_name'])
                         if frappe.db.exists('Leave Application', {'key': key}):
                             exists += 1
                             continue
