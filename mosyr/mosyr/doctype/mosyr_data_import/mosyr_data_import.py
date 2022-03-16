@@ -161,6 +161,23 @@ class MosyrDataImport(Document):
                         'company': company
                     })
                 salary_component_doc.save()
+        
+        banks = [
+            "Al Rajhi Bank",
+            "Al Inma Bank",
+            "Bank Al Bilad",
+            "Bank Al Jazira",
+            "The National Commercial Bank",
+            "Arab National Bank",
+            "Bank Saudi Fransi",
+            "Saudi Investment Bank",
+            "Saudi Hollandi Bank",
+            "The Saudi British Bank",
+            "Samba Financial Group",
+        ]
+        for bank in banks:
+            self.check_link_data('Bank', bank, 'bank_name')
+            
         frappe.db.commit()
 
     @frappe.whitelist()
@@ -338,7 +355,6 @@ class MosyrDataImport(Document):
                 error_msgs.append([did, _('Missing Class Value')])
         log_name = self.create_import_log('Department', total_data, success, existed, errors, headers, error_msgs)
         self.show_import_status('Department', total_data, success, existed, errors, headers, error_msgs, log_name)
-
 
     @frappe.whitelist()
     def import_employees(self, company_id):
@@ -1592,6 +1608,319 @@ class MosyrDataImport(Document):
         log_name = self.create_import_log('Employee Overtime', total_data, success, existed, errors, headers, error_msgs)
         self.show_import_status('Employee Overtime', total_data, success, existed, errors, headers, error_msgs, log_name)
 
+    @frappe.whitelist()
+    def import_main_settings(self, company_id):
+        path = 'https://www.mosyr.io/api/company_status.json?field_account_target_id={}'
+        data = self.call_api(path, company_id, 'Main Settings')
+        headers = [_('Error')]
+        error_msgs = []
+        total_data = len(data)
+        company_id_doc = frappe.db.exists('Company Id', company_id)
+        if not company_id_doc:
+            error_msgs.append(_('Company Id not found in the system'))
+            log_name = self.create_import_log('Main Settings', 0, 0, 0, 1, headers, error_msgs)
+            self.show_import_status('Main Settings', 0, 0, 0, 1, headers, error_msgs, log_name)
+            return
+        company_id_doc = frappe.get_doc('Company Id', company_id)
+        company_doc = frappe.db.exists('Company', company_id_doc.company)
+        if not company_doc:
+            error_msgs.append(_('Company not found in the system'))
+            log_name = self.create_import_log('Main Settings', 0, 0, 0, 1, headers, error_msgs)
+            self.show_import_status('Main Settings', 0, 0, 0, 1, headers, error_msgs, log_name)
+            return
+
+        company_doc = frappe.get_doc('Company', company_id_doc.company)
+        if frappe.db.exists('Company Controller', company_id_doc.company):
+            main_settings = frappe.get_doc('Company Controller', company_doc.name)
+        else:
+            main_settings = frappe.new_doc('Company Controller')
+            main_settings.company = company_doc.name
+
+        if isinstance(data, list):
+            if len(data) == 1:
+                main_data = data[0]
+                main_data = self.get_clean_data(main_data)
+                
+                mail_sender_address = main_data.get('mail_sender_address', '')
+                mail_sender_name = main_data.get('mail_sender_name', '')
+                cid = main_data.get('cid', '')
+
+                mobile = main_data.get('mobile', '')
+                bank_name = main_data.get('bank_name', '')
+                bank_code = main_data.get('bank_code', '')
+                bank_account_number = main_data.get('bank_account_number', '')
+                sender_name_sms = main_data.get('sender_name_sms', '')
+                organization_english = main_data.get('organization_english', '')
+                english_name_in_bank = main_data.get('english_name_in_bank', '')
+                
+                overtime_hours = main_data.get('overtime_hours', '')
+                attendance_service = main_data.get('attendance_service', '')
+                pension_percentage_on_company = main_data.get('pension_percentage_on_company', '')
+                pension_percentage_on_company = pension_percentage_on_company.replace('%', '')
+                pension_percentage_on_employee = main_data.get('pension_percentage_on_employee', '')
+                pension_percentage_on_employee = pension_percentage_on_employee.replace('%', '')
+                risk_percentage_on_company = main_data.get('risk_percentage_on_company', '')
+                risk_percentage_on_company = risk_percentage_on_company.replace('%', '')
+                risk_percentage_on_employee = main_data.get('risk_percentage_on_employee', '')
+                risk_percentage_on_employee = risk_percentage_on_employee.replace('%', '')
+                
+                first_absence_value = main_data.get('first_absence_value', '')
+                other_absences_value = main_data.get('other_absences_value', '')
+                first_delay_value = main_data.get('first_delay_value', '')
+                other_delays_value = main_data.get('other_delays_value', '')
+
+                payroll_type = main_data.get('payroll_type', 'payroll')
+                month_days = main_data.get('month_days', '22')
+                
+                main_settings.mail_sender_address = f"{mail_sender_address}"
+                main_settings.mail_sender_name = f"{mail_sender_name}"
+                main_settings.company_id = f"{company_id_doc.company_id}"
+                main_settings.sender_name_sms = f"{sender_name_sms}"
+                main_settings.organization_english = f"{organization_english}"
+                main_settings.english_name_in_bank = f"{english_name_in_bank}"
+                
+                main_settings.mobile = f"{mobile}"
+                if bank_name:
+                    if len(bank_name) > 0:
+                        is_new, v = self.check_link_data('Bank', bank_name, 'bank_name')
+                        bank_doc = frappe.get_doc('Bank', v)
+                        bank_doc.bank_name = bank_name
+                        if len(bank_code) > 0:
+                            bank_doc.swift_number = bank_code
+                            main_settings.bank_code = bank_code
+                        
+                        bank_doc.save()
+                        frappe.db.commit()
+                        main_settings.bank = bank_doc.name
+                        main_settings.bank_name = bank_name
+                
+                if len(bank_account_number) > 0:
+                    main_settings.bank_account_number = bank_account_number
+                
+                if overtime_hours in ["1.5", "2", 1.5, 2]:
+                    hl = {
+                        "1.5": "Hour And Half",
+                        "2": "Two Hours",
+                    }
+
+                    overtime_hours = hl.get(f"{overtime_hours}", "")
+                    main_settings.overtime_hours = overtime_hours
+                
+                if f"{attendance_service}".lower() in ["active", "suspended", "terminated"]:
+                    main_settings.attendance_service = f"{attendance_service}".capitalize()
+                
+                main_settings.pension_percentage_on_company = flt(pension_percentage_on_company)
+                main_settings.pension_percentage_on_employee = flt(pension_percentage_on_employee)
+                main_settings.risk_percentage_on_company = flt(risk_percentage_on_company)
+                main_settings.risk_percentage_on_employee = flt(risk_percentage_on_employee)
+                
+                if first_absence_value in ['1', '1.5', '2', 1, 1.5, 2]:
+                    main_settings.first_absence_value = f"{first_absence_value}"
+                if other_absences_value in ['1', '1.5', '2', 1, 1.5, 2]:
+                    main_settings.other_absences_value = f"{other_absences_value}"
+                if first_delay_value in ['1', '1.5', '2', 1, 1.5, 2]:
+                    main_settings.first_delay_value = f"{first_delay_value}"
+                if other_delays_value in ['1', '1.5', '2', 1, 1.5, 2]:
+                    main_settings.other_delays_value = f"{other_delays_value}"
+                
+                if f"{payroll_type}".lower() in ['payroll', 'wps', 'payrollcards']:
+                    ptl = {
+                        'payroll': 'Payroll',
+                        'wps': 'WPS',
+                        'payrollcards': 'Payroll Cards'
+                    }
+                    payroll_type = ptl.get(payroll_type, 'Payroll')
+                    main_settings.disbursement_type = f"{payroll_type}".capitalize()
+
+                if month_days in ['22', 22, '28', 28, '29', 29, '30', 30, 'calendar']:
+                    if month_days == 'calendar':
+                        month_days = 'Calendar'
+                    main_settings.month_days = month_days
+                else:
+                    main_settings.month_days = '30'
+                
+                
+                main_settings.overtime_hours = f"{overtime_hours}"
+                comp_lookup = {
+                    'basic_salary': 'Basic',
+                    'housing': 'Allowance Housing',
+                    'transportations': 'Allowance Trans',
+                    'phone': 'Allowance Phone',
+                    'feeding': 'Allowance Living',
+                    'natureow': 'Allowance Worknatural',
+                    'cash': 'Allowance Other'
+                }
+                employee_day_working = main_data.get('employee_day_working', [])
+                if isinstance(employee_day_working, list):
+                    for edw in employee_day_working:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_working', {
+                                'component': edw
+                            })
+                
+                employee_day_annual_vacation = main_data.get('employee_day_annual_vacation', [])
+                if isinstance(employee_day_annual_vacation, list):
+                    for edw in employee_day_annual_vacation:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_annual_vacation', {
+                                'component': edw
+                            })
+                
+                employee_day_childbirth_vacation = main_data.get('employee_day_childbirth_vacation', [])
+                if isinstance(employee_day_childbirth_vacation, list):
+                    for edw in employee_day_childbirth_vacation:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_childbirth_vacation', {
+                                'component': edw
+                            })
+                
+                employee_day_hajj_leave = main_data.get('employee_day_hajj_leave', [])
+                if isinstance(employee_day_hajj_leave, list):
+                    for edw in employee_day_hajj_leave:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_hajj_leave', {
+                                'component': edw
+                            })
+                
+                
+                emp_day_urgent_leave = main_data.get('emp_day_urgent_leave', [])
+                if isinstance(emp_day_urgent_leave, list):
+                    for edw in emp_day_urgent_leave:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_urgent_leave', {
+                                'component': edw
+                            })
+                
+                employee_day_sick_leave = main_data.get('employee_day_sick_leave', [])
+                if isinstance(employee_day_sick_leave, list):
+                    for edw in employee_day_sick_leave:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_sick_leave', {
+                                'component': edw
+                            })
+                
+                employee_day_benefits_withoutpay_leave = main_data.get('employee_day_benefits_withoutpay_leave', [])
+                if isinstance(employee_day_benefits_withoutpay_leave, list):
+                    for edw in employee_day_benefits_withoutpay_leave:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_benefits_with_out_pay_leave', {
+                                'component': edw
+                            })
+                
+                emp_day_death_leave = main_data.get('emp_day_death_leave', [])
+                if isinstance(emp_day_death_leave, list):
+                    for edw in emp_day_death_leave:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_death_leave', {
+                                'component': edw
+                            })
+                
+                end_of_services = main_data.get('end_of_services', [])
+                if isinstance(end_of_services, list):
+                    for edw in end_of_services:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('end_of_services', {
+                                'component': edw
+                            })
+                
+                emp_day_wedding_leave = main_data.get('emp_day_wedding_leave', [])
+                if isinstance(emp_day_wedding_leave, list):
+                    for edw in emp_day_wedding_leave:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('employee_day_wedding_leave', {
+                                'component': edw
+                            })
+                
+                unaccounted_deductions = main_data.get('unaccounted_deductions', [])
+                if isinstance(unaccounted_deductions, list):
+                    for edw in unaccounted_deductions:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            main_settings.append('unaccounted_deductions', {
+                                'component': edw
+                            })
+                
+                banks_type_payroll = main_data.get('banks_type_payroll', [])
+                if isinstance(banks_type_payroll, list):
+                    for edw in banks_type_payroll:
+                        edw = comp_lookup.get(edw, False)
+                        if edw:
+                            is_new, va = self.check_link_data('Bank', edw, 'bank_name')
+                            main_settings.append('banks_type_payroll', {
+                                'bank': va
+                            })
+                
+                main_settings.save()
+                frappe.db.commit()
+                source_path = "https://www.mosyr.io/sites/default/files/"
+                logo = main_data.get('logo', {})
+                baladiya_license = main_data.get('baladiya_license', {})
+                cr_document = main_data.get('cr_document', {})
+                stamp = main_data.get('stamp', {})
+                if isinstance(baladiya_license, dict):
+                    filename = baladiya_license.get('filename', False)
+                    if filename:
+                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'baladiya_license', source_path, filename)
+                        if is_downloaded:
+                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings.db_set('baladiya_license', _file['file_url'])
+                            # main_settings.save()
+                            frappe.db.commit()
+                if isinstance(stamp, dict):
+                    filename = stamp.get('filename', False)
+                    if filename:
+                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'stamp', source_path, filename)
+                        if is_downloaded:
+                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings.db_set('stamp', _file['file_url'])
+                            # main_settings.save()
+                            frappe.db.commit()
+                if isinstance(cr_document, dict):
+                    filename = cr_document.get('filename', False)
+                    if filename:
+                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'cr_document', source_path, filename)
+                        if is_downloaded:
+                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings.db_set('cr_document', _file['file_url'])
+                            # main_settings.save()
+                            frappe.db.commit()
+                if isinstance(logo, dict):
+                    filename = logo.get('filename', False)
+                    if filename:
+                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'logo', source_path, filename)
+                        if is_downloaded:
+                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings.db_set('logo', _file['file_url'])
+
+                        is_downloaded, _file  = self.download_mosyr_file('Company', company_doc.name, 'company_logo', source_path, filename)
+                        if is_downloaded:
+                            company_doc = frappe.get_doc('Company', company_doc.name)
+                            company_doc.db_set('company_logo', _file['file_url'])
+                            # main_settings.save()
+                frappe.db.commit()
+                
+            else:
+                error_msgs.append(_('Data Error, expected list with one record'))
+                log_name = self.create_import_log('Main Settings', 0, 0, 0, 1, headers, error_msgs)
+                self.show_import_status('Main Settings', 0, 0, 0, 1, headers, error_msgs, log_name)
+        else:
+            error_msgs.append(_('Data Error, expected list with one record'))
+            log_name = self.create_import_log('Main Settings', '', '', '', 1, headers, error_msgs)
+            self.show_import_status('Main Settings', '', '', '', 1, headers, error_msgs, log_name)
 
     @frappe.whitelist()
     def import_leave(self, company_id):

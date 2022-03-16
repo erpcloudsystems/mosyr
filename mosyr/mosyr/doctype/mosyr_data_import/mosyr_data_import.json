@@ -7,44 +7,44 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "cid",
+  "column_break_2",
+  "company",
+  "column_break_4",
   "company_id",
+  "master_data_section",
   "psc",
+  "import_main_settings",
   "section_break_2",
   "import_branches",
-  "column_break_4",
+  "column_break_10",
   "import_departments",
-  "column_break_7",
+  "column_break_12",
   "import_grades",
   "employee_data_section",
   "import_employees",
   "import_dependents",
   "import_employee_status",
-  "column_break_9",
+  "column_break_18",
   "import_identity",
   "import_passport",
-  "column_break_12",
+  "column_break_21",
   "import_employee_qualifications",
   "import_experiences",
   "cl",
   "import_contracts",
-  "column_break_17",
+  "column_break_26",
   "import_letters",
   "section_break_19",
   "import_benefits",
   "import_overtime",
-  "column_break_19",
+  "column_break_31",
   "import_deductions",
   "leaves_details_section",
   "import_leave",
   "import_leave_application"
  ],
  "fields": [
-  {
-   "fieldname": "company_id",
-   "fieldtype": "Data",
-   "label": "Company ID",
-   "read_only": 1
-  },
   {
    "fieldname": "import_branches",
    "fieldtype": "Button",
@@ -111,10 +111,6 @@
    "label": "Import Leave"
   },
   {
-   "fieldname": "column_break_19",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "import_departments",
    "fieldtype": "Button",
    "label": "Import Departments"
@@ -125,10 +121,6 @@
    "label": "Employee Details"
   },
   {
-   "fieldname": "column_break_9",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "column_break_12",
    "fieldtype": "Column Break"
   },
@@ -136,10 +128,6 @@
    "fieldname": "cl",
    "fieldtype": "Section Break",
    "label": "Contracts & Letters"
-  },
-  {
-   "fieldname": "column_break_17",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "section_break_19",
@@ -176,20 +164,72 @@
    "label": "Prepare Salary Components"
   },
   {
-   "fieldname": "column_break_7",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "import_grades",
    "fieldtype": "Button",
    "label": "Import Grades"
+  },
+  {
+   "bold": 1,
+   "fieldname": "cid",
+   "fieldtype": "Link",
+   "label": "Company ID",
+   "options": "Company Id"
+  },
+  {
+   "depends_on": "cid",
+   "fetch_from": "cid.company",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "master_data_section",
+   "fieldtype": "Section Break",
+   "label": "Master Data"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_31",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_main_settings",
+   "fieldtype": "Button",
+   "label": "Import Main Settings"
+  },
+  {
+   "fetch_from": "cid.company_id",
+   "fieldname": "company_id",
+   "fieldtype": "Data",
+   "label": "Company Id",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-03-12 23:02:59.728048",
+ "modified": "2022-03-16 13:56:17.472646",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Data Import",

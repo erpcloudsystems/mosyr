@@ -3,23 +3,26 @@
 
 frappe.ui.form.on('Mosyr Data Import', {
     refresh: function(frm) {
-        frm.disable_form()
-        frappe.call({
-            doc: frm.doc,
-            method: 'get_company_id',
-            callback: function(r) {
-                if (r.message) {
-                    frm.set_value('company_id', r.message)
-                    frm.refresh_field('company_id')
-                    frm.toggle_enable('company_id', 0)
-                } else {
-                    frm.toggle_enable('company_id', 1)
-                    frm.toggle_reqd('company_id', 1)
-                }
-            },
-            freeze: true,
-            freeze_message: __("Get Company id"),
-        })
+
+        $('.page-actions').css({ 'display': 'none' })
+        $('.indicator-pill').css({ 'display': 'none' })
+            // frm.disable_form()
+            // frappe.call({
+            //     doc: frm.doc,
+            //     method: 'get_company_id',
+            //     callback: function(r) {
+            //         if (r.message) {
+            //             frm.set_value('company_id', r.message)
+            //             frm.refresh_field('company_id')
+            //             frm.toggle_enable('company_id', 0)
+            //         } else {
+            //             frm.toggle_enable('company_id', 1)
+            //             frm.toggle_reqd('company_id', 1)
+            //         }
+            //     },
+            //     freeze: true,
+            //     freeze_message: __("Get Company id"),
+            // })
     },
     data_import_call(frm, methode, msg = "") {
         frappe.call({
@@ -35,11 +38,14 @@ frappe.ui.form.on('Mosyr Data Import', {
     psc(frm) {
         frm.events.data_import_call(frm, 'psc', "Start Salary Components Preparing")
     },
+    import_main_settings(frm) {
+        frm.events.data_import_call(frm, 'import_main_settings', "Start Main Settings Importing")
+    },
     import_branches(frm) {
         frm.events.data_import_call(frm, 'import_branches', "Start Branches Importing")
     },
     import_departments(frm) {
-        frm.events.data_import_call(frm, 'import_departments', "Start Employee Classes Importing")
+        frm.events.data_import_call(frm, 'import_departments', "Start Departments Importing")
     },
     import_grades(frm) {
         frm.events.data_import_call(frm, 'import_grades', "Start Grade Importing")

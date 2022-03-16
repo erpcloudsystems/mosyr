@@ -1,0 +1,488 @@
+{
+ "actions": [],
+ "autoname": "field:company",
+ "creation": "2022-03-16 13:41:48.219173",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "account_info_section",
+  "company_id",
+  "company",
+  "organization_arabic",
+  "column_break_4",
+  "organization_english",
+  "sender_name_sms",
+  "column_break_7",
+  "mail_sender_name",
+  "mobile",
+  "column_break_10",
+  "mail_sender_address",
+  "signature_section",
+  "signatures",
+  "logos_brands",
+  "logo",
+  "column_break_16",
+  "stamp",
+  "column_break_18",
+  "cr_document",
+  "column_break_20",
+  "baladiya_license",
+  "settings_section",
+  "employee_day_working",
+  "employee_day_annual_vacation",
+  "employee_day_childbirth_vacation",
+  "employee_day_hajj_leave",
+  "employee_day_urgent_leave",
+  "employee_day_sick_leave",
+  "column_break_29",
+  "employee_day_benefits_with_out_pay_leave",
+  "employee_day_death_leave",
+  "end_of_services",
+  "employee_day_wedding_leave",
+  "unaccounted_deductions",
+  "payroll_and_financial_settings_section",
+  "disbursement_type",
+  "bank_name",
+  "english_name_in_bank",
+  "column_break_39",
+  "month_days",
+  "bank_code",
+  "column_break_42",
+  "calendar_accreditation",
+  "banks_type_payroll",
+  "column_break_45",
+  "bank_account_number",
+  "banks_type_salary_card",
+  "working_in_weekend_section",
+  "friday",
+  "saterday",
+  "absence_and_delay_settings_section",
+  "first_absence_value",
+  "column_break_53",
+  "other_absences_value",
+  "column_break_55",
+  "first_delay_value",
+  "column_break_57",
+  "other_delays_value",
+  "social_insurance_settings_section",
+  "risk_percentage_on_employee",
+  "column_break_61",
+  "risk_percentage_on_company",
+  "column_break_63",
+  "pension_percentage_on_employee",
+  "column_break_65",
+  "pension_percentage_on_company",
+  "other_section",
+  "overtime_hours",
+  "column_break_69",
+  "attendance_service"
+ ],
+ "fields": [
+  {
+   "fieldname": "account_info_section",
+   "fieldtype": "Section Break",
+   "label": "Account Info"
+  },
+  {
+   "fetch_from": "company_id.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "organization_arabic",
+   "fieldtype": "Data",
+   "label": "Organization Arabic"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "organization_english",
+   "fieldtype": "Data",
+   "label": "Organization English"
+  },
+  {
+   "fieldname": "sender_name_sms",
+   "fieldtype": "Data",
+   "label": "Sender Name SMS"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mail_sender_name",
+   "fieldtype": "Data",
+   "label": " Mail Sender Name"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mail_sender_address",
+   "fieldtype": "Data",
+   "label": "Mail Sender Address"
+  },
+  {
+   "fieldname": "signature_section",
+   "fieldtype": "Section Break",
+   "label": "Signature"
+  },
+  {
+   "fieldname": "signatures",
+   "fieldtype": "Table",
+   "label": "Signatures",
+   "options": "Signatures"
+  },
+  {
+   "fieldname": "logos_brands",
+   "fieldtype": "Section Break",
+   "label": "Logos & Brands"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stamp",
+   "fieldtype": "Attach",
+   "label": "Stamp"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cr_document",
+   "fieldtype": "Attach",
+   "label": "CR document"
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "baladiya_license",
+   "fieldtype": "Attach",
+   "label": "Baladiya License"
+  },
+  {
+   "fieldname": "settings_section",
+   "fieldtype": "Section Break",
+   "label": "Settings"
+  },
+  {
+   "fieldname": "employee_day_working",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Working",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_annual_vacation",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Annual Vacation",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_childbirth_vacation",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Childbirth Vacation",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_hajj_leave",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Hajj Leave",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_urgent_leave",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Urgent Leave",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_sick_leave",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Sick Leave",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "column_break_29",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_day_benefits_with_out_pay_leave",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Benefits With Out Pay Leave",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_death_leave",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Death Leave",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "end_of_services",
+   "fieldtype": "Table MultiSelect",
+   "label": "End Of Services",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "employee_day_wedding_leave",
+   "fieldtype": "Table MultiSelect",
+   "label": "Employee Day Wedding Leave",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "unaccounted_deductions",
+   "fieldtype": "Table MultiSelect",
+   "label": "Unaccounted Deductions",
+   "options": "Salary Component Table"
+  },
+  {
+   "fieldname": "payroll_and_financial_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Payroll And Financial Settings"
+  },
+  {
+   "default": "Payroll",
+   "fieldname": "disbursement_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Disbursement Type",
+   "options": "Payroll\nWPS\nPayroll Cards",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Link",
+   "label": "Bank Name",
+   "options": "Bank",
+   "reqd": 1
+  },
+  {
+   "fieldname": "english_name_in_bank",
+   "fieldtype": "Data",
+   "label": "English Name In Bank"
+  },
+  {
+   "fieldname": "column_break_39",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "22",
+   "fieldname": "month_days",
+   "fieldtype": "Select",
+   "label": "Month Days",
+   "options": "22\n28\n29\n30\nCalendar",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bank_code",
+   "fieldtype": "Data",
+   "label": "Bank Code"
+  },
+  {
+   "fieldname": "column_break_42",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Gregorian",
+   "fieldname": "calendar_accreditation",
+   "fieldtype": "Select",
+   "label": "Calendar Accreditation",
+   "options": "Gregorian\nHijri",
+   "reqd": 1
+  },
+  {
+   "fieldname": "banks_type_payroll",
+   "fieldtype": "Table MultiSelect",
+   "label": "Banks Type Payroll",
+   "options": "Bank Type"
+  },
+  {
+   "fieldname": "column_break_45",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bank_account_number",
+   "fieldtype": "Int",
+   "label": "Bank Account Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "banks_type_salary_card",
+   "fieldtype": "Table MultiSelect",
+   "label": "Banks Type Salary Card",
+   "options": "Bank Type"
+  },
+  {
+   "fieldname": "working_in_weekend_section",
+   "fieldtype": "Section Break",
+   "label": "Working In Weekend"
+  },
+  {
+   "default": "0",
+   "fieldname": "friday",
+   "fieldtype": "Check",
+   "label": "Friday"
+  },
+  {
+   "default": "0",
+   "fieldname": "saterday",
+   "fieldtype": "Check",
+   "label": "Saterday"
+  },
+  {
+   "fieldname": "absence_and_delay_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Absence And Delay Settings"
+  },
+  {
+   "fieldname": "first_absence_value",
+   "fieldtype": "Select",
+   "label": "First Absence Value ( Day )",
+   "options": "\n1\n1.5\n2"
+  },
+  {
+   "fieldname": "column_break_53",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_absences_value",
+   "fieldtype": "Select",
+   "label": "Other Absences Value ( Day )",
+   "options": "\n1\n1.5\n2"
+  },
+  {
+   "fieldname": "column_break_55",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "first_delay_value",
+   "fieldtype": "Select",
+   "label": "First Delay Value ( Hour )",
+   "options": "\n1\n1.5\n2"
+  },
+  {
+   "fieldname": "column_break_57",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_delays_value",
+   "fieldtype": "Select",
+   "label": "Other Delays Value ( Hour )",
+   "options": "\n1\n1.5\n2"
+  },
+  {
+   "fieldname": "social_insurance_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Social Insurance Settings"
+  },
+  {
+   "fieldname": "risk_percentage_on_employee",
+   "fieldtype": "Percent",
+   "label": "Risk Percentage On Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_61",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "risk_percentage_on_company",
+   "fieldtype": "Percent",
+   "label": "Risk percentage on company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_63",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pension_percentage_on_employee",
+   "fieldtype": "Percent",
+   "label": "Pension Percentage On Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_65",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pension_percentage_on_company",
+   "fieldtype": "Percent",
+   "label": "Pension Percentage On Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "other_section",
+   "fieldtype": "Section Break",
+   "label": "Other"
+  },
+  {
+   "fieldname": "overtime_hours",
+   "fieldtype": "Select",
+   "label": "Overtime Hours",
+   "options": "\nHour And Half\nTwo Hours"
+  },
+  {
+   "fieldname": "column_break_69",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attendance_service",
+   "fieldtype": "Select",
+   "label": "Attendance Service",
+   "options": "\nActive\nSuspended\nTerminated"
+  },
+  {
+   "fieldname": "company_id",
+   "fieldtype": "Link",
+   "label": "Company ID",
+   "options": "Company Id"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-03-16 14:44:47.999500",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Company Controller",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "company"
+}

@@ -26,6 +26,15 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Company ID",
+   "link_to": "Company Id",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Data Import",
    "link_to": "Mosyr Data Import",
    "link_type": "DocType",
@@ -50,6 +59,24 @@
    "type": "Card Break"
   },
   {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bank Account",
+   "link_to": "Bank",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Company",
+   "link_to": "Company",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -67,6 +94,15 @@
    "link_to": "Branch",
    "link_type": "DocType",
    "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "HR Controller",
+   "link_to": "HR Controller",
+   "link_type": "DocType",
+   "onboard": 0,
    "type": "Link"
   },
   {
@@ -164,7 +200,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-02-27 16:01:27.114528",
+ "modified": "2022-03-15 23:28:05.291813",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr",
