@@ -1857,8 +1857,15 @@ class MosyrDataImport(Document):
                         if edw:
                             is_new, va = self.check_link_data('Bank', edw, 'bank_name')
                             main_settings.append('banks_type_payroll', {
-                                'bank': va
+                                'bank': edw
                             })
+                
+                working_in_weekend = main_data.get('working_in_weekend', [])
+                if isinstance(working_in_weekend, list):
+                    if 'Friday' in working_in_weekend or 'friday' in working_in_weekend:
+                        main_settings.friday = 1
+                    if 'Saturday' in working_in_weekend or 'saturday' in working_in_weekend:
+                        main_settings.saterday = 1
                 
                 main_settings.save()
                 frappe.db.commit()
