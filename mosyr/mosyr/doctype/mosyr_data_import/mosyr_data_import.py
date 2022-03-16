@@ -1752,6 +1752,7 @@ class MosyrDataImport(Document):
                 }
                 employee_day_working = main_data.get('employee_day_working', [])
                 if isinstance(employee_day_working, list):
+                    main_settings.employee_day_working = []
                     for edw in employee_day_working:
                         edw = comp_lookup.get(edw, False)
                         if edw:
@@ -1763,6 +1764,7 @@ class MosyrDataImport(Document):
                 if isinstance(employee_day_annual_vacation, list):
                     for edw in employee_day_annual_vacation:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_annual_vacation = []
                         if edw:
                             main_settings.append('employee_day_annual_vacation', {
                                 'component': edw
@@ -1772,6 +1774,7 @@ class MosyrDataImport(Document):
                 if isinstance(employee_day_childbirth_vacation, list):
                     for edw in employee_day_childbirth_vacation:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_childbirth_vacation = []
                         if edw:
                             main_settings.append('employee_day_childbirth_vacation', {
                                 'component': edw
@@ -1781,16 +1784,17 @@ class MosyrDataImport(Document):
                 if isinstance(employee_day_hajj_leave, list):
                     for edw in employee_day_hajj_leave:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_hajj_leave = []
                         if edw:
                             main_settings.append('employee_day_hajj_leave', {
                                 'component': edw
                             })
                 
-                
                 emp_day_urgent_leave = main_data.get('emp_day_urgent_leave', [])
                 if isinstance(emp_day_urgent_leave, list):
                     for edw in emp_day_urgent_leave:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_urgent_leave = []
                         if edw:
                             main_settings.append('employee_day_urgent_leave', {
                                 'component': edw
@@ -1800,6 +1804,7 @@ class MosyrDataImport(Document):
                 if isinstance(employee_day_sick_leave, list):
                     for edw in employee_day_sick_leave:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_sick_leave = []
                         if edw:
                             main_settings.append('employee_day_sick_leave', {
                                 'component': edw
@@ -1809,6 +1814,7 @@ class MosyrDataImport(Document):
                 if isinstance(employee_day_benefits_withoutpay_leave, list):
                     for edw in employee_day_benefits_withoutpay_leave:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_benefits_with_out_pay_leave = []
                         if edw:
                             main_settings.append('employee_day_benefits_with_out_pay_leave', {
                                 'component': edw
@@ -1818,6 +1824,7 @@ class MosyrDataImport(Document):
                 if isinstance(emp_day_death_leave, list):
                     for edw in emp_day_death_leave:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_death_leave = []
                         if edw:
                             main_settings.append('employee_day_death_leave', {
                                 'component': edw
@@ -1827,6 +1834,7 @@ class MosyrDataImport(Document):
                 if isinstance(end_of_services, list):
                     for edw in end_of_services:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.end_of_services = []
                         if edw:
                             main_settings.append('end_of_services', {
                                 'component': edw
@@ -1836,6 +1844,7 @@ class MosyrDataImport(Document):
                 if isinstance(emp_day_wedding_leave, list):
                     for edw in emp_day_wedding_leave:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.employee_day_wedding_leave = []
                         if edw:
                             main_settings.append('employee_day_wedding_leave', {
                                 'component': edw
@@ -1845,6 +1854,7 @@ class MosyrDataImport(Document):
                 if isinstance(unaccounted_deductions, list):
                     for edw in unaccounted_deductions:
                         edw = comp_lookup.get(edw, False)
+                        main_settings.unaccounted_deductions = []
                         if edw:
                             main_settings.append('unaccounted_deductions', {
                                 'component': edw
@@ -1853,7 +1863,7 @@ class MosyrDataImport(Document):
                 banks_type_payroll = main_data.get('banks_type_payroll', [])
                 if isinstance(banks_type_payroll, list):
                     for edw in banks_type_payroll:
-                        edw = comp_lookup.get(edw, False)
+                        main_settings.banks_type_payroll = []
                         if edw:
                             is_new, va = self.check_link_data('Bank', edw, 'bank_name')
                             main_settings.append('banks_type_payroll', {
