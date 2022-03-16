@@ -99,8 +99,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "HR Controller",
-   "link_to": "HR Controller",
+   "label": "Company Controller",
+   "link_to": "Company Controller",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -200,7 +200,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-03-15 23:28:05.291813",
+ "modified": "2022-03-16 15:26:21.091325",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr",
