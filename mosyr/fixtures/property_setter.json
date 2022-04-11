@@ -1,6 +1,23 @@
 [
  {
   "default_value": null,
+  "doc_type": "Salary Component",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "section_break_5",
+  "modified": "2022-04-11 12:03:47.330854",
+  "name": "Salary Component-section_break_5-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ },
+ {
+  "default_value": null,
   "doc_type": "Employee",
   "docstatus": 0,
   "doctype": "Property Setter",
