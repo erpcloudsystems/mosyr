@@ -95,13 +95,14 @@ after_install = "mosyr.install.after_install"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Salary Component": {
+		"validate": "mosyr.api.set_accounts"
+	},
+	"Salary Structure": {
+		"validate": "mosyr.api.check_payment_mode"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
