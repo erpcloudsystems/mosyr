@@ -252,6 +252,42 @@ fixtures = [
 				]]
 			]
 	},
+	{
+	"dt": "Workflow",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Employee Contract"
+				]
+			]
+		]
+	},
+	{
+	"dt": "Workflow State",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Draft",
+					"Approved And Applied",
+					"Approved And Not Applied",
+					"Cancelled"
+				]
+			]
+		]
+	},
+	{
+	"dt": "Workflow Action Master",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Approve No Apply"
+				]
+			]
+		]
+	},
 ]
 
 
