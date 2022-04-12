@@ -28,8 +28,8 @@ class EmployeeContract(Document):
 
 		self.check_workflow_status()
 	
-	@frappe.whitelist()
-	def apply_in_system(self):
+	@frappe.whitelist()	
+	def apply_in_system(self, apply):
 		employee = frappe.get_doc('Employee', self.employee)
 		lookup_value = {
 			"active" : "Active",
@@ -45,16 +45,17 @@ class EmployeeContract(Document):
 			employee.status = 'Active'
 			employee.save()
 			frappe.db.commit()
-
-		ss = self.create_salary_structure(employee.first_name)
-		self.create_salary_structure_assignment(ss)
-		self.db_set('status', 'Applied In System', update_modified=False)
-		employee.status = lookup_value.get(employee.api_employee_status, 'Inactive')
-		employee.valid_data = 1
-		employee.from_api = 0
-		employee.save()
-		frappe.db.commit()
-		return 'Applied In System'
+		
+		if apply:
+			ss = self.create_salary_structure(employee.first_name)
+			self.create_salary_structure_assignment(ss)
+			self.db_set('status', 'Applied In System', update_modified=False)
+			employee.status = lookup_value.get(employee.api_employee_status, 'Inactive')
+			employee.valid_data = 1
+			employee.from_api = 0
+			employee.save()
+			frappe.db.commit()
+			return 'Applied In System'
 	
 	def create_salary_structure_assignment(self, ss):
 		ssa = frappe.new_doc('Salary Structure Assignment')
@@ -207,31 +208,9 @@ class EmployeeContract(Document):
 
 	def check_workflow_status(self):
 		if self.workflow_state == "Approved And Applied":
-			emp_doc = frappe.get_doc("Employee", self.employee)
-			emp_doc.status = "Active"
-			emp_doc.save()
-
-			# Create Salary Structure
-			sal_structure = frappe.new_doc('Salary Structure')
-			sal_structure.name = self.employee + " Salary Structure"
-			sal_structure.insert()
-			sal_structure.submit()
-
-			# Create Salary Structure Assignment
-			sal_structure_assig  = frappe.new_doc("Salary Structure Assignment")
-			sal_structure_assig.employee = self.employee
-			sal_structure_assig.salary_structure = sal_structure.name 
-			sal_structure_assig.from_date = nowdate()
-			sal_structure_assig.base = self.basic_salary
-			sal_structure_assig.insert()
-			sal_structure_assig.submit()
-
-			# Create Salary Structure and Salary Structure Assignment
-			# salary_structure = self.create_salary_structure(self.employee)
-			# self.create_salary_structure_assignment(salary_structure)
+			apply = True
+			self.apply_in_system(apply)
 
 		if self.workflow_state == "Approved And Not Applied":
-			emp_doc = frappe.get_doc("Employee", self.employee)
-			emp_doc.status = "Active"
-			emp_doc.save()
-		frappe.db.commit()
+			apply = False
+			self.apply_in_system(apply)
