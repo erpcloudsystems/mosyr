@@ -248,7 +248,8 @@ fixtures = [
 					"Employee-last_name-hidden",
 					"Employee-middle_name-hidden",
 					"Employee-first_name-label",
-					"Salary Component-section_break_5-hidden"
+					"Salary Component-section_break_5-hidden",
+					"Salary Structure-account-hidden"
 				]]
 			]
 	},

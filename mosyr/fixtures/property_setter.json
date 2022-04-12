@@ -83,5 +83,22 @@
   "property_type": "Data",
   "row_name": null,
   "value": "Arabic Full Name"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Salary Structure",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "account",
+  "modified": "2022-04-12 16:24:46.778571",
+  "name": "Salary Structure-account-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
