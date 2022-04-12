@@ -95,13 +95,14 @@ after_install = "mosyr.install.after_install"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Salary Component": {
+		"validate": "mosyr.api.set_accounts"
+	},
+	"Salary Structure": {
+		"validate": "mosyr.api.check_payment_mode"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -246,9 +247,46 @@ fixtures = [
 					"Employee-employee_name-hidden",
 					"Employee-last_name-hidden",
 					"Employee-middle_name-hidden",
-					"Employee-first_name-label"
+					"Employee-first_name-label",
+					"Salary Component-section_break_5-hidden"
 				]]
 			]
+	},
+	{
+	"dt": "Workflow",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Employee Contract"
+				]
+			]
+		]
+	},
+	{
+	"dt": "Workflow State",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Draft",
+					"Approved And Applied",
+					"Approved And Not Applied",
+					"Cancelled"
+				]
+			]
+		]
+	},
+	{
+	"dt": "Workflow Action Master",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Approve No Apply"
+				]
+			]
+		]
 	},
 ]
 
