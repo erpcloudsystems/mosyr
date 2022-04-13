@@ -38,7 +38,7 @@ class EmployeeContract(Document):
 			"sponsorshiptrans" : "Suspended",
 			"finalexit" : "Left"
 		}
-		if self.hiring_start_date and cint(employee.from_api) == 1:
+		if self.hiring_start_date:
 			# Check  Employee Data
 			
 			employee.date_of_joining = self.hiring_start_date

@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-04-13 15:47:38.254437",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "notify_after_login",
+  "for_contracts_notice_me_before",
+  "for_ids__notice_me_before",
+  "for_passports_notice_me_before",
+  "for_insurance_notice_me_before"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "notify_after_login",
+   "fieldtype": "Check",
+   "label": "Notify After Login"
+  },
+  {
+   "fieldname": "for_contracts_notice_me_before",
+   "fieldtype": "Int",
+   "label": "For Contracts, Notice Me Before"
+  },
+  {
+   "fieldname": "for_ids__notice_me_before",
+   "fieldtype": "Int",
+   "label": "For ID's , Notice Me Before"
+  },
+  {
+   "fieldname": "for_passports_notice_me_before",
+   "fieldtype": "Int",
+   "label": "For Passports, Notice Me Before"
+  },
+  {
+   "fieldname": "for_insurance_notice_me_before",
+   "fieldtype": "Int",
+   "label": "For Insurance, Notice Me Before"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-04-13 15:47:38.254437",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "HR Notification Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
