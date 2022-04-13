@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, flt
+from frappe.utils import cint, flt, nowdate
 import erpnext
 
 class EmployeeContract(Document):
@@ -26,9 +26,10 @@ class EmployeeContract(Document):
 			else:
 				frappe.msgprint(_("Hiring Date is out of range {} and {}".format(self.contract_start_date, self.contract_end_date)))
 
+		self.check_workflow_status()
 	
-	@frappe.whitelist()
-	def apply_in_system(self):
+	@frappe.whitelist()	
+	def apply_in_system(self, apply):
 		employee = frappe.get_doc('Employee', self.employee)
 		lookup_value = {
 			"active" : "Active",
@@ -44,16 +45,17 @@ class EmployeeContract(Document):
 			employee.status = 'Active'
 			employee.save()
 			frappe.db.commit()
-
-		ss = self.create_salary_structure(employee.first_name)
-		self.create_salary_structure_assignment(ss)
-		self.db_set('status', 'Applied In System', update_modified=False)
-		employee.status = lookup_value.get(employee.api_employee_status, 'Inactive')
-		employee.valid_data = 1
-		employee.from_api = 0
-		employee.save()
-		frappe.db.commit()
-		return 'Applied In System'
+		
+		if apply:
+			ss = self.create_salary_structure(employee.first_name)
+			self.create_salary_structure_assignment(ss)
+			self.db_set('status', 'Applied In System', update_modified=False)
+			employee.status = lookup_value.get(employee.api_employee_status, 'Inactive')
+			employee.valid_data = 1
+			employee.from_api = 0
+			employee.save()
+			frappe.db.commit()
+			return 'Applied In System'
 	
 	def create_salary_structure_assignment(self, ss):
 		ssa = frappe.new_doc('Salary Structure Assignment')
@@ -203,3 +205,12 @@ class EmployeeContract(Document):
 		# frappe.db.commit()
 		return salary_structure_doc
 
+
+	def check_workflow_status(self):
+		if self.workflow_state == "Approved And Applied":
+			apply = True
+			self.apply_in_system(apply)
+
+		if self.workflow_state == "Approved And Not Applied":
+			apply = False
+			self.apply_in_system(apply)

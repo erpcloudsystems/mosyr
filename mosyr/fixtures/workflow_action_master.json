@@ -1,0 +1,12 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2022-04-12 12:19:10.797928",
+  "name": "Approve No Apply",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "workflow_action_name": "Approve No Apply"
+ }
+]
