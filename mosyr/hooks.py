@@ -259,7 +259,13 @@ fixtures = [
 		[
 			["name", "in", 
 				[
-					"Employee Contract"
+					"Employee Contract",
+					"Personal Details",
+					"Health Insurance",
+					"Salary Details",
+					"Educational Qualification",
+					"Emergency Contact",
+					"Contact Details"
 				]
 			]
 		]
@@ -273,7 +279,8 @@ fixtures = [
 					"Draft",
 					"Approved And Applied",
 					"Approved And Not Applied",
-					"Cancelled"
+					"Cancelled",
+					"Approved by HR"
 				]
 			]
 		]
