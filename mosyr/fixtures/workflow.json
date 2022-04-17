@@ -2,6 +2,486 @@
  {
   "docstatus": 0,
   "doctype": "Workflow",
+  "document_type": "Contact Details",
+  "is_active": 1,
+  "modified": "2022-04-13 16:46:05.659817",
+  "name": "Contact Details",
+  "override_status": 0,
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "send_email_alert": 1,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Contact Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Contact Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved by HR",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Contact Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Approved by HR",
+    "parent": "Contact Details",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "parent": "Contact Details",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   }
+  ],
+  "workflow_name": "Contact Details",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Emergency Contact",
+  "is_active": 1,
+  "modified": "2022-04-13 16:52:22.461487",
+  "name": "Emergency Contact",
+  "override_status": 0,
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "send_email_alert": 1,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Emergency Contact",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Emergency Contact",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved by HR",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Emergency Contact",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Approved by HR",
+    "parent": "Emergency Contact",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "parent": "Emergency Contact",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   }
+  ],
+  "workflow_name": "Emergency Contact",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Educational Qualification",
+  "is_active": 1,
+  "modified": "2022-04-13 16:52:50.053677",
+  "name": "Educational Qualification",
+  "override_status": 0,
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "send_email_alert": 1,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Educational Qualification",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Educational Qualification",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved by HR",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Educational Qualification",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Approved by HR",
+    "parent": "Educational Qualification",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "parent": "Educational Qualification",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   }
+  ],
+  "workflow_name": "Educational Qualification",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Salary Details",
+  "is_active": 1,
+  "modified": "2022-04-13 16:53:12.316751",
+  "name": "Salary Details",
+  "override_status": 0,
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "send_email_alert": 1,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Salary Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Salary Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved by HR",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Salary Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Approved by HR",
+    "parent": "Salary Details",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "parent": "Salary Details",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   }
+  ],
+  "workflow_name": "Salary Details",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Health Insurance",
+  "is_active": 1,
+  "modified": "2022-04-13 16:53:36.798894",
+  "name": "Health Insurance",
+  "override_status": 0,
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "send_email_alert": 1,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Health Insurance",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Health Insurance",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved by HR",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Health Insurance",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Approved by HR",
+    "parent": "Health Insurance",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "parent": "Health Insurance",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   }
+  ],
+  "workflow_name": "Health Insurance",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Personal Details",
+  "is_active": 1,
+  "modified": "2022-04-13 16:54:02.233537",
+  "name": "Personal Details",
+  "override_status": 0,
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "send_email_alert": 1,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Personal Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Personal Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved by HR",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "HR Manager",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Personal Details",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Approved by HR",
+    "parent": "Personal Details",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HR Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "parent": "Personal Details",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending"
+   }
+  ],
+  "workflow_name": "Personal Details",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
   "document_type": "Employee Contract",
   "is_active": 1,
   "modified": "2022-04-12 12:23:01.315510",

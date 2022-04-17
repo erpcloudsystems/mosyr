@@ -3,6 +3,18 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
+  "modified": "2022-04-13 16:45:02.029979",
+  "name": "Approved by HR",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "style": "Success",
+  "workflow_state_name": "Approved by HR"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
   "modified": "2022-04-12 13:25:52.184368",
   "name": "Draft",
   "parent": null,
