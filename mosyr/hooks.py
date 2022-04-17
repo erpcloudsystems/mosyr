@@ -65,6 +65,8 @@ doctype_js = {"Employee" : "public/js/employee.js"}
 # before_install = "mosyr.install.before_install"
 after_install = "mosyr.install.after_install"
 
+# boot_session = "mosyr.boot.boot_session"
+
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
@@ -289,6 +291,15 @@ fixtures = [
 			]
 		]
 	},
+	{
+	"dt": "Role",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"HR Notification"
+				]
+			]
+		]
+	},
 ]
-
-
