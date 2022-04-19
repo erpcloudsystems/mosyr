@@ -249,7 +249,8 @@ fixtures = [
 					"Employee-middle_name-hidden",
 					"Employee-first_name-label",
 					"Salary Component-section_break_5-hidden",
-					"Salary Structure-account-hidden"
+					"Salary Structure-account-hidden",
+					"Employee-erpnext_user-label"
 				]]
 			]
 	},
