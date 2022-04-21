@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-04-14 12:09:15.061865",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "contracts_notifications_section_section",
+  "contracts",
+  "ids_notifications_section_section",
+  "ids",
+  "passports_notifications_section_section",
+  "passports",
+  "insurance_notifications_section_section",
+  "insurance"
+ ],
+ "fields": [
+  {
+   "fieldname": "contracts_notifications_section_section",
+   "fieldtype": "Section Break",
+   "label": "Contracts "
+  },
+  {
+   "fieldname": "contracts",
+   "fieldtype": "HTML",
+   "label": "Contracts"
+  },
+  {
+   "fieldname": "ids_notifications_section_section",
+   "fieldtype": "Section Break",
+   "label": "ID's "
+  },
+  {
+   "fieldname": "ids",
+   "fieldtype": "HTML",
+   "label": "ID's"
+  },
+  {
+   "fieldname": "passports_notifications_section_section",
+   "fieldtype": "Section Break",
+   "label": "Passports "
+  },
+  {
+   "fieldname": "passports",
+   "fieldtype": "HTML",
+   "label": "Passports"
+  },
+  {
+   "fieldname": "insurance_notifications_section_section",
+   "fieldtype": "Section Break",
+   "label": "Insurance "
+  },
+  {
+   "fieldname": "insurance",
+   "fieldtype": "HTML",
+   "label": "Insurance"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-04-17 17:03:38.285439",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Notice Page",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
