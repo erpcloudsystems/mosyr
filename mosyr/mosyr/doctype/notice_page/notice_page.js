@@ -17,6 +17,13 @@ frappe.ui.form.on('Notice Page', {
 						</tr>
 						</thead>
 						<tbody>
+							<tr class="c-indicator">
+								<td colspan="3" class="indicator-td">
+									<div class="indicator_cont">
+										<img src="/assets/mosyr/imgs/indicator.gif" />
+									</div>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -31,21 +38,29 @@ frappe.ui.form.on('Notice Page', {
 					result.contracts.forEach((row, idx) => {
 						render_row(row, idx, "contracts")
 					})
+				} else {
+					render_mo_data_row("contracts")
 				}
 				if (result.ids.length){
 					result.ids.forEach((row, idx) => {
 						render_row(row, idx, "ids")
 					})
+				} else {
+					render_mo_data_row("ids")
 				}
 				if (result.passports.length){
 					result.passports.forEach((row, idx) => {
 						render_row(row, idx, "passports")
 					})
+				} else {
+					render_mo_data_row("passports")
 				}
 				if (result.insurances.length){
 					result.insurances.forEach((row, idx) => {
 						render_row(row, idx, "insurance")
 					})
+				} else {
+					render_mo_data_row("insurance")
 				}
 			}
 		})
@@ -55,6 +70,7 @@ frappe.ui.form.on('Notice Page', {
 const render_row= function(row, idx, table) {
 	let table_list = ["contracts", "ids", "passports", "insurance"]
 	if (table_list.includes(table)) {
+		$(`#${table} tbody tr.c-indicator`).remove()
 		$(`#${table} tbody`).append(`
 			<tr>
 				<td id=${idx}>
@@ -75,4 +91,13 @@ const render_row= function(row, idx, table) {
 			`)
 		}
 	}
+}
+
+const render_mo_data_row = function(table) {
+	$(`#${table} tbody tr.c-indicator`).remove()
+	$(`#${table} tbody`).append(`
+		<tr class="no-data">
+			<td colspan="3" class="empty-td"> ${__('There are no Documents that will expire soon')} </td>
+		</tr>
+	`)
 }
