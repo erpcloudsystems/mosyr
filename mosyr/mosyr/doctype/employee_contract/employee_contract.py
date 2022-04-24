@@ -28,6 +28,10 @@ class EmployeeContract(Document):
 
 		self.check_workflow_status()
 	
+	def submit(self):
+		if self.contract_status == "Not Valid":
+			frappe.throw("Can't take any action, The Contract is Not Valid")
+
 	@frappe.whitelist()	
 	def apply_in_system(self, apply):
 		employee = frappe.get_doc('Employee', self.employee)
