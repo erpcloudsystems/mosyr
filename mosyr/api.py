@@ -63,7 +63,7 @@ def get_will_expire_docs():
         FROM
             `tabEmployee Contract`
         WHERE 
-            docstatus = 1 AND contract_status = "Valid" AND DATEDIFF(contract_end_date, %(now)s) <= %(diff_day)s
+            docstatus = 1 AND contract_status = "Valid" AND DATEDIFF(contract_end_date, %(now)s) BETWEEN 0 AND %(diff_day)s
     """, {"now":now, "diff_day": notify_settings.for_contracts_notice_me_before}, as_dict=True)
 
     # Get Identities that will be expired 
@@ -73,7 +73,7 @@ def get_will_expire_docs():
         FROM
             `tabIdentity`
         WHERE 
-            DATEDIFF(expire_date, %(now)s) <= %(diff_day)s
+            DATEDIFF(expire_date, %(now)s) BETWEEN 0 AND %(diff_day)s
     """, {"now":now, "diff_day": notify_settings.for_ids__notice_me_before}, as_dict=True)
 
     # Get Passports that will be expired 
@@ -83,7 +83,7 @@ def get_will_expire_docs():
         FROM
             `tabPassport`
         WHERE 
-            DATEDIFF(passport_expire, %(now)s) <= %(diff_day)s
+            DATEDIFF(passport_expire, %(now)s) BETWEEN 0 AND %(diff_day)s
     """, {"now":now, "diff_day": notify_settings.for_passports_notice_me_before}, as_dict=True)
 
     # Get Insurances that will be expired 
@@ -93,7 +93,7 @@ def get_will_expire_docs():
         FROM
             `tabEmployee`
         WHERE 
-            DATEDIFF(insurance_card_expire, %(now)s) <= %(diff_day)s
+            DATEDIFF(insurance_card_expire, %(now)s) BETWEEN 0 AND %(diff_day)s
     """, {"now":now, "diff_day": notify_settings.for_insurance_notice_me_before}, as_dict=True)
 
     return {
