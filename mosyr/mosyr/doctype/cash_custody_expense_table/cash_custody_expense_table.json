@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-05-18 16:41:21.193289",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cash_custody",
+  "spent_value"
+ ],
+ "fields": [
+  {
+   "fieldname": "cash_custody",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cash Custody Expense",
+   "options": "Cash Custody Expense",
+   "read_only": 1
+  },
+  {
+   "depends_on": "cash_custody",
+   "fetch_from": "cash_custody.spent_value",
+   "fieldname": "spent_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Spent Value",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-05-19 11:06:15.669217",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Cash Custody Expense Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
