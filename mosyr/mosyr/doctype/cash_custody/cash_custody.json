@@ -1,0 +1,171 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "CC.####",
+ "creation": "2022-05-18 14:53:35.357923",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "responsible_employee",
+  "responsible_name",
+  "branch",
+  "date_receipt_h",
+  "notes",
+  "column_break_5",
+  "recipient_employee",
+  "recipient_name",
+  "custody_value",
+  "estimated_value",
+  "date_receipt_g",
+  "section_break_11",
+  "cash_custody_expense"
+ ],
+ "fields": [
+  {
+   "fieldname": "responsible_employee",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Responsible Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "date_receipt_h",
+   "fieldtype": "Data",
+   "label": "Date Receipt (H)",
+   "options": "Hijri Date"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "recipient_employee",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Recipient Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "custody_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Custody Value",
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_receipt_g",
+   "fieldtype": "Date",
+   "label": "Date Receipt (G)"
+  },
+  {
+   "depends_on": "responsible_employee",
+   "fetch_from": "responsible_employee.employee_name",
+   "fieldname": "responsible_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "depends_on": "recipient_employee",
+   "fetch_from": "recipient_employee.employee_name",
+   "fieldname": "recipient_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_11",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "cash_custody_expense",
+   "fieldtype": "Table",
+   "label": "Cash Custody Expense",
+   "options": "Cash Custody Expense Table",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "estimated_value",
+   "fieldtype": "Currency",
+   "label": "Estimated Value",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-05-19 12:01:19.504865",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Cash Custody",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "recipient_employee"
+}
