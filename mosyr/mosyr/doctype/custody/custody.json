@@ -1,22 +1,24 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{employee}-{type}-{####}",
+ "autoname": "CAST-.YYYY.-.#####",
  "creation": "2022-05-15 10:27:42.634889",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "employee",
+  "employee_name",
   "type",
   "branch",
-  "date_ah",
+  "receipt_date_h",
   "photo",
   "column_break_5",
   "recipient",
+  "recipient_name",
   "custody_value",
   "custody_status",
-  "date_ad",
+  "receipt_date_g",
   "notes",
   "amended_from"
  ],
@@ -24,7 +26,6 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
@@ -36,22 +37,17 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Custody Type",
-   "options": "Custody Type"
+   "no_copy": 1,
+   "options": "Custody Type",
+   "reqd": 1
   },
   {
    "fieldname": "branch",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Branch",
    "options": "Branch",
    "reqd": 1
-  },
-  {
-   "fieldname": "date_ah",
-   "fieldtype": "Data",
-   "label": "Date Receipt (H)",
-   "options": "Hijri Date"
   },
   {
    "fieldname": "photo",
@@ -66,28 +62,28 @@
    "fieldname": "recipient",
    "fieldtype": "Link",
    "label": "Recipient",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fieldname": "custody_value",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "label": "Custody Value",
-   "precision": "2"
+   "no_copy": 1
   },
   {
    "fieldname": "custody_status",
-   "fieldtype": "Data",
-   "label": "Custody Status on Receipt"
-  },
-  {
-   "fieldname": "date_ad",
-   "fieldtype": "Date",
-   "label": "Date Receipt (G)"
+   "fieldtype": "Link",
+   "label": "Custody Status on Receipt",
+   "no_copy": 1,
+   "options": "Custody Status",
+   "reqd": 1
   },
   {
    "fieldname": "notes",
    "fieldtype": "Small Text",
-   "label": "Notes"
+   "label": "Notes",
+   "no_copy": 1
   },
   {
    "fieldname": "amended_from",
@@ -97,12 +93,44 @@
    "options": "Custody",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "depends_on": "employee",
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "receipt_date_h",
+   "fieldtype": "Data",
+   "label": "Receipt Date (H)",
+   "no_copy": 1,
+   "options": "Hijri Date"
+  },
+  {
+   "depends_on": "recipient",
+   "fetch_from": "recipient.employee_name",
+   "fieldname": "recipient_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Recipient Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "receipt_date_g",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Receipt Date (G)",
+   "no_copy": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-05-18 14:48:08.766054",
+ "modified": "2022-06-01 18:24:34.660110",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Custody",
@@ -123,5 +151,5 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "employee"
+ "title_field": "employee_name"
 }
