@@ -238,7 +238,8 @@ fixtures = [
 				"Leave Application-leave_attachments",
 
 				"Additional Salary-reason",
-				"Additional Salary-employee_benefit"
+				"Additional Salary-employee_benefit",
+				'Employee-departement_location',
             ]]
         ]
     },

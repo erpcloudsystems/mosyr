@@ -18,6 +18,7 @@
   "mobile",
   "column_break_10",
   "mail_sender_address",
+  "labors_office_file_no",
   "signature_section",
   "signatures",
   "logos_brands",
@@ -48,9 +49,11 @@
   "column_break_39",
   "month_days",
   "bank_code",
+  "agreement_symbol",
   "column_break_42",
   "calendar_accreditation",
   "banks_type_payroll",
+  "establishment_number",
   "column_break_45",
   "bank_account_number",
   "banks_type_salary_card",
@@ -270,7 +273,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Disbursement Type",
-   "options": "Payroll\nWPS\nPayroll Cards",
+   "options": "Payroll\nWPS\nPayroll Cards\nInterchange",
    "reqd": 1
   },
   {
@@ -463,11 +466,30 @@
    "fieldtype": "Link",
    "label": "Company ID",
    "options": "Company Id"
+  },
+  {
+   "depends_on": "eval:doc.bank_name==\"Riyadh Bank\"",
+   "fieldname": "agreement_symbol",
+   "fieldtype": "Link",
+   "label": "Agreement Symbol",
+   "options": "Agreement Symbol"
+  },
+  {
+   "depends_on": "eval:doc.bank_name==\"Riyadh Bank\"",
+   "fieldname": "establishment_number",
+   "fieldtype": "Link",
+   "label": "Establishment Number",
+   "options": "Establishment  Number"
+  },
+  {
+   "fieldname": "labors_office_file_no",
+   "fieldtype": "Data",
+   "label": "Labors Office File Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-11 16:05:30.416921",
+ "modified": "2022-06-02 03:45:43.780920",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Company Controller",
