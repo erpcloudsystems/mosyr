@@ -1,0 +1,154 @@
+{
+ "actions": [],
+ "autoname": "RE-CST-.YYYY.-.#####",
+ "creation": "2022-06-08 14:35:31.432483",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "custody",
+  "resp_employee",
+  "emp_name",
+  "custody_status_on_return",
+  "receipt_date_g",
+  "column_break_6",
+  "custody_type",
+  "recipt_employee",
+  "employee_name",
+  "custody_status_on_receipt",
+  "receipt_date_h",
+  "return_reason",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "custody",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Custody",
+   "options": "Custody",
+   "reqd": 1
+  },
+  {
+   "depends_on": "custody",
+   "fetch_from": "custody.employee",
+   "fieldname": "resp_employee",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Responsible Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "depends_on": "resp_employee",
+   "fetch_from": "resp_employee.employee_name",
+   "fieldname": "emp_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Responsible Employee Name",
+   "read_only": 1
+  },
+  {
+   "depends_on": "custody",
+   "fetch_from": "custody.type",
+   "fieldname": "custody_type",
+   "fieldtype": "Link",
+   "label": "Custody Type",
+   "options": "Custody Type",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "receipt_date_g",
+   "fieldtype": "Date",
+   "label": "Return Date (G)"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "custody",
+   "fetch_from": "custody.recipient",
+   "fieldname": "recipt_employee",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Recipient Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "depends_on": "recipt_employee",
+   "fetch_from": "recipt_employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Recipient Employee Name",
+   "read_only": 1
+  },
+  {
+   "depends_on": "custody",
+   "fetch_from": "custody.custody_status",
+   "fieldname": "custody_status_on_receipt",
+   "fieldtype": "Link",
+   "label": "Custody Status on Receipt",
+   "options": "Custody Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "custody_status_on_return",
+   "fieldtype": "Link",
+   "label": "Custody Status on Return",
+   "options": "Custody Status",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "receipt_date_h",
+   "fieldtype": "Data",
+   "label": "Return Date (H)",
+   "options": "Hijri Date"
+  },
+  {
+   "fieldname": "return_reason",
+   "fieldtype": "Small Text",
+   "label": "Return Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Return Custody",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-06-08 15:54:31.392688",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Return Custody",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "custody"
+}
