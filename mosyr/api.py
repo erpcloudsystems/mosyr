@@ -135,4 +135,23 @@ def show_expier_docs():
         
         if print_msg:
             frappe.msgprint(_(msg), title= _('Employee Docs that will be expired'), indicator= 'orange')
-    
+
+@frappe.whitelist()
+def set_employee_approvers(department):
+    ''' Fetch Aprrovers From Department & Set it in Employee Page Depends on Department Field'''
+    if department:
+        leave_approver = expense_approver = shift_req_approver = ''
+        department = frappe.get_doc('Department', department)
+        
+        if len(department.leave_approvers):
+            leave_approver = department.leave_approvers[0].approver
+            leave_approver = leave_approver
+        if len(department.expense_approvers):
+            expense_approver = department.expense_approvers[0].approver
+            expense_approver = expense_approver
+
+        if len(department.shift_request_approver):
+            shift_req_approver = department.shift_request_approver[0].approver
+            shift_req_approver = shift_req_approver
+
+        return leave_approver, expense_approver, shift_req_approver
