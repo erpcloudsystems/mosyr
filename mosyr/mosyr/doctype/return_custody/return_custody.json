@@ -10,13 +10,13 @@
   "resp_employee",
   "emp_name",
   "custody_status_on_return",
-  "receipt_date_g",
+  "return_date_g",
   "column_break_6",
   "custody_type",
   "recipt_employee",
   "employee_name",
   "custody_status_on_receipt",
-  "receipt_date_h",
+  "return_date_h",
   "return_reason",
   "amended_from"
  ],
@@ -59,12 +59,6 @@
    "read_only": 1
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "receipt_date_g",
-   "fieldtype": "Date",
-   "label": "Return Date (G)"
-  },
-  {
    "fieldname": "column_break_6",
    "fieldtype": "Column Break"
   },
@@ -105,13 +99,6 @@
    "reqd": 1
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "receipt_date_h",
-   "fieldtype": "Data",
-   "label": "Return Date (H)",
-   "options": "Hijri Date"
-  },
-  {
    "fieldname": "return_reason",
    "fieldtype": "Small Text",
    "label": "Return Reason",
@@ -125,12 +112,25 @@
    "options": "Return Custody",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "return_date_g",
+   "fieldtype": "Date",
+   "label": "Return Date (G)"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "return_date_h",
+   "fieldtype": "Data",
+   "label": "Return Date (H)",
+   "options": "Hijri Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-09 10:10:27.180739",
+ "modified": "2022-06-09 15:24:08.927903",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Return Custody",
