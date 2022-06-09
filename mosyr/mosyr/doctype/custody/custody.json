@@ -13,6 +13,7 @@
   "branch",
   "receipt_date_h",
   "photo",
+  "status",
   "column_break_5",
   "recipient",
   "recipient_name",
@@ -20,6 +21,7 @@
   "custody_status",
   "receipt_date_g",
   "notes",
+  "returned_custody",
   "amended_from"
  ],
  "fields": [
@@ -34,6 +36,7 @@
   {
    "fieldname": "type",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Custody Type",
@@ -61,6 +64,7 @@
   {
    "fieldname": "recipient",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Recipient",
    "options": "Employee",
    "reqd": 1
@@ -125,12 +129,31 @@
    "in_list_view": 1,
    "label": "Receipt Date (G)",
    "no_copy": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nReturned",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "returned_custody",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Returned Custody",
+   "no_copy": 1,
+   "options": "Return Custody",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-01 18:24:34.660110",
+ "modified": "2022-06-09 14:31:04.734541",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Custody",
@@ -145,6 +168,35 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "select": 1,
    "share": 1,
    "write": 1
   }
