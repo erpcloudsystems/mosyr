@@ -117,5 +117,22 @@
   "property_type": "Data",
   "row_name": null,
   "value": "Mosyr User"
+ },
+  {
+  "default_value": null,
+  "doc_type": "Department",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "payroll_cost_center",
+  "modified": "2022-06-14 07:37:33.704530",
+  "name": "Department-payroll_cost_center-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
