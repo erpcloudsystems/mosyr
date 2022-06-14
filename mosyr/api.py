@@ -1,6 +1,7 @@
 import frappe 
-from frappe.utils import nowdate
+from frappe.utils import nowdate, getdate
 from frappe import _
+from hijri_converter import Hijri, Gregorian
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -155,3 +156,15 @@ def set_employee_approvers(department):
             shift_req_approver = shift_req_approver
 
         return leave_approver, expense_approver, shift_req_approver
+
+@frappe.whitelist()
+def convert_date(gregorian_date=None, hijri_date=None):
+    if gregorian_date:
+        gd, gm, gy = getdate(gregorian_date).day, getdate(gregorian_date).month, getdate(gregorian_date).year
+        hijri = Gregorian(gy, gm, gd).to_hijri()
+        return str(hijri)
+
+    if hijri_date:
+        hd, hm, hy = getdate(hijri_date).day, getdate(hijri_date).month, getdate(hijri_date).year
+        gregorian = Hijri(hy, hm, hd ).to_gregorian()
+        return str(gregorian)
