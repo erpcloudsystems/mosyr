@@ -31,6 +31,38 @@ frappe.ui.form.on('Employee', {
         //     frm.scroll_to_field('mosyr_employee_status');
         // }, __('Jump to'));
     },
+    date_of_birth: function (frm) { 
+		if (frm.doc.date_of_birth){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: frm.doc.date_of_birth
+				},
+				callback: r => {
+					if (r.message){
+						frm.doc.hijri_date_of_birth = r.message
+						frm.refresh_field('hijri_date_of_birth')
+					}
+				}
+			})
+		}
+	 },
+	 hijri_date_of_birth: function (frm) { 
+		if (frm.doc.hijri_date_of_birth){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: frm.doc.hijri_date_of_birth
+				},
+				callback: r => {
+					if (r.message){
+						frm.doc.date_of_birth = r.message
+						frm.refresh_field('date_of_birth')
+					}
+				}
+			})
+		}
+	 },
     department: function(frm){
         if (frm.doc.department){
             frappe.call({
