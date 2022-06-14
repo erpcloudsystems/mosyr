@@ -199,7 +199,6 @@ fixtures = [
 				"Employee-nationality",
 				"Employee-payment_type",
 				"Employee-religion",
-				"Employee-branch_working_place",
 				"Employee-handicap",
 				"Employee-self_service",
 				"Employee-payroll_card_number",

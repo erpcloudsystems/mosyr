@@ -451,7 +451,7 @@ class MosyrDataImport(Document):
                     is_new, v = self.check_link_data('Nationality', v, 'nationality')
                 if k == 'health_insurance_provider' and v != '':
                     is_new, v = self.check_link_data('Employee Health Insurance', v, 'health_insurance_name')
-                if k == ['branch', 'branch_working_place'] and v != '':
+                if k == 'branch' and v != '':
                     is_new, v = self.check_link_data('Branch', v, 'branch')
                 if k == 'gender' and v != '':
                     is_new, v = self.check_link_data('Gender', v, 'gender')
