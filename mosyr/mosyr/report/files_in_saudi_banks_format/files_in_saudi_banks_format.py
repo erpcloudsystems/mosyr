@@ -243,14 +243,22 @@ def get_data_riad(filters):
 		GROUP BY emp.first_name,emp_num
 		ORDER BY row_num_riad
 		""",as_dict=1)
-
 	for d in data :
-		sl_total = d.get('salary').replace(',','')
-		sl_basic =  d.get('basic').replace(',','')
-		sl_housing_allowance =  d.get('housing_allowance').replace(',','')
-		sl_other_earnings =  d.get('other_earnings').replace(',','')
-		sl_dedactions =  d.get('dedactions').replace(',','')
-		d.update({'salary':sl_total,'basic':sl_basic,'housing_allowance':sl_housing_allowance,'other_earnings':sl_other_earnings,'dedactions':sl_dedactions})
+		if ',' in d.get('salary'):
+			sl_total = d.get('salary').replace(',','').replace('.','')
+			d.update({'salary':sl_total})
+		if ',' in d.get('salary'):
+			sl_basic =  d.get('basic').replace(',','').replace('.','')
+			d.update({'basic':sl_basic})
+		if ',' in d.get('salary'):
+			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
+			d.update({'housing_allowance':sl_housing_allowance})
+		if ',' in d.get('salary'):
+			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
+			d.update({'other_earnings':sl_other_earnings})
+		if ',' in d.get('salary'):
+			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
+			d.update({'dedactions':sl_dedactions})
 
 	company_controller = frappe.get_doc("Company Controller" ,company)
 	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
@@ -432,14 +440,28 @@ def get_data_sumba(filters):
 		GROUP BY emp.name
 		""",as_dict=1)
 	for d in data :
-		salary = d.get('salary').replace(',','').split('.')[0][1:]
+		if ',' in d.get('salary'):
+			salary = d.get('salary').replace(',','').split('.')[0][1:]
+		else :salary = d.get('salary').split('.')[0][1:]
 		checksum =_samba_wps_checksum(company_controller.company_id,d.get('id_number'),d.get('emp_name'),salary)
-		sl_total = d.get('salary').replace(',','').replace('.','')
-		sl_basic =  d.get('basic').replace(',','').replace('.','')
-		sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
-		sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
-		sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
-		d.update({'checksum':checksum,'salary':sl_total,'basic':sl_basic,'housing_allowance':sl_housing_allowance,'other_earnings':sl_other_earnings,'dedactions':sl_dedactions})
+		d.update({'checksum':checksum})
+		if ',' in d.get('salary'):
+			sl_total = d.get('salary').replace(',','').replace('.','')
+			d.update({'salary':sl_total})
+		if ',' in d.get('basic'):
+			sl_basic =  d.get('basic').replace(',','').replace('.','')
+			d.update({'basic':sl_basic})
+		if ',' in d.get('housing_allowance'):
+			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
+			d.update({'housing_allowance':sl_housing_allowance})
+		if ',' in d.get('other_earnings'):
+			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
+			d.update({'other_earnings':sl_other_earnings})
+		if ',' in d.get('dedactions'):
+			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
+			d.update({'dedactions':sl_dedactions})
+	
+	
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
 	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
@@ -457,11 +479,15 @@ def get_data_sumba(filters):
 		'checksum':company_controller.organization_english.ljust(40),
 		'emp_bank' : company_controller.company_id.ljust(152)
 		})
+	if ',' in (str("%.2f" % total_salary).zfill(19)): 
+		salary=(str("%.2f" % total_salary).zfill(19)).replace(',','').replace('.','')
+	else:
+		(str("%.2f" % total_salary).zfill(19)).replace('.','')	
 	data.append(
 		{
 			'num':'003',
 			'emp_num':str(total_emp).zfill(6),
-			'emp_name':(str("%.2f" % total_salary).zfill(19)).replace(',','').replace('.',''),
+			'emp_name':salary,
 			'salary':' ' # 181 spaces
 		}
 	)
@@ -506,8 +532,9 @@ def get_data_alrajhi_payroll(filters):
 		ORDER BY emp_num
 		""",as_dict=1)
 	for d in data :
-		sl_total = d.get('salary').replace(',','').replace('.','')
-		d.update({'salary':sl_total})
+		if ',' in d.get('salary'):
+			sl_total = d.get('salary').replace(',','').replace('.','')
+			d.update({'salary':sl_total})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
 	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
@@ -528,14 +555,18 @@ def get_data_alrajhi_payroll(filters):
 		today =  datetime.date.today()
 	elif date.hour > 14:
 		today = datetime.date.today() + datetime.timedelta(days=1)
-	
+
+	if ',' in (str("%.2f" % total_salary).zfill(16)): 
+		salary=(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.','')
+	else:
+		(str("%.2f" % total_salary).zfill(16)).replace('.','')	
 	data.insert(0,
 		{
 		'emp_num': '000000000000',
 		'bank_code' : cal,
 		'bank_acc_no' : today.strftime("%Y%m%d"),
 		'emp_name': (today + datetime.timedelta(days=1)).strftime("%Y%m%d"),
-		'salary':(('{:.2f}'.format(total_salary)).zfill(16)).replace(',','').replace('.',''),
+		'salary':salary,
 		'id_number' : str(total_emp).zfill(8),
 		"zero":str(company_controller.bank_account_number).zfill(15),
 		"file_seq":"",
@@ -583,8 +614,9 @@ def get_data_alrajhi_interchange(filters):
 		""",as_dict=1)
 
 	for d in data :
-		sl_total = d.get('salary').replace(',','').replace('.','')
-		d.update({'salary':sl_total})
+		if ',' in  d.get('salary'):
+			sl_total = d.get('salary').replace(',','').replace('.','')
+			d.update({'salary':sl_total})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
 	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
@@ -607,13 +639,17 @@ def get_data_alrajhi_interchange(filters):
 			today = datetime.date.today() + datetime.timedelta(days=2)
 		elif today.strftime("%A") == 'Saturday':
 			today = datetime.today() + datetime.timedelta(days=1)
+	if ',' in (str("%.2f" % total_salary).zfill(16)): 
+		salary=(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.','')
+	else:
+		(str("%.2f" % total_salary).zfill(16)).replace('.','')
 	data.insert(0,
 		{
 		'emp_num': '000000000000',
 		'bank_code' : cal,
 		'bank_acc_no' : today.strftime("%Y%m%d"),
 		'emp_name': (today + datetime.timedelta(days=1)).strftime("%Y%m%d"),
-		'salary':(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.',''),
+		'salary':salary,
 		'id_number' : str(total_emp).zfill(8),
 		"zero":company_controller.bank_account_number.zfill(15),
 		"zero3":" "*67,
@@ -675,12 +711,21 @@ def get_data_alrajhi_payroll_card(filters):
 		""",as_dict=1)
 
 	for d in data :
-		sl_total = d.get('salary').replace(',','').replace('.','')
-		sl_basic =  d.get('basic').replace(',','').replace('.','')
-		sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
-		sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
-		sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
-		d.update({'salary':sl_total,'basic':sl_basic,'housing_allowance':sl_housing_allowance,'other_earnings':sl_other_earnings,'dedactions':sl_dedactions})
+		if ',' in d.get('salary'):
+			sl_total = d.get('salary').replace(',','').replace('.','')
+			d.update({'salary':sl_total})
+		if ',' in d.get('salary'):
+			sl_basic =  d.get('basic').replace(',','').replace('.','')
+			d.update({'basic':sl_basic})
+		if ',' in d.get('salary'):
+			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
+			d.update({'housing_allowance':sl_housing_allowance})
+		if ',' in d.get('salary'):
+			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
+			d.update({'other_earnings':sl_other_earnings})
+		if ',' in d.get('salary'):
+			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
+			d.update({'dedactions':sl_dedactions})
 	return data
 
 
