@@ -13,21 +13,21 @@ def execute(filters=None):
 	company_controller = frappe.get_doc("Company Controller" , filters.get('company'))
 	disbursement_type = company_controller.disbursement_type
 	bank_name = company_controller.bank_name
-	if bank_name == "alinmabank" and disbursement_type == 'Payroll':
+	if bank_name == "Al Inma Bank" and disbursement_type == 'Payroll':
 		return get_columns_inma_payroll(),get_data_inma_payroll(filters)
-	elif bank_name == "alinmabank" and disbursement_type == 'WPS':
+	elif bank_name == "Al Inma Bank" and disbursement_type == 'WPS':
 		return get_columns_inma_wps(),get_data_inma_wps(filters)
 	elif bank_name == "Riyadh Bank" and disbursement_type == 'WPS':
 		return get_columns_riad(),get_data_riad(filters)
-	elif bank_name == "National Commercial Bank" and disbursement_type == 'WPS':
+	elif bank_name == "The National Commercial Bank" and disbursement_type == 'WPS':
 		return get_columns_ahly(),get_data_ahly(filters)
-	elif bank_name == "Saudi American Bank" and disbursement_type == 'WPS':
+	elif bank_name == "Samba Financial Group" and disbursement_type == 'WPS':
 		return get_columns_sumba(),get_data_sumba(filters)
-	elif bank_name == "Al-Rajhi Bank" and disbursement_type == 'Payroll':
+	elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll':
 		return get_columns_alrajhi_payroll(),get_data_alrajhi_payroll(filters)
-	elif bank_name == "Al-Rajhi Bank" and disbursement_type == 'Interchange':
+	elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Interchange':
 		return get_columns_alrajhi_interchange(),get_data_alrajhi_interchange(filters)
-	elif bank_name == "Al-Rajhi Bank" and disbursement_type == 'Payroll Cards':
+	elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll Cards':
 		return get_columns_alrajhi_payroll_card(),get_data_alrajhi_payroll_card(filters)
 	else :
 		return [] , []
