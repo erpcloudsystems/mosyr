@@ -253,7 +253,8 @@ fixtures = [
 					"Salary Component-section_break_5-hidden",
 					"Salary Structure-account-hidden",
 					"Employee-erpnext_user-label",
-					"Department-payroll_cost_center-hidden"
+					"Department-payroll_cost_center-hidden",
+					"Employee-payroll_cost_center-hidden"
 				]]
 			]
 	},
