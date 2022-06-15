@@ -247,16 +247,16 @@ def get_data_riad(filters):
 		if ',' in d.get('salary'):
 			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
-		if ',' in d.get('salary'):
+		if ',' in d.get('basic'):
 			sl_basic =  d.get('basic').replace(',','').replace('.','')
 			d.update({'basic':sl_basic})
-		if ',' in d.get('salary'):
+		if ',' in d.get('housing_allowance'):
 			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
 			d.update({'housing_allowance':sl_housing_allowance})
-		if ',' in d.get('salary'):
+		if ',' in d.get('other_earnings'):
 			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
 			d.update({'other_earnings':sl_other_earnings})
-		if ',' in d.get('salary'):
+		if ',' in d.get('dedactions'):
 			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
 
@@ -482,7 +482,7 @@ def get_data_sumba(filters):
 	if ',' in (str("%.2f" % total_salary).zfill(19)): 
 		salary=(str("%.2f" % total_salary).zfill(19)).replace(',','').replace('.','')
 	else:
-		(str("%.2f" % total_salary).zfill(19)).replace('.','')	
+		salary=(str("%.2f" % total_salary).zfill(19))
 	data.append(
 		{
 			'num':'003',
@@ -559,7 +559,7 @@ def get_data_alrajhi_payroll(filters):
 	if ',' in (str("%.2f" % total_salary).zfill(16)): 
 		salary=(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.','')
 	else:
-		(str("%.2f" % total_salary).zfill(16)).replace('.','')	
+		salary=(str("%.2f" % total_salary).zfill(16))
 	data.insert(0,
 		{
 		'emp_num': '000000000000',
@@ -642,7 +642,7 @@ def get_data_alrajhi_interchange(filters):
 	if ',' in (str("%.2f" % total_salary).zfill(16)): 
 		salary=(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.','')
 	else:
-		(str("%.2f" % total_salary).zfill(16)).replace('.','')
+		salary=(str("%.2f" % total_salary).zfill(16))
 	data.insert(0,
 		{
 		'emp_num': '000000000000',
@@ -714,16 +714,16 @@ def get_data_alrajhi_payroll_card(filters):
 		if ',' in d.get('salary'):
 			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
-		if ',' in d.get('salary'):
+		if ',' in d.get('basic'):
 			sl_basic =  d.get('basic').replace(',','').replace('.','')
 			d.update({'basic':sl_basic})
-		if ',' in d.get('salary'):
+		if ',' in d.get('housing_allowance'):
 			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
 			d.update({'housing_allowance':sl_housing_allowance})
-		if ',' in d.get('salary'):
+		if ',' in d.get('other_earnings'):
 			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
 			d.update({'other_earnings':sl_other_earnings})
-		if ',' in d.get('salary'):
+		if ',' in d.get('dedactions'):
 			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
 	return data
