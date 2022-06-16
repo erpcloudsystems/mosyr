@@ -18,6 +18,8 @@
   "custody_status_on_receipt",
   "return_date_h",
   "return_reason",
+  "attachments_section",
+  "attachments",
   "amended_from"
  ],
  "fields": [
@@ -125,12 +127,23 @@
    "fieldtype": "Data",
    "label": "Return Date (H)",
    "options": "Hijri Date"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "attachments",
+   "fieldtype": "Table",
+   "options": "Return Custody Attachment"
+  },
+  {
+   "fieldname": "attachments_section",
+   "fieldtype": "Section Break",
+   "label": "Attachments"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-09 15:24:08.927903",
+ "modified": "2022-06-15 09:50:01.457345",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Return Custody",
