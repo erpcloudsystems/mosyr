@@ -82,3 +82,251 @@ frappe.ui.form.on('Employee', {
         }
     }
 });
+frappe.ui.form.on('Employee Status', {
+	status_date: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.status_date){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.status_date
+				},
+				callback: r => {
+					if (r.message){
+						row.status_date_h = r.message
+						frm.refresh_field('mosyr_employee_status')
+					}
+				}
+			})
+		}
+	 },
+	 status_date_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.status_date_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.status_date_h
+				},
+				callback: r => {
+					if (r.message){
+						row.status_date = r.message
+						frm.refresh_field('mosyr_employee_status')
+					}
+				}
+			})
+		}
+	 }
+})
+
+frappe.ui.form.on('Dependent', {
+	birth_date_g: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.birth_date_g){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.birth_date_g
+				},
+				callback: r => {
+					if (r.message){
+						row.birth_date_h = r.message
+						frm.refresh_field('dependent')
+					}
+				}
+			})
+		}
+	 },
+	 birth_date_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.birth_date_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.birth_date_h
+				},
+				callback: r => {
+					if (r.message){
+						row.birth_date_g = r.message
+						frm.refresh_field('dependent')
+					}
+				}
+			})
+		}
+	 }
+})
+
+frappe.ui.form.on('Identity', {
+	expire_date: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.expire_date){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.expire_date
+				},
+				callback: r => {
+					if (r.message){
+						row.expire_date_h = r.message
+						frm.refresh_field('identity')
+					}
+				}
+			})
+		}
+	 },
+	 expire_date_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.expire_date_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.expire_date_h
+				},
+				callback: r => {
+					if (r.message){
+						row.expire_date = r.message
+						frm.refresh_field('identity')
+					}
+				}
+			})
+		}
+	 },
+     issue_date: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.issue_date){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.issue_date
+				},
+				callback: r => {
+					if (r.message){
+						row.issue_date_h = r.message
+						frm.refresh_field('identity')
+					}
+				}
+			})
+		}
+	 },
+	 issue_date_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.issue_date_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.issue_date_h
+				},
+				callback: r => {
+					if (r.message){
+						row.issue_date = r.message
+						frm.refresh_field('identity')
+					}
+				}
+			})
+		}
+	 },
+     border_entry_date: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.border_entry_date){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.border_entry_date
+				},
+				callback: r => {
+					if (r.message){
+						row.border_entry_date_h = r.message
+						frm.refresh_field('identity')
+					}
+				}
+			})
+		}
+	 },
+	 border_entry_date_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.border_entry_date_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.border_entry_date_h
+				},
+				callback: r => {
+					if (r.message){
+						row.border_entry_date = r.message
+						frm.refresh_field('identity')
+					}
+				}
+			})
+		}
+	 }
+})
+frappe.ui.form.on('Passport', {
+	passport_expire: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.passport_expire){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.passport_expire
+				},
+				callback: r => {
+					if (r.message){
+						row.passport_expire_h = r.message
+						frm.refresh_field('passport')
+					}
+				}
+			})
+		}
+	 },
+	passport_expire_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.passport_expire_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.passport_expire_h
+				},
+				callback: r => {
+					if (r.message){
+						row.passport_expire = r.message
+						frm.refresh_field('passport')
+					}
+				}
+			})
+		}
+	 },
+     passport_issue_date: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.passport_issue_date){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					gregorian_date: row.passport_issue_date
+				},
+				callback: r => {
+					if (r.message){
+						row.passport_issue_date_h = r.message
+						frm.refresh_field('passport')
+					}
+				}
+			})
+		}
+	 },
+	passport_issue_date_h: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn] 
+		if (row.passport_issue_date_h){
+			frappe.call({
+				method: "mosyr.api.convert_date",
+				args: {
+					hijri_date: row.passport_issue_date_h
+				},
+				callback: r => {
+					if (r.message){
+						row.passport_issue_date = r.message
+						frm.refresh_field('passport')
+					}
+				}
+			})
+		}
+	 },
+})
