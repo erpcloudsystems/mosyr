@@ -312,4 +312,15 @@ fixtures = [
 			]
 		]
 	},
+	{
+	"dt": "Print Format",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Data Import Log"
+				]
+			]
+		]
+	},
 ]

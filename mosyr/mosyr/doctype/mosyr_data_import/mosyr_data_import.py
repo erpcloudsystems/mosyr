@@ -256,7 +256,11 @@ class MosyrDataImport(Document):
 		{error_table_html}
 		"""
         frappe.msgprint(msg, title=f'{total_data} {doctype} Imported',
-                        indicator='Cs', primary_action={ 'label': _('Export Error Log') })
+                        indicator='Cs', primary_action={ 'label': _('Export Error Log 2'),
+                            'client_action': 'mosyr.download_errors',
+                            'args': {
+                                'data': log_name
+                            } })
     
     def create_import_log(self, doctype, total_data, success, existed, errors, headers, error_msgs):
         err_log = frappe.new_doc('Mosyr Data Import Log')
@@ -2072,10 +2076,15 @@ class MosyrDataImport(Document):
 		"""
         frappe.msgprint(msg, title=f'{len(data)} Employess Imported', indicator='Cs',
                         primary_action={
-                            'label': _('Export Error Log'),
+                            'label': _('Export Error Log 2'),
                             'client_action': 'mosyr.utils.download_errors',
                             'args': {
-                                'data': [['A', 'B'], ['errra', 'errb']]
+                                'data': 'e42237ba5e'
                             }
                         }
                         )
+
+    def get_error_as_json(self, err):
+        if not frappe.db.exists('Mosyr Data Import Log', err): return {}
+        mdi = frappe.get_doc('Mosyr Data Import Log', err)
+        return json.loads(mdi.error_json)

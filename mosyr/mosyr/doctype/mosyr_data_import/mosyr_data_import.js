@@ -2,6 +2,15 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Mosyr Data Import', {
+    onload: function(frm){
+        frm.set_query('cid', function(doc){
+            return{
+                filters:{
+                    'docstatus': 1
+                }
+            }
+        })
+    },
     refresh: function(frm) {
 
         $('.page-actions').css({ 'display': 'none' })
