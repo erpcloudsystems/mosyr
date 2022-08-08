@@ -1,9 +1,20 @@
 import frappe
 
-def after_install(): pass
+def after_install():
+    edit_gender_list()
     # create_salary_components()
     # create_salary_structure()
     # frappe.db.commit()
+
+def edit_gender_list():
+    genders_to_del = frappe.get_list('Gender', filters={'name': ['not in', ['Female', 'Male']]})
+    for gender in genders_to_del:
+        try:
+            gender = frappe.get_doc('Gender', gender.name)
+            gender.delete()
+        except:
+            pass
+        frappe.db.commit()
 
 def create_salary_components():
     print('[*] Add Salary Components')
