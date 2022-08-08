@@ -151,5 +151,22 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Employee",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "company",
+  "modified": "2022-08-08 15:29:56.695879",
+  "name": "Employee-company-in_standard_filter",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "in_standard_filter",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
