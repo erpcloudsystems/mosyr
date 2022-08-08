@@ -254,7 +254,8 @@ fixtures = [
 					"Salary Structure-account-hidden",
 					"Employee-erpnext_user-label",
 					"Department-payroll_cost_center-hidden",
-					"Employee-payroll_cost_center-hidden"
+					"Employee-payroll_cost_center-hidden",
+					"Employee-company-in_standard_filter"
 				]]
 			]
 	},
