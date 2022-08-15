@@ -103,6 +103,19 @@ doc_events = {
 	},
 	"Salary Structure": {
 		"validate": "mosyr.api.check_payment_mode"
+	},
+
+	"Loan Type": {
+		"validate": "mosyr.api.set_missing_accounts"
+	},
+	"Loan Write Off": {
+		"validate": "mosyr.api.set_missing_accounts"
+	},
+	"Employee Advance": {
+		"validate": "mosyr.api.set_missing_accounts"
+	},
+	"Expense Claim": {
+		"validate": "mosyr.api.set_missing_accounts"
 	}
 }
 
