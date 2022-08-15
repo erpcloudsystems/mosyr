@@ -190,6 +190,7 @@
   {
    "fieldname": "settings_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Settings"
   },
   {
@@ -489,7 +490,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-02 03:45:43.780920",
+ "modified": "2022-08-15 17:05:08.523563",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Company Controller",
