@@ -11,6 +11,7 @@ class ERPForm(Document):
 		allow_rename = 0
 		custom = 1
 		copy_doc = frappe.copy_doc(self, ignore_no_copy=False).as_json()
+		copy_doc.replace('ERPFormField', 'DocField')
 		copy_doc = json.loads(copy_doc)
 		copy_doc.update({
 			'module': module,
