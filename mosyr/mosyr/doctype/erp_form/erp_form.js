@@ -12,14 +12,19 @@ frappe.ui.form.on('ERP Form', {
 			}
 		});
 		if (!frm.is_new() && !frm.doc.istable) {
-			if (frm.doc.issingle) {
-				frm.add_custom_button(__('Go to {0}', [__(frm.doc.name)]), () => {
-					window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+			if (frm.doc.docstatus == 1) {
+				frm.add_custom_button(__('Customzie {0}', [__(frm.doc.name)]), () => {
+					window.open(`/app/doctype/${frm.doc.name}`);
 				});
-			} else {
-				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
-					window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
-				});
+				if (frm.doc.issingle) {
+					frm.add_custom_button(__('Go to {0}', [__(frm.doc.name)]), () => {
+						window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+					});
+				} else {
+					frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
+						window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+					});
+				}
 			}
 		}
 		if (frm.is_new()) {
