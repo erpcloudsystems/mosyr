@@ -1,9 +1,14 @@
 import frappe
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 
+from mosyr import mosyr_accounts, mosyr_mode_payments
+
 def after_install():
     edit_gender_list()
+    prepare_mode_payments()
     prepare_system_accounts()
+    hide_accounts_fields()
+    
     # create_salary_components()
     # create_salary_structure()
     # frappe.db.commit()
@@ -17,6 +22,196 @@ def edit_gender_list():
         except:
             pass
         frappe.db.commit()
+
+def prepare_system_accounts():
+    companies = frappe.get_list("Company", fields=["default_currency", "name"])
+    setup_loan_accounts(companies)
+    setup_loan_type_accounts(companies)
+    setup_loan_writeoff_accounts(companies)
+
+    setup_employee_advance_accounts(companies)
+    setup_expense_claim_accounts(companies)
+
+    setup_salary_component_accounts()
+
+def setup_loan_accounts(companies):
+    accounts = mosyr_accounts.get('LoanType', [])
+    mode_payments = mosyr_mode_payments.get('LoanType', {})
+    for company in companies:
+        args = {
+            "company": company.name,
+            "account_currency": company.default_currency
+        }
+        for account in accounts:
+            args.update(account["account"])
+            new_account = create_account(**args)
+            if new_account:
+                set_property_setter(new_account, account["for_fields"])
+    
+    new_mode = create_mode_payment(mode_payments["type"], mode_payments["title"])
+    if new_mode:
+        set_property_setter(new_mode, mode_payments["for_fields"])
+
+def setup_loan_type_accounts(companies):
+    accounts = mosyr_accounts.get('LoanType', [])
+    mode_payments = mosyr_mode_payments.get('LoanType', {})
+    for company in companies:
+        args = {
+            "company": company.name,
+            "account_currency": company.default_currency
+        }
+        for account in accounts:
+            args.update(account["account"])
+            new_account = create_account(**args)
+            if new_account:
+                set_property_setter(new_account, account["for_fields"])
+    new_mode = create_mode_payment(mode_payments["type"], mode_payments["title"])
+    if new_mode:
+        set_property_setter(new_mode, mode_payments["for_fields"])
+
+def setup_loan_writeoff_accounts(companies):
+    accounts = mosyr_accounts.get('LoanWriteOff', [])
+    for company in companies:
+        args = {
+            "company": company.name,
+            "account_currency": company.default_currency
+        }
+        for account in accounts:
+            args.update(account["account"])
+            new_account = create_account(**args)
+            if new_account:
+                set_property_setter(new_account, account["for_fields"])
+
+def setup_employee_advance_accounts(companies):
+    accounts = mosyr_accounts.get('EmployeeAdvance', [])
+    for company in companies:
+        args = {
+            "company": company.name,
+            "account_currency": company.default_currency
+        }
+        for account in accounts:
+            args.update(account["account"])
+            new_account = create_account(**args)
+            if new_account:
+                set_property_setter(new_account, account["for_fields"])
+
+def setup_expense_claim_accounts(companies):
+    accounts = mosyr_accounts.get('ExpenseClaim', [])
+    for company in companies:
+        args = {
+            "company": company.name,
+            "account_currency": company.default_currency
+        }
+        for account in accounts:
+            args.update(account["account"])
+            new_account = create_account(**args)
+            if new_account:
+                set_property_setter(new_account, account["for_fields"])
+
+def setup_salary_component_accounts():
+    sal_comps = frappe.get_list('Salary Component')
+    for sal_comp in sal_comps:
+        sal_comp = frappe.get_doc('Salary Component', sal_comp.name)
+        sal_comp.save()
+
+def setup_salary_structure_accounts():
+    # Use account from payment entry
+    mode_payments = mosyr_mode_payments.get('SalaryStructure', {})
+    new_mode = create_mode_payment(mode_payments["type"], mode_payments["title"])
+    # if new_mode:
+    #     set_property_setter(new_mode, mode_payments["for_fields"])
+
+def prepare_mode_payments():
+    # to Set accounts in old data
+    mods = frappe.get_list('Mode of Payment')
+    for mod in mods:
+        mod = frappe.get_doc('Mode of Payment', mod.name)
+        mod.save()
+
+    # for loans and hr
+    create_mode_payment("Bank", "Loan Payment")
+    create_mode_payment("Bank", "Advance Payment")
+    create_mode_payment("Bank", "Salary Payment")
+
+def create_mode_payment(mode_type, title):
+    mode = frappe.db.exists("Mode of Payment", title)
+    if not mode:
+        mop = frappe.new_doc("Mode of Payment")
+        mop.mode_of_payment = title
+        mop.type = mode_type
+        mop.save()
+        mode = mop.name
+    return mode
+
+def hide_accounts_fields():
+    make_property_setter("Mode of Payment" , "accounts", "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Salary Component", "accounts", "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    
+    make_property_setter("Salary Structure", "account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Salary Structure Assignment", "payroll_payable_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    
+
+def set_property_setter(value, fields):
+    # Hide, non-reqd and default
+    for fld in fields:
+        if not fld["doctype"] or not fld["fieldname"]: continue
+        make_property_setter(fld["doctype"], fld["fieldname"], "reqd", 0, "Check", validate_fields_for_doctype=False,)
+        make_property_setter(fld["doctype"], fld["fieldname"], "hidden", 1, "Check", validate_fields_for_doctype=False,)
+        make_property_setter(fld["doctype"], fld["fieldname"], "default", value, "Text", validate_fields_for_doctype=False,)
+
+def create_account(**kwargs):
+    if kwargs.get("check_company") and kwargs.get("check_company_field"):
+        try:
+            val = frappe.get_value("Company",  kwargs.get("company"), kwargs.get("check_company_field")) or None
+            if val: return val
+        except: pass
+    
+    fltrs = {
+        "account_name": kwargs.get("account_name"),
+        "company": kwargs.get("company")
+    }
+    
+    if kwargs.get("account_type", False):
+        fltrs.update({
+            "account_type": kwargs.get("account_type", "")
+        })
+    account = frappe.db.get_value(
+        "Account", filters=fltrs
+    )
+    
+    if account:
+        return account
+    else:
+        parent_name = frappe.db.get_value(
+            "Account", filters={
+                "account_name": kwargs.get("parent_account"),
+                "company": kwargs.get("company"),
+                "is_group": 1
+            }
+        )
+        if not parent_name:
+            parent_name = frappe.db.get_value(
+                "Account", filters={
+                    "company": kwargs.get("company"),
+                    "root_type": kwargs.get("root_type"),
+                    "is_group": 1
+                    }, order_by="creation"
+                )
+        if not parent_name:
+            return None
+        account = frappe.get_doc(
+            dict(
+                doctype="Account",
+                account_name=kwargs.get("account_name"),
+                account_type=kwargs.get("account_type", False),
+                parent_account=parent_name,
+                company=kwargs.get("company"),
+                account_currency=kwargs.get("account_currency"),
+            )
+        )
+
+        account.save()
+        return account.name
 
 def create_salary_components():
     print("[*] Add Salary Components")
@@ -109,188 +304,3 @@ def create_salary_structure():
         })
     salary_structure_doc.save()
     salary_structure_doc.submit()
-
-def prepare_system_accounts():
-    accounts = [
-        {
-            "account": {
-                "account_name": "Loan Account",
-                "parent_account": "Loans and Advances (Assets)",
-                "root_type": "Asset"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "loan_account",
-                    "doctype": "Loan Type"
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Loan Disbursement",
-                "parent_account": "Loans and Advances (Assets)",
-                "root_type": "Asset"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "disbursement_account",
-                    "doctype": "Loan Type"
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Loan Repayment",
-                "parent_account": "Loans and Advances (Assets)",
-                "root_type": "Asset"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "payment_account",
-                    "doctype": "Loan Type"
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Loan Inreset",
-                "parent_account": "Income",
-                "root_type": "Income"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "interest_income_account",
-                    "doctype": "Loan Type",
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Loan Penalty",
-                "parent_account": "Income",
-                "root_type": "Income"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "penalty_income_account",
-                    "doctype": "Loan Type"
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Loan Write off Account",
-                "parent_account": "Expenses",
-                "root_type": "Expense"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "write_off_account",
-                    "doctype": "Loan Write Off"
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Employee Advances",
-                "parent_account": "Loans and Advances (Assets)",
-                "root_type": "Asset",
-                "check_company": 1,
-                "check_company_field": "default_employee_advance_account"
-            },
-            "for_fields": [
-                {
-                    "fieldname": "advance_account",
-                    "doctype": "Employee Advance"
-                }
-            ]
-        },
-        {
-            "account": {
-                "account_name": "Expense Claim",
-                "parent_account": "Accounts Payable",
-                "root_type": "Liability",
-                "account_type": "Payable",
-                "check_company": 0
-            },
-            "for_fields": [
-                {
-                    "fieldname": "payable_account",
-                    "doctype": "Expense Claim"
-                }
-            ]
-        }
-    ]
-    companies = frappe.get_list("Company", fields=["default_currency", "name"])
-    for company in companies:
-        args = {
-            "company": company.name,
-            "account_currency": company.default_currency
-        }
-        for account in accounts:
-            args.update(account["account"])
-            new_account = create_account(**args)
-            if new_account:
-                set_property_setter(new_account, account["for_fields"])
-
-def set_property_setter(new_account, fields):
-    # Hide, non-reqd and default
-    for fld in fields:
-        if not fld["doctype"] or not fld["fieldname"]: continue
-        make_property_setter(fld["doctype"], fld["fieldname"], "reqd", 0, "Check", validate_fields_for_doctype=False,)
-        # make_property_setter(fld["doctype"], fld["fieldname"], "hidden", 1, "Check", validate_fields_for_doctype=False,)
-        make_property_setter(fld["doctype"], fld["fieldname"], "default", new_account, "Text", validate_fields_for_doctype=False,)
-
-def create_account(**kwargs):
-    if kwargs.get("check_company") and kwargs.get("check_company_field"):
-        try:
-            val = frappe.get_value("Company",  kwargs.get("company"), kwargs.get("check_company_field")) or None
-            if val: return val
-        except: pass
-    
-    fltrs = {
-        "account_name": kwargs.get("account_name"),
-        "company": kwargs.get("company")
-    }
-    
-    if kwargs.get("account_type", False):
-        fltrs.update({
-            "account_type": kwargs.get("account_type", "")
-        })
-    account = frappe.db.get_value(
-        "Account", filters=fltrs
-    )
-    
-    if account:
-        return account
-    else:
-        parent_name = frappe.db.get_value(
-            "Account", filters={
-                "account_name": kwargs.get("parent_account"),
-                "company": kwargs.get("company"),
-                "is_group": 1
-            }
-        )
-        if not parent_name:
-            parent_name = frappe.db.get_value(
-                "Account", filters={
-                    "company": kwargs.get("company"),
-                    "root_type": kwargs.get("root_type"),
-                    "is_group": 1
-                    }, order_by="creation"
-                )
-        if not parent_name:
-            return None
-        account = frappe.get_doc(
-            dict(
-                doctype="Account",
-                account_name=kwargs.get("account_name"),
-                account_type=kwargs.get("account_type", False),
-                parent_account=parent_name,
-                company=kwargs.get("company"),
-                account_currency=kwargs.get("account_currency"),
-            )
-        )
-
-        account.save()
-        return account.name

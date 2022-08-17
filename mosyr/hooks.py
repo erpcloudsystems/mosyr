@@ -89,33 +89,27 @@ after_install = "mosyr.install.after_install"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Loan": "mosyr.overrides.CustomLoan",
+	"Loan Type": "mosyr.overrides.CustomLoanType",
+	"Loan Write Off": "mosyr.overrides.CustomLoanWriteOff",
+
+	"Employee Advance": "mosyr.overrides.CustomEmployeeAdvance",
+	"Expense Claim": "mosyr.overrides.CustomExpenseClaim",
+
+	"Salary Structure": "mosyr.overrides.CustomSalaryStructure"
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
 doc_events = {
+	"Mode of Payment": {
+		"validate": "mosyr.api.setup_mode_accounts"
+	},
 	"Salary Component": {
-		"validate": "mosyr.api.set_accounts"
-	},
-	"Salary Structure": {
-		"validate": "mosyr.api.check_payment_mode"
-	},
-
-	"Loan Type": {
-		"validate": "mosyr.api.set_missing_accounts"
-	},
-	"Loan Write Off": {
-		"validate": "mosyr.api.set_missing_accounts"
-	},
-	"Employee Advance": {
-		"validate": "mosyr.api.set_missing_accounts"
-	},
-	"Expense Claim": {
-		"validate": "mosyr.api.set_missing_accounts"
+		"validate": "mosyr.api.setup_components_accounts"
 	}
 }
 
@@ -263,8 +257,8 @@ fixtures = [
 					"Employee-last_name-hidden",
 					"Employee-middle_name-hidden",
 					"Employee-first_name-label",
-					"Salary Component-section_break_5-hidden",
-					"Salary Structure-account-hidden",
+					# "Salary Component-section_break_5-hidden",
+					# "Salary Structure-account-hidden",
 					"Employee-erpnext_user-label",
 					"Department-payroll_cost_center-hidden",
 					"Employee-payroll_cost_center-hidden",
