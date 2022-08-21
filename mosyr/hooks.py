@@ -264,7 +264,21 @@ fixtures = [
 					"Employee-erpnext_user-label",
 					"Department-payroll_cost_center-hidden",
 					"Employee-payroll_cost_center-hidden",
-					"Employee-company-in_standard_filter"
+					"Employee-company-in_standard_filter",
+
+					"Company-sales_settings-hidden",
+					"Company-default_settings-hidden",
+					"Company-fixed_asset_defaults-hidden",
+					"Company-default_finance_book-hidden",
+					"Company-default_selling_terms-hidden",
+					"Company-default_buying_terms-hidden",
+					"Company-default_warehouse_for_sales_return-hidden",
+					"Company-create_chart_of_accounts_based_on-default",
+					"Company-chart_of_accounts-hidden",
+					"Company-section_break_22-hidden",
+					"Company-budget_detail-hidden",
+					"Company-default_in_transit_warehouse-hidden",
+					"Company-create_chart_of_accounts_based_on-hidden",
 				]]
 			]
 	},
