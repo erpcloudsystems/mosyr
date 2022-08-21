@@ -97,7 +97,9 @@ override_doctype_class = {
 	"Employee Advance": "mosyr.overrides.CustomEmployeeAdvance",
 	"Expense Claim": "mosyr.overrides.CustomExpenseClaim",
 
-	"Salary Structure": "mosyr.overrides.CustomSalaryStructure"
+	"Salary Structure": "mosyr.overrides.CustomSalaryStructure",
+
+	"Company": "mosyr.overrides.CustomCompany"
 }
 
 # Document Events
@@ -110,6 +112,11 @@ doc_events = {
 	},
 	"Salary Component": {
 		"validate": "mosyr.api.setup_components_accounts"
+	},
+	"Employee": {
+		"validate": [
+			"mosyr.api.validate_social_insurance"
+		]
 	}
 }
 
@@ -222,6 +229,15 @@ fixtures = [
 				"Employee-mosyr_employee_status",
 				"Employee-moyser_employee_status",
 				
+				"Employee-social_insurance",
+				"Employee-s_subscription_date",
+				"Employee-s_insurance_no",
+				"Employee-column_break_88",
+				"Employee-social_insurance_type",
+				"Employee-citizen",
+				"Employee-risk_on_employee",
+				"Employee-pension_on_employee",
+
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
 				"Employee Education-qualification_institute",
@@ -262,7 +278,21 @@ fixtures = [
 					"Employee-erpnext_user-label",
 					"Department-payroll_cost_center-hidden",
 					"Employee-payroll_cost_center-hidden",
-					"Employee-company-in_standard_filter"
+					"Employee-company-in_standard_filter",
+
+					"Company-sales_settings-hidden",
+					"Company-default_settings-hidden",
+					"Company-fixed_asset_defaults-hidden",
+					"Company-default_finance_book-hidden",
+					"Company-default_selling_terms-hidden",
+					"Company-default_buying_terms-hidden",
+					"Company-default_warehouse_for_sales_return-hidden",
+					"Company-create_chart_of_accounts_based_on-default",
+					"Company-chart_of_accounts-hidden",
+					"Company-section_break_22-hidden",
+					"Company-budget_detail-hidden",
+					"Company-default_in_transit_warehouse-hidden",
+					"Company-create_chart_of_accounts_based_on-hidden",
 				]]
 			]
 	},
