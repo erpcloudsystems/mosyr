@@ -1,5 +1,6 @@
+from operator import le
 import frappe 
-from frappe.utils import nowdate, getdate
+from frappe.utils import nowdate, getdate, flt
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from mosyr.install import create_account
@@ -204,3 +205,13 @@ def setup_components_accounts(doc, method):
                 'company': company.name,
                 'account': new_account,
             })
+
+def validate_social_insurance(doc, method):
+    if not doc.s_subscription_date: return
+    if doc.s_subscription_date > doc.date_of_joining:
+        frappe.throw(_("Date of Insurance Subscription must be before Joining of Birth"))
+    comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['risk_percentage_on_employee', 'pension_percentage_on_employee'])
+    if len(comapny_data) > 0:
+        comapny_data = comapny_data[0]
+        doc.risk_on_employee = flt(comapny_data.risk_percentage_on_employee) if doc.citizen else 0
+        doc.pension_on_employee = flt(comapny_data.pension_percentage_on_employee)

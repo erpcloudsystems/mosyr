@@ -112,6 +112,11 @@ doc_events = {
 	},
 	"Salary Component": {
 		"validate": "mosyr.api.setup_components_accounts"
+	},
+	"Employee": {
+		"validate": [
+			"mosyr.api.validate_social_insurance"
+		]
 	}
 }
 
@@ -224,6 +229,15 @@ fixtures = [
 				"Employee-mosyr_employee_status",
 				"Employee-moyser_employee_status",
 				
+				"Employee-social_insurance",
+				"Employee-s_subscription_date",
+				"Employee-s_insurance_no",
+				"Employee-column_break_88",
+				"Employee-social_insurance_type",
+				"Employee-citizen",
+				"Employee-risk_on_employee",
+				"Employee-pension_on_employee",
+
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
 				"Employee Education-qualification_institute",
