@@ -97,7 +97,9 @@ override_doctype_class = {
 	"Employee Advance": "mosyr.overrides.CustomEmployeeAdvance",
 	"Expense Claim": "mosyr.overrides.CustomExpenseClaim",
 
-	"Salary Structure": "mosyr.overrides.CustomSalaryStructure"
+	"Salary Structure": "mosyr.overrides.CustomSalaryStructure",
+
+	"Company": "mosyr.overrides.CustomCompany"
 }
 
 # Document Events
