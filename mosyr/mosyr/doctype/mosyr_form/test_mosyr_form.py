@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestERPForm(unittest.TestCase):
+class TestMosyrForm(unittest.TestCase):
 	pass

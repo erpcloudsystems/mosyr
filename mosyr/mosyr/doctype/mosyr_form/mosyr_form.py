@@ -1,11 +1,11 @@
 # Copyright (c) 2022, AnvilERP and contributors
 # For license information, please see license.txt
+import json
 
 import frappe
 from frappe.model.document import Document
-import json
 
-class ERPForm(Document):
+class MosyrForm(Document):
 	def on_submit(self):
 		module = "HR"
 		allow_rename = 0

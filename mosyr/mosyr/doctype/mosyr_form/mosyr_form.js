@@ -1,7 +1,7 @@
 // Copyright (c) 2022, AnvilERP and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('ERP Form', {
+frappe.ui.form.on('Mosyr Form', {
 	refresh: function (frm) {
 		frm.set_query('role', 'permissions', function (doc) {
 			if (doc.custom && frappe.session.user != 'Administrator') {
