@@ -210,8 +210,16 @@ def validate_social_insurance(doc, method):
     if not doc.s_subscription_date: return
     if doc.s_subscription_date > doc.date_of_joining:
         frappe.throw(_("Date of Insurance Subscription must be before Joining of Birth"))
-    comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['risk_percentage_on_employee', 'pension_percentage_on_employee'])
+    comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
     if len(comapny_data) > 0:
         comapny_data = comapny_data[0]
-        doc.risk_on_employee = flt(comapny_data.risk_percentage_on_employee) if doc.citizen else 0
-        doc.pension_on_employee = flt(comapny_data.pension_percentage_on_employee)
+        if doc.social_insurance_type == "Saudi":
+            doc.risk_on_employee = 0
+            doc.risk_on_company = 0
+            doc.pension_on_employee = comapny_data.pension_percentage_on_employee
+            doc.pension_on_company = comapny_data.pension_percentage_on_company
+        elif doc.social_insurance_type == "Non Saudi":
+            doc.risk_on_employee = comapny_data.risk_percentage_on_employee
+            doc.risk_on_company = comapny_data.risk_percentage_on_company
+            doc.pension_on_employee = 0
+            doc.pension_on_company = 0
