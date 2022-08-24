@@ -233,8 +233,11 @@ fixtures = [
 				"Employee-s_subscription_date",
 				"Employee-s_insurance_no",
 				"Employee-column_break_88",
+				
 				"Employee-social_insurance_type",
-				"Employee-citizen",
+				"Employee-include_housing",
+				"Employee-risk_on_company",
+				"Employee-pension_on_company",
 				"Employee-risk_on_employee",
 				"Employee-pension_on_employee",
 

@@ -216,14 +216,14 @@ def create_salary_components():
     print("[*] Add Salary Components")
     salary_components = [
         # Base Components
-        {"salary_component": "Basic",                 "salary_component_abbr": "BS", "type": "Earning"},
-        {"salary_component": "Housing",               "salary_component_abbr": "H", "type": "Earning"},
+        {"salary_component": "Basic",                 "salary_component_abbr":"BS","type": "Earning"},
+        {"salary_component": "Variable",              "salary_component_abbr":"V", "type": "Earning"},
         {"salary_component": "Allowance Housing",     "salary_component_abbr":"AH", "type": "Earning"},
         {"salary_component": "Allowance Worknatural", "salary_component_abbr":"AW", "type": "Earning"},
-        {"salary_component": "Allowance Other",       "salary_component_abbr":"AO", "type": "Earning"},
         {"salary_component": "Allowance Phone",       "salary_component_abbr":"AP", "type": "Earning"},
         {"salary_component": "Allowance Trans",       "salary_component_abbr":"AT", "type": "Earning"},
         {"salary_component": "Allowance Living",      "salary_component_abbr":"AL", "type": "Earning"},
+        {"salary_component": "Allowance Other",       "salary_component_abbr":"AO", "type": "Earning"},
         
         # Benefit Components
         {"salary_component": "Back Pay",              "salary_component_abbr":"BP", "type": "Earning", "is_flexible_benefit": 1},
@@ -233,12 +233,17 @@ def create_salary_components():
         {"salary_component": "Commission",            "salary_component_abbr":"COM","type": "Earning", "is_flexible_benefit": 1},
 
         # Deduction Components
-        {"salary_component": "Deduction",              "salary_component_abbr":"DD", "type": "Deduction"},
-        {"salary_component": "Social Insurance",       "salary_component_abbr":"SI", "type": "Deduction", "amount_based_on_formula": 1, "formula": "risk_on_employee"}
+        {"salary_component": "Deduction",                   "salary_component_abbr":"DD", "type": "Deduction"},
+        {"salary_component": "Other Deductions",            "salary_component_abbr":"DD", "type": "Deduction"},
+        {"salary_component": "Risk On Employee",               "salary_component_abbr":"RED", "type": "Deduction"},
+        {"salary_component": "Risk On Company",                "salary_component_abbr":"RCD", "type": "Deduction", "do_not_include_in_total": 1},
+        
+        {"salary_component": "Employee Pension Insurance",   "salary_component_abbr":"EPD","type": "Deduction"},
+        {"salary_component": "Company Pension Insurance",    "salary_component_abbr":"CPD","type": "Deduction", "do_not_include_in_total": 1},
     ]
     
     for component in salary_components:
-        components = frappe.get_list("Salary Component", filters={"name": component['salary_component'], "salary_component_abbr": component['salary_component_abbr']})
+        components = frappe.get_list("Salary Component", filters={"name": component['salary_component']})
         if len(components) == 0:
             salary_component_doc = frappe.new_doc("Salary Component")
             salary_component_doc.update(component)
@@ -252,18 +257,30 @@ def create_salary_structures_for_companies():
 def create_salary_structures(company):
     # Create 2 Salary Structers for ( Citizen and non-Citizens )
     earnings_componantes = [
-        {"salary_component": "Housing",               "abbr": "H"},
-        {"salary_component": "Allowance Housing",     "abbr":"AH"},
-        {"salary_component": "Allowance Worknatural", "abbr":"AW"},
-        {"salary_component": "Allowance Other",       "abbr":"AO"},
-        {"salary_component": "Allowance Phone",       "abbr":"AP"},
-        {"salary_component": "Allowance Trans",       "abbr":"AT"},
-        {"salary_component": "Allowance Living",      "abbr":"AL"}]
+        {
+            "salary_component": "Basic",
+            "amount_based_on_formula": 1,
+            "formula": "base * 1"
+        },
+        {
+            "salary_component": "Variable",
+            "amount_based_on_formula": 1,
+            "formula": "variable * 1"
+        },
+        {"salary_component": "Allowance Housing",},
+        {"salary_component": "Allowance Worknatural",},
+        {"salary_component": "Allowance Other",},
+        {"salary_component": "Allowance Phone",},
+        {"salary_component": "Allowance Trans",},
+        {"salary_component": "Allowance Living",}]
 
     deductions_componantes = [
-        {"salary_component": "Other Deductions",       "abbr":"ODS"},
-        {"salary_component": "Social Insurance",       "abbr":"SI", 
-         "amount_based_on_formula": 1, "formula": "risk_on_employee"}
+        {"salary_component": "Other Deductions"},
+        {"salary_component": "Employee Pension Insurance"},
+        {"salary_component": "Company Pension Insurance"},
+        {"salary_component": "Risk On Employee"},
+        {"salary_component": "Risk On Company"},
+        {"salary_component": "Social Insurance",}
     ]
 
     citizen_ss_doc = frappe.new_doc("Salary Structure")

@@ -6,7 +6,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "status",
   "info",
   "employee",
   "employee_name",
@@ -648,21 +647,12 @@
    "fieldtype": "Select",
    "label": "Amount Type",
    "options": "Fixed\nPercentage"
-  },
-  {
-   "default": "Not Applied",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Status",
-   "options": "Not Applied\nApplied In System",
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-22 16:44:16.548608",
+ "modified": "2022-08-23 12:11:40.501323",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",

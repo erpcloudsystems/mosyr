@@ -3,14 +3,17 @@
 
 frappe.listview_settings['Employee Contract'] = {
     get_indicator: function(doc) {
-        if (doc.docstatus == 0) {
-            return [__("Draft"), "red", "1,=,1"];
-        } else if (doc.status === "Not Applied") {
-            // Closed
-            return [__("Not Applied"), "orange", "status,=,Not Applied"];
-        } else if (doc.status === "Applied In System") {
-            // on hold
-            return [__("Applied In System"), "green", "status,=,Applied In System"];
+		var colors = {
+			"Pending":   "blue",
+            "Approved":  "green",
+            "Ended":     "blue",
+            "Cancelled": "red"
+		};
+		let status = doc.status;
+		if(doc.contract_status == "Valid"){
+            return [__(status), colors[status], 'status,=,' + doc.status];
         }
-    }
+        return [__("Not Valid"), "red", '1,=,1'];
+	},
+    hide_name_column: true
 };

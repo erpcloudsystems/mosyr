@@ -484,7 +484,7 @@
   "doctype": "Workflow",
   "document_type": "Employee Contract",
   "is_active": 1,
-  "modified": "2022-04-12 12:23:01.315510",
+  "modified": "2022-08-23 12:11:11.170045",
   "name": "Employee Contract",
   "override_status": 0,
   "parent": null,
@@ -501,7 +501,7 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
-    "state": "Draft",
+    "state": "Pending",
     "update_field": "",
     "update_value": null
    },
@@ -514,7 +514,7 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
-    "state": "Approved And Applied",
+    "state": "Approved",
     "update_field": "",
     "update_value": null
    },
@@ -527,7 +527,7 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
-    "state": "Approved And Not Applied",
+    "state": "Ended",
     "update_field": "",
     "update_value": null
    },
@@ -550,23 +550,12 @@
     "action": "Approve",
     "allow_self_approval": 1,
     "allowed": "HR Manager",
-    "condition": null,
-    "next_state": "Approved And Applied",
+    "condition": "doc.contract_status == \"Valid\"",
+    "next_state": "Approved",
     "parent": "Employee Contract",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
-   },
-   {
-    "action": "Approve No Apply",
-    "allow_self_approval": 1,
-    "allowed": "HR Manager",
-    "condition": null,
-    "next_state": "Approved And Not Applied",
-    "parent": "Employee Contract",
-    "parentfield": "transitions",
-    "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Pending"
    },
    {
     "action": "Cancel",
@@ -577,18 +566,7 @@
     "parent": "Employee Contract",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Approved And Applied"
-   },
-   {
-    "action": "Cancel",
-    "allow_self_approval": 1,
-    "allowed": "HR Manager",
-    "condition": null,
-    "next_state": "Cancelled",
-    "parent": "Employee Contract",
-    "parentfield": "transitions",
-    "parenttype": "Workflow",
-    "state": "Approved And Not Applied"
+    "state": "Approved"
    }
   ],
   "workflow_name": "Employee Contract",
