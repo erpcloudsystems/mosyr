@@ -230,6 +230,7 @@ fixtures = [
 				"Employee-moyser_employee_status",
 				
 				"Employee-social_insurance",
+				"Employee-include_housing",
 				"Employee-s_subscription_date",
 				"Employee-s_insurance_no",
 				"Employee-column_break_88",
