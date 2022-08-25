@@ -8,7 +8,7 @@ from datetime import datetime
 from frappe import _
 import os
 import json
-from frappe.utils import cint, getdate, flt
+from frappe.utils import cint, getdate, flt, get_date_str
 
 doctypes_with_abbr = ['Department']
 doctypes_with_company_field = ['Department']
@@ -349,7 +349,7 @@ class MosyrDataImport(Document):
             
             birth_date_g = d.get('birth_date_g', False)
             if not birth_date_g:
-                birth_date_g = "01-01-2000"
+                birth_date_g = get_date_str(getdate("01-01-2000"))
                 # errors += 1
                 # error_msgs.append([key, fullname_ar, _('Missing Date Of Birth')])
                 # continue
