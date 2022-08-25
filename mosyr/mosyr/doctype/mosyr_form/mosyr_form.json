@@ -10,8 +10,6 @@
   "sb0",
   "is_submittable",
   "istable",
-  "issingle",
-  "is_tree",
   "cb01",
   "track_seen",
   "track_views",
@@ -29,7 +27,6 @@
   "show_name_in_global_search",
   "sb2",
   "permissions",
-  "amended_from",
   "amended_from"
  ],
  "fields": [
@@ -56,25 +53,6 @@
    "label": "Is Child Table",
    "oldfieldname": "istable",
    "oldfieldtype": "Check"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:!doc.istable",
-   "description": "Single Types have only one record no tables associated. Values are stored in tabSingles",
-   "fieldname": "issingle",
-   "fieldtype": "Check",
-   "in_standard_filter": 1,
-   "label": "Is Single",
-   "oldfieldname": "issingle",
-   "oldfieldtype": "Check",
-   "set_only_once": 1
-  },
-  {
-   "default": "0",
-   "description": "Tree structures are implemented using Nested Set",
-   "fieldname": "is_tree",
-   "fieldtype": "Check",
-   "label": "Is Tree"
   },
   {
    "fieldname": "cb01",
@@ -190,15 +168,6 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "ERP Form",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
    "options": "Mosyr Form",
    "print_hide": 1,
    "read_only": 1
@@ -207,7 +176,7 @@
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-21 15:49:58.123950",
+ "modified": "2022-08-25 15:40:15.893405",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",

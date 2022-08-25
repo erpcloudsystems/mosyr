@@ -8,7 +8,7 @@ from datetime import datetime
 from frappe import _
 import os
 import json
-from frappe.utils import cint, getdate, flt
+from frappe.utils import cint, getdate, flt, get_date_str
 
 doctypes_with_abbr = ['Department']
 doctypes_with_company_field = ['Department']
@@ -91,77 +91,8 @@ class MosyrDataImport(Document):
 
     @frappe.whitelist()
     def psc(self):
-        base_components = [
-            {'component': 'Basic',                 'abbr': 'B'},
-            {'component': 'Allowance Housing',     'abbr':'AH'},
-            {'component': 'Allowance Worknatural', 'abbr':'AW'},
-            {'component': 'Allowance Other',       'abbr':'AO'},
-            {'component': 'Allowance Phone',       'abbr':'AP'},
-            {'component': 'Allowance Trans',       'abbr':'AT'},
-            {'component': 'Allowance Living',      'abbr':'AL'}]
-            # Benefit Components
-        benefit_components = [
-            {'component': 'Back Pay',              'abbr':'BP'},
-            {'component': 'Bonus',                 'abbr':'BO'},
-            {'component': 'Overtime',              'abbr':'OT'},
-            {'component': 'Business Trip',         'abbr':'BT'},
-            {'component': 'Commission',            'abbr':'COM'}]
-        
-        deduction_components = [
-            {'component': 'Deduction',              'abbr':'DD'}]
-        
-        company = frappe.defaults.get_global_default('company') or None
-        for component in base_components:
-            salary_component = component['component']
-            if not frappe.db.exists('Salary Component', salary_component):
-                salary_component_abbr = component['abbr']
-                component_type = "Earning"
-                salary_component_doc = frappe.new_doc("Salary Component")
-                salary_component_doc.update({
-                    'salary_component': salary_component,
-                    'salary_component_abbr': salary_component_abbr,
-                    'type': component_type})
-                if company:
-                    salary_component_doc.append('accounts', {
-                        'company': company
-                    })
-                salary_component_doc.save()
-        
-        for component in benefit_components:
-            salary_component = component['component']
-            if not frappe.db.exists('Salary Component', salary_component):
-                salary_component_abbr = component['abbr']
-                component_type = "Earning"
-                salary_component_doc = frappe.new_doc("Salary Component")
-                salary_component_doc.update({
-                    'salary_component': salary_component,
-                    'salary_component_abbr': salary_component_abbr,
-                    'type': component_type,
-                    'is_flexible_benefit': 1
-                })
-                if company:
-                    salary_component_doc.append('accounts', {
-                        'company': company
-                    })
-                salary_component_doc.save()
-        
-        for component in deduction_components:
-            salary_component = component['component']
-            if not frappe.db.exists('Salary Component', salary_component):
-                salary_component_abbr = component['abbr']
-                component_type = "Deduction"
-                salary_component_doc = frappe.new_doc("Salary Component")
-                salary_component_doc.update({
-                    'salary_component': salary_component,
-                    'salary_component_abbr': salary_component_abbr,
-                    'type': component_type
-                })
-                if company:
-                    salary_component_doc.append('accounts', {
-                        'company': company
-                    })
-                salary_component_doc.save()
-        
+        from mosyr.install import create_salary_components
+        create_salary_components()
         banks = [
             "Al Rajhi Bank",
             "Al Inma Bank",
@@ -418,9 +349,10 @@ class MosyrDataImport(Document):
             
             birth_date_g = d.get('birth_date_g', False)
             if not birth_date_g:
-                errors += 1
-                error_msgs.append([key, fullname_ar, _('Missing Date Of Birth')])
-                continue
+                birth_date_g = get_date_str(getdate("01-01-2000"))
+                # errors += 1
+                # error_msgs.append([key, fullname_ar, _('Missing Date Of Birth')])
+                # continue
 
             new_employee = frappe.new_doc("Employee")
             employees_with_same_key = frappe.get_list('Employee', filters={'key': key})
