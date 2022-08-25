@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 from ast import arg
+from unicodedata import name
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -37,6 +38,11 @@ class EmployeeContract(Document):
 	@frappe.whitelist()
 	def create_employee_salary_structure(self):
 		if(self.docstatus != 1): return
+		ss_name = "{}-{}-{}".format(self.name, employee.name, nowdate())
+		ss_doc = frappe.db.exists("Salary Structure", ss_name)
+		if ss_doc:
+			frappe.throw(_("Employee has Salary Structure {}").format(ss_name))
+			return
 		self.validate_dates()
 		# Make sure that all components are in the system
 		create_salary_components()
@@ -247,6 +253,10 @@ class EmployeeContract(Document):
 		ssa_doc.base = self.basic_salary
 		ssa_doc.save()
 		ssa_doc.submit()
+		return {
+			"ss": ss_doc.name,
+			"ssa": ssa_doc.name
+		}
 
 	def validate_dates(self):
 		class DuplicateAssignment(frappe.ValidationError): pass
