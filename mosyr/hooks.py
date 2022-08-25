@@ -327,7 +327,8 @@ fixtures = [
 					"Approved And Applied",
 					"Approved And Not Applied",
 					"Cancelled",
-					"Approved by HR"
+					"Approved by HR",
+					"Ended"
 				]
 			]
 		]
