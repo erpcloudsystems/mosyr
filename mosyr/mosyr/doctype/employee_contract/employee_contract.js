@@ -9,7 +9,11 @@ frappe.ui.form.on('Employee Contract', {
                     frappe.call({
                         method: 'create_employee_salary_structure',
                         doc: frm.doc,
-                        callback: (r) => { }
+                        callback: (r) => {
+                            if(r && r.mesasge){
+                                frappe.msgprint(__("Salary Structure Created and Assigned to Employee")+` ${r.mesasge.ssa}`)
+                            }
+                         }
                     })
                 })
             })
