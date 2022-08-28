@@ -1,6 +1,6 @@
-from operator import le
+
 import frappe 
-from frappe.utils import nowdate, getdate, flt
+from frappe.utils import nowdate, getdate, today
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from mosyr.install import create_account
@@ -223,3 +223,30 @@ def validate_social_insurance(doc, method):
             doc.risk_on_company = comapny_data.risk_percentage_on_company
             doc.pension_on_employee = 0
             doc.pension_on_company = 0
+
+def notify_expired_dates(doc, method):
+    emp = doc
+    # Check Employee Insurance
+    if getdate(emp.insurance_card_expire) < getdate(today()):
+        emp.db_set("notify_insurance_e", 1, update_modified=False)
+
+    # Check ID's
+    need_update = False
+    for eid in emp.identity:
+        if getdate(eid.expire_date) < getdate(today()):
+            need_update = True
+    if need_update: emp.db_set("notify_id", 1, update_modified=False)
+
+    # Check Passports
+    need_update = False
+    for epass in emp.passport:
+        if getdate(epass.passport_expire) < getdate(today()):
+            need_update = True
+    if need_update: emp.db_set("notify_passport", 1, update_modified=False)
+
+    # Check Dependent Insurance
+    need_update = False
+    for edep in emp.dependent:
+        if getdate(edep.insurance_card_expire) < getdate(today()):
+            need_update = True
+    if need_update: emp.db_set("notify_insurance_d", 1, update_modified=False)

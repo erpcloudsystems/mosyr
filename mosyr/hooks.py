@@ -115,7 +115,8 @@ doc_events = {
 	},
 	"Employee": {
 		"validate": [
-			"mosyr.api.validate_social_insurance"
+			"mosyr.api.validate_social_insurance",
+			"mosyr.api.notify_expired_dates",
 		]
 	}
 }
