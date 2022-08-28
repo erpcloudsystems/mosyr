@@ -484,7 +484,7 @@
   "doctype": "Workflow",
   "document_type": "Employee Contract",
   "is_active": 1,
-  "modified": "2022-08-23 12:11:11.170045",
+  "modified": "2022-08-28 15:23:46.941340",
   "name": "Employee Contract",
   "override_status": 0,
   "parent": null,
@@ -570,6 +570,6 @@
    }
   ],
   "workflow_name": "Employee Contract",
-  "workflow_state_field": "workflow_state"
+  "workflow_state_field": "status"
  }
 ]

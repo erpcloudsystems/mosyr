@@ -11,7 +11,7 @@ frappe.listview_settings['Employee Contract'] = {
 		};
 		let status = doc.status;
 		if(doc.contract_status == "Valid"){
-            return [__(status), colors[status], 'status,=,' + doc.status];
+            return [__(status), colors[status], '1,=,1'];
         }
         return [__("Not Valid"), "red", '1,=,1'];
 	},
