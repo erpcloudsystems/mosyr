@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "System Notification",
+ "condition": "doc.notify_insurance_e==1",
+ "creation": "2022-08-28 16:51:08.636378",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Employee",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "Employee {{ doc.name }} Has Expired Insurance",
+ "modified": "2022-08-28 16:51:08.636378",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Expired Insurance",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "HR Notification"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Employee {{ doc.name }} Has Expired Insurance",
+ "value_changed": "notify_insurance_e"
+}
