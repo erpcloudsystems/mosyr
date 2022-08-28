@@ -4,10 +4,11 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import nowdate, flt, cint, get_date_str
+from frappe.utils import nowdate, flt, cint, get_date_str, getdate, today
 from mosyr.install import create_salary_components
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 
+from mosyr.tasks import update_status_for_contracts
 class EmployeeContract(Document):
 	def validate(self):
 		if self.contract_start_date >= self.contract_end_date:
@@ -36,10 +37,9 @@ class EmployeeContract(Document):
 		if self.hiring_start_date < self.contract_start_date or self.hiring_start_date > self.contract_end_date:
 			frappe.msgprint(_("Hiring Date in contract {} is out of range {} and {}".format(self.name, self.contract_start_date, self.contract_end_date)))
 
-	# def on_submit(self):
-		# Make sure that all components are in the system
-		# create_salary_components()
-		# self.create_employee_salary_structure()
+	def on_submit(self):
+		if getdate(today()) > getdate(self.contract_end_date):
+			update_status_for_contracts()
 	
 	@frappe.whitelist()
 	def create_employee_salary_structure(self):

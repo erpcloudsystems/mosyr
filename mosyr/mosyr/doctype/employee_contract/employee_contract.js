@@ -18,5 +18,8 @@ frappe.ui.form.on('Employee Contract', {
                 })
             })
         }
+    },
+    after_workflow_action: function(frm){
+        if(frm.doc.status == "Approved"){frm.reload_doc()}
     }
 });
