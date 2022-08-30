@@ -1,28 +1,35 @@
 # Copyright (c) 2022, AnvilERP and contributors
 # For license information, please see license.txt
 
-from ast import arg
-from unicodedata import name
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import nowdate, flt, cint
+from frappe.utils import nowdate, flt, cint, get_date_str, getdate, today
 from mosyr.install import create_salary_components
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 
+from mosyr.tasks import update_status_for_contracts
 class EmployeeContract(Document):
 	def validate(self):
 		if self.contract_start_date >= self.contract_end_date:
 			frappe.throw(_("The end date of the contract must be after the start date"))
 			return
 		
-		previous_contracts = frappe.get_list('Employee Contract', 
-											 filters={
-												'employee': self.employee, 
-												'docstatus' :1, 
-												'status': 'Approved', 
-												'contract_status': 'Valid', 
-												'contract_start_date': ["<=", self.contract_end_date]})
+		# previous_contracts = frappe.get_list('Employee Contract', 
+		# 									 filters={
+		# 										'employee': self.employee, 
+		# 										'docstatus' :1, 
+		# 										'status': 'Approved', 
+		# 										'contract_status': 'Valid', 
+		# 										'contract_start_date': ["<=", self.contract_end_date]})
+		
+		previous_contracts = frappe.db.sql("""
+						SELECT name, contract_start_date, contract_end_date
+						FROM `tabEmployee Contract`
+						WHERE docstatus=1 AND status='Approved' AND contract_status='Valid'
+						AND employee='{0}' AND (contract_start_date BETWEEN '{1}' AND '{2}' OR contract_end_date BETWEEN '{1}' AND '{2}') """
+				.format(self.employee, get_date_str(self.contract_start_date), get_date_str(self.contract_end_date)), as_dict=1)
+
 		if len(previous_contracts) > 0:
 			frappe.throw(_("Employee {} has Valid contract within {} and {}".format(self.employee_name, self.contract_start_date, self.contract_end_date)))
 			return
@@ -30,10 +37,9 @@ class EmployeeContract(Document):
 		if self.hiring_start_date < self.contract_start_date or self.hiring_start_date > self.contract_end_date:
 			frappe.msgprint(_("Hiring Date in contract {} is out of range {} and {}".format(self.name, self.contract_start_date, self.contract_end_date)))
 
-	# def on_submit(self):
-		# Make sure that all components are in the system
-		# create_salary_components()
-		# self.create_employee_salary_structure()
+	def on_submit(self):
+		if getdate(today()) > getdate(self.contract_end_date):
+			update_status_for_contracts()
 	
 	@frappe.whitelist()
 	def create_employee_salary_structure(self):

@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "System Notification",
+ "condition": "doc.status==\"Approved\"",
+ "creation": "2022-08-28 14:57:36.509179",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Employee Contract",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "*Contract Ended*\n\n{{ doc.name }} Ended",
+ "modified": "2022-08-28 15:31:58.115786",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Ended Contracts",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "HR Notification"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "{{ doc.name }} Ended",
+ "value_changed": "status"
+}

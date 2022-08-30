@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "System Notification",
+ "condition": "doc.notify_id==1",
+ "creation": "2022-08-28 16:42:46.558229",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Employee",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "Employee {{ doc.name }} Has Expired ID",
+ "modified": "2022-08-28 16:42:46.558229",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Expired Id",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "HR Notification"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Employee {{ doc.name }} Has Expired ID",
+ "value_changed": "notify_id"
+}

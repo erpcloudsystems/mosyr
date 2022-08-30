@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Employee Contract', {
     refresh: function (frm) {
-        if (frm.doc.docstatus == 1 && frm.doc.workflow_state == "Approved" && frm.doc.contract_status == "Valid") {
+        if (frm.doc.docstatus == 1 && frm.doc.status == "Approved" && frm.doc.contract_status == "Valid") {
             frm.add_custom_button(__("Prepare Salary Structuer"), () => {
                 frappe.confirm("This will Create Salary Structure and Assign it to Employee,", () => {
                     frappe.call({
@@ -18,5 +18,8 @@ frappe.ui.form.on('Employee Contract', {
                 })
             })
         }
+    },
+    after_workflow_action: function(frm){
+        if(frm.doc.status == "Approved"){frm.reload_doc()}
     }
 });

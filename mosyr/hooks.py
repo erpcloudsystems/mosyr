@@ -115,14 +115,20 @@ doc_events = {
 	},
 	"Employee": {
 		"validate": [
-			"mosyr.api.validate_social_insurance"
+			"mosyr.api.validate_social_insurance",
+			"mosyr.api.notify_expired_dates",
 		]
 	}
 }
 
 # Scheduled Tasks
 # ---------------
-
+scheduler_events = {
+	"daily": [
+		"mosyr.daily.update_status_for_contracts",
+		"mosyr.daily.notify_expired_dates",
+	],
+}
 # scheduler_events = {
 # 	"all": [
 # 		"mosyr.tasks.all"
@@ -260,6 +266,11 @@ fixtures = [
 				"Employee External Work History-key",
 				"Employee External Work History-column_break_7",
 				
+				"Employee-notify_id",
+				"Employee-notify_passport",
+				"Employee-notify_insurance_d",
+				"Employee-notify_insurance_e",
+
 				"Leave Application-key",
 				"Leave Application-leave_attachments",
 
