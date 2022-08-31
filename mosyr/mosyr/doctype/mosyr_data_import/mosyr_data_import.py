@@ -63,7 +63,7 @@ class MosyrDataImport(Document):
         return clear_data
 
     def check_link_data(self, doctype, value, filed):
-        new_value = value
+        new_value = f"{value}".strip()
         if doctype in doctypes_with_abbr:
             company = frappe.defaults.get_global_default('company')
             company = frappe.get_doc('Company', company)
