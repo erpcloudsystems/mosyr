@@ -213,6 +213,16 @@ def validate_social_insurance(doc, method):
     comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
     if len(comapny_data) > 0:
         comapny_data = comapny_data[0]
+        if doc.social_insurance_type == "Other":
+            doc.risk_on_employee = 0
+            doc.risk_on_company = 0
+            doc.pension_on_employee = 0
+            doc.pension_on_company = 0
+            return
+        nationality = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
+        if nationality == "Saudi": doc.social_insurance_type = "Saudi"
+        else: doc.social_insurance_type == "Non Saudi"
+
         if doc.social_insurance_type == "Saudi":
             doc.risk_on_employee = 0
             doc.risk_on_company = 0
