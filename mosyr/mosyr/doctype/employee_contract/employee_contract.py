@@ -53,6 +53,14 @@ class EmployeeContract(Document):
 		# Make sure that all components are in the system
 		create_salary_components()
 		employee = frappe.get_doc("Employee", self.employee)
+		
+		employee.from_api = 0
+		employee.valid_data = 1
+		employee.status = "Active"
+		if not employee.date_of_joining: employee.date_of_joining = self.hiring_start_date
+		if not employee.date_of_birth: get_date_str(getdate("01-01-2000"))
+		employee.save()
+		frappe.db.commit()
 		company = frappe.get_doc('Company', employee.company)
 		# bsc = frappe.get_doc('Salary Component', 'Basic')
 		
