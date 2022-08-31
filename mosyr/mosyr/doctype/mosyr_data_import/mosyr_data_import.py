@@ -348,7 +348,7 @@ class MosyrDataImport(Document):
                 continue
             
             birth_date_g = d.get('birth_date_g', False)
-            if not birth_date_g:
+            if not birth_date_g or birth_date_g=="":
                 birth_date_g = get_date_str(getdate("01-01-2000"))
                 # errors += 1
                 # error_msgs.append([key, fullname_ar, _('Missing Date Of Birth')])
