@@ -350,7 +350,7 @@ fixtures = [
 		[
 			["name", "in", 
 				[
-					"Approve No Apply"
+					"Approve No Apply", "Cancel"
 				]
 			]
 		]
