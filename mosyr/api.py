@@ -207,7 +207,7 @@ def setup_components_accounts(doc, method):
             })
 
 def validate_social_insurance(doc, method):
-    if not doc.s_subscription_date: return
+    # if not doc.s_subscription_date: return
     # if doc.s_subscription_date > doc.date_of_joining:
     #     frappe.throw(_("Date of Insurance Subscription must be before Joining of Birth"))
     comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
