@@ -44,7 +44,7 @@ class EmployeeContract(Document):
 	@frappe.whitelist()
 	def create_employee_salary_structure(self):
 		if(self.docstatus != 1): return
-		ss_name = "{}-{}-{}".format(self.name, employee.name, nowdate())
+		ss_name = "{}-{}-{}".format(self.name, self.name, nowdate())
 		ss_doc = frappe.db.exists("Salary Structure", ss_name)
 		if ss_doc:
 			frappe.throw(_("Employee has Salary Structure {}").format(ss_name))
