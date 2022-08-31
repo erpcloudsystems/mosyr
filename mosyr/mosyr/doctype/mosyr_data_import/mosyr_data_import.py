@@ -295,13 +295,33 @@ class MosyrDataImport(Document):
     def import_employees(self, company_id):
         path = 'https://www.mosyr.io/en/api/migration-employees.json?company_id={}'
         data = self.call_api(path, company_id, 'Employee')
+        company_id_for_insurances = frappe.db.exists("Company Id", company_id)
+        company_insurances = {
+            "risk_on_employee": 0,
+            "risk_on_company": 0,
+            "pension_on_employee": 0,
+            "pension_on_company": 0,
+            "company": None
+        }
+        if company_id_for_insurances:
+            company_id_for_insurances = frappe.get_doc("Company Id", company_id)
+            comapny_data = frappe.get_list("Company Controller", filters={'company': company_id_for_insurances.company}, fields=['*'])
+            if len(comapny_data) > 0:
+                comapny_data = comapny_data[0]
+                company_insurances.update({
+                    "risk_on_employee": comapny_data.risk_percentage_on_employee,
+                    "risk_on_company": comapny_data.risk_percentage_on_company,
+                    "pension_on_employee": comapny_data.pension_percentage_on_employee,
+                    "pension_on_company": comapny_data.pension_percentage_on_company,
+                    'company': comapny_data.company
+                })
+
         headers = [_('Employee Id'), _('Employee Name'), _('Error')]
         error_msgs = []
         total_data = len(data)
         errors = 0
         success = 0
         existed = 0
-
         attachment_field_as_dict = ['employee_photo']
         attachment_field_as_list = []
         ignored_fields = ['branches']
@@ -408,7 +428,39 @@ class MosyrDataImport(Document):
                     })
                 
             new_employee.update(args)
-            new_employee.flags.ignore_mandatory = True
+            nationality = args.get('nationality', '')
+            company = company_insurances.get("company", False)
+            if company:
+                new_employee.update({
+                    "company": company
+                })
+            if len(nationality) == 0:
+                new_employee.update({
+                    "social_insurance_type": "Other",
+                    "risk_on_employee": 0,
+                    "risk_on_company": 0,
+                    "pension_on_employee": 0,
+                    "pension_on_company": 0,
+                })
+            else:
+                nationality = "Saudi" if f"{new_employee.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
+                if nationality == "Saudi":
+                    new_employee.update({
+                        "social_insurance_type": "Saudi",
+                        "risk_on_employee": 0,
+                        "risk_on_company": 0,
+                        "pension_on_employee": company_insurances.get('pension_on_employee', 0),
+                        "pension_on_company": company_insurances.get('pension_on_company', 0),
+                    })
+                else:
+                    new_employee.update({
+                        "social_insurance_type": "Non Saudi",
+                        "risk_on_employee": company_insurances.get('risk_on_employee', 0),
+                        "risk_on_company": company_insurances.get('risk_on_company', 0),
+                        "pension_on_employee": 0,
+                        "pension_on_company": 0,
+                    })
+
             new_employee.save()
             frappe.db.commit()
             for fta in fiels_to_attach:
