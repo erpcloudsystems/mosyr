@@ -3,20 +3,21 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import flt
 
 class CompanyController(Document):
-    def validate(self):
-        employees = frappe.get_list("Employee", filters={'company': self.company})
-        for employee in employees:
-            employee = frappe.get_doc('Employee', employee.name)
-            if employee.social_insurance_type == "Saudi":
-                employee.risk_on_employee = 0
-                employee.risk_on_company = 0
-                employee.pension_on_employee = self.pension_percentage_on_employee
-                employee.pension_on_company = self.pension_percentage_on_company
-            elif employee.social_insurance_type == "Non Saudi":
-                employee.risk_on_employee = self.risk_percentage_on_employee
-                employee.risk_on_company = self.risk_percentage_on_company
-                employee.pension_on_employee = 0
-                employee.pension_on_company = 0
+    def on_update(self):
+        
+        frappe.db.sql("""
+              UPDATE `tabEmployee`
+              SET pension_on_employee={}, pension_on_company={},
+                  risk_on_employee=0, risk_on_company=0
+              WHERE social_insurance_type='Saudi'""".format(flt(self.pension_percentage_on_employee), flt(self.pension_percentage_on_company)))
+        
+        frappe.db.sql("""
+              UPDATE `tabEmployee`
+              SET pension_on_employee=0, pension_on_company=0,
+                  risk_on_employee={}, risk_on_company={}
+              WHERE social_insurance_type='Non Saudi'""".format(flt(self.risk_percentage_on_employee), flt(self.risk_percentage_on_company)))
+
             
