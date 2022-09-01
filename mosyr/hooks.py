@@ -308,6 +308,11 @@ fixtures = [
 					"Company-budget_detail-hidden",
 					"Company-default_in_transit_warehouse-hidden",
 					"Company-create_chart_of_accounts_based_on-hidden",
+					"Company-default_inventory_account-hidden",
+					"Company-stock_adjustment_account-hidden",
+					"Company-stock_received_but_not_billed-hidden",
+					"Company-default_provisional_account-hidden",
+					"Company-expenses_included_in_valuation-hidden",
 				]]
 			]
 	},
