@@ -207,8 +207,6 @@ def setup_components_accounts(doc, method):
 
 def validate_social_insurance(doc, method):
     comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
-    print("$$$$$$$$$$$$$$$$$$")
-    print(comapny_data)
     social_type = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
     if len(comapny_data) > 0:
         comapny_data = comapny_data[0]
