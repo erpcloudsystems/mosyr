@@ -428,39 +428,12 @@ class MosyrDataImport(Document):
                     })
                 
             new_employee.update(args)
-            nationality = args.get('nationality', '')
             company = company_insurances.get("company", False)
             if company:
                 new_employee.update({
                     "company": company
                 })
-            if len(nationality) == 0:
-                new_employee.update({
-                    "social_insurance_type": "Other",
-                    "risk_on_employee": 0,
-                    "risk_on_company": 0,
-                    "pension_on_employee": 0,
-                    "pension_on_company": 0,
-                })
-            else:
-                nationality = "Saudi" if f"{new_employee.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
-                if nationality == "Saudi":
-                    new_employee.update({
-                        "social_insurance_type": "Saudi",
-                        "risk_on_employee": 0,
-                        "risk_on_company": 0,
-                        "pension_on_employee": company_insurances.get('pension_on_employee', 0),
-                        "pension_on_company": company_insurances.get('pension_on_company', 0),
-                    })
-                else:
-                    new_employee.update({
-                        "social_insurance_type": "Non Saudi",
-                        "risk_on_employee": company_insurances.get('risk_on_employee', 0),
-                        "risk_on_company": company_insurances.get('risk_on_company', 0),
-                        "pension_on_employee": 0,
-                        "pension_on_company": 0,
-                    })
-
+            new_employee.flags.ignore_mandatory = True
             new_employee.save()
             frappe.db.commit()
             for fta in fiels_to_attach:

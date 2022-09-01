@@ -1,9 +1,8 @@
 
 import frappe 
-from frappe.utils import nowdate, getdate, today
+from frappe.utils import nowdate, getdate, today, flt
 from frappe import _
 from hijri_converter import Hijri, Gregorian
-from mosyr.install import create_account
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -207,32 +206,28 @@ def setup_components_accounts(doc, method):
             })
 
 def validate_social_insurance(doc, method):
-    # if not doc.s_subscription_date: return
-    # if doc.s_subscription_date > doc.date_of_joining:
-    #     frappe.throw(_("Date of Insurance Subscription must be before Joining of Birth"))
     comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
+    social_type = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
     if len(comapny_data) > 0:
         comapny_data = comapny_data[0]
-        if not doc.nationality:
+        doc.social_insurance_type = social_type
+        
+        if social_type == "Saudi":
             doc.risk_on_employee = 0
             doc.risk_on_company = 0
+            doc.pension_on_employee = flt(comapny_data.pension_percentage_on_employee)
+            doc.pension_on_company = flt(comapny_data.pension_percentage_on_company)
+        else:
+            doc.risk_on_employee = flt(comapny_data.risk_percentage_on_employee)
+            doc.risk_on_company = flt(comapny_data.risk_percentage_on_company)
             doc.pension_on_employee = 0
             doc.pension_on_company = 0
-            doc.social_insurance_type = "Other"
-        else:
-            nationality = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
-            if nationality == "Saudi":
-                doc.social_insurance_type = "Saudi"
-                doc.risk_on_employee = 0
-                doc.risk_on_company = 0
-                doc.pension_on_employee = comapny_data.pension_percentage_on_employee
-                doc.pension_on_company = comapny_data.pension_percentage_on_company
-            else: 
-                doc.social_insurance_type == "Non Saudi"
-                doc.risk_on_employee = comapny_data.risk_percentage_on_employee
-                doc.risk_on_company = comapny_data.risk_percentage_on_company
-                doc.pension_on_employee = 0
-                doc.pension_on_company = 0
+    else:
+        doc.social_insurance_type = "Other"
+        doc.risk_on_employee = 0
+        doc.risk_on_company = 0
+        doc.pension_on_employee = 0
+        doc.pension_on_company = 0
 
 def notify_expired_dates(doc, method):
     emp = doc
