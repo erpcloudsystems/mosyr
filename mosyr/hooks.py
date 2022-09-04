@@ -118,6 +118,9 @@ doc_events = {
 			"mosyr.api.validate_social_insurance",
 			"mosyr.api.notify_expired_dates",
 		]
+	},
+	"Leave Type": {
+		"validate": "mosyr.api.check_other_annual_leaves"
 	}
 }
 
