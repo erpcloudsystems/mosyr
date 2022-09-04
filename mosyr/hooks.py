@@ -276,7 +276,9 @@ fixtures = [
 
 				"Additional Salary-reason",
 				"Additional Salary-employee_benefit",
-				'Employee-departement_location',
+				"Employee-departement_location",
+
+				"Leave Type-is_annual_leave",
             ]]
         ]
     },
