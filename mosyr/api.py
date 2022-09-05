@@ -1,6 +1,6 @@
 
 import frappe 
-from frappe.utils import nowdate, getdate, today, flt
+from frappe.utils import nowdate, getdate, today, flt, cint
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 
@@ -255,3 +255,15 @@ def notify_expired_dates(doc, method):
         if getdate(edep.insurance_card_expire) < getdate(today()):
             need_update = True
     if need_update: emp.db_set("notify_insurance_d", 1, update_modified=False)
+
+def check_other_annual_leaves(doc, method):
+    if cint(doc.is_annual_leave) == 1 and cint(doc.allow_encashment) == 1:
+        leaves = frappe.get_list("Leave Type", filters={"is_annual_leave": 1, "allow_encashment": 1})
+        print(leaves)
+        #frappe.db.sql("""SELECT name FROM `tabLeave Type` WHERE is_annual_leave=1 AND allow_encashment=1""")
+        if len(leaves) >= 1:
+            msg_str = ""
+            for l in leaves:
+                msg_str += "<li>{}</li>".format(_(l['name']))
+            msg_str = "<ul>" + msg_str + "</ul>"
+            frappe.throw(_("Only One Annual Leave allowed to be encashment check.")+msg_str)
