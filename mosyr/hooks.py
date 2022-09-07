@@ -282,6 +282,8 @@ fixtures = [
 				"Employee-departement_location",
 
 				"Leave Type-is_annual_leave",
+
+				"Shift Assignment-lateness_permission",
             ]]
         ]
     },
