@@ -84,6 +84,12 @@
    "label": "To Date"
   },
   {
+   "fieldname": "lateness_hours",
+   "fieldtype": "Float",
+   "label": "Lateness Hours",
+   "reqd": 1
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -91,19 +97,13 @@
    "options": "Lateness Permission",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "lateness_hours",
-   "fieldtype": "Float",
-   "label": "Lateness Hours",
-   "reqd": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-06 16:18:01.516367",
+ "modified": "2022-09-19 09:35:00.382949",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Employee Self Service",
  "name": "Lateness Permission",
  "owner": "Administrator",
  "permissions": [
