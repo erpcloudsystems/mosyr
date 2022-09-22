@@ -1,15 +1,14 @@
 {
  "actions": [],
  "autoname": "format:{employee}-{####}",
- "creation": "2021-01-19 15:23:23.826320",
+ "creation": "2021-01-19 15:38:24.440667",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "salary_mode",
-  "bank_name",
-  "bank_ac_no",
-  "column_break_4",
+  "health_insurance_provider",
+  "health_insurance_no",
+  "column_break_3",
   "employee",
   "employee_name",
   "reason",
@@ -17,25 +16,19 @@
  ],
  "fields": [
   {
-   "fieldname": "salary_mode",
-   "fieldtype": "Select",
-   "label": "Salary Mode",
-   "options": "\nBank\nCash\nCheque"
+   "fieldname": "health_insurance_provider",
+   "fieldtype": "Link",
+   "label": "Health Insurance Provider",
+   "options": "Employee Health Insurance"
   },
   {
-   "depends_on": "eval:doc.salary_mode == 'Bank'",
-   "fieldname": "bank_name",
+   "depends_on": "eval:doc.health_insurance_provider",
+   "fieldname": "health_insurance_no",
    "fieldtype": "Data",
-   "label": "Bank Name"
+   "label": "Health Insurance No"
   },
   {
-   "depends_on": "eval:doc.salary_mode == 'Bank'",
-   "fieldname": "bank_ac_no",
-   "fieldtype": "Data",
-   "label": "Bank A/C No."
-  },
-  {
-   "fieldname": "column_break_4",
+   "fieldname": "column_break_3",
    "fieldtype": "Column Break"
   },
   {
@@ -53,6 +46,7 @@
    "label": "Employee Name"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "reason",
    "fieldtype": "Small Text",
    "label": "Reason",
@@ -63,17 +57,17 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Salary Details",
+   "options": "Health Insurance",
    "print_hide": 1,
    "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-13 13:00:23.870291",
+ "modified": "2022-09-22 08:22:13.526142",
  "modified_by": "Administrator",
- "module": "Mosyr",
- "name": "Salary Details",
+ "module": "Mosyr Self Service",
+ "name": "Health Insurance",
  "owner": "Administrator",
  "permissions": [
   {
@@ -139,6 +133,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1

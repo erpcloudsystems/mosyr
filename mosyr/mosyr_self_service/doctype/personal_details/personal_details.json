@@ -192,9 +192,9 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 5,
- "modified": "2022-04-13 12:57:34.249866",
+ "modified": "2022-09-22 08:04:50.500162",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Mosyr Self Service",
  "name": "Personal Details",
  "owner": "Administrator",
  "permissions": [

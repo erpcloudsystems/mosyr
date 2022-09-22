@@ -101,9 +101,9 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-19 09:35:00.382949",
+ "modified": "2022-09-19 09:40:36.050212",
  "modified_by": "Administrator",
- "module": "Employee Self Service",
+ "module": "Mosyr Self Service",
  "name": "Lateness Permission",
  "owner": "Administrator",
  "permissions": [

@@ -20,7 +20,8 @@
   "permanent_address",
   "current_address_is",
   "current_address",
-  "reason"
+  "reason",
+  "amended_from"
  ],
  "fields": [
   {
@@ -109,13 +110,22 @@
    "fieldtype": "Small Text",
    "label": "Reason",
    "permlevel": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Contact Details",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-13 16:14:55.054375",
+ "modified": "2022-09-22 08:19:32.298393",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Mosyr Self Service",
  "name": "Contact Details",
  "owner": "Administrator",
  "permissions": [

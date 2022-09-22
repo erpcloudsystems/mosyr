@@ -1,36 +1,18 @@
 {
  "actions": [],
  "autoname": "format:{employee}-{####}",
- "creation": "2021-01-19 15:38:24.440667",
+ "creation": "2021-01-21 00:08:25.006036",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "health_insurance_provider",
-  "health_insurance_no",
-  "column_break_3",
   "employee",
   "employee_name",
+  "education",
   "reason",
   "amended_from"
  ],
  "fields": [
-  {
-   "fieldname": "health_insurance_provider",
-   "fieldtype": "Link",
-   "label": "Health Insurance Provider",
-   "options": "Employee Health Insurance"
-  },
-  {
-   "depends_on": "eval:doc.health_insurance_provider",
-   "fieldname": "health_insurance_no",
-   "fieldtype": "Data",
-   "label": "Health Insurance No"
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
@@ -46,7 +28,12 @@
    "label": "Employee Name"
   },
   {
-   "allow_on_submit": 1,
+   "fieldname": "education",
+   "fieldtype": "Table",
+   "label": "Education",
+   "options": "Employee Education"
+  },
+  {
    "fieldname": "reason",
    "fieldtype": "Small Text",
    "label": "Reason",
@@ -57,17 +44,17 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Health Insurance",
+   "options": "Educational Qualification",
    "print_hide": 1,
    "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-13 12:59:14.843907",
+ "modified": "2022-09-22 08:07:45.552796",
  "modified_by": "Administrator",
- "module": "Mosyr",
- "name": "Health Insurance",
+ "module": "Mosyr Self Service",
+ "name": "Educational Qualification",
  "owner": "Administrator",
  "permissions": [
   {

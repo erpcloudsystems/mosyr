@@ -335,7 +335,11 @@ fixtures = [
 					"Salary Details",
 					"Educational Qualification",
 					"Emergency Contact",
-					"Contact Details"
+					"Contact Details",
+					"Dependants Details",
+					"Passport Details",
+					"Work Experience",
+					"Lateness Permission"
 				]
 			]
 		]
