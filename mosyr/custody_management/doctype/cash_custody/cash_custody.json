@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "CASH-.YY.MM.DD.-.###",
- "creation": "2022-05-18 14:53:35.357923",
+ "creation": "2022-09-22 09:14:32.003374",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -23,12 +23,36 @@
  ],
  "fields": [
   {
+   "fieldname": "resp_employee",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "in_standard_filter": 1,
+   "label": "Responsible Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "depends_on": "resp_employee",
+   "fetch_from": "resp_employee.employee_name",
+   "fieldname": "resp_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Responsible Name",
+   "read_only": 1
+  },
+  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "in_standard_filter": 1,
    "label": "Branch",
    "options": "Branch"
+  },
+  {
+   "fieldname": "receipt_date_h",
+   "fieldtype": "Data",
+   "label": "Receipt Date (H)",
+   "options": "Hijri Date"
   },
   {
    "fieldname": "notes",
@@ -49,6 +73,14 @@
    "reqd": 1
   },
   {
+   "depends_on": "recipient_employee",
+   "fetch_from": "recipient_employee.employee_name",
+   "fieldname": "recipient_name",
+   "fieldtype": "Data",
+   "label": "Recipient Name",
+   "read_only": 1
+  },
+  {
    "fieldname": "custody_value",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -57,12 +89,18 @@
    "reqd": 1
   },
   {
-   "depends_on": "recipient_employee",
-   "fetch_from": "recipient_employee.employee_name",
-   "fieldname": "recipient_name",
-   "fieldtype": "Data",
-   "label": "Recipient Name",
+   "allow_on_submit": 1,
+   "fieldname": "estimated_value",
+   "fieldtype": "Currency",
+   "label": "Estimated Value",
    "read_only": 1
+  },
+  {
+   "fieldname": "receipt_date_g",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Receipt Date (G)",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_11",
@@ -77,44 +115,6 @@
    "read_only": 1
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "estimated_value",
-   "fieldtype": "Currency",
-   "label": "Estimated Value",
-   "read_only": 1
-  },
-  {
-   "fieldname": "resp_employee",
-   "fieldtype": "Link",
-   "ignore_user_permissions": 1,
-   "in_standard_filter": 1,
-   "label": "Responsible Employee",
-   "options": "Employee",
-   "reqd": 1
-  },
-  {
-   "depends_on": "resp_employee",
-   "fetch_from": "resp_employee.employee_name",
-   "fieldname": "resp_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Responsible Name",
-   "read_only": 1
-  },
-  {
-   "fieldname": "receipt_date_h",
-   "fieldtype": "Data",
-   "label": "Receipt Date (H)",
-   "options": "Hijri Date"
-  },
-  {
-   "fieldname": "receipt_date_g",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Receipt Date (G)",
-   "reqd": 1
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -127,9 +127,9 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-01 18:32:30.149204",
+ "modified": "2022-09-22 09:14:32.003374",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Custody Management",
  "name": "Cash Custody",
  "owner": "Administrator",
  "permissions": [

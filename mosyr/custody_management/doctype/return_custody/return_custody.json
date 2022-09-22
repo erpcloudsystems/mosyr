@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "RE-CST-.YYYY.-.#####",
- "creation": "2022-06-08 14:35:31.432483",
+ "creation": "2022-09-22 09:17:41.504151",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -52,6 +52,23 @@
    "read_only": 1
   },
   {
+   "fieldname": "custody_status_on_return",
+   "fieldtype": "Link",
+   "label": "Custody Status on Return",
+   "options": "Custody Status",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "return_date_g",
+   "fieldtype": "Date",
+   "label": "Return Date (G)"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
    "depends_on": "custody",
    "fetch_from": "custody.type",
    "fieldname": "custody_type",
@@ -59,10 +76,6 @@
    "label": "Custody Type",
    "options": "Custody Type",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_6",
-   "fieldtype": "Column Break"
   },
   {
    "depends_on": "custody",
@@ -94,17 +107,28 @@
    "read_only": 1
   },
   {
-   "fieldname": "custody_status_on_return",
-   "fieldtype": "Link",
-   "label": "Custody Status on Return",
-   "options": "Custody Status",
-   "reqd": 1
+   "allow_on_submit": 1,
+   "fieldname": "return_date_h",
+   "fieldtype": "Data",
+   "label": "Return Date (H)",
+   "options": "Hijri Date"
   },
   {
    "fieldname": "return_reason",
    "fieldtype": "Small Text",
    "label": "Return Reason",
    "reqd": 1
+  },
+  {
+   "fieldname": "attachments_section",
+   "fieldtype": "Section Break",
+   "label": "Attachments"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "attachments",
+   "fieldtype": "Table",
+   "options": "Return Custody Attachment"
   },
   {
    "fieldname": "amended_from",
@@ -114,38 +138,14 @@
    "options": "Return Custody",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "return_date_g",
-   "fieldtype": "Date",
-   "label": "Return Date (G)"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "return_date_h",
-   "fieldtype": "Data",
-   "label": "Return Date (H)",
-   "options": "Hijri Date"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "attachments",
-   "fieldtype": "Table",
-   "options": "Return Custody Attachment"
-  },
-  {
-   "fieldname": "attachments_section",
-   "fieldtype": "Section Break",
-   "label": "Attachments"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-15 09:50:01.457345",
+ "modified": "2022-09-22 09:17:41.504151",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Custody Management",
  "name": "Return Custody",
  "owner": "Administrator",
  "permissions": [

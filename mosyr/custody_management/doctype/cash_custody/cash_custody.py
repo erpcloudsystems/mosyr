@@ -8,4 +8,3 @@ class CashCustody(Document):
 	def on_submit(self):
 		self.estimated_value = self.custody_value
 		self.save()
-

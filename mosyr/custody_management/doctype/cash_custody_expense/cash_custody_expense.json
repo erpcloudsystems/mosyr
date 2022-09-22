@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "CCE.-.YYYY.MM.DD.-.#####",
- "creation": "2022-05-18 16:33:23.549430",
+ "creation": "2022-09-22 09:15:40.390046",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -26,6 +26,28 @@
    "label": "Cash Custody",
    "options": "Cash Custody",
    "reqd": 1
+  },
+  {
+   "depends_on": "cash_custody",
+   "fetch_from": "cash_custody.estimated_value",
+   "fieldname": "estimated_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Estimated Value",
+   "read_only": 1
+  },
+  {
+   "depends_on": "cash_custody",
+   "fieldname": "spent_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Spent Value",
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
   },
   {
    "depends_on": "cash_custody",
@@ -59,26 +81,11 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "cash_custody",
-   "fieldname": "spent_value",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Spent Value",
-   "precision": "2",
-   "reqd": 1
-  },
-  {
-   "depends_on": "cash_custody",
-   "fetch_from": "cash_custody.estimated_value",
-   "fieldname": "estimated_value",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Estimated Value",
-   "read_only": 1
+   "allow_on_submit": 1,
+   "fieldname": "references",
+   "fieldtype": "Table",
+   "label": "References",
+   "options": "Cash Custody Attachment"
   },
   {
    "fieldname": "amended_from",
@@ -88,21 +95,14 @@
    "options": "Cash Custody Expense",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "references",
-   "fieldtype": "Table",
-   "label": "References",
-   "options": "Cash Custody Attachment"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-01 18:39:41.445986",
+ "modified": "2022-09-22 09:15:40.390046",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Custody Management",
  "name": "Cash Custody Expense",
  "owner": "Administrator",
  "permissions": [

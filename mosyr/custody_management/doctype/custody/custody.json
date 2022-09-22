@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "CAST-.YYYY.-.#####",
- "creation": "2022-05-15 10:27:42.634889",
+ "creation": "2022-09-22 09:17:02.041600",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -34,6 +34,15 @@
    "reqd": 1
   },
   {
+   "depends_on": "employee",
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
    "fieldname": "type",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
@@ -53,9 +62,25 @@
    "reqd": 1
   },
   {
+   "fieldname": "receipt_date_h",
+   "fieldtype": "Data",
+   "label": "Receipt Date (H)",
+   "no_copy": 1,
+   "options": "Hijri Date"
+  },
+  {
    "fieldname": "photo",
    "fieldtype": "Attach Image",
    "label": "Photo"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nReturned",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_5",
@@ -68,6 +93,15 @@
    "label": "Recipient",
    "options": "Employee",
    "reqd": 1
+  },
+  {
+   "depends_on": "recipient",
+   "fetch_from": "recipient.employee_name",
+   "fieldname": "recipient_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Recipient Name",
+   "read_only": 1
   },
   {
    "fieldname": "custody_value",
@@ -84,46 +118,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "notes",
-   "fieldtype": "Small Text",
-   "label": "Notes",
-   "no_copy": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Custody",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "depends_on": "employee",
-   "fetch_from": "employee.employee_name",
-   "fieldname": "employee_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Employee Name",
-   "read_only": 1
-  },
-  {
-   "fieldname": "receipt_date_h",
-   "fieldtype": "Data",
-   "label": "Receipt Date (H)",
-   "no_copy": 1,
-   "options": "Hijri Date"
-  },
-  {
-   "depends_on": "recipient",
-   "fetch_from": "recipient.employee_name",
-   "fieldname": "recipient_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Recipient Name",
-   "read_only": 1
-  },
-  {
    "fieldname": "receipt_date_g",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -131,13 +125,10 @@
    "no_copy": 1
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "\nReturned",
-   "read_only": 1
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes",
+   "no_copy": 1
   },
   {
    "allow_on_submit": 1,
@@ -148,14 +139,23 @@
    "no_copy": 1,
    "options": "Return Custody",
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Custody",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-09 14:31:04.734541",
+ "modified": "2022-09-22 09:17:02.041600",
  "modified_by": "Administrator",
- "module": "Mosyr",
+ "module": "Custody Management",
  "name": "Custody",
  "owner": "Administrator",
  "permissions": [
