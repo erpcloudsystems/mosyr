@@ -1,0 +1,268 @@
+{
+ "actions": [],
+ "autoname": "format:{employee}-{####}",
+ "creation": "2021-01-21 00:04:59.611945",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "passport_number",
+  "date_of_issue",
+  "valid_upto",
+  "place_of_issue",
+  "id_number",
+  "id_date_of_issue",
+  "id_valid_upto",
+  "id_place_of_issue",
+  "copy_of_id",
+  "driving_licence_number",
+  "licence_date_of_issue",
+  "licence_valid_upto",
+  "attach_licence_copy",
+  "number_of_dependants",
+  "column_break_5",
+  "employee",
+  "employee_name",
+  "copy_of_passport",
+  "marital_status",
+  "wedding_certificate",
+  "spouse_name",
+  "spouse_working_status",
+  "blood_group",
+  "family_background",
+  "health_details",
+  "amended_from",
+  "reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "passport_number",
+   "fieldtype": "Data",
+   "label": "Passport Number"
+  },
+  {
+   "fieldname": "date_of_issue",
+   "fieldtype": "Date",
+   "label": "Date of Issue"
+  },
+  {
+   "fieldname": "valid_upto",
+   "fieldtype": "Date",
+   "label": "Valid Upto"
+  },
+  {
+   "fieldname": "place_of_issue",
+   "fieldtype": "Data",
+   "label": "Place of Issue"
+  },
+  {
+   "fieldname": "id_number",
+   "fieldtype": "Data",
+   "label": "ID Number",
+   "translatable": 1
+  },
+  {
+   "fieldname": "id_date_of_issue",
+   "fieldtype": "Date",
+   "label": "ID Date of Issue"
+  },
+  {
+   "fieldname": "id_valid_upto",
+   "fieldtype": "Date",
+   "label": "ID Valid Upto"
+  },
+  {
+   "fieldname": "id_place_of_issue",
+   "fieldtype": "Data",
+   "label": "ID Place of Issue",
+   "translatable": 1
+  },
+  {
+   "fieldname": "copy_of_id",
+   "fieldtype": "Attach",
+   "label": "Copy of ID"
+  },
+  {
+   "fieldname": "driving_licence_number",
+   "fieldtype": "Data",
+   "label": "Driving Licence Number"
+  },
+  {
+   "fieldname": "licence_date_of_issue",
+   "fieldtype": "Data",
+   "label": "Licence Date of Issue"
+  },
+  {
+   "fieldname": "licence_valid_upto",
+   "fieldtype": "Data",
+   "label": "Licence Valid upto"
+  },
+  {
+   "fieldname": "attach_licence_copy",
+   "fieldtype": "Attach",
+   "label": "Attach Licence Copy"
+  },
+  {
+   "fieldname": "number_of_dependants",
+   "fieldtype": "Data",
+   "label": "Number of Dependants"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "copy_of_passport",
+   "fieldtype": "Attach",
+   "label": "Copy of Passport"
+  },
+  {
+   "fieldname": "marital_status",
+   "fieldtype": "Select",
+   "label": "Marital Status",
+   "options": "\nSingle\nMarried\nDivorced\nWidowed"
+  },
+  {
+   "depends_on": "eval:doc.marital_status == \"Married\"",
+   "fieldname": "wedding_certificate",
+   "fieldtype": "Attach",
+   "label": "Wedding Certificate"
+  },
+  {
+   "depends_on": "eval:doc.marital_status == \"Married\"",
+   "fieldname": "spouse_name",
+   "fieldtype": "Data",
+   "label": "Spouse Name"
+  },
+  {
+   "depends_on": "eval:doc.marital_status == \"Married\"",
+   "fieldname": "spouse_working_status",
+   "fieldtype": "Select",
+   "label": "Spouse Working Status",
+   "options": "Employed\nUnemployed"
+  },
+  {
+   "fieldname": "blood_group",
+   "fieldtype": "Select",
+   "label": "Blood Group",
+   "options": "\nA+\nA-\nB+\nB-\nAB+\nAB-\nO+\nO-"
+  },
+  {
+   "description": "Here you can maintain family details like name and occupation of parent, spouse and children",
+   "fieldname": "family_background",
+   "fieldtype": "Small Text",
+   "label": "Family Background"
+  },
+  {
+   "description": "Here you can maintain height, weight, allergies, medical concerns etc",
+   "fieldname": "health_details",
+   "fieldtype": "Small Text",
+   "label": "Health Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Personal Details",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "permlevel": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "max_attachments": 5,
+ "modified": "2022-09-22 08:04:50.500162",
+ "modified_by": "Administrator",
+ "module": "Mosyr Self Service",
+ "name": "Personal Details",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
