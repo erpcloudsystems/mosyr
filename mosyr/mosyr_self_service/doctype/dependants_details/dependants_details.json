@@ -47,15 +47,6 @@
    "options": "Dependants Details",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Dependants Details",
-   "print_hide": 1,
-   "read_only": 1
   }
  ],
  "is_submittable": 1,
