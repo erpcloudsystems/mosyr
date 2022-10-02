@@ -117,6 +117,7 @@ doc_events = {
 		"validate": [
 			"mosyr.api.validate_social_insurance",
 			"mosyr.api.notify_expired_dates",
+			"mosyr.api.set_employee_gender",
 		]
 	},
 	"Leave Type": {
@@ -250,6 +251,7 @@ fixtures = [
 				"Employee-pension_on_company",
 				"Employee-risk_on_employee",
 				"Employee-pension_on_employee",
+				"Employee-e_gender",
 
 				"Employee Education-attachment",
 				"Employee Education-qualification_location",
@@ -320,6 +322,9 @@ fixtures = [
 					"Company-stock_received_but_not_billed-hidden",
 					"Company-default_provisional_account-hidden",
 					"Company-expenses_included_in_valuation-hidden",
+
+					"Employee-gender-hidden",
+					"Employee-gender-default",
 				]]
 			]
 	},

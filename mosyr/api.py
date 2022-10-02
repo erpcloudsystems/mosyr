@@ -267,3 +267,14 @@ def check_other_annual_leaves(doc, method):
                 msg_str += "<li>{}</li>".format(_(l['name']))
             msg_str = "<ul>" + msg_str + "</ul>"
             frappe.throw(_("Only One Annual Leave allowed to be encashment check.")+msg_str)
+
+def set_employee_gender(doc, method):
+    gender_doc = frappe.db.exists("Gender", doc.e_gender)
+    if gender_doc:
+        doc.gender = gender_doc
+    else:
+        gender_doc = frappe.new_doc("Gender")
+        gender_doc.gender = doc.e_gender
+        gender_doc.save()
+        frappe.db.commit()
+        doc.gender = gender_doc.name
