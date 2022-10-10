@@ -278,3 +278,50 @@ def set_employee_gender(doc, method):
         gender_doc.save()
         frappe.db.commit()
         doc.gender = gender_doc.name
+
+@frappe.whitelist(allow_guest=True)
+def add_employee_log(*args, **kwargs):
+    logs_data =frappe.request.data.decode()
+    if isinstance(logs_data, str):
+        logs_data = json.dumps(logs_data)
+    errors = []
+    success = []
+    if isinstance(logs_data, list):
+        for log in logs_data:
+            log_id = log.get("log_id", False)
+            device_id = log.get("device_id", "")
+            if log_id:
+                employee_field_value = log.get("employee_field_value", False)
+                timestamp = log.get("timestamp", False)
+                if not employee_field_value or not timestamp:
+                    errors.append({
+                        "log_id": log_id,
+                        "result": "Employee Id or Chickin datetime"
+                    })
+                    continue
+                employee = frappe.db.get_values(
+                    "Employee",{"attendance_device_id": employee_field_value},
+                    ["name", "employee_name", "attendance_device_id"], as_dict=True,)
+                if employee:
+                    employee = employee[0]
+                else:
+                    errors.append({
+                        "log_id": log_id,
+                        "result": "no employee found for {}".format(employee_field_value or "")
+                    })
+                    continue
+            doc = frappe.new_doc("Employee Checkin")
+            doc.employee = employee.name
+            doc.employee_name = employee.employee_name
+            doc.time = timestamp
+            doc.device_id = device_id
+            doc.log_type = None
+            doc.insert()
+            success.append({
+                "log_id": log_id,
+                "result": "success"
+            })
+        return {
+            "errors": errors,
+            "success": success,
+        }
