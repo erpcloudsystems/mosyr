@@ -43,11 +43,11 @@ class CompanyController(Document):
             has_new_letter_head = True
             for signature in self.signatures:
                 job_title = signature.job_title or ""
-                signature = frappe.db.get_value("Employee", signature.name1, "employee_signature")
-                
-                print(signature)
-                if signature:
-                    html_footer_content += '''<div class="col-sm-4 text-right"><p class="text-center" style="font-weight: bold">{}</p><img src="{}" height="120px" width="100%"></div>'''.format(job_title, signature)
+                employee_name = frappe.db.get_value("Employee", signature.name1, "employee_name")
+                html_footer_content += '''<div class="col-sm-4 text-right">
+                                                <p class="text-center" style="font-weight: bold">{}</p>
+                                                <p class="text-center" style="font-weight: bold">{}</p>
+                                              </div>'''.format(job_title, employee_name)
             
             
             html_footer_content = '<div class="container-fluid"><div class="row">' + html_footer_content + '</div></div>'
