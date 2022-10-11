@@ -283,7 +283,8 @@ def set_employee_gender(doc, method):
 def add_employee_log(*args, **kwargs):
     logs_data =frappe.request.data.decode()
     if isinstance(logs_data, str):
-        logs_data = json.dumps(logs_data)
+        logs_data = json.loads(logs_data)
+    logs_data = logs_data.get("logs", [])
     errors = []
     success = []
     if isinstance(logs_data, list):
@@ -310,18 +311,20 @@ def add_employee_log(*args, **kwargs):
                         "result": "no employee found for {}".format(employee_field_value or "")
                     })
                     continue
-            doc = frappe.new_doc("Employee Checkin")
-            doc.employee = employee.name
-            doc.employee_name = employee.employee_name
-            doc.time = timestamp
-            doc.device_id = device_id
-            doc.log_type = None
-            doc.insert()
-            success.append({
-                "log_id": log_id,
-                "result": "success"
-            })
-        return {
-            "errors": errors,
-            "success": success,
-        }
+
+                frappe.logger("mosyr.biometric").debug({"resuest_data":" [!] logs_data"})
+                doc = frappe.new_doc("Employee Checkin")
+                doc.employee = employee.name
+                doc.employee_name = employee.employee_name
+                doc.time = timestamp
+                doc.device_id = device_id
+                doc.log_type = None
+                doc.insert(ignore_permissions=True)
+                success.append({
+                    "log_id": log_id,
+                    "result": "success"
+                })
+    return {
+        "errors": errors,
+        "success": success,
+    }
