@@ -2,6 +2,10 @@ import frappe
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.utils import nowdate
 from mosyr import mosyr_accounts, mosyr_mode_payments
+from erpnext.setup.install import create_custom_role ,create_user_type
+from six import iteritems
+from frappe.installer import update_site_config
+
 
 def after_install():
     edit_gender_list()
@@ -12,6 +16,7 @@ def after_install():
     create_salary_components()
     create_salary_structures_for_companies()
     # frappe.db.commit()
+    edit_doctypes_user_type()
 
 def edit_gender_list():
     genders_to_del = frappe.get_list("Gender", filters={"name": ["not in", ["Female", "Male"]]})
@@ -315,3 +320,50 @@ def create_salary_structures(company):
 
     non_citizen_ss_doc.save()
     non_citizen_ss_doc.submit()
+
+
+def edit_doctypes_user_type():
+
+	user_types = get_user_types_data()
+
+	user_type_limit = {}
+	for user_type, data in iteritems(user_types):
+		user_type_limit.setdefault(frappe.scrub(user_type), 20)
+
+	update_site_config("user_type_doctype_limit", user_type_limit)
+	for user_type, data in iteritems(user_types):
+		create_user_type(user_type, data)
+
+	frappe.db.commit()
+def get_user_types_data():
+	return {
+		"Employee Self Service": {
+			"role": "Employee Self Service",
+			"apply_user_permission_on": "Employee",
+			"user_id_field": "user_id",
+			"doctypes": {
+
+				"Salary Slip": ["read"],
+				"Employee": ["read", "write"],
+				"Expense Claim": ["read", "write", "create", "delete"],
+				"Leave Application": ["read", "write", "create", "delete"],
+				"Attendance Request": ["read", "write", "create", "delete"],
+				"Compensatory Leave Request": ["read", "write", "create", "delete"],
+				"Employee Tax Exemption Declaration": ["read", "write", "create", "delete"],
+				"Employee Tax Exemption Proof Submission": ["read", "write", "create", "delete"],
+				"Timesheet": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				
+				"Work Experience": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Dependants Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Passport Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Salary Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Health Insurance": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Contact Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Emergency Contact": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Educational Qualification": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Personal Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Employee Info Update Form": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Lateness Permission": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+			},
+		}
+	}
