@@ -162,7 +162,7 @@ def set_property_setter(value, fields):
         make_property_setter(fld["doctype"], fld["fieldname"], "reqd", 0, "Check", validate_fields_for_doctype=False,)
         make_property_setter(fld["doctype"], fld["fieldname"], "default", value, "Text", validate_fields_for_doctype=False,)
         make_property_setter(fld["doctype"], fld["fieldname"], "hidden", 1, "Check", validate_fields_for_doctype=False,)
-
+    frappe.db.commit()
 def create_account(**kwargs):
     if kwargs.get("check_company") and kwargs.get("check_company_field"):
         try:
