@@ -137,22 +137,38 @@ mosyr_accounts = {
         }
     ],
     "PayrollEntry":[
-        # {
-        #     "fieldname":"payment_account",
-        #     "account":{
-        #         "account_name":"Payroll Payable",
-        #         "parent_account":"Accounts Payable",
-        #         "root_type":"Liability",
-        #         "account_type":"Payable",
-        #         "check_company":0
-        #     },
-        #     "for_fields":[
-        #         {
-        #             "fieldname":"payment_account",
-        #             "doctype":"Payroll Entry"
-        #         }
-        #     ]
-        # }
+        {
+            "fieldname":"payment_account",
+            "account":{
+                "account_name":"Payroll Payable",
+                "parent_account":"Accounts Payable",
+                "root_type":"Liability",
+                "account_type":"Payable",
+                "check_company":0
+            },
+            "for_fields":[
+                {
+                    "fieldname":"payment_account",
+                    "doctype":"Payroll Entry"
+                }
+            ]
+        },
+        {
+            "fieldname":"payroll_payable_account",
+            "account":{
+                "account_name":"Payroll Payable Account",
+                "parent_account":"Accounts Payable",
+                "root_type":"Liability",
+                "account_type":"Payable",
+                "check_company":0
+            },
+            "for_fields":[
+                {
+                    "fieldname":"payroll_payable_account",
+                    "doctype":"Payroll Entry"
+                }
+            ]
+        }
     ]
 }
 
