@@ -325,6 +325,12 @@ fixtures = [
 
 					"Employee-gender-hidden",
 					"Employee-gender-default",
+					"Expense Claim-sb1-hidden",
+					"Salary Slip-deduct_tax_for_unsubmitted_tax_exemption_proof-hidden",
+					"Salary Slip-deduct_tax_for_unclaimed_employee_benefits-hidden",
+					"Payroll Entry-deduct_tax_for_unsubmitted_tax_exemption_proof-hidden",
+					"Payroll Entry-deduct_tax_for_unclaimed_employee_benefits-hidden",
+					"Salary Structure Assignment-income_tax_slab-hidden"
 				]]
 			]
 	},
