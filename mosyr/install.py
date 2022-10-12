@@ -33,12 +33,11 @@ def prepare_system_accounts():
     setup_loan_accounts(companies)
     setup_loan_type_accounts(companies)
     setup_loan_writeoff_accounts(companies)
-
     setup_employee_advance_accounts(companies)
     setup_expense_claim_accounts(companies)
-
     setup_salary_component_accounts()
-
+    setup_payroll_entry_accounts(companies)
+    
 def setup_loan_accounts(companies):
     accounts = mosyr_accounts.get('LoanType', [])
     mode_payments = mosyr_mode_payments.get('LoanType', {})
@@ -89,6 +88,7 @@ def setup_loan_writeoff_accounts(companies):
 
 def setup_employee_advance_accounts(companies):
     accounts = mosyr_accounts.get('EmployeeAdvance', [])
+    mode_payments = mosyr_mode_payments.get('EmployeeAdvance', {})
     for company in companies:
         args = {
             "company": company.name,
@@ -99,6 +99,10 @@ def setup_employee_advance_accounts(companies):
             new_account = create_account(**args)
             if new_account:
                 set_property_setter(new_account, account["for_fields"])
+    new_mode = create_mode_payment(mode_payments["type"], mode_payments["title"])
+    if new_mode:
+       set_property_setter(new_mode, mode_payments["for_fields"])
+
 
 def setup_expense_claim_accounts(companies):
     accounts = mosyr_accounts.get('ExpenseClaim', [])
@@ -112,6 +116,21 @@ def setup_expense_claim_accounts(companies):
             new_account = create_account(**args)
             if new_account:
                 set_property_setter(new_account, account["for_fields"])
+
+def setup_payroll_entry_accounts(companies):
+    accounts = mosyr_accounts.get('PayrollEntry', [])
+    for company in companies:
+         args = {
+             "company": company.name,
+             "account_currency": company.default_currency
+         }
+         for account in accounts:
+             args.update(account["account"])
+             new_account =  create_account(**args)
+             if new_account:
+                 set_property_setter(new_account, account["for_fields"])
+
+
 
 def setup_salary_component_accounts():
     sal_comps = frappe.get_list('Salary Component')
