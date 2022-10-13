@@ -140,7 +140,7 @@ mosyr_accounts = {
         {
             "fieldname":"payment_account",
             "account":{
-                "account_name":"Payroll Payable",
+                "account_name":"Mosyr Payroll Payable",
                 "parent_account":"Accounts Payable",
                 "root_type":"Liability",
                 "account_type":"Payable",
