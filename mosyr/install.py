@@ -31,12 +31,19 @@ def edit_gender_list():
 def prepare_system_accounts():
     companies = frappe.get_list("Company", fields=["default_currency", "name"])
     setup_loan_accounts(companies)
+    frappe.db.commit()
     setup_loan_type_accounts(companies)
+    frappe.db.commit()
     setup_loan_writeoff_accounts(companies)
+    frappe.db.commit()
     setup_employee_advance_accounts(companies)
+    frappe.db.commit()
     setup_expense_claim_accounts(companies)
+    frappe.db.commit()
     setup_salary_component_accounts()
+    frappe.db.commit()
     setup_payroll_entry_accounts(companies)
+    frappe.db.commit()
     
 def setup_loan_accounts(companies):
     accounts = mosyr_accounts.get('LoanType', [])
@@ -182,6 +189,7 @@ def set_property_setter(value, fields):
         make_property_setter(fld["doctype"], fld["fieldname"], "default", value, "Text", validate_fields_for_doctype=False,)
         make_property_setter(fld["doctype"], fld["fieldname"], "hidden", 1, "Check", validate_fields_for_doctype=False,)
     frappe.db.commit()
+
 def create_account(**kwargs):
     if kwargs.get("check_company") and kwargs.get("check_company_field"):
         try:
