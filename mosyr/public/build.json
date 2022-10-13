@@ -1,7 +1,8 @@
 {
     "mosyr/js/mosyr.min.js": [
         "public/js/utils.js",
-        "public/js/custom_desk.js"
+        "public/js/custom_desk.js",
+        "public/js/custum_list_view.js"
     ],
     "mosyr/css/mosyr.min.css": [
         "public/css/mosyr.css"
