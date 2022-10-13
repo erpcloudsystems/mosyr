@@ -118,9 +118,8 @@ doc_events = {
 			"mosyr.api.validate_social_insurance",
 			"mosyr.api.notify_expired_dates",
 			"mosyr.api.set_employee_gender",
-		],
-		"after_insert":"mosyr.api.translate_employee"
-	},
+			"mosyr.api.translate_employee"
+	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
 	}
