@@ -328,3 +328,11 @@ def add_employee_log(*args, **kwargs):
         "errors": errors,
         "success": success,
     }
+
+def translate_employee(doc,method):
+    if doc.full_name_en:
+        t = frappe.new_doc("Translation")
+        t.language = "ar"
+        t.source_text = doc.full_name_en
+        t.translated_text = doc.first_name
+        t.save()
