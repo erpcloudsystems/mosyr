@@ -333,7 +333,7 @@ def translate_employee(doc,method):
     old_doc = doc.get_doc_before_save()
     if doc.full_name_en != old_doc.full_name_en:
         t = frappe.new_doc("Translation")
-        t.language = "ar"
-        t.source_text = doc.full_name_en
-        t.translated_text = doc.first_name
+        t.language = "en"
+        t.source_text = doc.first_name
+        t.translated_text = doc.full_name_en
         t.save()
