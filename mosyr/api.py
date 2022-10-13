@@ -330,7 +330,9 @@ def add_employee_log(*args, **kwargs):
     }
 
 def translate_employee(doc,method):
-    if doc.full_name_en:
+    old_doc = doc.get_doc_before_save()
+    if not old_doc: return
+    if doc.full_name_en != old_doc.full_name_en:
         t = frappe.new_doc("Translation")
         t.language = "ar"
         t.source_text = doc.full_name_en
