@@ -302,7 +302,7 @@ class CustomCompany(Company, NestedSet):
 
         # Make root department with NSM updation
         make_records(records[:1])
-
+        from frappe.utils.nestedset import rebuild_tree
         frappe.local.flags.ignore_update_nsm = True
         make_records(records)
         frappe.local.flags.ignore_update_nsm = False
