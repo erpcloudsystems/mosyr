@@ -116,7 +116,7 @@ class PayrollRegisterTool(Document):
 				sa.salary_structure = ss_doc.name
 				sa.from_date = from_date
 				sa.base = flt(base)
-				sa.variables = flt(variables)
+				sa.variable = flt(variables)
 				sa.insert()
 				sa.submit()
 		msg = _("<h5>Salary Structure Prepared for {} Employees</h5>".format(len(valid_employees)))
