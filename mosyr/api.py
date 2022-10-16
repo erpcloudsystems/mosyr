@@ -330,9 +330,12 @@ def add_employee_log(*args, **kwargs):
     }
 
 def translate_employee(doc,method):
-    old_doc = doc.get_doc_before_save()
-    if doc.full_name_en != old_doc.full_name_en:
-        t = frappe.new_doc("Translation")
+    if doc.full_name_en:
+        tr = frappe.db.exists("Translation", {"source_text": doc.first_name,"language":"en"})
+        if tr:
+            t = frappe.get_doc("Translation",tr)
+        else:
+            t = frappe.new_doc("Translation")
         t.language = "en"
         t.source_text = doc.first_name
         t.translated_text = doc.full_name_en
