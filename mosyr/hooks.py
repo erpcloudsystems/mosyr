@@ -356,7 +356,7 @@ fixtures = [
 					"Passport Details",
 					"Work Experience",
 					"Lateness Permission",
-					"Employee Info Update Form"
+					"Employee ID"
 				]
 			]
 		]
