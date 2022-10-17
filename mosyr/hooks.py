@@ -330,7 +330,12 @@ fixtures = [
 					"Salary Slip-deduct_tax_for_unclaimed_employee_benefits-hidden",
 					"Payroll Entry-deduct_tax_for_unsubmitted_tax_exemption_proof-hidden",
 					"Payroll Entry-deduct_tax_for_unclaimed_employee_benefits-hidden",
-					"Salary Structure Assignment-income_tax_slab-hidden"
+					"Salary Structure Assignment-income_tax_slab-hidden",
+					
+					"Salary Detail-is_tax_applicable-hidden",
+					"Salary Detail-is_flexible_benefit-hidden",
+					"Salary Detail-deduct_full_tax_on_selected_payroll_date-hidden",
+					"Salary Detail-exempted_from_income_tax-hidden"
 				]]
 			]
 	},
