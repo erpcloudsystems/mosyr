@@ -1,4 +1,6 @@
 
+import json
+
 import frappe 
 from frappe.utils import nowdate, getdate, today, flt, cint
 from frappe import _
@@ -330,10 +332,16 @@ def add_employee_log(*args, **kwargs):
     }
 
 def translate_employee(doc,method):
-    old_doc = doc.get_doc_before_save()
-    if doc.full_name_en != old_doc.full_name_en:
-        t = frappe.new_doc("Translation")
-        t.language = "en"
-        t.source_text = doc.first_name
-        t.translated_text = doc.full_name_en
-        t.save()
+    tr = False
+    if doc.is_new():
+        tr = frappe.new_doc("Translation")
+    else:
+        old_doc = doc.get_doc_before_save()
+        if doc.full_name_en and doc.full_name_en != old_doc.full_name_en:
+            tr = frappe.new_doc("Translation")
+    if not tr: return
+
+    tr.language = "en"
+    tr.source_text = doc.first_name
+    tr.translated_text = doc.full_name_en
+    tr.save()

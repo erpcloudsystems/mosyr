@@ -76,7 +76,7 @@ frappe.ui.form.on('Payroll Register Tool', {
 			if (frm.doc.currency) { args = { ...args, "currency": frm.doc.currency }; }
 			if (frm.doc.payroll_frequency) { args = { ...args, "frequency": frm.doc.payroll_frequency || "Monthly" }; }			
 			if (frm.doc.base) { args = { ...args, "base": frm.doc.base || "0" }; }
-			if (frm.doc.variables) { args = { ...args, "variables": frm.doc.variables || "0" }; }
+			if (frm.doc.variable) { args = { ...args, "variables": frm.doc.variable || "0" }; }
 			if (frm.doc.salary_component) { args = { ...args, "ts_component": frm.doc.salary_component }; }
 			if (frm.doc.hour_rate) { args = { ...args, "hour_rate": frm.doc.hour_rate }; }
 			if (frm.doc.encashment_per_day) { args = { ...args, "encashment_per_day": frm.doc.leave_encashment_amount_per_day }; }
