@@ -180,6 +180,14 @@ def hide_accounts_fields():
     
     make_property_setter("Salary Structure", "account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
     make_property_setter("Salary Structure Assignment", "payroll_payable_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+
+    make_property_setter("Loan", "mode_of_payment" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Loan", "disbursement_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Loan", "payment_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Loan", "loan_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Loan", "interest_income_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    make_property_setter("Loan", "penalty_income_account" , "hidden", 1, "Check", validate_fields_for_doctype=False,)
+    frappe.db.commit()
     
 def set_property_setter(value, fields):
     # Hide, non-reqd and default
