@@ -95,6 +95,7 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Draft\nApproved\nRejected",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -135,7 +136,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-21 09:16:19.468939",
+ "modified": "2022-10-17 02:34:07.602615",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Employee Info Update Form",
@@ -177,6 +178,42 @@
    "role": "HR User",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee Self Service",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
    "write": 1
   }
  ],
