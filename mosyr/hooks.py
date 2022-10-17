@@ -350,7 +350,8 @@ fixtures = [
 					"Dependants Details",
 					"Passport Details",
 					"Work Experience",
-					"Lateness Permission"
+					"Lateness Permission",
+					"Employee ID"
 				]
 			]
 		]
