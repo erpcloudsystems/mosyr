@@ -20,7 +20,6 @@
   "dependents",
   "passports",
   "qualifications",
-  "status",
   "amended_from"
  ],
  "fields": [
@@ -90,14 +89,6 @@
    "reqd": 1
   },
   {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Draft\nApproved\nRejected",
-   "reqd": 1
-  },
-  {
    "default": "0",
    "fieldname": "clear_if_empty",
    "fieldtype": "Check",
@@ -135,7 +126,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-17 02:48:02.090680",
+ "modified": "2022-10-17 15:03:20.374266",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Employee Info Update Form",
@@ -177,6 +168,42 @@
    "role": "HR User",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee Self Service",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
    "write": 1
   }
  ],
