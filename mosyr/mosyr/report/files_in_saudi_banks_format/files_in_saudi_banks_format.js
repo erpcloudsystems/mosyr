@@ -2,6 +2,21 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
+let d = new Date();
+let monthNames=  [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December'
+]
 frappe.query_reports["Files in Saudi banks format"] = {
 	"filters": [
 		{
@@ -30,7 +45,8 @@ frappe.query_reports["Files in Saudi banks format"] = {
 				'October',
 				'November',
 				'December'
-            ]
+            ],
+			'default': monthNames[d.getMonth()]
 		},
 		{
 			"fieldname": "company",

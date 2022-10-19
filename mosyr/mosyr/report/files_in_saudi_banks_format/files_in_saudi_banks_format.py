@@ -9,26 +9,31 @@ import datetime
 
 def execute(filters=None):
 	if not filters.get('company'): return [], []
-	
-	company_controller = frappe.get_doc("Company Controller" , filters.get('company'))
-	disbursement_type = company_controller.disbursement_type
-	bank_name = company_controller.bank_name
-	if bank_name == "Al Inma Bank" and disbursement_type == 'Payroll':
-		return get_columns_inma_payroll(),get_data_inma_payroll(filters)
-	elif bank_name == "Al Inma Bank" and disbursement_type == 'WPS':
-		return get_columns_inma_wps(),get_data_inma_wps(filters)
-	elif bank_name == "Riyadh Bank" and disbursement_type == 'WPS':
-		return get_columns_riad(),get_data_riad(filters)
-	elif bank_name == "The National Commercial Bank" and disbursement_type == 'WPS':
-		return get_columns_ahly(),get_data_ahly(filters)
-	elif bank_name == "Samba Financial Group" and disbursement_type == 'WPS':
-		return get_columns_sumba(),get_data_sumba(filters)
-	elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll':
-		return get_columns_alrajhi_payroll(),get_data_alrajhi_payroll(filters)
-	elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Interchange':
-		return get_columns_alrajhi_interchange(),get_data_alrajhi_interchange(filters)
-	elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll Cards':
-		return get_columns_alrajhi_payroll_card(),get_data_alrajhi_payroll_card(filters)
+	co_controller = frappe.get_list("Company Controller")
+	if len(co_controller)>0:
+		company_controller = frappe.get_doc("Company Controller" , filters.get('company'))
+		disbursement_type = company_controller.disbursement_type
+		bank_name = company_controller.bank_name
+		if bank_name == "Al Inma Bank" and disbursement_type == 'Payroll':
+			return get_columns_inma_payroll(),get_data_inma_payroll(filters)
+		elif bank_name == "Al Inma Bank" and disbursement_type == 'WPS':
+			return get_columns_inma_wps(),get_data_inma_wps(filters)
+		elif bank_name == "Riyadh Bank" and disbursement_type == 'WPS':
+			return get_columns_riad(),get_data_riad(filters)
+		elif bank_name == "The National Commercial Bank" and disbursement_type == 'WPS':
+			return get_columns_ahly(),get_data_ahly(filters)
+		elif bank_name == "Samba Financial Group" and disbursement_type == 'WPS':
+			return get_columns_sumba(),get_data_sumba(filters)
+		elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll':
+			return get_columns_alrajhi_payroll(),get_data_alrajhi_payroll(filters)
+		elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Interchange':
+			return get_columns_alrajhi_interchange(),get_data_alrajhi_interchange(filters)
+		elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll Cards':
+			return get_columns_alrajhi_payroll_card(),get_data_alrajhi_payroll_card(filters)
+		elif bank_name == "NCBK" and disbursement_type == 'WPS':
+			return get_columns_alaraby(),get_data_alaraby(filters)
+		else :
+			return [] , []
 	else :
 		return [] , []
 
@@ -105,7 +110,6 @@ def get_data_inma_payroll(filters):
 	return data
 
 def get_data_inma_wps(filters):
-	print(filters,'cccccccccccccccccccccccccccccccccccccccccccc')
 	condition='1=1 '
 	if filters.get("month"):
 		monthes = ['January',
@@ -153,9 +157,9 @@ def get_data_inma_wps(filters):
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted'
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic Salary"
-		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Housing Allowance"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Housing Allowance" and sade.salary_component<>"Basic Salary"  and sade.parentfield='earnings'
+		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
+		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
+		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
 		WHERE {condition}
 		GROUP BY emp.first_name
 		""",as_dict=1)
@@ -237,9 +241,9 @@ def get_data_riad(filters):
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabCompany Controller` cc ON cc.bank_name=b.name
-		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic Salary"
-		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Housing Allowance"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Housing Allowance" and sade.salary_component<>"Basic Salary"  and sade.parentfield='earnings'
+		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
+		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
+		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
 		WHERE {condition}
 		GROUP BY emp.first_name,emp_num
 		ORDER BY row_num_riad
@@ -435,9 +439,9 @@ def get_data_sumba(filters):
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic Salary"
-		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Housing Allowance"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Housing Allowance" and sade.salary_component<>"Basic Salary"  and sade.parentfield='earnings'
+		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
+		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
+		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
 		WHERE {condition}
 		GROUP BY emp.name
 		""",as_dict=1)
@@ -693,9 +697,9 @@ def get_data_alrajhi_payroll_card(filters):
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic Salary"
-		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Housing Allowance"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Housing Allowance" and sade.salary_component<>"Basic Salary"  and sade.parentfield='earnings'
+		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
+		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
+		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
 		WHERE {condition}
 		GROUP BY emp.name
 		ORDER BY emp_num
@@ -719,6 +723,78 @@ def get_data_alrajhi_payroll_card(filters):
 			d.update({'dedactions':sl_dedactions})
 	return data
 
+def get_data_alaraby(filters):
+	condition='1=1 '
+	if filters.get("month"):
+		monthes = ['January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December']
+		date = filters.get("month")
+		if date in monthes:
+			idx = monthes.index(date) + 1
+			condition += f""" AND Month (sl.start_date)={idx}"""
+	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	month = monthes[frappe.utils.get_datetime().month]
+	year = frappe.utils.get_datetime().year
+	data = frappe.db.sql(f"""
+		SELECT
+			'D' as d,
+			sl.month_to_date,
+			sl.gross_pay,
+			emp.bank_ac_no,
+			emp.first_name,
+			'NCBK' as swift_number,
+			"salaries for {month} {year}" as month,
+			sd.amount as basic,
+			sde.amount  as housing_allowance,
+			0 as other_earnings,
+			sl.total_deduction as dedactions,
+			id.id_number as id_number,
+			null as co_number
+		FROM `tabEmployee` emp  
+		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
+		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
+		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
+		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
+		WHERE emp.status ='Active' and {condition}
+		
+		""",as_dict=1)
+	for d in data:
+		other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
+		d.update({"other_earnings":other_earnings})
+	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
+	company_controller = frappe.get_doc("Company Controller" ,company)
+	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
+	salary=[]
+	for d in data:
+		salary.append(d.get("month_to_date"))
+	total_salary=sum(salary)
+	data.insert(0,
+		{'d': 'H',
+		'month_to_date': "ARNB",
+		'bank_ac_no': company_controller.agreement_number_for_customer,
+		'first_name':"N",
+		'swift_number':frappe.utils.get_datetime().date().strftime("%d%m%Y") + ".EX1",
+		'month':company_controller.bank_account_number,
+		'basic':"SAR",
+		'housing_allowance': frappe.utils.get_datetime().date().strftime("%d%m%Y"),
+		'other_earnings' :total_salary,
+		'dedactions':frappe.utils.get_datetime().date().strftime("%d%m%Y"),
+		'id_number':company_controller.company_id,
+		'co_number':f"salaries for {month} {year}"
+		})
+	return data
 
 def get_columns_inma_payroll():
 		return [
@@ -1070,7 +1146,7 @@ def get_columns_inma_wps():
 				"width": 100
 			},
 			{
-				"label": _("Housing Allowance"),
+				"label": _("Allowance Housing"),
 				"fieldname": "housing_allowance",
 				"fieldtype": "Data",
 				"width": 100
@@ -1195,7 +1271,7 @@ def get_columns_riad():
 			"width": 200
 		},
 		{
-			"label": _("Housing Allowance"),
+			"label": _("Allowance Housing"),
 			"fieldname": "housing_allowance",
 			"fieldtype": "Data",
 			"width": 200
@@ -1347,7 +1423,7 @@ def get_columns_sumba():
 			"width": 170
 		},
 		{
-			"label": _("Housing Allowance"),
+			"label": _("Allowance Housing"),
 			"fieldname": "housing_allowance",
 			"fieldtype": "Data",
 			"width": 170
@@ -1564,7 +1640,7 @@ def get_columns_alrajhi_payroll_card():
 			"width": 120
 		},
 		{
-			"label": _("Housing Allowance"),
+			"label": _("Allowance Housing"),
 			"fieldname": "housing_allowance",
 			"fieldtype": "Data",
 			"width": 120
@@ -1582,4 +1658,81 @@ def get_columns_alrajhi_payroll_card():
 			"width": 120
 		},
 	]
+
+def get_columns_alaraby():
+		return [
+				{
+					"label": _(""),
+					"fieldname": "d",
+					"fieldtype": "Data",
+					"width": 50,
+				},
+
+				{
+					"label": _("Total Salary"),
+					"fieldname": "month_to_date",
+					"fieldtype": "Data",
+					"width": 100
+				},
+				{
+					"label": _("Bank Account Number"),
+					"fieldname": "bank_ac_no",
+					"fieldtype": "Data",
+					"width": 150
+				},
+				{
+					"label": _("Employee Name"),
+					"fieldname": "first_name",
+					"fieldtype": "Data",
+					"width": 150
+				},
+				{
+					"label": _("Swift Number"),
+					"fieldname": "swift_number",
+					"fieldtype": "Data",
+					"width": 150
+				},
+				{
+					"label": _("Salary Month"),
+					"fieldname": "month",
+					"fieldtype": "Data",
+					"width": 100
+				},
+				{
+					"label": _("Basic"),
+					"fieldname": "basic",
+					"fieldtype": "Data",
+					"width": 100
+				},
+				{
+					"label": _("Allowance Housing"),
+					"fieldname": "housing_allowance",
+					"fieldtype": "Data",
+					"width": 100
+				},
+				{
+					"label": _("Other Earnings"),
+					"fieldname": "other_earnings",
+					"fieldtype": "Data",
+					"width": 100
+				},
+				{
+					"label": _("Dedactions"),
+					"fieldname": "dedactions",
+					"fieldtype": "Data",
+					"width": 100
+				},
+				{
+					"label": _("Identity"),
+					"fieldname": "id_number",
+					"fieldtype": "Data",
+					"width": 150
+				},
+				{
+					"label": _("Salaries Month"),
+					"fieldname": "co_number",
+					"fieldtype": "Data",
+					"width": 150
+				}
+			]
 
