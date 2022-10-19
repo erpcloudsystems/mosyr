@@ -398,6 +398,7 @@ def get_user_types_data():
 				"Educational Qualification": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				"Personal Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				"Employee ID": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Lateness Permission": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 			},
 		}
 	}

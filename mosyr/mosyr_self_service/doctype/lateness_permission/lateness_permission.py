@@ -28,16 +28,21 @@ class LatenessPermission(Document):
             sr.from_date = self.from_date
             sr.to_date = self.to_date
             sr.status = "Approved"
+            sr.lateness_permission = self.name
             sr.flags.ignore_mandatory = True
             sr.save()
             sr.submit()
+
     def on_cancel(self):
-        pass
+        shift_request_list = frappe.get_list("Shift Request", {"lateness_permission": self.name})
+        if shift_request_list:
+            for shift in shift_request_list:
+                shift_request_doc = frappe.get_doc("Shift Request", shift["name"])
+                shift_request_doc.cancel()
 
     def validate_dates(self):
         if self.from_date and self.to_date and (getdate(self.to_date) < getdate(self.from_date)):
             frappe.throw(_("To date cannot be before from date"))
-
 
     def validate_overlap_dates(self):
         if not self.name:
