@@ -30,7 +30,7 @@ def execute(filters=None):
 			return get_columns_alrajhi_interchange(),get_data_alrajhi_interchange(filters)
 		elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll Cards':
 			return get_columns_alrajhi_payroll_card(),get_data_alrajhi_payroll_card(filters)
-		elif bank_name == "NCBK" and disbursement_type == 'WPS':
+		elif bank_name == "ARNB" and disbursement_type == 'WPS':
 			return get_columns_alaraby(),get_data_alaraby(filters)
 		else :
 			return [] , []
@@ -771,8 +771,9 @@ def get_data_alaraby(filters):
 		
 		""",as_dict=1)
 	for d in data:
-		other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
-		d.update({"other_earnings":other_earnings})
+		if d.get("gross_pay") and d.get("basic") and d.get("housing_allowance"):
+			other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
+			d.update({"other_earnings":other_earnings})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
 	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
