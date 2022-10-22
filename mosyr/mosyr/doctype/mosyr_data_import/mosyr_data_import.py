@@ -1155,7 +1155,6 @@ class MosyrDataImport(Document):
             attached_documents = d.get('attached_documents', [])
             if isinstance(attached_documents, list):
                 for ad in attached_documents:
-                    print(ad)
                     file_name = ad.split('/')[-1]
                     source_path = '/'.join(ad.split('/')[:-1])
                     source_path = f'{source_path}/'

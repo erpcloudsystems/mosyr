@@ -90,16 +90,26 @@ after_install = "mosyr.install.after_install"
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Loan": "mosyr.overrides.CustomLoan",
-	"Loan Type": "mosyr.overrides.CustomLoanType",
-	"Loan Write Off": "mosyr.overrides.CustomLoanWriteOff",
-
-	"Employee Advance": "mosyr.overrides.CustomEmployeeAdvance",
+	"Company": "mosyr.overrides.CustomCompany",
+	"Employee": "mosyr.overrides.CustomEmployee",
+	"Department": "mosyr.overrides.CustomDepartment",
+	"TravelRequest": "mosyr.overrides.CustomTravelRequest",
 	"Expense Claim": "mosyr.overrides.CustomExpenseClaim",
-
+	"Employee Advance": "mosyr.overrides.CustomEmployeeAdvance",
+	"Expense Claim Type": "mosyr.overrides.CustomExpenseClaimType",
+	"Mode of Payment": "mosyr.overrides.CustomModeofPayment",
+	"Loan Type": "mosyr.overrides.CustomLoanType",
+	
+	"Loan": "mosyr.overrides.CustomLoan",
+	"Loan Disbursement": "mosyr.overrides.CustomLoanDisbursement",
+	"Loan Repayment": "mosyr.overrides.CustomLoanRepayment",
+	"Loan Write Off": "mosyr.overrides.CustomLoanWriteOff",
+	
+	"Salary Component": "mosyr.overrides.CustomSalaryComponent",
 	"Salary Structure": "mosyr.overrides.CustomSalaryStructure",
-
-	"Company": "mosyr.overrides.CustomCompany"
+	"Salary Structure Assignment": "mosyr.overrides.CustomSalaryStructureAssignment",
+	"Salary Slip": "mosyr.overrides.CustomSalarySlip",
+	"Payroll Entry": "mosyr.overrides.CustomPayrollEntry",
 }
 
 # Document Events
@@ -107,12 +117,6 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
-	"Mode of Payment": {
-		"validate": "mosyr.api.setup_mode_accounts"
-	},
-	"Salary Component": {
-		"validate": "mosyr.api.setup_components_accounts"
-	},
 	"Employee": {
 		"validate": [
 			"mosyr.api.validate_social_insurance",
@@ -299,45 +303,10 @@ fixtures = [
 					"Employee-last_name-hidden",
 					"Employee-middle_name-hidden",
 					"Employee-first_name-label",
-					# "Salary Component-section_break_5-hidden",
-					# "Salary Structure-account-hidden",
 					"Employee-erpnext_user-label",
-					"Department-payroll_cost_center-hidden",
-					"Employee-payroll_cost_center-hidden",
 					"Employee-company-in_standard_filter",
-
-					"Company-sales_settings-hidden",
-					"Company-default_settings-hidden",
-					"Company-fixed_asset_defaults-hidden",
-					"Company-default_finance_book-hidden",
-					"Company-default_selling_terms-hidden",
-					"Company-default_buying_terms-hidden",
-					"Company-default_warehouse_for_sales_return-hidden",
-					"Company-create_chart_of_accounts_based_on-default",
-					"Company-chart_of_accounts-hidden",
-					"Company-section_break_22-hidden",
-					"Company-budget_detail-hidden",
-					"Company-default_in_transit_warehouse-hidden",
-					"Company-create_chart_of_accounts_based_on-hidden",
-					"Company-default_inventory_account-hidden",
-					"Company-stock_adjustment_account-hidden",
-					"Company-stock_received_but_not_billed-hidden",
-					"Company-default_provisional_account-hidden",
-					"Company-expenses_included_in_valuation-hidden",
-
 					"Employee-gender-hidden",
-					"Employee-gender-default",
-					"Expense Claim-sb1-hidden",
-					"Salary Slip-deduct_tax_for_unsubmitted_tax_exemption_proof-hidden",
-					"Salary Slip-deduct_tax_for_unclaimed_employee_benefits-hidden",
-					"Payroll Entry-deduct_tax_for_unsubmitted_tax_exemption_proof-hidden",
-					"Payroll Entry-deduct_tax_for_unclaimed_employee_benefits-hidden",
-					"Salary Structure Assignment-income_tax_slab-hidden",
-					
-					"Salary Detail-is_tax_applicable-hidden",
-					"Salary Detail-is_flexible_benefit-hidden",
-					"Salary Detail-deduct_full_tax_on_selected_payroll_date-hidden",
-					"Salary Detail-exempted_from_income_tax-hidden"
+					"Employee-gender-default"
 				]]
 			]
 	},
