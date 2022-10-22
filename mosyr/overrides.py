@@ -70,6 +70,25 @@ class CustomCompany(Company, NestedSet):
             rebuild_tree("Company", "parent_company")
 
         frappe.clear_cache()
+    def after_insert(self):
+        super().after_insert()
+        self.update_custom_linked_accounts()
+
+    def update_custom_linked_accounts(self):
+        # Setup For mode of payments
+        for mop in frappe.get_list("Mode of Payment"):
+            mop = frappe.get_doc("Mode of Payment", mop.name)
+            mop.save()
+
+        # Setup For salayr components
+        for sc in frappe.get_list("Salary Component"):
+            sc = frappe.get_doc("Salary Component", sc.name)
+            sc.save()
+        
+        # Setup For salayr components
+        for ect in frappe.get_list("Expense Claim Type"):
+            ect = frappe.get_doc("Expense Claim Type", ect.name)
+            ect.save()
     
     def create_default_departments(self):
         records = [
