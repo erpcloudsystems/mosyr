@@ -105,7 +105,6 @@ def get_data_inma_payroll(filters):
 	return data
 
 def get_data_inma_wps(filters):
-	print(filters,'cccccccccccccccccccccccccccccccccccccccccccc')
 	condition='1=1 '
 	if filters.get("month"):
 		monthes = ['January',
