@@ -1,2 +1,2 @@
-mosyr.patches.setup_system_accounts
 mosyr.patches.delete_citizen_field
+mosyr.patches.update_accounts_props
