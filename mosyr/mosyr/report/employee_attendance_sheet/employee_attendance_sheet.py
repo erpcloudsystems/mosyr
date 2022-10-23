@@ -1,8 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
-
-
-from calendar import monthrange
+# Copyright (c) 2022, AnvilERP and contributors
+# For license information, please see license.txt
 
 import frappe
 from frappe import _, msgprint
@@ -38,7 +35,7 @@ def execute(filters=None):
 		return columns, [], None, None
 
 	if filters.group_by:
-		emp_map, group_by_parameters = get_employee_details(filters.group_by, filters.company)
+		emp_map, group_by_parameters = get_employee_details(filters.group_by, filters.company, filters.branch, filters.department)
 		holiday_list = []
 		for parameter in group_by_parameters:
 			h_list = [
@@ -48,7 +45,7 @@ def execute(filters=None):
 			]
 			holiday_list += h_list
 	else:
-		emp_map = get_employee_details(filters.group_by, filters.company)
+		emp_map = get_employee_details(filters.group_by, filters.company, filters.branch, filters.department)
 		holiday_list = [emp_map[d]["holiday_list"] for d in emp_map if emp_map[d]["holiday_list"]]
 
 	default_holiday_list = frappe.get_cached_value(
@@ -148,9 +145,10 @@ def add_data(
 		if not emp_det or emp not in att_map:
 			continue
 		row = []
+		print(emp_det)
 		if filters.group_by:
 			row += [" "]
-		row += [emp, emp_det.employee_name]
+		row += [emp, emp_det.employee_name, emp_det.department, emp_det.branch]
 		total_p = total_a = total_l = total_h = total_um = 0.0
 		emp_status_map = []
 		date_list = pandas.date_range(filters.get("from"),filters.get("to"))
@@ -232,6 +230,7 @@ def get_columns(filters):
 	if filters.group_by:
 		columns = [_(filters.group_by) + ":Link/Branch:120"]
 	columns += [_("Employee") + ":Link/Employee:108", _("Employee Name") + ":Data/:150"]
+	columns += [_("Department") + ":Link/Department:108", _("Branch") + ":Link/Branch:108"]
 	days = []
 	from_date = filters.get("from")
 	to_date = filters.get("to")
@@ -294,13 +293,25 @@ def days_between(d1, d2):
 			return abs((d2 - d1).days)
 		
 
-def get_employee_details(group_by, company):
+def get_employee_details(group_by, company, branch=None, department=None):
 	emp_map = {}
+	conds = []
+	if branch:
+		conds.append(" branch='{}' ".format(branch))
+	if department:
+		conds.append(" department='{}' ".format(department))
+	if len(conds) > 0:
+		conds = " AND ".join(conds)
+		conds = " AND {}".format(conds)
+	else:
+		conds = ""
+
 	query = """select name, employee_name, designation, department, branch, company,
 		holiday_list from `tabEmployee` where company = %s """ % frappe.db.escape(
 		company
 	)
 
+	query = f" {query} {conds} "
 	if group_by:
 		group_by = group_by.lower()
 		query += " order by " + group_by + " ASC"
