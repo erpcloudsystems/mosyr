@@ -1,2 +1,3 @@
 mosyr.patches.delete_citizen_field
 mosyr.patches.update_accounts_props
+mosyr.patches.delete_attendance_report
