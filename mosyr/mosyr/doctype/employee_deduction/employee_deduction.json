@@ -7,7 +7,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "status",
   "employee_section",
   "employee",
   "column_break_2",
@@ -151,21 +150,12 @@
    "options": "Employee Deduction",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "default": "Not Applied",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Status",
-   "options": "Not Applied\nApplied In System",
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-22 17:54:27.300653",
+ "modified": "2022-10-23 04:53:35.867088",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Deduction",

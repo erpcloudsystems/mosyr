@@ -11,7 +11,6 @@
   "employee",
   "column_break_3",
   "employee_name",
-  "status",
   "amount_details_section",
   "addition_type",
   "column_break_7",
@@ -71,6 +70,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "Format: YYYY-MM ( 2022-01 )\n",
    "fieldname": "payroll_month",
    "fieldtype": "Data",
    "label": "Payroll Month",
@@ -122,15 +122,6 @@
    "label": "Apply At"
   },
   {
-   "default": "Not Applied",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Status",
-   "options": "Not Applied\nApplied In System",
-   "read_only": 1
-  },
-  {
    "fetch_from": "employee.first_name",
    "fieldname": "employee_name",
    "fieldtype": "Read Only",
@@ -142,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-22 16:34:47.734020",
+ "modified": "2022-10-23 04:30:00.159399",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Benefit",
