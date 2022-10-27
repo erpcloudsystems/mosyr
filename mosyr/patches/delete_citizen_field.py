@@ -1,6 +1,3 @@
-import fractions
-
-
 import frappe
 
 def execute():

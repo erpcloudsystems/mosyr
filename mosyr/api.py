@@ -133,80 +133,6 @@ def convert_date(gregorian_date=None, hijri_date=None):
         gregorian = Hijri(hy, hm, hd ).to_gregorian()
         return str(gregorian)
 
-def setup_mode_accounts(doc, method):
-    from mosyr.install import create_account
-    companies = frappe.get_list('Company', fields=['name', 'default_currency', 'default_bank_account', 'default_cash_account'])
-    doc.accounts = []
-    
-    account_name = "Bank Account"
-    account_type = "Bank"
-    parent_account = "Bank Accounts"
-    
-    if f"{doc.name}".lower == "Salary Payment".lower():
-        account_name = "Salary"
-        account_type = "Indirect Expenses"
-        parent_account = "Accounts Payable"
-
-    for company in companies:
-        if doc.type == "Bank":
-            if company.default_bank_account:
-                doc.append('accounts', {
-                    'company': company.name,
-                    'default_account': company.default_bank_account,
-                })
-            else:
-                new_account = create_account(**{
-                    "account_name": account_name,
-                    "account_type": account_type,
-                    "parent_account": parent_account,
-                    "root_type": "Asset",
-                    "company": company.name,
-                    "account_currency": company.default_currency
-                })
-                if new_account:
-                    doc.append('accounts', {
-                        'company': company.name,
-                        'default_account': new_account
-                    })
-        else:
-            if company.default_cash_account:
-                doc.append('accounts', {
-                    'company': company.name,
-                    'default_account': company.default_cash_account,
-                })
-            else:
-                new_account = create_account(**{
-                    "account_name": "Cash",
-                    "account_type": "Cash",
-                    "parent_account": "Cash In Hand",
-                    "root_type": "Asset",
-                    "company": company.name,
-                    "account_currency": company.default_currency
-                })
-                if new_account:
-                    doc.append('accounts', {
-                        'company': company.name,
-                        'default_account': new_account,
-                    })
-
-def setup_components_accounts(doc, method):
-    from mosyr.install import create_account
-    companies = frappe.get_list('Company', fields=['name', 'default_currency', 'default_payroll_payable_account'])
-    doc.accounts = []
-    for company in companies:
-        new_account = create_account(**{
-                "account_name": "Salary",
-                "parent_account": "Indirect Expenses",
-                "root_type": "Expense",
-                "company": company.name,
-                "account_currency": company.default_currency
-            })
-        if new_account:
-            doc.append('accounts', {
-                'company': company.name,
-                'account': new_account,
-            })
-
 def validate_social_insurance(doc, method):
     comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
     social_type = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
@@ -261,7 +187,6 @@ def notify_expired_dates(doc, method):
 def check_other_annual_leaves(doc, method):
     if cint(doc.is_annual_leave) == 1 and cint(doc.allow_encashment) == 1:
         leaves = frappe.get_list("Leave Type", filters={"is_annual_leave": 1, "allow_encashment": 1})
-        print(leaves)
         #frappe.db.sql("""SELECT name FROM `tabLeave Type` WHERE is_annual_leave=1 AND allow_encashment=1""")
         if len(leaves) >= 1:
             msg_str = ""

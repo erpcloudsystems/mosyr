@@ -1,7 +1,7 @@
 {
  "add_total_row": 0,
  "columns": [],
- "creation": "2022-10-19 02:34:57.613730",
+ "creation": "2022-10-23 15:09:19.289132",
  "disable_prepared_report": 0,
  "disabled": 0,
  "docstatus": 0,
@@ -9,14 +9,14 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2022-10-19 02:34:57.613730",
+ "modified": "2022-10-23 15:09:19.289132",
  "modified_by": "Administrator",
  "module": "Mosyr",
- "name": "Attendance",
+ "name": "Employee Attendance Sheet",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "Attendance",
- "report_name": "Attendance",
+ "report_name": "Employee Attendance Sheet",
  "report_type": "Script Report",
  "roles": [
   {
