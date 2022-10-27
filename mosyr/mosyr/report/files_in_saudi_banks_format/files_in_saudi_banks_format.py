@@ -5,8 +5,93 @@ import frappe
 from frappe import _
 from random import randint
 import datetime
+from six import iteritems, string_types
+import json
+from frappe.desk.query_report import run,get_columns_dict,handle_duration_fieldtype_values,build_xlsx_data
+from frappe.utils import cstr
+from io import StringIO
+from frappe.utils import flt
+@frappe.whitelist()
+def export_query():
+	"""export from query reports"""
+	data = frappe._dict(frappe.local.form_dict)
+	data.pop("cmd", None)
+	data.pop("csrf_token", None)
+
+	if isinstance(data.get("filters"), string_types):
+		filters = json.loads(data["filters"])
+	if data.get("report_name"):
+		report_name = data["report_name"]
+		frappe.permissions.can_export(
+			frappe.get_cached_value("Report", report_name, "ref_doctype"),
+			raise_exception=True,
+		)
+	
+	file_format_type = data.get("file_format_type")
+	custom_columns = frappe.parse_json(data.get("custom_columns", "[]"))
+	include_indentation = data.get("include_indentation")
+	visible_idx = data.get("visible_idx")
+
+	if isinstance(visible_idx, string_types):
+		visible_idx = json.loads(visible_idx)
+
+	if file_format_type == "Excel":
+		data = run(report_name, filters, custom_columns=custom_columns)
+		data = frappe._dict(data)
+		if not data.columns:
+			frappe.respond_as_web_page(
+				_("No data to export"),
+				_("You can try changing the filters of your report."),
+			)
+			return
+		columns = get_columns_dict(data.columns)
+		from frappe.utils.xlsxutils import make_xlsx
+		data["result"] = handle_duration_fieldtype_values(data.get("result"), data.get("columns"))
+		xlsx_data, column_widths = build_xlsx_data(columns, data, visible_idx, include_indentation)
+		xlsx_data.pop(0)
+		xlsx_file = make_xlsx(xlsx_data, "Query Report", column_widths=column_widths)
+		bank = get_bank()[0]
+		frappe.response["filename"] = bank + ".xlsx"
+		frappe.response["filecontent"] = xlsx_file.getvalue()
+		frappe.response["type"] = "binary"
 
 
+	elif file_format_type == "Txt":
+		data = run(report_name, filters, custom_columns=custom_columns)
+		data = frappe._dict(data)
+		if not data.columns:
+			frappe.respond_as_web_page(
+				_("No data to export"),
+				_("You can try changing the filters of your report."),
+			)
+			return
+		columns = get_columns_dict(data.columns)
+		frappe.response["filename"] = report_name + ".txt"
+		import csv
+		from frappe.utils.xlsxutils import handle_html
+		f = StringIO()
+		writer = csv.writer(f)
+		q=[]
+		for n in data["result"]:
+			if n.get('gross_pay'):
+				del n['gross_pay']
+			q.append(n.values())
+		for r in q:
+			# encode only unicode type strings and not int, floats etc.
+			writer.writerow([handle_html(frappe.as_unicode(v)) if isinstance(v, str) else v for v in r])
+		f.seek(0)
+		res = cstr(f.read())
+		frappe.response["result"] =  res.replace(",",'')
+		frappe.response["type"] = "txt"
+		bank = get_bank()[0]
+		frappe.response["doctype"] = bank
+@frappe.whitelist()
+def get_bank():
+	company = frappe.get_doc("Global Defaults").default_company
+	bank_name = frappe.get_doc("Company Controller" , company).bank_name
+	disbursement_type = frappe.get_doc("Company Controller" , company).disbursement_type
+	return bank_name ,disbursement_type
+	
 def execute(filters=None):
 	if not filters.get('company'): return [], []
 	co_controller = frappe.get_list("Company Controller")
@@ -20,7 +105,7 @@ def execute(filters=None):
 			return get_columns_inma_wps(),get_data_inma_wps(filters)
 		elif bank_name == "Riyadh Bank" and disbursement_type == 'WPS':
 			return get_columns_riad(),get_data_riad(filters)
-		elif bank_name == "The National Commercial Bank" and disbursement_type == 'WPS':
+		elif bank_name == "The National Commercial Bank" and (disbursement_type == 'Payroll' or disbursement_type == 'WPS'):
 			return get_columns_ahly(),get_data_ahly(filters)
 		elif bank_name == "Samba Financial Group" and disbursement_type == 'WPS':
 			return get_columns_sumba(),get_data_sumba(filters)
@@ -30,7 +115,7 @@ def execute(filters=None):
 			return get_columns_alrajhi_interchange(),get_data_alrajhi_interchange(filters)
 		elif bank_name == "Al Rajhi Bank" and disbursement_type == 'Payroll Cards':
 			return get_columns_alrajhi_payroll_card(),get_data_alrajhi_payroll_card(filters)
-		elif bank_name == "ARNB" and disbursement_type == 'WPS':
+		elif bank_name == "Al Araby Bank" and disbursement_type == 'WPS':
 			return get_columns_alaraby(),get_data_alaraby(filters)
 		else :
 			return [] , []
@@ -40,24 +125,14 @@ def execute(filters=None):
 def get_data_inma_payroll(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January','February','March','April','May','June','July','August','September','October','November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
 		SELECT
 			1 as one1,
@@ -66,71 +141,57 @@ def get_data_inma_payroll(filters):
 			ROW_NUMBER() OVER (ORDER BY emp.first_name)  row_num ,
 			emp.first_name as name,
 			emp.bank_ac_no,
-			'yes' as yes,
+			'Yes' as yes,
 			b.swift_number,
 			'SA' as sa,
 			sl.month_to_date,
 			'SAR' as sar,
 			1 as one2,
 			'/PAYROLL/' as payrol,
-			IF(b.swift_number="INMA", 'BANK ACCOUNT', "SARIE") as inma,
+			IF(emp.bank_name="Al Inma Bank", 'BANK ACCOUNT', "SARIE") as inma,
 			id.id_number as id_number
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		WHERE {condition}
-		GROUP BY emp.first_name
+		WHERE emp.status ='Active' and  {condition}
 		ORDER BY row_num
 		""",as_dict=1)
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
 	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
-	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
 	salary=[]
-	for ssl in salary_slip_list :
-		salary.append(ssl.month_to_date)
-	total_salary=sum(salary)
-	
+	for d in data:
+		salary.append(d.get("month_to_date"))
+	total_salary = sum(salary)
+	if not data: return []
 	data.insert(0,
 		{'one1': 0,
 		'row_num': company_controller.company_id,
 		'emp_num': company_controller.bank_account_number,
-		'name':company_controller.bank_name,
+		'name':company_controller.english_name_in_bank,
 		'bank_ac_no':salary_slip.posting_date.strftime("%Y%m%d"),
 		'yes':salary_slip.posting_date.strftime("%Y%m%d"),
 		'swift_number':'',
-		'sa':total_emp,
+		'sa':len(data),
 		'month_to_date':total_salary,
 		'sar':'SAR',
-
 		})
-
 	return data
 
 def get_data_inma_wps(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January','February','March','April','May','June','July','August','September','October','November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
-
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
 		SELECT
 			1 as one1,
@@ -143,47 +204,48 @@ def get_data_inma_wps(filters):
 			b.swift_number,
 			'SA' as sa,
 			sl.month_to_date,
+			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
 			'SAR' as sar,
 			1 as one2,
 			'/PAYROLL/' as payrol,
-			IF(b.swift_number="INMA", 'BANK ACCOUNT', "SARIE") as inma,
+			IF(emp.bank_name="Al Inma Bank", 'BANK ACCOUNT', "SARIE") as inma,
 			id.id_number as id_number,
-			sd.amount as basic,
-			sde.amount as housing_allowance,
-			SUM(sade.amount) as other_earnings,
+			IF(sd.amount , sd.amount,0) as basic,
+			IF(sde.amount , sde.amount,0) as housing_allowance,
+			IF(sade.amount , sade.amount,0) as allowance_trans,
 			sl.total_deduction as dedactions
-
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted'
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
-		WHERE {condition}
-		GROUP BY emp.first_name
+		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component="Allowance Trans"
+		WHERE emp.status ='Active' and {condition}
+		ORDER BY row_num
 		""",as_dict=1)
-		
+	# for d in data:
+	# 	other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
+	# 	d.update({"other_earnings":other_earnings})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	bank = filters.get('bank') 
 	company_controller = frappe.get_doc("Company Controller" ,company)
-	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
-	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	salary=[]
-	for ssl in salary_slip_list :
-		salary.append(ssl.month_to_date)
-	total_salary=sum(salary)
-
+	for d in data:
+		salary.append(d.get("month_to_date"))
+	total_salary = sum(salary)
+	if not data: return []
 	data.insert(0,
 		{'one1': "WPS",
 		'row_num': company_controller.company_id,
 		'emp_num': company_controller.bank_account_number,
-		'name':company_controller.bank_name,
+		'name':company_controller.english_name_in_bank,
 		'bank_ac_no':salary_slip.posting_date.strftime("%Y%m%d"),
 		'yes':salary_slip.posting_date.strftime("%Y%m%d"),
 		'swift_number':'',
-		'sa':total_emp,
+		'sa':len(data),
 		'month_to_date':total_salary,
 		'sar':'SAR',
 		'one2': company_controller.labors_office_file_no
@@ -193,24 +255,14 @@ def get_data_inma_wps(filters):
 def get_data_riad(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January','February','March','April','May','June','July','August','September','October','November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	agreement_symbol = frappe.get_value("Company Controller" , company , 'agreement_symbol') or '0'
 	num = ""
@@ -227,98 +279,115 @@ def get_data_riad(filters):
 			CASE WHEN id.id_number <> '' THEN LPAD(id.id_number,10,0)
 			ELSE '0000000000'
 			END AS id_number_riad ,
+			' ' as spaces13,
 			LPAD(emp.bank_ac_no, 24, 0) as bank_acc_riad,
+			' ' as sar_header,
 			LPAD(FORMAT(sl.month_to_date,2), 16, 0 ) as salary,
 			'SAR' as sar,
-			LPAD(emp.first_name,50,' ') as emp_name,
-			RPAD(b.swift_number,11, 'X') as emp_bank,
-			LPAD(FORMAT(sd.amount,2),13,0) as basic,
-			LPAD(FORMAT(sde.amount,2),13,0) as housing_allowance,
-			LPAD(FORMAT(SUM(sade.amount) ,2) ,13 ,0) as other_earnings,
-			LPAD(FORMAT(sl.total_deduction,2),13 ,0) as dedactions
+			' ' as spaces239,
+			' ' as spaces90,
+			RPAD(emp.first_name,50,' ') as emp_name,
+			RPAD(b.swift_number,11, ' ') as emp_bank,
+			' ' as spaces129,
+			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
+			LPAD(FORMAT(sd.amount,2),14,0) as basic,
+			LPAD(FORMAT(sde.amount,2),14,0) as housing_allowance,
+			LPAD(FORMAT('0' ,2) ,14 ,0) as other_earnings,
+			LPAD(FORMAT(sl.total_deduction,2),14 ,0) as dedactions,
+			' ' as spaces33
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		LEFT JOIN `tabCompany Controller` cc ON cc.bank_name=b.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
-		WHERE {condition}
-		GROUP BY emp.first_name,emp_num
+		WHERE emp.status ='Active' and {condition}
 		ORDER BY row_num_riad
 		""",as_dict=1)
+	for d in data:
+		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
+		d.update({"other_earnings":(str(other_earnings).zfill(13))})
+	if not data: return []
+	if not data[0].get("emp_name"): return []
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
+	salary=[]
+	for d in data:
+		salary.append(flt(d.get("salary")))
+	total_salary = sum(salary)
 	for d in data :
-		
+		d.update({'spaces13':' ' * 13})
+		d.update({'sar_header':' ' * 10})
+		d.update({'spaces239':' ' * 239})
+		d.update({'spaces90':' ' * 90})
+		d.update({'spaces129':' ' * 129})
+		d.update({'spaces33':' ' * 33})
 		if d.get('salary', False):
-			sl_total = d.get('salary').replace(',','').replace('.','')
+			sl_total = d.get('salary').replace(',','')
 			d.update({'salary':sl_total})
 		if d.get('basic', False):
-			sl_basic =  d.get('basic').replace(',','').replace('.','')
+			sl_basic =  d.get('basic').replace(',','')
 			d.update({'basic':sl_basic})
 		if d.get('housing_allowance', False):
-			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
+			sl_housing_allowance =  d.get('housing_allowance').replace(',','')
 			d.update({'housing_allowance':sl_housing_allowance})
-		if d.get('other_earnings', False):
-			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
+		if d.get('other_earnings' ,0):
+			sl_other_earnings =  str(d.get('other_earnings')).replace(',','')
 			d.update({'other_earnings':sl_other_earnings})
 		if d.get('dedactions', False):
-			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
+			sl_dedactions =  d.get('dedactions').replace(',','')
 			d.update({'dedactions':sl_dedactions})
 
 	company_controller = frappe.get_doc("Company Controller" ,company)
-	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
-	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
-	salary=[]
-	for ssl in salary_slip_list :
-		salary.append(ssl.month_to_date)
-	total_salary=sum(salary)
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 
+	if company_controller.labors_office_file_no:
+		labors_office_file_no = (company_controller.labors_office_file_no).zfill(9)
+	else :
+		labors_office_file_no = 000000000
+	data.append(
+		{
+			'riad_num':999,
+			'emp_num':(str("%.2f" % total_salary).zfill(18)),
+			'y':(str(len(data)).zfill(6))
+		}
+	)
+	if company_controller.establishment_number:
+		establishment_number = (str(company_controller.establishment_number).zfill(9))
+	else :
+		establishment_number = (str('').zfill(9))
+	if company_controller.bank_account_number:
+		bank_account_number = (str(company_controller.bank_account_number).zfill(13))
+	else :
+		bank_account_number = (str('').zfill(13))
 	data.insert(0,
 		{
 		'riad_num':  111,
 		'emp_num' : company_controller.agreement_symbol,
 		'y':salary_slip.posting_date.strftime("%Y%m%d"),
 		'agreament_s':'PAYROLLREF-PR-0001- '+ str(randint(100, 10000000000000000)),
-		'row_num_riad' :(str(company_controller.establishment_number).zfill(9)),
+		'row_num_riad' :establishment_number,
 		'id_number_riad':"RIBL",
-		'bank_account_number' : (str(company_controller.bank_account_number).zfill(13)),
-		'bank_acc_riad':' ' # 11 spaces
+		'bank_account_number' : bank_account_number,
+		'bank_acc_riad':' ' * 11 # 11 spaces
 		,'sar_header' : 'SAR',
-		'salary':company_controller.labors_office_file_no.zfill(9),
-		'sar':' ' # 9 spaces
+		'salary':company_controller.company_id,
+		'sar':' ' * 9  # 9 spaces
 		})
-	data.append(
-		{
-			'riad_num':999,
-			'emp_num':(str("%.2f" % total_salary).zfill(18)),
-			'y':(str(total_emp).zfill(6))
-		}
-	)
+
 	return data
 
 def get_data_ahly(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January','February','March','April','May','June','July','August','September','October','November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
 		SELECT
 			b.swift_number as emp_bank_ahly,
@@ -332,32 +401,21 @@ def get_data_ahly(filters):
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		WHERE {condition}
-		GROUP BY emp.first_name ,bank_acc_ahly
+		WHERE emp.status ='Active' and {condition}
 		""",as_dict=1)
 	return data
 
 def get_data_sumba(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January','February','March','April','May','June','July','August','September','October','November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
 
@@ -431,9 +489,11 @@ def get_data_sumba(filters):
 			ELSE '0000000000'
 			END AS id_number,
 			LPAD(emp.departement_location, 20 ,' ') as departement_location,
+			' ' as spaces19,
+			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
 			LPAD(FORMAT(sd.amount,2), 13 , 0) as basic,
-			LPAD(FORMAT(sde.amount ,2) , 13 , 0) as housing_allowance,
-			LPAD(FORMAT(SUM(sade.amount),2) , 13 , 0) as other_earnings,
+			LPAD(FORMAT(sde.amount ,2) , 12 , 0) as housing_allowance,
+			LPAD(FORMAT('0' ,2) , 12 , 0) as other_earnings,
 			LPAD(FORMAT(sl.total_deduction,2), 13 , 0)  as dedactions
 		FROM `tabEmployee` emp
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
@@ -442,10 +502,15 @@ def get_data_sumba(filters):
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
-		WHERE {condition}
+		WHERE emp.status ='Active' and  {condition}
 		GROUP BY emp.name
 		""",as_dict=1)
 	for d in data :
+		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
+		d.update({"other_earnings":(str(other_earnings).zfill(12))})
+		sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
+		d.update({'other_earnings':sl_other_earnings})
+		d.update({'spaces19':' ' * 19})
 		if d.get('salary', False):
 			salary = d.get('salary').replace(',','').split('.')[0][1:]
 		else :salary = d.get('salary').split('.')[0][1:]
@@ -460,41 +525,41 @@ def get_data_sumba(filters):
 		if d.get('housing_allowance', False):
 			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
 			d.update({'housing_allowance':sl_housing_allowance})
-		if d.get('other_earnings', False):
-			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
-			d.update({'other_earnings':sl_other_earnings})
 		if d.get('dedactions', False):
 			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
-	
-	
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
-	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	salary=[]
-	for ssl in salary_slip_list :
-		salary.append(ssl.month_to_date)
-	total_salary=sum(salary)
+	for d in data:
+		salary.append(flt(d.get("month_to_date")))
+	total_salary = sum(salary)
+	if company_controller.organization_english:
+		organization_english = company_controller.organization_english.ljust(40)
+	else:
+		organization_english = ' ' * 40
+	if not data: return []
 	data.insert(0,
 		{
 		'num': '0011',
 		'emp_num' : str(salary_slip.posting_date.month).zfill(2),
 		'emp_name' : str(salary_slip.posting_date.day).zfill(2),
 		'salary':salary_slip.posting_date.strftime("%Y%m%d"),
-		'checksum':company_controller.organization_english.ljust(40),
+		'checksum':organization_english,
 		'emp_bank' : company_controller.company_id.ljust(152)
 		})
-	if (str("%.2f" % total_salary).zfill(19), False): 
+	if (str("%.2f" % total_salary).zfill(19)): 
 		salary=(str("%.2f" % total_salary).zfill(19)).replace(',','').replace('.','')
 	else:
 		salary=(str("%.2f" % total_salary).zfill(19))
 	data.append(
 		{
 			'num':'003',
-			'emp_num':str(total_emp).zfill(6),
+			'emp_num':str(len(data)).zfill(6),
 			'emp_name':salary,
-			'salary':' ' # 181 spaces
+			'salary':' ' * 181  # 181 spaces
 		}
 	)
 	return data
@@ -509,6 +574,7 @@ def get_data_alrajhi_payroll(filters):
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
 		SELECT
 			LPAD(emp.employee_number,12,0) as emp_num,
@@ -522,8 +588,7 @@ def get_data_alrajhi_payroll(filters):
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		WHERE {condition}
-		GROUP BY emp_num ,bank_acc_no
+		WHERE emp.status ='Active' and {condition}
 		ORDER BY emp_num
 		""",as_dict=1)
 	for d in data :
@@ -532,15 +597,14 @@ def get_data_alrajhi_payroll(filters):
 			d.update({'salary':sl_total})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
-	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
-	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
-	# get total salary
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	salary=[]
-	for ssl in salary_slip_list :
-		salary.append(ssl.month_to_date)
-	total_salary=sum(salary)
-
+	for d in data:
+		salary.append(flt(d.get("salary")))
+	total_salary = sum(salary)
+	cal = ''
 	if company_controller.calendar_accreditation == 'Gregorian': cal = 'G'
 	if company_controller.calendar_accreditation == 'Hijri': cal = 'H'
 
@@ -555,6 +619,11 @@ def get_data_alrajhi_payroll(filters):
 		salary=(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.','')
 	else:
 		salary=(str("%.2f" % total_salary).zfill(16))
+	if not data: return []
+	if company_controller.bank_account_number:
+		bank_account_number = (str(company_controller.bank_account_number).zfill(15))
+	else :
+		bank_account_number = (str('').zfill(15))
 	data.insert(0,
 		{
 		'emp_num': '000000000000',
@@ -562,8 +631,8 @@ def get_data_alrajhi_payroll(filters):
 		'bank_acc_no' : today.strftime("%Y%m%d"),
 		'emp_name': (today + datetime.timedelta(days=1)).strftime("%Y%m%d"),
 		'salary':salary,
-		'id_number' : str(total_emp).zfill(8),
-		"zero":str(company_controller.bank_account_number).zfill(15),
+		'id_number' : str(len(data)).zfill(8),
+		"zero":bank_account_number,
 		"file_seq":"",
 		})
 	return data
@@ -571,59 +640,51 @@ def get_data_alrajhi_payroll(filters):
 def get_data_alrajhi_interchange(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
 		SELECT
 			LPAD(emp.employee_number,12,0) as emp_num,
 			LPAD(b.swift_number,4,' ') as bank_code,
-			RPAD(emp.bank_ac_no,24,'X') as bank_acc_no,
-			LPAD(emp.first_name,50,'x') as emp_name,
+			RPAD(emp.bank_ac_no,24,' ') as bank_acc_no,
+			LPAD(emp.first_name,50,' ') as emp_name,
 			LPAD(FORMAT(sl.month_to_date,2),17,0) as salary,
 			LPAD(id.id_number,15,0) as id_number,
 			'0' as zero,
-			'000' as zero3
+			'000' as zero3,
+			' ' as  i
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		WHERE {condition}
-		GROUP BY emp.name ,emp_num
+		WHERE emp.status ='Active' and  {condition}
 		ORDER BY emp_num
 		""",as_dict=1)
-
 	for d in data :
+		d.update({'i': ' ' * 11 })
 		if  d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
-	salary_slip = frappe.get_last_doc("Salary Slip" ,filters={'docstatus':1,'company':company}) 
-	total_emp = len(frappe.get_list("Employee", filters={'status':'Active',"company": company}))
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
+	# get total salary
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
+	salary=[]
+	for d in data:
+		salary.append(flt(d.get("salary")))
+	total_salary = sum(salary)
+	cal = ''
 	if company_controller.calendar_accreditation == 'Gregorian': cal = 'G' 
 	if company_controller.calendar_accreditation == 'Hijri': cal = 'H' 
-	# get total salary
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
-	salary=[]
-	for ssl in salary_slip_list :
-		salary.append(ssl.month_to_date)
-	total_salary=sum(salary)
+
 	# get hour now
 	date=datetime.datetime.now()
 	if date.hour < 14:
@@ -638,6 +699,11 @@ def get_data_alrajhi_interchange(filters):
 		salary=(str("%.2f" % total_salary).zfill(16)).replace(',','').replace('.','')
 	else:
 		salary=(str("%.2f" % total_salary).zfill(16))
+	if not data: return []
+	if company_controller.bank_account_number:
+		bank_account_number = (str(company_controller.bank_account_number).zfill(15))
+	else :
+		bank_account_number = (' ' *15)
 	data.insert(0,
 		{
 		'emp_num': '000000000000',
@@ -645,9 +711,9 @@ def get_data_alrajhi_interchange(filters):
 		'bank_acc_no' : today.strftime("%Y%m%d"),
 		'emp_name': (today + datetime.timedelta(days=1)).strftime("%Y%m%d"),
 		'salary':salary,
-		'id_number' : str(total_emp).zfill(8),
-		"zero":company_controller.bank_account_number.zfill(15),
-		"zero3":" "*67,
+		'id_number' : str(len(data)).zfill(8),
+		"zero":bank_account_number,
+		"zero3":" " * 67,
 		"i":"I",
 		})
 	return data
@@ -655,143 +721,125 @@ def get_data_alrajhi_interchange(filters):
 def get_data_alrajhi_payroll_card(filters):
 	condition='1=1 '
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
+		monthes = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November','December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	today=datetime.datetime.today().strftime('%Y%m%d')
 	data = frappe.db.sql(f"""
 		SELECT
 			LPAD(emp.employee_number,12,0) as emp_num,
 			'00000' as zero5,
 			LPAD(emp.payroll_card_number,19,0) as payroll_card_number,
-			LPAD(emp.first_name,50,' ') as emp_name,
+			RPAD(emp.first_name,50,' ') as emp_name,
 			CASE WHEN id.id_number <> '' THEN LPAD(id.id_number,10,0)
 			ELSE '0000000000'
-			END AS id_number,
+			END AS id_number_rajhi,
 			LPAD(FORMAT(sl.month_to_date,2), 17, 0 )as salary,
+			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
 			{today} as date,
 			'2' as op_type,
 			'000000' as zero6,
+			' ' as spaces10,
 			CASE WHEN emp.cell_number <> '' THEN LPAD(emp.cell_number,10,0)
 			ELSE '0000000000'
 			END AS phone,
-			LPAD(FORMAT(sd.amount, 2),13,0) as basic ,
-			LPAD(FORMAT(sde.amount, 2),13,0) as housing_allowance,
-			LPAD(FORMAT(SUM(sade.amount), 2),13,0) as other_earnings,
-			LPAD(FORMAT(sl.total_deduction, 2),13,0) as dedactions
+			LPAD(FORMAT(sd.amount, 2),14,0) as basic ,
+			LPAD(FORMAT(sde.amount, 2),14,0) as housing_allowance,
+			LPAD(FORMAT('0' ,2) ,14 ,0) as other_earnings,
+			LPAD(FORMAT(sl.total_deduction, 2),14,0) as dedactions
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
-		WHERE {condition}
-		GROUP BY emp.name
+		WHERE emp.status ='Active' and  {condition}
 		ORDER BY emp_num
 		""",as_dict=1)
-
+	for d in data:
+		d.update({"spaces10": ' ' *10 })
+		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
+		d.update({"other_earnings":(str(other_earnings).zfill(13))})
 	for d in data :
 		if d.get('salary', False):
-			sl_total = d.get('salary').replace(',','').replace('.','')
+			sl_total = d.get('salary').replace(',','')
 			d.update({'salary':sl_total})
 		if d.get('basic', False):
-			sl_basic =  d.get('basic').replace(',','').replace('.','')
+			sl_basic =  d.get('basic').replace(',','')
 			d.update({'basic':sl_basic})
 		if d.get('housing_allowance', False):
-			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
+			sl_housing_allowance =  d.get('housing_allowance').replace(',','')
 			d.update({'housing_allowance':sl_housing_allowance})
 		if d.get('other_earnings', False):
-			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
+			sl_other_earnings =  d.get('other_earnings').replace(',','')
 			d.update({'other_earnings':sl_other_earnings})
 		if d.get('dedactions', False):
-			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
+			sl_dedactions =  d.get('dedactions').replace(',','')
 			d.update({'dedactions':sl_dedactions})
 	return data
 
 def get_data_alaraby(filters):
 	condition='1=1 '
+	monthes = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November','December']
 	if filters.get("month"):
-		monthes = ['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December']
 		date = filters.get("month")
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
-	month = monthes[frappe.utils.get_datetime().month]
-	year = frappe.utils.get_datetime().year
+	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
+	year = filters.get("year")
+	month = monthes[frappe.utils.get_datetime().date().month]
 	data = frappe.db.sql(f"""
 		SELECT
 			'D' as d,
 			sl.month_to_date,
-			sl.gross_pay,
+			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
 			emp.bank_ac_no,
 			emp.first_name,
-			'NCBK' as swift_number,
+			b.swift_number as swift_number,
 			"salaries for {month} {year}" as month,
-			sd.amount as basic,
-			sde.amount  as housing_allowance,
+			IF(sd.amount , sd.amount,0) as basic,
+			IF(sde.amount , sde.amount,0) as housing_allowance,
 			0 as other_earnings,
 			sl.total_deduction as dedactions,
 			id.id_number as id_number,
 			null as co_number
-		FROM `tabEmployee` emp  
+		FROM `tabEmployee` emp
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
+		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and {condition}
-		
 		""",as_dict=1)
 	for d in data:
-		if d.get("gross_pay") and d.get("basic") and d.get("housing_allowance"):
-			other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
-			d.update({"other_earnings":other_earnings})
+		other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
+		d.update({"other_earnings":other_earnings})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
-	salary_slip_list = frappe.get_list("Salary Slip",fields=['month_to_date'],filters={'company':company,'docstatus':1})
 	salary=[]
 	for d in data:
-		salary.append(d.get("month_to_date"))
+		salary.append(flt(d.get("month_to_date")))
 	total_salary=sum(salary)
+	if not data: return []
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	data.insert(0,
 		{'d': 'H',
 		'month_to_date': "ARNB",
 		'bank_ac_no': company_controller.agreement_number_for_customer,
 		'first_name':"N",
-		'swift_number':frappe.utils.get_datetime().date().strftime("%d%m%Y") + ".EX1",
+		'swift_number':salary_slip.posting_date.strftime("%d%m%Y") + ".EX1",
 		'month':company_controller.bank_account_number,
 		'basic':"SAR",
-		'housing_allowance': frappe.utils.get_datetime().date().strftime("%d%m%Y"),
+		'housing_allowance': salary_slip.posting_date.strftime("%d%m%Y"),
 		'other_earnings' :total_salary,
-		'dedactions':frappe.utils.get_datetime().date().strftime("%d%m%Y"),
+		'dedactions':salary_slip.posting_date.strftime("%d%m%Y"),
 		'id_number':company_controller.company_id,
 		'co_number':f"salaries for {month} {year}"
 		})
@@ -800,163 +848,157 @@ def get_data_alaraby(filters):
 def get_columns_inma_payroll():
 		return [
 				{
-					"label": _(""),
+					
 					"fieldname": "one1",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _("Idx"),
+					
 					"fieldname": "row_num",
 					"fieldtype": "Data",
 					"width": 100,
 				},
 				{
-					"label": _("Employee Number"),
+					
 					"fieldname": "emp_num",
 					"fieldtype": "Data",
 					"width": 150
 				},
 				{
-					"label": _("Name"),
+					
 					"fieldname": "name",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Bank Acount Number"),
+					
 					"fieldname": "bank_ac_no",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "yes",
 					"fieldtype": "Data",
 					"width": 100,
 				},
 				{
-					"label": _("Bank Code"),
+					
 					"fieldname": "swift_number",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "sa",
 					"fieldtype": "Data",
 					"width": 50,
 				},
 				{
-					"label": _("Total Salary"),
+					
 					"fieldname": "month_to_date",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "sar",
 					"fieldtype": "Data",
 					"width": 50,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "one2",
 					"fieldtype": "Data",
 					"width": 100,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "payrol",
 					"fieldtype": "Data",
 					"width": 100,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "inma",
 					"fieldtype": "Data",
 					"width": 200,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
+					
 					"fieldname": "",
 					"fieldtype": "Data",
 					"width": 10,
 				},
 				{
-					"label": _(""),
-					"fieldname": "",
-					"fieldtype": "Data",
-					"width": 10,
-				},
-				{
-					"label": _("Id Number"),
+					
 					"fieldname": "id_number",
 					"fieldtype": "Data",
 					"width": 100
@@ -967,199 +1009,193 @@ def get_columns_inma_wps():
 
 	return [
 			{
-				"label": _(""),
+				
 				"fieldname": "one1",
 				"fieldtype": "Data",
 				"width": 100,
 			},
 			{
-				"label": _("Idx"),
+				
 				"fieldname": "row_num",
 				"fieldtype": "Data",
 				"width": 100,
 			},
 			{
-				"label": _("Employee Number"),
+				
 				"fieldname": "emp_num",
 				"fieldtype": "Data",
 				"width": 150
 			},
 			{
-				"label": _("Name"),
+				
 				"fieldname": "name",
 				"fieldtype": "Data",
 				"width": 200
 			},
 			{
-				"label": _("Bank Acount Number"),
+				
 				"fieldname": "bank_ac_no",
 				"fieldtype": "Data",
 				"width": 100
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "yes",
 				"fieldtype": "Data",
 				"width": 100,
 			},
 			{
-				"label": _("Bank Code"),
+				
 				"fieldname": "swift_number",
 				"fieldtype": "Data",
 				"width": 100
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "sa",
 				"fieldtype": "Data",
 				"width": 50,
 			},
 			{
-				"label": _("Total Salary"),
+				
 				"fieldname": "month_to_date",
 				"fieldtype": "",
 				"width": 100
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "sar",
 				"fieldtype": "Data",
 				"width": 50,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "one2",
 				"fieldtype": "Data",
 				"width": 100,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "payrol",
 				"fieldtype": "Data",
 				"width": 100,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "inma",
 				"fieldtype": "Data",
 				"width": 150,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _("Id Number"),
+				
 				"fieldname": "id_number",
 				"fieldtype": "Data",
 				"width": 100
 			},
 			{
-				"label": _(""),
+				
 				"fieldname": "",
 				"fieldtype": "Data",
 				"width": 10,
 			},
 			{
-				"label": _(""),
-				"fieldname": "",
-				"fieldtype": "Data",
-				"width": 10,
-			},
-			{
-				"label": _("Basic"),
+				
 				"fieldname": "basic",
 				"fieldtype": "Data",
 				"width": 100
 			},
 			{
-				"label": _("Allowance Housing"),
+				
 				"fieldname": "housing_allowance",
 				"fieldtype": "Data",
 				"width": 100
 			},
 			{
-				"label": _("Other Earnings"),
-				"fieldname": "other_earnings",
+				
+				"fieldname": "allowance_trans",
 				"fieldtype": "Data",
 				"width": 100
 			},
 			{
-				"label": _("Dedactions"),
+				
 				"fieldname": "dedactions",
 				"fieldtype": "Data",
 				"width": 100
@@ -1169,129 +1205,129 @@ def get_columns_inma_wps():
 def get_columns_riad():
 	return [
 		{
-			"label": _(""),
+			
 			"fieldname": "riad_num",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Employee Number"),
+			
 			"fieldname": "emp_num",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "y",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Agreament Number"),
+			
 			"fieldname": "agreament_s",
 			"fieldtype": "Data",
 			"width": 300,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "row_num_riad",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Identity"),
+			
 			"fieldname": "id_number_riad",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _(""),
-			"fieldname": "bank_account_number", # 13 spaces
+			
+			"fieldname": "spaces13", # 13 spaces
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _("Account Number"),
+			
 			"fieldname": "bank_acc_riad",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _(''),
+			
 			"fieldname": "sar_header", # 10 spaces
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Salary"),
+			
 			"fieldname": "salary",
 			"fieldtype": "Data",
 			# "apply_currency_formatter": 2,
 			"width": 200,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "sar",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _(""),
-			"fieldname": "", # 239 spaces
+			
+			"fieldname": "spaces239", # 239 spaces
 			"fieldtype": "Data",
 			"width": 10,
 		},
 		{
-			"label": _("Employee Name"),
+			
 			"fieldname": "emp_name",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _(""),
-			"fieldname": "", # 90 spaces
+			
+			"fieldname": "spaces90", # 90 spaces
 			"fieldtype": "Data",
 			"width": 10,
 		},
 		{
-			"label": _("Back Code"),
+			
 			"fieldname": "emp_bank",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _(""),
-			"fieldname": "", # 129 spaces
+			
+			"fieldname": "spaces129", # 129 spaces
 			"fieldtype": "Data",
 			"width": 10,
 		},	
 		{
-			"label": _("Basic"),
+			
 			"fieldname": "basic",
 			"fieldtype": "Data",
 			"width": 200
 		},
 		{
-			"label": _("Allowance Housing"),
+			
 			"fieldname": "housing_allowance",
 			"fieldtype": "Data",
 			"width": 200
 		},
 		{
-			"label": _("Other Earnings"),
+			
 			"fieldname": "other_earnings",
 			"fieldtype": "Data",
 			"width": 200
 		},
 		{
-			"label": _("Dedactions"),
+			
 			"fieldname": "dedactions",
 			"fieldtype": "Data",
 			"width": 200
 		},
 		{
-			"label": _(""),
-			"fieldname": "", # 33 spaces
+			
+			"fieldname": "spaces33", # 33 spaces
 			"fieldtype": "Data",
 			"width": 10,
 		},
@@ -1300,43 +1336,43 @@ def get_columns_riad():
 def get_columns_ahly():
 	return 	[
 		{
-			"label": _("Bank Code"),
+			
 			"fieldname": "emp_bank_ahly",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Employee Account Number"),
+			
 			"fieldname": "bank_acc_ahly",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Salary"),
+			
 			"fieldname": "salary_ahly",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Notes"),
+			
 			"fieldname": "Month",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Employee Name"),
+			
 			"fieldname": "emp_name",
 			"fieldtype": "Data",
 			"width": 250,
 		},
 		{
-			"label": _("Identity"),
+			
 			"fieldname": "id_number",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Permanent Address"),
+			
 			"fieldname": "permanent_address",
 			"fieldtype": "Data",
 			"width": 200,
@@ -1346,97 +1382,97 @@ def get_columns_ahly():
 def get_columns_sumba():
 	return 	[
 		{
-			"label": _(""),
+			
 			"fieldname": "num",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Employee Number"),
+			
 			"fieldname": "emp_num",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Employee Name"),
+			
 			"fieldname": "emp_name",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _("Salary"),
+			
 			"fieldname": "salary",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _("CheckSum"),
+			
 			"fieldname": "checksum",
 			"fieldtype": "Data",
 			"width": 250,
 		},
 		{
-			"label": _("Bank Code"),
+			
 			"fieldname": "emp_bank",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Bank Account Number"),
+			
 			"fieldname": "bank_acc_no",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "zero",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Is Saudi"),
+			
 			"fieldname": "nationality",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Identity"),
+			
 			"fieldname": "id_number",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Departement Location"),
+			
 			"fieldname": "departement_location",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _(""),
-			"fieldname": "", # 19 spaces
+			
+			"fieldname": "spaces19", # 19 spaces
 			"fieldtype": "Data",
 			"width": 10,
 		},
 		{
-			"label": _("Basic"),
+			
 			"fieldname": "basic",
 			"fieldtype": "Data",
 			"width": 170
 		},
 		{
-			"label": _("Allowance Housing"),
+			
 			"fieldname": "housing_allowance",
 			"fieldtype": "Data",
 			"width": 170
 		},
 		{
-			"label": _("Other Earnings"),
+			
 			"fieldname": "other_earnings",
 			"fieldtype": "Data",
 			"width": 170
 		},
 		{
-			"label": _("Dedactions"),
+			
 			"fieldname": "dedactions",
 			"fieldtype": "Data",
 			"width": 170
@@ -1446,62 +1482,62 @@ def get_columns_sumba():
 def get_columns_alrajhi_payroll():
 	return 	[
 		{
-			"label": _("Employee Number"),
+			
 			"fieldname": "emp_num",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Bank Code"),
+			
 			"fieldname": "bank_code",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _("Account Number"),
+			
 			"fieldname": "bank_acc_no",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _("Employee Name"),
+			
 			"fieldname": "emp_name",
 			"fieldtype": "Data",
 			"width": 250,
 		},
 		{
-			"label": _("Salary"),
+			
 			"fieldname": "salary",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Identity"),
+			
 			"fieldname": "id_number",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Employee ID Type"),
+			
 			"fieldname": "zero",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "one", # 14 spaces
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "file_seq",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 
 		{
-			"label": _(""),
+			
 			"fieldname": "", #65 spaces in header
 			"fieldtype": "Data",
 			"width": 100,
@@ -1511,55 +1547,55 @@ def get_columns_alrajhi_payroll():
 def get_columns_alrajhi_interchange():
 	return 	[
 		{
-			"label": _("Employee Number"),
+			
 			"fieldname": "emp_num",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _("Bank Code"),
+			
 			"fieldname": "bank_code",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Employee Account Number"),
+			
 			"fieldname": "bank_acc_no",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _("Employee Name"),
+			
 			"fieldname": "emp_name",
 			"fieldtype": "Data",
 			"width": 350,
 		},
 		{
-			"label": _("Salary"),
+			
 			"fieldname": "salary",
 			"fieldtype": "data",
 			"width": 200,
 		},
 		{
-			"label": _("Identity"),
+			
 			"fieldname": "id_number",
 			"fieldtype": "Data",
 			"width": 200,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "zero",
 			"fieldtype": "Data",
 			"width": 150,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "zero3",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "i", # 11 spaces
 			"fieldtype": "Data",
 			"width": 100,
@@ -1569,91 +1605,91 @@ def get_columns_alrajhi_interchange():
 def get_columns_alrajhi_payroll_card():
 	return 	[
 		{
-			"label": _("Employee Number"),
+			
 			"fieldname": "emp_num",
 			"fieldtype": "Data",
 			"width": 120,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "zero5",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Payroll Card Number"),
+			
 			"fieldname": "payroll_card_number",
 			"fieldtype": "Data",
 			"width": 180,
 		},
 		{
-			"label": _("Employee Name"),
+			
 			"fieldname": "emp_name",
 			"fieldtype": "Data",
 			"width": 180,
 		},
 		{
-			"label": _("Identity"),
-			"fieldname": "id_number",
+			
+			"fieldname": "id_number_rajhi",
 			"fieldtype": "Data",
 			"width": 120,
 		},
 		{
-			"label": _("Salary"),
+			
 			"fieldname": "salary",
 			"fieldtype": "Data",
 			"width": 120,
 		},
 		{
-			"label": _("Date"),
+			
 			"fieldname": "date",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Operation Type"),
+			
 			"fieldname": "op_type",
 			"fieldtype": "Data",
 			"width": 50,
 		},
 		{
-			"label": _(""),
+			
 			"fieldname": "zero6",
 			"fieldtype": "Data",
 			"width": 80,
 		},
 		{
-			"label": _(""),
-			"fieldname": "",
+			
+			"fieldname": "spaces10",
 			"fieldtype": "Data", # 10 spaces
 			"width": 50,
 		},
 		{
-			"label": _("Phone"),
+			
 			"fieldname": "phone",
 			"fieldtype": "Data",
 			"width": 100,
 		},
 		{
-			"label": _("Basic"),
+			
 			"fieldname": "basic",
 			"fieldtype": "Data",
 			"width": 120
 		},
 		{
-			"label": _("Allowance Housing"),
+			
 			"fieldname": "housing_allowance",
 			"fieldtype": "Data",
 			"width": 120
 		},
 		{
-			"label": _("Other Earnings"),
+			
 			"fieldname": "other_earnings",
 			"fieldtype": "Data",
 			"width": 120
 		},
 		{
-			"label": _("Dedactions"),
+			
 			"fieldname": "dedactions",
 			"fieldtype": "Data",
 			"width": 120
@@ -1663,74 +1699,74 @@ def get_columns_alrajhi_payroll_card():
 def get_columns_alaraby():
 		return [
 				{
-					"label": _(""),
+					
 					"fieldname": "d",
 					"fieldtype": "Data",
 					"width": 50,
 				},
 
 				{
-					"label": _("Total Salary"),
+					
 					"fieldname": "month_to_date",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Bank Account Number"),
+					
 					"fieldname": "bank_ac_no",
 					"fieldtype": "Data",
 					"width": 150
 				},
 				{
-					"label": _("Employee Name"),
+					
 					"fieldname": "first_name",
 					"fieldtype": "Data",
 					"width": 150
 				},
 				{
-					"label": _("Swift Number"),
+					
 					"fieldname": "swift_number",
 					"fieldtype": "Data",
 					"width": 150
 				},
 				{
-					"label": _("Salary Month"),
+					
 					"fieldname": "month",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Basic"),
+					
 					"fieldname": "basic",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Allowance Housing"),
+					
 					"fieldname": "housing_allowance",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Other Earnings"),
+					
 					"fieldname": "other_earnings",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Dedactions"),
+					
 					"fieldname": "dedactions",
 					"fieldtype": "Data",
 					"width": 100
 				},
 				{
-					"label": _("Identity"),
+					
 					"fieldname": "id_number",
 					"fieldtype": "Data",
 					"width": 150
 				},
 				{
-					"label": _("Salaries Month"),
+					
 					"fieldname": "co_number",
 					"fieldtype": "Data",
 					"width": 150

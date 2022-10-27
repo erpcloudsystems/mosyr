@@ -17,7 +17,7 @@ def after_install():
     create_salary_structures_for_companies()
     # frappe.db.commit()
     edit_doctypes_user_type()
-
+    create_banks()
 def edit_gender_list():
     genders_to_del = frappe.get_list("Gender", filters={"name": ["not in", ["Female", "Male"]]})
     for gender in genders_to_del:
@@ -402,3 +402,20 @@ def get_user_types_data():
 			},
 		}
 	}
+
+def create_banks():
+    banks = [
+        {"bank_name":"Al Inma Bank","swift_number" :"INMA" },
+        {"bank_name":"Riyadh Bank","swift_number" :"RIBL" },
+        {"bank_name":"The National Commercial Bank","swift_number" :"NCBK" },
+        {"bank_name":"Samba Financial Group","swift_number" :"SAMB" },
+        {"bank_name":"Al Rajhi Bank","swift_number" :"RJHI" },
+        {"bank_name":"Al Araby Bank","swift_number" :"ARNB" },
+    ]
+    for bank in banks:
+        banks_list = frappe.get_list("Bank", filters={"name": bank['bank_name']})
+        if len(banks_list) == 0:
+            bank_doc = frappe.new_doc("Bank")
+            bank_doc.update(bank)
+            bank_doc.save()
+    frappe.db.commit()

@@ -489,7 +489,7 @@
    "label": "Labors Office File Number"
   },
   {
-   "depends_on": "eval:doc.bank_name=='NCBK'",
+   "depends_on": "eval:doc.bank_name=='Al Araby Bank'",
    "fieldname": "agreement_number_for_customer",
    "fieldtype": "Data",
    "label": "Agreement Number for Customer"
@@ -497,7 +497,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-10-18 23:12:28.410878",
+ "modified": "2022-10-27 02:57:11.152626",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Company Controller",
