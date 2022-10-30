@@ -505,7 +505,9 @@ def get_data_sumba(filters):
 		WHERE emp.status ='Active' and  {condition}
 		GROUP BY emp.name
 		""",as_dict=1)
+	salary=[]
 	for d in data :
+		salary.append(flt(d.get("salary")))
 		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
 		d.update({"other_earnings":(str(other_earnings).zfill(12))})
 		sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
@@ -532,9 +534,6 @@ def get_data_sumba(filters):
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
 	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
-	salary=[]
-	for d in data:
-		salary.append(flt(d.get("month_to_date")))
 	total_salary = sum(salary)
 	if company_controller.organization_english:
 		organization_english = company_controller.organization_english.ljust(40)
@@ -666,7 +665,9 @@ def get_data_alrajhi_interchange(filters):
 		WHERE emp.status ='Active' and  {condition}
 		ORDER BY emp_num
 		""",as_dict=1)
+	salary=[]
 	for d in data :
+		salary.append(flt(d.get("salary")))
 		d.update({'i': ' ' * 11 })
 		if  d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
@@ -677,9 +678,6 @@ def get_data_alrajhi_interchange(filters):
 	if not salary_slip_list: return []
 	# get total salary
 	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
-	salary=[]
-	for d in data:
-		salary.append(flt(d.get("salary")))
 	total_salary = sum(salary)
 	cal = ''
 	if company_controller.calendar_accreditation == 'Gregorian': cal = 'G' 
