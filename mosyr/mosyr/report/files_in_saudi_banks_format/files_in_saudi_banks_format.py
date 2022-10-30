@@ -137,9 +137,8 @@ def get_data_inma_payroll(filters):
 		SELECT
 			1 as one1,
 			emp.employee_number as emp_num,
-			emp.first_name,
 			ROW_NUMBER() OVER (ORDER BY emp.first_name)  row_num ,
-			emp.first_name as name,
+			IFNULL(emp.full_name_en , emp.first_name) as name,
 			emp.bank_ac_no,
 			'Yes' as yes,
 			b.swift_number,
@@ -198,7 +197,7 @@ def get_data_inma_wps(filters):
 			emp.employee_number as emp_num,
 			emp.name,
 			ROW_NUMBER() OVER (ORDER BY emp.first_name)  row_num ,
-			emp.first_name as name,
+			IFNULL(emp.full_name_en , emp.first_name) as name,
 			emp.bank_ac_no,
 			'Yes' as yes,
 			b.swift_number,
@@ -287,6 +286,7 @@ def get_data_riad(filters):
 			' ' as spaces239,
 			' ' as spaces90,
 			RPAD(emp.first_name,50,' ') as emp_name,
+			IFNULL(RPAD(emp.full_name_en,50,' ') , RPAD(emp.first_name,50,' ') ) as emp_name,
 			RPAD(b.swift_number,11, ' ') as emp_bank,
 			' ' as spaces129,
 			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
@@ -394,7 +394,7 @@ def get_data_ahly(filters):
 			emp.bank_ac_no as bank_acc_ahly,
 			sl.month_to_date as salary_ahly,
 			LPAD(MONTHNAME(sl.start_date),3) AS Month,
-			emp.first_name as emp_name,
+			IFNULL(emp.full_name_en , emp.first_name) as emp_name,
 			id.id_number as id_number,
 			emp.permanent_address 
 		FROM `tabEmployee` emp  
@@ -478,7 +478,7 @@ def get_data_sumba(filters):
 		SELECT
 			'00207' as num,
 			LPAD(emp.employee_number,12 ,0) as emp_num,
-			RPAD(emp.first_name,45,' ') as emp_name,
+			IFNULL(RPAD(emp.full_name_en,45,' ') , RPAD(emp.first_name,45,' ') ) as emp_name,
 			LPAD(FORMAT(sl.month_to_date,2),13,0) as salary,
 			NULL as checksum,
 			LPAD(b.swift_number,4,' ') as emp_bank,
@@ -501,15 +501,14 @@ def get_data_sumba(filters):
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
-		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component<>"Allowance Housing" and sade.salary_component<>"Basic"  and sade.parentfield='earnings'
 		WHERE emp.status ='Active' and  {condition}
 		GROUP BY emp.name
 		""",as_dict=1)
-	salary=[]
+	salary_total = []
 	for d in data :
-		salary.append(flt(d.get("salary")))
+		salary_total.append(flt(d.get("salary")))
 		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
-		d.update({"other_earnings":(str(other_earnings).zfill(12))})
+		d.update({"other_earnings":(str(("%.2f" % other_earnings)).zfill(13))})
 		sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
 		d.update({'other_earnings':sl_other_earnings})
 		d.update({'spaces19':' ' * 19})
@@ -534,7 +533,7 @@ def get_data_sumba(filters):
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
 	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
-	total_salary = sum(salary)
+	total_salary = sum(salary_total)
 	if company_controller.organization_english:
 		organization_english = company_controller.organization_english.ljust(40)
 	else:
@@ -579,7 +578,8 @@ def get_data_alrajhi_payroll(filters):
 			LPAD(emp.employee_number,12,0) as emp_num,
 			LPAD(b.swift_number , 4,' ') as bank_code,
 			LPAD(emp.bank_ac_no,24,0) as bank_acc_no,
-			RPAD(emp.first_name ,50 ,' ') as emp_name,
+			RPAD(emp.full_name_en ,50 ,' ') as emp_name,
+			IFNULL(RPAD(emp.full_name_en,50,' ') , RPAD(emp.first_name,50,' ') ) as emp_name,
 			LPAD(FORMAT(sl.month_to_date,2) , 17, 0) as salary,
 			LPAD(id.id_number , 15 , 0) as id_number,
 			'0' as zero
@@ -590,7 +590,9 @@ def get_data_alrajhi_payroll(filters):
 		WHERE emp.status ='Active' and {condition}
 		ORDER BY emp_num
 		""",as_dict=1)
+	salary=[]
 	for d in data :
+		salary.append(flt(d.get("salary")))
 		if d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
@@ -599,9 +601,6 @@ def get_data_alrajhi_payroll(filters):
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
 	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
-	salary=[]
-	for d in data:
-		salary.append(flt(d.get("salary")))
 	total_salary = sum(salary)
 	cal = ''
 	if company_controller.calendar_accreditation == 'Gregorian': cal = 'G'
@@ -652,7 +651,7 @@ def get_data_alrajhi_interchange(filters):
 			LPAD(emp.employee_number,12,0) as emp_num,
 			LPAD(b.swift_number,4,' ') as bank_code,
 			RPAD(emp.bank_ac_no,24,' ') as bank_acc_no,
-			LPAD(emp.first_name,50,' ') as emp_name,
+			IFNULL(LPAD(emp.full_name_en,50,' ') , LPAD(emp.first_name,50,' ') ) as emp_name,
 			LPAD(FORMAT(sl.month_to_date,2),17,0) as salary,
 			LPAD(id.id_number,15,0) as id_number,
 			'0' as zero,
@@ -733,7 +732,7 @@ def get_data_alrajhi_payroll_card(filters):
 			LPAD(emp.employee_number,12,0) as emp_num,
 			'00000' as zero5,
 			LPAD(emp.payroll_card_number,19,0) as payroll_card_number,
-			RPAD(emp.first_name,50,' ') as emp_name,
+			IFNULL(RPAD(emp.full_name_en,50,' ') , RPAD(emp.first_name,50,' ') ) as emp_name,
 			CASE WHEN id.id_number <> '' THEN LPAD(id.id_number,10,0)
 			ELSE '0000000000'
 			END AS id_number_rajhi,
@@ -747,7 +746,7 @@ def get_data_alrajhi_payroll_card(filters):
 			ELSE '0000000000'
 			END AS phone,
 			LPAD(FORMAT(sd.amount, 2),14,0) as basic ,
-			LPAD(FORMAT(sde.amount, 2),14,0) as housing_allowance,
+			IFNULL(LPAD(FORMAT(sde.amount, 2),14,0) , '00000000000.00' ) as housing_allowance,
 			LPAD(FORMAT('0' ,2) ,14 ,0) as other_earnings,
 			LPAD(FORMAT(sl.total_deduction, 2),14,0) as dedactions
 		FROM `tabEmployee` emp  
@@ -781,25 +780,25 @@ def get_data_alrajhi_payroll_card(filters):
 	return data
 
 def get_data_alaraby(filters):
+	if not filters.get("month"):return []
 	condition='1=1 '
 	monthes = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November','December']
-	if filters.get("month"):
-		date = filters.get("month")
-		if date in monthes:
-			idx = monthes.index(date) + 1
-			condition += f""" AND Month (sl.start_date)={idx}"""
+	date = filters.get("month")
+	if date in monthes:
+		idx = monthes.index(date) + 1
+		condition += f""" AND Month (sl.start_date)={idx}"""
 	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	year = filters.get("year")
-	month = monthes[frappe.utils.get_datetime().date().month]
+	month = filters.get("month")
 	data = frappe.db.sql(f"""
 		SELECT
 			'D' as d,
 			sl.month_to_date,
 			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
 			emp.bank_ac_no,
-			emp.first_name,
+			IFNULL(emp.full_name_en , emp.first_name) as first_name,
 			b.swift_number as swift_number,
 			"salaries for {month} {year}" as month,
 			IF(sd.amount , sd.amount,0) as basic,
