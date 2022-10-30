@@ -25,7 +25,7 @@ let monthNames=  [
 frappe.query_reports["Files in Saudi banks format"] = {
 	
 	onload: function(report) {
-			report.page.add_inner_button(__("Export"), function() {
+			report.page.add_inner_button(__("Export For Bank"), function() {
 				if (frappe.model.can_export(report.report_name)) {
 					frappe.call({
 						method: "mosyr.mosyr.report.files_in_saudi_banks_format.files_in_saudi_banks_format.get_bank",
