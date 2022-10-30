@@ -292,6 +292,7 @@ fixtures = [
 				"Shift Assignment-lateness_permission",
 				"Shift Type-in_lateness_permission",
 				"Shift Request-lateness_permission",
+				"Additional Salary-employee_deduction"
             ]]
         ]
     },

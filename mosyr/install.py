@@ -10,6 +10,15 @@ from mosyr import create_account, create_cost_center, create_mode_payment, creat
 
 def after_install():
     edit_gender_list()
+    prepare_mode_payments()
+    prepare_system_accounts()
+    hide_accounts_fields()
+    
+    create_salary_components()
+    create_salary_structures_for_companies()
+    # frappe.db.commit()
+    edit_doctypes_user_type()
+    create_banks()
     companies = frappe.get_list("Company")
     create_dafault_bank_accounts(companies)
     create_dafault_accounts(companies)
@@ -17,6 +26,7 @@ def after_install():
     create_dafault_mode_of_payments()
     hide_accounts_and_taxs_from_system()
     setup_doctypes_user_type()
+
 
 def edit_gender_list():
     genders_to_del = frappe.get_list("Gender", filters={"name": ["not in", ["Female", "Male"]]})
@@ -118,6 +128,22 @@ def get_user_types_data():
 		}
 	}
 
+def create_banks():
+    banks = [
+        {"bank_name":"Al Inma Bank","swift_number" :"INMA" },
+        {"bank_name":"Riyadh Bank","swift_number" :"RIBL" },
+        {"bank_name":"The National Commercial Bank","swift_number" :"NCBK" },
+        {"bank_name":"Samba Financial Group","swift_number" :"SAMB" },
+        {"bank_name":"Al Rajhi Bank","swift_number" :"RJHI" },
+        {"bank_name":"Al Araby Bank","swift_number" :"ARNB" },
+    ]
+    for bank in banks:
+        banks_list = frappe.get_list("Bank", filters={"name": bank['bank_name']})
+        if len(banks_list) == 0:
+            bank_doc = frappe.new_doc("Bank")
+            bank_doc.update(bank)
+            bank_doc.save()
+    frappe.db.commit()
 def add_property_setter(fields_props):
     for props in fields_props:
         doctype = props.get("doctype", False)

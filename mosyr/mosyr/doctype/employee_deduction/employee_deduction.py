@@ -16,12 +16,7 @@ class EmployeeDeduction(Document):
 			frappe.throw(_("Incorrect data format, should be YYYY-MM"))
 			return
 
-	@frappe.whitelist()
-	def apply_in_system(self):
-		# adds = frappe.get_list('Additional Salary', filters={'employee_deduction': self.name})
-		# if len(adds) > 0:
-		# 	frappe.throw(_('{} Applied in the System see <a href="/app/additional-salary/EB-2022-02-01">Additional Salary<a/>'.format(self.name, adds[0])))
-
+	def on_submit(self):
 		eadd = frappe.new_doc('Additional Salary')
 		eadd.employee = self.employee
 		eadd.amount = flt(self.amount)
@@ -31,7 +26,11 @@ class EmployeeDeduction(Document):
 		eadd.employee_deduction = self.name
 		eadd.save()
 		eadd.submit()
-		self.db_set('status', 'Applied In System', update_modified=False)
-		frappe.db.commit()
-		return 'Applied In System'
-
+		
+	def on_cancel(self):
+		eadd = frappe.get_list('Additional Salary' ,{"employee_deduction":self.name})
+		print(eadd)
+		if eadd:
+			for ea in eadd:
+				doc = frappe.get_doc("Additional Salary",ea['name'])
+				doc.cancel()
