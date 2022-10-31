@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "user",
-  "permissions"
+  "permissions",
+  "page_or_report"
  ],
  "fields": [
   {
@@ -25,12 +26,19 @@
    "label": "Permissions",
    "mandatory_depends_on": "user",
    "options": "User Permission Document Type"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "page_or_report",
+   "fieldtype": "Table",
+   "label": "Page Or Report",
+   "options": "User Permission Report And Page"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-10-23 18:04:16.677141",
+ "modified": "2022-10-31 01:25:51.416951",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Users Permission Manager",

@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "creation": "2022-10-31 01:21:07.801522",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "set_role_for",
+  "page_or_report"
+ ],
+ "fields": [
+  {
+   "fieldname": "set_role_for",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Set Role For",
+   "options": "\nReport\nPage"
+  },
+  {
+   "fieldname": "page_or_report",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Name",
+   "options": "set_role_for"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-10-31 01:27:57.236194",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "User Permission Report And Page",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
