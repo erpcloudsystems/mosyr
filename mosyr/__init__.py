@@ -181,6 +181,13 @@ update_fields_props = {
             "doctype":  "Expense Claim Type",
             "value": 1
         },
+        {
+            "field": "accounts",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Expense Claim Type",
+            "value": 1
+        }
     ],
     "Expense Claim": [
         {
@@ -200,6 +207,13 @@ update_fields_props = {
         {
             "field": "payable_account",
             "prop": "hidden",
+            "prop_type": "Check",
+            "doctype":  "Expense Claim",
+            "value": 1
+        },
+        {
+            "field": "payable_account",
+            "prop": "ignore_User_Permissions",
             "prop_type": "Check",
             "doctype":  "Expense Claim",
             "value": 1
@@ -243,6 +257,13 @@ update_fields_props = {
             "doctype":  "Expense Claim Detail",
             "value": 1
         },
+        {
+            "field": "default_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Expense Claim Detail",
+            "value": 1
+        },
         # 2 Field (cost_center) => Read value from Expense Claim
         {
             "field": "cost_center",
@@ -268,6 +289,13 @@ update_fields_props = {
             "value": 1
         },
         {
+            "field": "advance_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Employee Advance",
+            "value": 1
+        },
+        {
             "field": "mode_of_payment",
             "prop": "hidden",
             "prop_type": "Check",
@@ -280,6 +308,13 @@ update_fields_props = {
         {
             "field": "advance_account",
             "prop": "hidden",
+            "prop_type": "Check",
+            "doctype":  "Expense Claim Advance",
+            "value": 1
+        },
+        {
+            "field": "advance_account",
+            "prop": "ignore_User_Permissions",
             "prop_type": "Check",
             "doctype":  "Expense Claim Advance",
             "value": 1
@@ -324,6 +359,13 @@ update_fields_props = {
             "value": '0'
         },
         {
+            "field": "disbursement_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Type",
+            "value": 1
+        },
+        {
             "field": "payment_account",
             "prop": "hidden",
             "prop_type": "Check",
@@ -336,6 +378,13 @@ update_fields_props = {
             "prop_type": "Check",
             "doctype":  "Loan Type",
             "value": '0'
+        },
+        {
+            "field": "payment_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Type",
+            "value": 1
         },
         {
             "field": "loan_account",
@@ -352,6 +401,13 @@ update_fields_props = {
             "value": '0'
         },
         {
+            "field": "loan_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Type",
+            "value": 1
+        },
+        {
             "field": "interest_income_account",
             "prop": "hidden",
             "prop_type": "Check",
@@ -366,6 +422,13 @@ update_fields_props = {
             "value": '0'
         },
         {
+            "field": "interest_income_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Type",
+            "value": 1
+        },
+        {
             "field": "penalty_income_account",
             "prop": "hidden",
             "prop_type": "Check",
@@ -378,6 +441,13 @@ update_fields_props = {
             "prop_type": "Check",
             "doctype":  "Loan Type",
             "value": '0'
+        },
+        {
+            "field": "penalty_income_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Type",
+            "value": 1
         },
         {
             "field": "rate_of_interest",
@@ -439,6 +509,13 @@ update_fields_props = {
             "value": '0'
         },
         {
+            "field": "disbursement_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": 1
+        },
+        {
             "field": "payment_account",
             "prop": "hidden",
             "prop_type": "Check",
@@ -451,6 +528,13 @@ update_fields_props = {
             "prop_type": "Check",
             "doctype":  "Loan",
             "value": '0'
+        },
+        {
+            "field": "payment_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": 1
         },
         {
             "field": "loan_account",
@@ -467,6 +551,13 @@ update_fields_props = {
             "value": '0'
         },
         {
+            "field": "loan_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": 1
+        },
+        {
             "field": "interest_income_account",
             "prop": "hidden",
             "prop_type": "Check",
@@ -481,6 +572,13 @@ update_fields_props = {
             "value": '0'
         },
         {
+            "field": "interest_income_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": 1
+        },
+        {
             "field": "penalty_income_account",
             "prop": "hidden",
             "prop_type": "Check",
@@ -493,6 +591,13 @@ update_fields_props = {
             "prop_type": "Check",
             "doctype":  "Loan",
             "value": '0'
+        },
+        {
+            "field": "penalty_income_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": 1
         },
     ],
     "Loan Disbursement": [
@@ -511,8 +616,22 @@ update_fields_props = {
             "value": 1
         },
         {
+            "field": "disbursement_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": 1
+        },
+        {
             "field": "loan_account",
             "prop": "hidden",
+            "prop_type": "Check",
+            "doctype":  "Loan Disbursement",
+            "value": 1
+        },
+        {
+            "field": "loan_account",
+            "prop": "ignore_User_Permissions",
             "prop_type": "Check",
             "doctype":  "Loan Disbursement",
             "value": 1
@@ -555,6 +674,13 @@ update_fields_props = {
             "value": 'false'
         },
         {
+            "field": "payroll_payable_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Repayment",
+            "value": 1
+        },
+        {
             "field": "interest_payable",
             "prop": "hidden",
             "prop_type": "Check",
@@ -576,8 +702,22 @@ update_fields_props = {
             "value": 1
         },
         {
+            "field": "payment_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Repayment",
+            "value": 1
+        },
+        {
             "field": "penalty_income_account",
             "prop": "hidden",
+            "prop_type": "Check",
+            "doctype":  "Loan Repayment",
+            "value": 1
+        },
+        {
+            "field": "penalty_income_account",
+            "prop": "ignore_User_Permissions",
             "prop_type": "Check",
             "doctype":  "Loan Repayment",
             "value": 1
@@ -589,28 +729,42 @@ update_fields_props = {
             "doctype":  "Loan Repayment",
             "value": 1
         },
+        {
+            "field": "loan_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Repayment",
+            "value": 1
+        },
     ],
     "Loan Write Off": [
         {
             "field": "cost_center",
             "prop": "hidden",
             "prop_type": "Check",
-            "doctype":  "Loan Disbursement",
+            "doctype":  "Loan Write Off",
             "value": 1
         },
         {
             "field": "write_off_account",
             "prop": "hidden",
             "prop_type": "Check",
-            "doctype":  "Loan Disbursement",
+            "doctype":  "Loan Write Off",
             "value": 1
         },
         {
             "field": "write_off_account",
             "prop": "reqd",
             "prop_type": "Check",
-            "doctype":  "Loan Disbursement",
+            "doctype":  "Loan Write Off",
             "value": '0'
+        },
+        {
+            "field": "write_off_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Loan Write Off",
+            "value": 1
         },
     ],
     "Loan Application": [
@@ -658,6 +812,13 @@ update_fields_props = {
             "doctype":  "Salary Component",
             "value": 1
         },
+        {
+            "field": "accounts",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Salary Component",
+            "value": 1
+        }
     ],
     "Salary Structure": [
         {
@@ -688,6 +849,13 @@ update_fields_props = {
             "doctype":  "Salary Structure",
             "value": 1
         },
+        {
+            "field": "payment_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Salary Structure",
+            "value": 1
+        }
     ],
     "Salary Detail":[
         {
@@ -723,6 +891,13 @@ update_fields_props = {
         {
             "field": "payroll_payable_account",
             "prop": "hidden",
+            "prop_type": "Check",
+            "doctype":  "Salary Structure Assignment",
+            "value": 1
+        },
+        {
+            "field": "payroll_payable_account",
+            "prop": "ignore_User_Permissions",
             "prop_type": "Check",
             "doctype":  "Salary Structure Assignment",
             "value": 1
@@ -795,6 +970,13 @@ update_fields_props = {
             "value": 1
         },
         {
+            "field": "payroll_payable_account",
+            "prop": "ignore_User_Permissions",
+            "prop_type": "Check",
+            "doctype":  "Payroll Entry",
+            "value": 1
+        },
+        {
             "field": "project",
             "prop": "hidden",
             "prop_type": "Check",
@@ -818,6 +1000,13 @@ update_fields_props = {
         {
             "field": "payment_account",
             "prop": "hidden",
+            "prop_type": "Check",
+            "doctype":  "Payroll Entry",
+            "value": 1
+        },
+        {
+            "field": "payment_account",
+            "prop": "ignore_User_Permissions",
             "prop_type": "Check",
             "doctype":  "Payroll Entry",
             "value": 1

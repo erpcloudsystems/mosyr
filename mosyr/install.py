@@ -10,13 +10,6 @@ from mosyr import create_account, create_cost_center, create_mode_payment, creat
 
 def after_install():
     edit_gender_list()
-    prepare_mode_payments()
-    prepare_system_accounts()
-    hide_accounts_fields()
-    
-    create_salary_components()
-    create_salary_structures_for_companies()
-    # frappe.db.commit()
     edit_doctypes_user_type()
     create_banks()
     companies = frappe.get_list("Company")
