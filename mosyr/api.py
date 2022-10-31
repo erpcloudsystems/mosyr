@@ -270,3 +270,10 @@ def translate_employee(doc,method):
     tr.source_text = doc.first_name
     tr.translated_text = doc.full_name_en
     tr.save()
+
+@frappe.whitelist()
+def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
+    result = frappe.db.sql("""
+        select doc_name,parent_name from `tabSideBar Item Table`
+        where doc_name LIKE %(txt)s or parent_name LIKE %(txt)s""" ,{"txt": "%" + txt + "%"})
+    return result
