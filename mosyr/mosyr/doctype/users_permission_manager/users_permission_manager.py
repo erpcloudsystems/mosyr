@@ -19,7 +19,8 @@ class UsersPermissionManager(Document):
 		user_type = frappe.get_doc("User Type", user.user_type)
 		if user_type.is_standard: return []
 
-		return [{
+		return {
+			'docs': [{
 			"document_type": perm.document_type,
 			"is_custom": perm.is_custom,
 			"read": perm.read,
@@ -29,16 +30,18 @@ class UsersPermissionManager(Document):
 			"cancel": perm.cancel,
 			"amend": perm.amend,
 			"delete": perm.delete
-		} for perm in user_type.user_doctypes]
+		} for perm in user_type.user_doctypes],
+		'repage': frappe.db.sql(f"SELECT cr.page, cr.report, hr.role FROM `tabCustom Role` cr LEFT JOIN `tabHas Role` hr ON hr.parent=cr.name WHERE hr.role='{user.name}'", as_dict=True)
+		}
 	
 	@frappe.whitelist()
-	def apply_permissions(self, user, perms):
+	def apply_permissions(self, user, perms, rps):
 		if not frappe.db.exists("User", user): return ""
 		
 		user_types = self.get_user_types_data(user, perms)
 		user_type_limit = {}
 		for user_type, data in iteritems(user_types):
-			user_type_limit.setdefault(frappe.scrub(user_type), 10)
+			user_type_limit.setdefault(frappe.scrub(user_type), 10000)
 
 		update_site_config("user_type_doctype_limit", user_type_limit)
 
@@ -47,14 +50,53 @@ class UsersPermissionManager(Document):
 			create_custom_role(data)
 			new_type = self.create_user_type(user_type, data)
 		
+
 		if new_type:
 			user = frappe.get_doc("User", user)
 			user.db_set("user_type", new_type)
 			frappe.db.commit()
+			self.delete_old_roles(user.name)
+			for rpr in rps:
+				args = { 'doctype': 'Custom Role', 'roles': [{'role': user.name, 'parenttype': 'Custom Role'}]}
+				if rpr.get('set_role_for', "") == "Report":
+					report_name = rpr.get("page_or_report")
+					args.update({
+						'report': report_name,
+						"ref_doctype": frappe.db.get_value("Report", report_name, "ref_doctype")
+					})
+					self.update_custom_roles({'report': report_name}, args)
+				elif rpr.get('set_role_for', "")  == "Page":
+					args.update({
+						'page': rpr.get("page_or_report")
+					})
+					self.update_custom_roles({'page': rpr.get("page_or_report")}, args)
+					print('asdasdasd')
+			# frappe.db.commit()
+	
+	def delete_old_roles(self, user_role):
+		for custom_role in frappe.get_list("Custom Role"):
+			custom_role = frappe.get_doc("Custom Role", custom_role.name)
+			for role in custom_role.roles:
+				if role.role == user_role:
+					frappe.get_doc("Has Role", role.name).delete()
+		frappe.db.commit()
+
+	def update_custom_roles(self, role_args, args):
+		name = frappe.db.get_value("Custom Role", role_args, "name")
+		if name:
+			custom_role = frappe.get_doc("Custom Role", name)
+			for new_role in args.get('roles', []):
+				rol = new_role.get('role', False)
+				if not rol: continue
+				custom_role.append("roles", {
+					'role': rol
+				})
+			custom_role.save()
+		else:
+			frappe.get_doc(args).insert()
 
 	def get_user_types_data(slef, user, perms):
 		doctypes_permissions = {
-			"Account": ['read'],
 			"Company": ['read'],
 		}
 		allowed_perms = ['read','write', 'create', 'delete', 'submit', 'cancel', 'amend']
