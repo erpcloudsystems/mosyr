@@ -5,7 +5,6 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import nowdate, flt, cint, get_date_str, getdate, today
-from mosyr.install import create_salary_components
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 
 from mosyr.tasks import update_status_for_contracts
@@ -51,7 +50,6 @@ class EmployeeContract(Document):
 			return
 		self.validate_dates()
 		# Make sure that all components are in the system
-		create_salary_components()
 		employee = frappe.get_doc("Employee", self.employee)
 		
 		employee.from_api = 0

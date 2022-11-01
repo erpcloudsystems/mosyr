@@ -91,8 +91,6 @@ class MosyrDataImport(Document):
 
     @frappe.whitelist()
     def psc(self):
-        from mosyr.install import create_salary_components
-        create_salary_components()
         banks = [
             "Al Rajhi Bank",
             "Al Inma Bank",
