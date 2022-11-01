@@ -277,3 +277,8 @@ def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
         select doc_name,parent_name from `tabSideBar Item Table`
         where doc_name LIKE %(txt)s or parent_name LIKE %(txt)s""" ,{"txt": "%" + txt + "%"})
     return result
+
+def set_user_type(doc,method):
+    if doc.email != "Administrator":
+        doc.user_type = "Employee Self Service"
+        doc.save()

@@ -1019,6 +1019,15 @@ update_fields_props = {
             "value": 1
         },
     ],
+    "User":[
+        {
+            "field": "user_type",
+            "prop": "permlevel",
+            "prop_type": "Int",
+            "doctype":  "User",
+            "value": 3
+        },
+    ]   
 }
 
 def create_cost_center(cost_center_name, company, check_company=False, company_fields=[]):

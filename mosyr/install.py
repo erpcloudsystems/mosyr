@@ -1,16 +1,14 @@
-from six import iteritems
-
 import frappe
+from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.installer import update_site_config
-
 from erpnext.setup.install import create_user_type
-
+from erpnext.setup.install import create_custom_role
 from mosyr import create_account, create_cost_center, create_mode_payment, create_bank_account, update_fields_props
+from frappe.permissions import update_permission_property
 
 def after_install():
     edit_gender_list()
-    edit_doctypes_user_type()
     create_banks()
     companies = frappe.get_list("Company")
     create_dafault_bank_accounts(companies)
@@ -19,7 +17,8 @@ def after_install():
     create_dafault_mode_of_payments()
     hide_accounts_and_taxs_from_system()
     setup_doctypes_user_type()
-
+    add_non_standard_user_types()
+    create_role_and_set_to_admin()
 
 def edit_gender_list():
     genders_to_del = frappe.get_list("Gender", filters={"name": ["not in", ["Female", "Male"]]})
@@ -79,48 +78,87 @@ def hide_accounts_and_taxs_from_system():
         add_property_setter(fields_props)
 
 def setup_doctypes_user_type():
-	user_types = get_user_types_data()
-	user_type_limit = {}
-	for user_type, data in iteritems(user_types):
-		user_type_limit.setdefault(frappe.scrub(user_type), 20)
-	update_site_config("user_type_doctype_limit", user_type_limit)
-	for user_type, data in iteritems(user_types):
-		create_user_type(user_type, data)
-	frappe.db.commit()
+    user_types = get_user_types_data()
+    user_type_limit = {}
+    for user_type, data in iteritems(user_types):
+        user_type_limit.setdefault(frappe.scrub(user_type), 20)
+    update_site_config("user_type_doctype_limit", user_type_limit)
+
+    for user_type, data in iteritems(user_types):
+        create_user_type(user_type, data)
+    frappe.db.commit()
 
 def get_user_types_data():
-	return {
-		"Employee Self Service": {
-			"role": "Employee Self Service",
-			"apply_user_permission_on": "Employee",
-			"user_id_field": "user_id",
-			"doctypes": {
+    return {
+        "Employee Self Service": {
+            "role": "Employee Self Service",
+            "apply_user_permission_on": "Employee",
+            "user_id_field": "user_id",
+            "doctypes": {
+                "Salary Slip": ["read"],
+                "Employee": ["read", "write"],
+                "Expense Claim": ["read", "write", "create", "delete"],
+                "Leave Application": ["read", "write", "create", "delete"],
+                "Attendance Request": ["read", "write", "create", "delete"],
+                "Compensatory Leave Request": ["read", "write", "create", "delete"],
+                "Employee Tax Exemption Declaration": ["read", "write", "create", "delete"],
+                "Employee Tax Exemption Proof Submission": ["read", "write", "create", "delete"],
+                "Timesheet": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                
+                "Work Experience": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Dependants Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Passport Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Salary Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Health Insurance": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Contact Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Emergency Contact": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Educational Qualification": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Personal Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Employee ID": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Lateness Permission": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+            },
+        },
+    }
 
-				"Salary Slip": ["read"],
-				"Employee": ["read", "write"],
-				"Expense Claim": ["read", "write", "create", "delete"],
-				"Leave Application": ["read", "write", "create", "delete"],
-				"Attendance Request": ["read", "write", "create", "delete"],
-				"Compensatory Leave Request": ["read", "write", "create", "delete"],
-				"Employee Tax Exemption Declaration": ["read", "write", "create", "delete"],
-				"Employee Tax Exemption Proof Submission": ["read", "write", "create", "delete"],
-				"Timesheet": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				
-				"Work Experience": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Dependants Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Passport Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Salary Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Health Insurance": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Contact Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Emergency Contact": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Educational Qualification": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Personal Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Employee ID": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-				"Lateness Permission": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-			},
-		}
-	}
+permission_saas_manager = ["Company Controller","Department","Branch","Employee Group","Designation","Employee Grade","Employment Type","Shift Type","Staffing Plan","Holiday List","Leave Type","Leave Period","Leave Policy","Leave Policy Assignment","Leave Allocation","Leave Encashment","Employee Health Insurance","Employee","Salary Structure","Mosyr Form","Leave Application","Shift Request","Contact Details","Educational Qualification","Emergency Contact","Health Insurance","Personal Details","Salary Details","Attendance","Employee Attendance Tool","Attendance Request","Upload Attendance","Employee Checkin","Payroll Settings","Payroll Entry","Payroll Period","Salary Structure","Salary Structure Assignment","Salary Slip","Additional Salary","Retention Bonus","Employee Incentive","Appraisal","Appraisal Template","Leave Application","Compensatory Leave Request","Travel Request","Employee Advance","Expense Claim","Loan Type","Loan","Loan Application","Vehicle","Vehicle Log","Employee Contract","Salary Structure Assignment","Leave Encashment","End Of Service","Document Manager","Document Type","User","Users Permission Manager"]
 
+def add_non_standard_user_types():
+    user_types = install_user_types()
+
+    user_type_limit = {}
+    for user_type, data in iteritems(user_types):
+        user_type_limit.setdefault(frappe.scrub(user_type), 100)
+    update_site_config("user_type_doctype_limit", user_type_limit)
+    
+    for user_type, data in iteritems(user_types):
+        create_custom_role(data)
+        create_user_type(user_type, data)
+    frappe.db.commit()
+
+def install_user_types():
+    doctypes={}
+    for document in permission_saas_manager:
+        doctypes.update({document: ["read", "write", "create", "delete", "submit", "cancel", "amend"]})
+
+    types = {
+        "SaaS Manager": {
+            "role": "SaaS Manager",
+            "apply_user_permission_on": "Employee",
+            "user_id_field": "user_id",
+            "doctypes": doctypes
+        }
+    }
+    return types
+
+def create_role_and_set_to_admin():
+    data = {'role' :"Read User Type"}
+    create_custom_role(data)
+    frappe.get_doc("User", 'Administrator').add_roles("Read User Type")
+    frappe.db.commit()
+    update_permission_property("User", "Read User Type", 3, "read" , 1)
+    update_permission_property("User", "Read User Type", 3, "write" , 1)
+    frappe.db.commit()
+    
 def create_banks():
     banks = [
         {"bank_name":"Al Inma Bank","swift_number" :"INMA" },
