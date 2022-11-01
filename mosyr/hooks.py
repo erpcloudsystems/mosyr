@@ -126,6 +126,9 @@ doc_events = {
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
+	},
+	"User" :{
+		"after_insert" : "mosyr.api.set_user_type"
 	}
 }
 
