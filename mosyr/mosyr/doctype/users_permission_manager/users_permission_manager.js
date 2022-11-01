@@ -16,6 +16,10 @@ frappe.ui.form.on('Users Permission Manager', {
 	user:function(frm){
 		frm.clear_table('permissions')
 		frm.refresh_field('permissions')
+
+		frm.clear_table('page_or_report')
+		frm.refresh_field('page_or_report')
+
 		if(frm.doc.user){
 			frappe.call({
 				doc:frm.doc,
@@ -23,10 +27,27 @@ frappe.ui.form.on('Users Permission Manager', {
 				freeze: true,
 				args:{user: frm.doc.user},
 				callback: function(r){
-					(r.message || []).forEach(row => {
+					console.log(r.message);
+					(r.message.docs || []).forEach(row => {
 						let new_row = frm.add_child("permissions", row)
 					});
 					frm.refresh_field('permissions');
+
+					(r.message.repage || []).forEach(row => {
+						if(row.page){
+							let new_row = frm.add_child("page_or_report", {
+								'set_role_for': 'Page',
+								'page_or_report': row.page
+							})
+						}else if(row.report){
+							let new_row = frm.add_child("page_or_report", {
+								'set_role_for':'Report',
+								'page_or_report': row.report
+							})
+						}
+						
+					});
+					frm.refresh_field('page_or_report');
 				}
 			})
 
@@ -35,7 +56,7 @@ frappe.ui.form.on('Users Permission Manager', {
 					doc:frm.doc,
 					method: "apply_permissions",
 					freeze: true,
-					args:{user: frm.doc.user, perms: frm.doc.permissions},
+					args:{user: frm.doc.user, perms: frm.doc.permissions, rps: frm.doc.page_or_report},
 					callback: function(r){
 						(r.message || []).forEach(row => {
 							let new_row = frm.add_child("permissions", row)
