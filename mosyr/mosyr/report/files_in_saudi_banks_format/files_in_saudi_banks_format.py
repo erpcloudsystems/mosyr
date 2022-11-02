@@ -130,7 +130,7 @@ def get_data_inma_payroll(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
@@ -147,11 +147,11 @@ def get_data_inma_payroll(filters):
 			'SAR' as sar,
 			1 as one2,
 			'/PAYROLL/' as payrol,
-			IF(emp.bank_name="Al Inma Bank", 'BANK ACCOUNT', "SARIE") as inma,
+			IF(emp.employee_bank="Al Inma Bank", 'BANK ACCOUNT', "SARIE") as inma,
 			id.id_number as id_number
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		WHERE emp.status ='Active' and  {condition}
 		ORDER BY row_num
@@ -188,7 +188,7 @@ def get_data_inma_wps(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
@@ -207,7 +207,7 @@ def get_data_inma_wps(filters):
 			'SAR' as sar,
 			1 as one2,
 			'/PAYROLL/' as payrol,
-			IF(emp.bank_name="Al Inma Bank", 'BANK ACCOUNT', "SARIE") as inma,
+			IF(emp.employee_bank="Al Inma Bank", 'BANK ACCOUNT', "SARIE") as inma,
 			id.id_number as id_number,
 			IF(sd.amount , sd.amount,0) as basic,
 			IF(sde.amount , sde.amount,0) as housing_allowance,
@@ -215,7 +215,7 @@ def get_data_inma_wps(filters):
 			sl.total_deduction as dedactions
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted'
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
@@ -259,7 +259,7 @@ def get_data_riad(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
@@ -297,7 +297,7 @@ def get_data_riad(filters):
 			' ' as spaces33
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
@@ -385,7 +385,7 @@ def get_data_ahly(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
@@ -399,7 +399,7 @@ def get_data_ahly(filters):
 			emp.permanent_address 
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		WHERE emp.status ='Active' and {condition}
 		""",as_dict=1)
@@ -413,7 +413,7 @@ def get_data_sumba(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
@@ -497,7 +497,7 @@ def get_data_sumba(filters):
 			LPAD(FORMAT(sl.total_deduction,2), 13 , 0)  as dedactions
 		FROM `tabEmployee` emp
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
@@ -570,7 +570,7 @@ def get_data_alrajhi_payroll(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
@@ -585,7 +585,7 @@ def get_data_alrajhi_payroll(filters):
 			'0' as zero
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		WHERE emp.status ='Active' and {condition}
 		ORDER BY emp_num
@@ -643,7 +643,7 @@ def get_data_alrajhi_interchange(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	data = frappe.db.sql(f"""
@@ -659,7 +659,7 @@ def get_data_alrajhi_interchange(filters):
 			' ' as  i
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		WHERE emp.status ='Active' and  {condition}
 		ORDER BY emp_num
@@ -723,7 +723,7 @@ def get_data_alrajhi_payroll_card(filters):
 		if date in monthes:
 			idx = monthes.index(date) + 1
 			condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	today=datetime.datetime.today().strftime('%Y%m%d')
@@ -787,7 +787,7 @@ def get_data_alaraby(filters):
 	if date in monthes:
 		idx = monthes.index(date) + 1
 		condition += f""" AND Month (sl.start_date)={idx}"""
-	if(filters.get('bank')):condition += f" AND emp.bank_name='{filters.get('bank')}'"
+	if(filters.get('bank')):condition += f" AND emp.employee_bank='{filters.get('bank')}'"
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	year = filters.get("year")
@@ -810,7 +810,7 @@ def get_data_alaraby(filters):
 		FROM `tabEmployee` emp
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
-		LEFT JOIN `tabBank` b ON b.name=emp.bank_name
+		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and {condition}

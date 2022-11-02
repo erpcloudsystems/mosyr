@@ -295,7 +295,8 @@ fixtures = [
 				"Shift Assignment-lateness_permission",
 				"Shift Type-in_lateness_permission",
 				"Shift Request-lateness_permission",
-				"Additional Salary-employee_deduction"
+				"Additional Salary-employee_deduction",
+				"Employee-employee_bank"
             ]]
         ]
     },
@@ -310,7 +311,8 @@ fixtures = [
 					"Employee-erpnext_user-label",
 					"Employee-company-in_standard_filter",
 					"Employee-gender-hidden",
-					"Employee-gender-default"
+					"Employee-gender-default",
+					"Employee-bank_name-hidden"
 				]]
 			]
 	},
