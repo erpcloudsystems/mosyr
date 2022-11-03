@@ -19,6 +19,7 @@ def after_install():
     setup_doctypes_user_type()
     add_non_standard_user_types()
     create_role_and_set_to_admin()
+    set_home_page_login()
 
 def edit_gender_list():
     genders_to_del = frappe.get_list("Gender", filters={"name": ["not in", ["Female", "Male"]]})
@@ -193,3 +194,7 @@ def add_property_setter(fields_props):
         if self.payable_account: return
         account = create_account("Expense Claims", self.company, "Accounts Payable", "Liability", "Payable", True, "default_payable_account")
         self.payable_account = account
+
+def set_home_page_login():
+    frappe.db.set_value('Website Settings', 'Website Settings', 'home_page', 'login')
+    frappe.db.commit()
