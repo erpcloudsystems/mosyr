@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('Users Permission Manager', {
 	refresh: function(frm){
+		frm.disable_save()
 		frm.set_query( 'document_type', "permissions", function(doc) {
 			return {
 				query: "mosyr.api.get_doctypes",
@@ -10,9 +11,9 @@ frappe.ui.form.on('Users Permission Manager', {
 			};
 		});
 	},
-	setup: function(frm) {
-		frm.disable_save()
-	},
+	// setup: function(frm) {
+	// 	frm.disable_save()
+	// },
 	user:function(frm){
 		frm.clear_table('permissions')
 		frm.refresh_field('permissions')

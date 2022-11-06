@@ -10,6 +10,12 @@ from six import iteritems
 from erpnext.setup.install import create_custom_role, create_role_permissions_for_doctype, update_select_perm_after_install
 
 class UsersPermissionManager(Document):
+
+	def validate(self):
+		self.flags.ignore_mandatory = 1
+		self.user = ''
+		self.permissions = []
+		self.page_or_report = []
 	
 	@frappe.whitelist()
 	def get_permissions(self, user):
