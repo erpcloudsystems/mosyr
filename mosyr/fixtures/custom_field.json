@@ -2360,7 +2360,7 @@
   "in_standard_filter": 0,
   "insert_after": "payroll_cost_center",
   "label": "Payroll Card Number",
-  "length": 0,
+  "length": 19,
   "mandatory_depends_on": null,
   "modified": "2022-02-27 18:09:29.784041",
   "name": "Employee-payroll_card_number",
