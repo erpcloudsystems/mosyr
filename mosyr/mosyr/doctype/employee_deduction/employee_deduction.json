@@ -39,7 +39,8 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "amount",
@@ -149,7 +150,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-02 23:50:14.230356",
+ "modified": "2022-11-06 03:21:57.370869",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Deduction",
