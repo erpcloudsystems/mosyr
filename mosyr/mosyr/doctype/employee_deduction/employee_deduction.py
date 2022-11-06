@@ -29,7 +29,6 @@ class EmployeeDeduction(Document):
 		
 	def on_cancel(self):
 		eadd = frappe.get_list('Additional Salary' ,{"employee_deduction":self.name})
-		print(eadd)
 		if eadd:
 			for ea in eadd:
 				doc = frappe.get_doc("Additional Salary",ea['name'])
