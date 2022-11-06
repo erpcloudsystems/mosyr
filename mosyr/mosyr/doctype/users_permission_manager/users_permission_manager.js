@@ -10,6 +10,13 @@ frappe.ui.form.on('Users Permission Manager', {
 
 			};
 		});
+		frm.clear_table('permissions')
+		frm.clear_table('page_or_report')
+		frm.set_value('user', '')
+
+		frm.refresh_field('permissions')
+		frm.refresh_field('page_or_report')
+		frm.refresh_field('user')
 	},
 	// setup: function(frm) {
 	// 	frm.disable_save()
