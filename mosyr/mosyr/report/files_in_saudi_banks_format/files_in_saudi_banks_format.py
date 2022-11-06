@@ -105,7 +105,7 @@ def execute(filters=None):
 			return get_columns_inma_wps(),get_data_inma_wps(filters)
 		elif bank_name == "Riyadh Bank" and disbursement_type == 'WPS':
 			return get_columns_riad(),get_data_riad(filters)
-		elif bank_name == "The National Commercial Bank" and (disbursement_type == 'Payroll' or disbursement_type == 'WPS'):
+		elif bank_name == "The National Commercial Bank" and (disbursement_type == 'Payroll'):
 			return get_columns_ahly(),get_data_ahly(filters)
 		elif bank_name == "Samba Financial Group" and disbursement_type == 'WPS':
 			return get_columns_sumba(),get_data_sumba(filters)
@@ -154,7 +154,6 @@ def get_data_inma_payroll(filters):
 		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
 		LEFT JOIN `tabIdentity` id ON id.parent=emp.name
 		WHERE emp.status ='Active' and  {condition}
-		ORDER BY row_num
 		""",as_dict=1)
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	company_controller = frappe.get_doc("Company Controller" ,company)
@@ -221,7 +220,6 @@ def get_data_inma_wps(filters):
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component="Allowance Trans"
 		WHERE emp.status ='Active' and {condition}
-		ORDER BY row_num
 		""",as_dict=1)
 	# for d in data:
 	# 	other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
@@ -236,6 +234,15 @@ def get_data_inma_wps(filters):
 		salary.append(d.get("month_to_date"))
 	total_salary = sum(salary)
 	if not data: return []
+	for d in data:
+		if d.get("basic") == 0:
+			d.update({"basic":"0"})
+		if d.get("housing_allowance") == 0:
+			d.update({"housing_allowance":"0"})
+		if d.get("allowance_trans") == 0:
+			d.update({"allowance_trans":"0"})
+		if d.get("dedactions") == 0:
+			d.update({"dedactions":"0"})
 	data.insert(0,
 		{'one1': "WPS",
 		'row_num': company_controller.company_id,
@@ -290,10 +297,10 @@ def get_data_riad(filters):
 			RPAD(b.swift_number,11, ' ') as emp_bank,
 			' ' as spaces129,
 			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
-			LPAD(FORMAT(sd.amount,2),14,0) as basic,
-			LPAD(FORMAT(sde.amount,2),14,0) as housing_allowance,
-			LPAD(FORMAT('0' ,2) ,14 ,0) as other_earnings,
-			LPAD(FORMAT(sl.total_deduction,2),14 ,0) as dedactions,
+			LPAD(FORMAT(sd.amount,2),12,0) as basic,
+			LPAD(FORMAT(sde.amount,2),12,0) as housing_allowance,
+			LPAD(FORMAT('0' ,2) ,12 ,0) as other_earnings,
+			LPAD(FORMAT(sl.total_deduction,2),12 ,0) as dedactions,
 			' ' as spaces33
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
@@ -304,6 +311,7 @@ def get_data_riad(filters):
 		WHERE emp.status ='Active' and {condition}
 		ORDER BY row_num_riad
 		""",as_dict=1)
+
 	for d in data:
 		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
 		d.update({"other_earnings":(str(other_earnings).zfill(13))})
@@ -345,6 +353,15 @@ def get_data_riad(filters):
 		labors_office_file_no = (company_controller.labors_office_file_no).zfill(9)
 	else :
 		labors_office_file_no = 000000000
+	for d in data:
+		if not d.get("basic"):
+			d.update({"basic":"000000000.00"})
+		if not d.get("housing_allowance"):
+			d.update({"housing_allowance":"000000000.00"})
+		if not d.get("other_earnings"):
+			d.update({"other_earnings":"000000000.00"})
+		if not d.get("dedactions"):
+			d.update({"dedactions":"000000000.00"})
 	data.append(
 		{
 			'riad_num':999,
@@ -406,6 +423,7 @@ def get_data_ahly(filters):
 	return data
 
 def get_data_sumba(filters):
+	today = datetime.date.today()
 	condition='1=1 '
 	if filters.get("month"):
 		monthes = ['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -477,7 +495,7 @@ def get_data_sumba(filters):
 	data = frappe.db.sql(f"""
 		SELECT
 			'00207' as num,
-			LPAD(emp.employee_number,12 ,0) as emp_num,
+			'' as emp_num,
 			IFNULL(RPAD(emp.full_name_en,45,' ') , RPAD(emp.first_name,45,' ') ) as emp_name,
 			LPAD(FORMAT(sl.month_to_date,2),13,0) as salary,
 			NULL as checksum,
@@ -494,7 +512,8 @@ def get_data_sumba(filters):
 			LPAD(FORMAT(sd.amount,2), 13 , 0) as basic,
 			LPAD(FORMAT(sde.amount ,2) , 12 , 0) as housing_allowance,
 			LPAD(FORMAT('0' ,2) , 12 , 0) as other_earnings,
-			LPAD(FORMAT(sl.total_deduction,2), 13 , 0)  as dedactions
+			LPAD(FORMAT(sl.total_deduction,2), 13 , 0)  as dedactions,
+			emp.name as name
 		FROM `tabEmployee` emp
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
@@ -502,13 +521,18 @@ def get_data_sumba(filters):
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and  {condition}
-		GROUP BY emp.name
 		""",as_dict=1)
 	salary_total = []
 	for d in data :
+		num = ''
+		for c in d.get("name"):
+			if c.isdigit():
+				num = num + c
+		d.update({"emp_num": '0000000' + num})
 		salary_total.append(flt(d.get("salary")))
+		del d['name']
 		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
-		d.update({"other_earnings":(str(("%.2f" % other_earnings)).zfill(13))})
+		d.update({"other_earnings":(str(("%.2f" % other_earnings)).zfill(12))})
 		sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
 		d.update({'other_earnings':sl_other_earnings})
 		d.update({'spaces19':' ' * 19})
@@ -523,12 +547,15 @@ def get_data_sumba(filters):
 		if d.get('basic', False):
 			sl_basic =  d.get('basic').replace(',','').replace('.','')
 			d.update({'basic':sl_basic})
+		else :d.update({'basic':'00000000000'})
 		if d.get('housing_allowance', False):
 			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
 			d.update({'housing_allowance':sl_housing_allowance})
+		else :d.update({'housing_allowance':'00000000000'})
 		if d.get('dedactions', False):
 			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
+		else :d.update({'dedactions':'00000000000'})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
@@ -539,19 +566,6 @@ def get_data_sumba(filters):
 	else:
 		organization_english = ' ' * 40
 	if not data: return []
-	data.insert(0,
-		{
-		'num': '0011',
-		'emp_num' : str(salary_slip.posting_date.month).zfill(2),
-		'emp_name' : str(salary_slip.posting_date.day).zfill(2),
-		'salary':salary_slip.posting_date.strftime("%Y%m%d"),
-		'checksum':organization_english,
-		'emp_bank' : company_controller.company_id.ljust(152)
-		})
-	if (str("%.2f" % total_salary).zfill(19)): 
-		salary=(str("%.2f" % total_salary).zfill(19)).replace(',','').replace('.','')
-	else:
-		salary=(str("%.2f" % total_salary).zfill(19))
 	data.append(
 		{
 			'num':'003',
@@ -560,6 +574,20 @@ def get_data_sumba(filters):
 			'salary':' ' * 181  # 181 spaces
 		}
 	)
+	data.insert(0,
+		{
+		'num': '0011',
+		'emp_num' : str(today.month).zfill(2),
+		'emp_name' : str(today.day).zfill(2),
+		'salary':today.strftime("%Y%m%d"),
+		'checksum':organization_english,
+		'emp_bank' : company_controller.company_id.ljust(152)
+		})
+	if (str("%.2f" % total_salary).zfill(19)): 
+		salary=(str("%.2f" % total_salary).zfill(19)).replace(',','').replace('.','')
+	else:
+		salary=(str("%.2f" % total_salary).zfill(19))
+
 	return data
 
 def get_data_alrajhi_payroll(filters):
@@ -582,7 +610,8 @@ def get_data_alrajhi_payroll(filters):
 			IFNULL(RPAD(emp.full_name_en,50,' ') , RPAD(emp.first_name,50,' ') ) as emp_name,
 			LPAD(FORMAT(sl.month_to_date,2) , 17, 0) as salary,
 			LPAD(id.id_number , 15 , 0) as id_number,
-			'0' as zero
+			'0' as zero,
+			' ' as onespace
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
@@ -592,6 +621,7 @@ def get_data_alrajhi_payroll(filters):
 		""",as_dict=1)
 	salary=[]
 	for d in data :
+		d.update({"onespace" : " " * 14})
 		salary.append(flt(d.get("salary")))
 		if d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
@@ -631,7 +661,9 @@ def get_data_alrajhi_payroll(filters):
 		'salary':salary,
 		'id_number' : str(len(data)).zfill(8),
 		"zero":bank_account_number,
-		"file_seq":"",
+		"onespace" :" ",
+		"file_seq":"01",
+		"space65":" " * 65 ,
 		})
 	return data
 
@@ -747,7 +779,7 @@ def get_data_alrajhi_payroll_card(filters):
 			END AS phone,
 			LPAD(FORMAT(sd.amount, 2),14,0) as basic ,
 			IFNULL(LPAD(FORMAT(sde.amount, 2),14,0) , '00000000000.00' ) as housing_allowance,
-			LPAD(FORMAT('0' ,2) ,14 ,0) as other_earnings,
+			'0' as other_earnings,
 			LPAD(FORMAT(sl.total_deduction, 2),14,0) as dedactions
 		FROM `tabEmployee` emp  
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
@@ -758,25 +790,26 @@ def get_data_alrajhi_payroll_card(filters):
 		ORDER BY emp_num
 		""",as_dict=1)
 	for d in data:
-		d.update({"spaces10": ' ' *10 })
+		d.update({"spaces10": ' ' * 10 })
 		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
-		d.update({"other_earnings":(str(other_earnings).zfill(13))})
-	for d in data :
+		other_earnings = "%.2f" % other_earnings
+		d.update({"other_earnings":(str(other_earnings).zfill(12))})
 		if d.get('salary', False):
-			sl_total = d.get('salary').replace(',','')
+			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
 		if d.get('basic', False):
-			sl_basic =  d.get('basic').replace(',','')
+			sl_basic =  d.get('basic').replace(',','').replace('.','')
 			d.update({'basic':sl_basic})
 		if d.get('housing_allowance', False):
-			sl_housing_allowance =  d.get('housing_allowance').replace(',','')
+			sl_housing_allowance =  d.get('housing_allowance').replace(',','').replace('.','')
 			d.update({'housing_allowance':sl_housing_allowance})
 		if d.get('other_earnings', False):
-			sl_other_earnings =  d.get('other_earnings').replace(',','')
+			sl_other_earnings =  d.get('other_earnings').replace(',','').replace('.','')
 			d.update({'other_earnings':sl_other_earnings})
 		if d.get('dedactions', False):
-			sl_dedactions =  d.get('dedactions').replace(',','')
+			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
+		
 	return data
 
 def get_data_alaraby(filters):
@@ -826,17 +859,18 @@ def get_data_alaraby(filters):
 	total_salary=sum(salary)
 	if not data: return []
 	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
+	today =  datetime.date.today()
 	data.insert(0,
 		{'d': 'H',
 		'month_to_date': "ARNB",
 		'bank_ac_no': company_controller.agreement_number_for_customer,
 		'first_name':"N",
-		'swift_number':salary_slip.posting_date.strftime("%d%m%Y") + ".EX1",
+		'swift_number':today.strftime("%d%m%Y") + ".EX1",
 		'month':company_controller.bank_account_number,
 		'basic':"SAR",
-		'housing_allowance': salary_slip.posting_date.strftime("%d%m%Y"),
+		'housing_allowance': today.strftime("%d%m%Y"),
 		'other_earnings' :total_salary,
-		'dedactions':salary_slip.posting_date.strftime("%d%m%Y"),
+		'dedactions':today.strftime("%d%m%Y"),
 		'id_number':company_controller.company_id,
 		'co_number':f"salaries for {month} {year}"
 		})
@@ -1522,7 +1556,7 @@ def get_columns_alrajhi_payroll():
 		},
 		{
 			
-			"fieldname": "one", # 14 spaces
+			"fieldname": "onespace", # 14 spaces in emplooyees and on space in header
 			"fieldtype": "Data",
 			"width": 100,
 		},
@@ -1535,7 +1569,7 @@ def get_columns_alrajhi_payroll():
 
 		{
 			
-			"fieldname": "", #65 spaces in header
+			"fieldname": "space65", #65 spaces in header
 			"fieldtype": "Data",
 			"width": 100,
 		},
@@ -1769,4 +1803,3 @@ def get_columns_alaraby():
 					"width": 150
 				}
 			]
-
