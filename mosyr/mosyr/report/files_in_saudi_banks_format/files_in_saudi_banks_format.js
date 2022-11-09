@@ -1,9 +1,4 @@
-/**
- * frappe.views.ReportView
- */
-//  import DataTable from 'frappe-datatable';
 
-//  frappe.provide('frappe.views');
 
 let d = new Date();
 let monthNames=  [
@@ -38,17 +33,36 @@ frappe.query_reports["Files in Saudi banks format"] = {
 								let	disbursement_type = r.message[1]
 								// CSV
 								if (bank_name === "Al Inma Bank") {
-									let file_format = 'CSV'
-									report.make_access_log('Export', file_format);
-									const data = report.get_data_for_csv(include_indentation=false);
-									if (disbursement_type === "Payroll"){
-										data[0][0]="0"
-										data[0] = data[0].slice(0,10)
-									}
-									else if(disbursement_type === 'WPS'){
-										data[0] = data[0].slice(0,11)
-									}
-									frappe.tools.downloadify(data, null, bank_name.replaceAll(" ","_"));
+									var d = new frappe.ui.Dialog({
+										title: __('Add Due Date'),
+										fields: [
+											{
+												"label" : "Date",
+												"fieldname": "date",
+												"fieldtype": "Date",
+												"reqd": 1,
+											}
+										],
+										primary_action: function() {
+											d.hide()
+											var date = d.get_values();
+											let myDate = date.date.split('-').join('')
+											let file_format = 'CSV'
+											report.make_access_log('Export', file_format);
+											const data = report.get_data_for_csv(include_indentation=false);
+											if (disbursement_type === "Payroll"){
+												data[0][0]="0"
+												data[0] = data[0].slice(0,10)
+											}
+											else if(disbursement_type === 'WPS'){
+												data[0] = data[0].slice(0,11)
+											}
+											data[0][5] = myDate
+											frappe.tools.downloadify(data, null, bank_name.replaceAll(" ","_"));
+										},
+										primary_action_label: __('Export')
+									});
+									d.show();
 								}
 								else if (bank_name === "The National Commercial Bank"){
 									let file_format = 'CSV'
@@ -58,44 +72,29 @@ frappe.query_reports["Files in Saudi banks format"] = {
 								}
 								// Excel
 								else if (bank_name === "Al Araby Bank" && disbursement_type == 'WPS') {
-									let file_format = 'Excel'
-									let filters = report.get_filter_values(true);
-									if (frappe.urllib.get_dict("prepared_report_name")) {
-										filters = Object.assign(frappe.urllib.get_dict("prepared_report_name"), filters);
-									}
-									const visible_idx = report.datatable.bodyRenderer.visibleRowIndices;
-									if (visible_idx.length + 1 === report.data.length) {
-										visible_idx.push(visible_idx.length);
-									}
-									
-									const args = {
-										cmd: 'mosyr.mosyr.report.files_in_saudi_banks_format.files_in_saudi_banks_format.export_query',
-										report_name: report.report_name,
-										custom_columns: report.custom_columns.length? report.custom_columns: [],
-										file_format_type: file_format,
-										filters: filters,
-										visible_idx,
-										include_indentation:false,
-									};
-					
-									open_url_post(frappe.request.url, args);
-								}
-								// Txt
-								else if ((bank_name === "Riyadh Bank" && disbursement_type === "WPS") || 
-										 (bank_name === "Samba Financial Group" && disbursement_type === "WPS")||
-										 (bank_name === "Al Rajhi Bank")
-										){
-											let file_format = 'Txt'
+									var d = new frappe.ui.Dialog({
+										title: __('Add Date'),
+										fields: [
+											{
+												"label" : "Date",
+												"fieldname": "date",
+												"fieldtype": "Date",
+												"reqd": 1,
+											}
+										],
+										primary_action: function() {
+											d.hide()
+											var date = d.get_values();
+											let file_format = 'Excel'
 											let filters = report.get_filter_values(true);
 											if (frappe.urllib.get_dict("prepared_report_name")) {
 												filters = Object.assign(frappe.urllib.get_dict("prepared_report_name"), filters);
 											}
-							
 											const visible_idx = report.datatable.bodyRenderer.visibleRowIndices;
 											if (visible_idx.length + 1 === report.data.length) {
 												visible_idx.push(visible_idx.length);
 											}
-											
+									
 											const args = {
 												cmd: 'mosyr.mosyr.report.files_in_saudi_banks_format.files_in_saudi_banks_format.export_query',
 												report_name: report.report_name,
@@ -104,10 +103,89 @@ frappe.query_reports["Files in Saudi banks format"] = {
 												filters: filters,
 												visible_idx,
 												include_indentation:false,
+												date : date.date
 											};
 							
 											open_url_post(frappe.request.url, args);
+										},
+										primary_action_label: __('Export')
+									});
+									d.show();	
+
+								}
+								// Txt with dialog
+								else if ((bank_name === "Riyadh Bank" && disbursement_type === "WPS") || 
+										 ((bank_name === "Al Rajhi Bank" && disbursement_type === "Payroll")) ||
+										 ((bank_name === "Al Rajhi Bank" && disbursement_type === "Interchange"))
+										){
+											var d = new frappe.ui.Dialog({
+												title: __('Add Date'),
+												fields: [
+													{
+														"label" : "Date",
+														"fieldname": "date",
+														"fieldtype": "Date",
+														"reqd": 1,
+													}
+												],
+												primary_action: function() {
+													d.hide()
+													var date = d.get_values();
+													let myDate = date.date.split('-').join('')
+													let file_format = 'Txt'
+													let filters = report.get_filter_values(true);
+													if (frappe.urllib.get_dict("prepared_report_name")) {
+														filters = Object.assign(frappe.urllib.get_dict("prepared_report_name"), filters);
+													}
+									
+													const visible_idx = report.datatable.bodyRenderer.visibleRowIndices;
+													if (visible_idx.length + 1 === report.data.length) {
+														visible_idx.push(visible_idx.length);
+													}
+													
+													const args = {
+														cmd: 'mosyr.mosyr.report.files_in_saudi_banks_format.files_in_saudi_banks_format.export_query',
+														report_name: report.report_name,
+														custom_columns: report.custom_columns.length? report.custom_columns: [],
+														file_format_type: file_format,
+														filters: filters,
+														visible_idx,
+														include_indentation:false,
+														date : date.date
+													};
+													open_url_post(frappe.request.url, args);
+													},
+													primary_action_label: __('Export')
+												});
+												d.show();
 										}
+								// Txt without dialog
+								else if ((bank_name === "Samba Financial Group" && disbursement_type === "WPS") ||
+										(bank_name === "Al Rajhi Bank" && disbursement_type === "Payroll Cards")
+									   ){
+										   let file_format = 'Txt'
+										   let filters = report.get_filter_values(true);
+										   if (frappe.urllib.get_dict("prepared_report_name")) {
+											   filters = Object.assign(frappe.urllib.get_dict("prepared_report_name"), filters);
+										   }
+						   
+										   const visible_idx = report.datatable.bodyRenderer.visibleRowIndices;
+										   if (visible_idx.length + 1 === report.data.length) {
+											   visible_idx.push(visible_idx.length);
+										   }
+										   
+										   const args = {
+											   cmd: 'mosyr.mosyr.report.files_in_saudi_banks_format.files_in_saudi_banks_format.export_query',
+											   report_name: report.report_name,
+											   custom_columns: report.custom_columns.length? report.custom_columns: [],
+											   file_format_type: file_format,
+											   filters: filters,
+											   visible_idx,
+											   include_indentation:false,
+										   };
+						   
+										   open_url_post(frappe.request.url, args);
+									   }
 							}
 						}
 					});

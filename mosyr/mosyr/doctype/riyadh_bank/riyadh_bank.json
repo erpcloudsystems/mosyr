@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:random_number",
+ "creation": "2022-11-07 04:33:07.387559",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "random_number",
+  "today"
+ ],
+ "fields": [
+  {
+   "fieldname": "random_number",
+   "fieldtype": "Data",
+   "label": "Random Number",
+   "unique": 1
+  },
+  {
+   "fieldname": "today",
+   "fieldtype": "Date",
+   "label": "Today"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-11-07 04:38:15.920918",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Riyadh Bank",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
