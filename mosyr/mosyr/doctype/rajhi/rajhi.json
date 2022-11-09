@@ -15,9 +15,10 @@
    "label": "Rajhi Date"
   }
  ],
+ "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-06 04:46:03.830181",
+ "modified": "2022-11-09 04:30:41.936825",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Rajhi",
@@ -36,6 +37,7 @@
    "write": 1
   }
  ],
+ "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
 }

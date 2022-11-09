@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_rename": 1,
  "autoname": "field:random_number",
  "creation": "2022-11-07 04:33:07.387559",
  "doctype": "DocType",
@@ -15,17 +14,20 @@
    "fieldname": "random_number",
    "fieldtype": "Data",
    "label": "Random Number",
+   "read_only": 1,
    "unique": 1
   },
   {
    "fieldname": "today",
    "fieldtype": "Date",
-   "label": "Today"
+   "label": "Today",
+   "read_only": 1
   }
  ],
+ "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-07 04:38:15.920918",
+ "modified": "2022-11-09 04:30:19.783583",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Riyadh Bank",
@@ -44,6 +46,7 @@
    "write": 1
   }
  ],
+ "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
 }
