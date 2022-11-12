@@ -13,3 +13,4 @@ class RiyadhBank(Document):
 		while random_num in list_riad:
 			random_num = str(randint(10000,100000))
 		self.random_number = random_num
+		self.today = frappe.utils.today()
