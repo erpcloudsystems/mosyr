@@ -56,7 +56,6 @@ def export_query(date=frappe.utils.today()):
 		frappe.response["filename"] = bank + ".xlsx"
 		frappe.response["filecontent"] = xlsx_file.getvalue()
 		frappe.response["type"] = "binary"
-# housing_allowance
 
 	elif file_format_type == "Txt":
 		data = run(report_name, filters, custom_columns=custom_columns)
@@ -100,6 +99,9 @@ def export_query(date=frappe.utils.today()):
 				data["result"][0]['bank_acc_no'] = frappe.utils.today().replace("-" , "")
 				data["result"][0]['emp_name'] = date.replace("-" , "")
 		if get_bank()[0] == 'Riyadh Bank' and get_bank()[1] == "WPS":
+			company_controller = frappe.get_doc("Company Controller" , get_bank()[2])
+			data["result"][0]['y'] = date.replace("-" , "")
+
 			doc = frappe.get_doc({
 				'doctype': 'Riyadh Bank',
 				'today': frappe.utils.today()
@@ -416,7 +418,7 @@ def get_data_riad(filters):
 			d.update({'dedactions':sl_dedactions})
 
 	company_controller = frappe.get_doc("Company Controller" ,company)
-	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
+	
 
 	if company_controller.labors_office_file_no:
 		labors_office_file_no = (company_controller.labors_office_file_no).zfill(9)
@@ -451,7 +453,7 @@ def get_data_riad(filters):
 		{
 		'riad_num':  111,
 		'emp_num' : company_controller.agreement_symbol,
-		'y':salary_slip.posting_date.strftime("%Y%m%d"),
+		'y':frappe.utils.today(),
 		'agreament_s':'PAYROLLREF-PR-0001-'+ str(randint(100, 10000000000000000)),
 		'row_num_riad' :establishment_number,
 		'id_number_riad':"RIBL",
@@ -609,9 +611,16 @@ def get_data_sumba(filters):
 			id = str(id).zfill(10)
 		d.update({"id_number":id})
 	salary_total = []
-	for d in data :
-		if not  d.get("departement_location"):d.update({"departement_location": ' ' *20})
+	for d in data:
 		salary_total.append(flt(d.get("salary")))
+
+	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
+	salary_slip_list = frappe.get_list("Salary Slip")
+	if not salary_slip_list: return []
+	total_salary = sum(salary_total)
+
+	for d in data:
+		if not d.get("departement_location"):d.update({"departement_location": ' ' *20})
 		del d['name']
 		other_earnings = flt(d.get("gross_pay" or '0')) - flt(d.get("basic" or '0')) - flt(d.get("housing_allowance" or '0'))
 		d.update({"other_earnings":(str(("%.2f" % other_earnings)).zfill(12))})
@@ -638,11 +647,6 @@ def get_data_sumba(filters):
 			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
 		else :d.update({'dedactions':'00000000000'})
-	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	salary_slip_list = frappe.get_list("Salary Slip")
-	if not salary_slip_list: return []
-	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
-	total_salary = sum(salary_total)
 	if company_controller.organization_english:
 		organization_english = company_controller.organization_english.ljust(40)
 	else:
@@ -653,7 +657,7 @@ def get_data_sumba(filters):
 		{
 			'num':'003',
 			'emp_num':str(len(data)).zfill(6),
-			'emp_name':str(salary).zfill(18),
+			'emp_name':str("%.2f" % total_salary).zfill(18).replace(',','').replace('.',''),
 			'salary':' ' * 181  # 181 spaces
 		}
 	)
@@ -666,7 +670,6 @@ def get_data_sumba(filters):
 		'checksum':organization_english,
 		'emp_bank' : company_controller.company_id.ljust(152)
 		})
-
 	return data
 
 def get_data_alrajhi_payroll(filters):
@@ -861,7 +864,7 @@ def get_data_alrajhi_payroll_card(filters):
 		SELECT
 			LPAD(emp.employee_number,12,0) as emp_num,
 			'00000' as zero5,
-			LPAD(emp.payroll_card_number,19,0) as payroll_card_number,
+			IFNULL(LPAD(emp.payroll_card_number,19,0),'0000000000000000000') as payroll_card_number,
 			IFNULL(RPAD(emp.full_name_en,50,' ') ,
 			RPAD(emp.first_name,50,' ') ) as emp_name,
 			'' AS id_number_rajhi,
