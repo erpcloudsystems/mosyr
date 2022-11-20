@@ -58,17 +58,6 @@
   "column_break_45",
   "bank_account_number",
   "banks_type_salary_card",
-  "working_in_weekend_section",
-  "friday",
-  "saterday",
-  "absence_and_delay_settings_section",
-  "first_absence_value",
-  "column_break_53",
-  "other_absences_value",
-  "column_break_55",
-  "first_delay_value",
-  "column_break_57",
-  "other_delays_value",
   "social_insurance_settings_section",
   "risk_percentage_on_employee",
   "column_break_61",
@@ -76,11 +65,7 @@
   "column_break_63",
   "pension_percentage_on_employee",
   "column_break_65",
-  "pension_percentage_on_company",
-  "other_section",
-  "overtime_hours",
-  "column_break_69",
-  "attendance_service"
+  "pension_percentage_on_company"
  ],
  "fields": [
   {
@@ -344,64 +329,6 @@
    "options": "Bank Type"
   },
   {
-   "fieldname": "working_in_weekend_section",
-   "fieldtype": "Section Break",
-   "label": "Working In Weekend"
-  },
-  {
-   "default": "0",
-   "fieldname": "friday",
-   "fieldtype": "Check",
-   "label": "Friday"
-  },
-  {
-   "default": "0",
-   "fieldname": "saterday",
-   "fieldtype": "Check",
-   "label": "Saterday"
-  },
-  {
-   "fieldname": "absence_and_delay_settings_section",
-   "fieldtype": "Section Break",
-   "label": "Absence And Delay Settings"
-  },
-  {
-   "fieldname": "first_absence_value",
-   "fieldtype": "Select",
-   "label": "First Absence Value ( Day )",
-   "options": "\n1\n1.5\n2"
-  },
-  {
-   "fieldname": "column_break_53",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "other_absences_value",
-   "fieldtype": "Select",
-   "label": "Other Absences Value ( Day )",
-   "options": "\n1\n1.5\n2"
-  },
-  {
-   "fieldname": "column_break_55",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "first_delay_value",
-   "fieldtype": "Select",
-   "label": "First Delay Value ( Hour )",
-   "options": "\n1\n1.5\n2"
-  },
-  {
-   "fieldname": "column_break_57",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "other_delays_value",
-   "fieldtype": "Select",
-   "label": "Other Delays Value ( Hour )",
-   "options": "\n1\n1.5\n2"
-  },
-  {
    "fieldname": "social_insurance_settings_section",
    "fieldtype": "Section Break",
    "label": "Social Insurance Settings"
@@ -443,27 +370,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "other_section",
-   "fieldtype": "Section Break",
-   "label": "Other"
-  },
-  {
-   "fieldname": "overtime_hours",
-   "fieldtype": "Select",
-   "label": "Overtime Hours",
-   "options": "\nHour And Half\nTwo Hours"
-  },
-  {
-   "fieldname": "column_break_69",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "attendance_service",
-   "fieldtype": "Select",
-   "label": "Attendance Service",
-   "options": "\nActive\nSuspended\nTerminated"
-  },
-  {
    "fieldname": "company_id",
    "fieldtype": "Link",
    "label": "Company ID",
@@ -497,7 +403,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-10-27 02:57:11.152626",
+ "modified": "2022-11-20 09:47:42.969289",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Company Controller",
