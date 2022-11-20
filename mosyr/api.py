@@ -285,3 +285,6 @@ def set_user_type(doc,method):
 
 def set_employee_number(doc,method):
     doc.employee_number = doc.number
+
+def set_date_of_joining(doc,method):
+    doc.date_of_joining = doc.custom_date_of_joining

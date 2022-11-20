@@ -236,5 +236,39 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Employee",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "date_of_joining",
+  "modified": "2022-11-20 11:25:05.094612",
+  "name": "Employee-date_of_joining-default",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "default",
+  "property_type": "Text",
+  "row_name": null,
+  "value": "Today"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Employee",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "date_of_joining",
+  "modified": "2022-11-20 11:36:01.113303",
+  "name": "Employee-date_of_joining-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]

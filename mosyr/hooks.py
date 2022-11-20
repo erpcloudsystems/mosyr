@@ -124,6 +124,7 @@ doc_events = {
 			"mosyr.api.set_employee_gender",
 			"mosyr.api.translate_employee",
 			"mosyr.api.set_employee_number",
+			"mosyr.api.set_date_of_joining",
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
@@ -303,7 +304,8 @@ fixtures = [
 				"Shift Request-lateness_permission",
 				"Additional Salary-employee_deduction",
 				"Employee-employee_bank",
-				"Employee-number"
+				"Employee-number",
+				"Employee-custom_date_of_joining"
             ]]
         ]
     },
@@ -325,6 +327,8 @@ fixtures = [
 					"Employee-scheduled_confirmation_date-hidden",
 					"Employee-notice_number_of_days-hidden",
 					"Employee-date_of_retirement-hidden",
+					"Employee-date_of_joining-default",
+					"Employee-date_of_joining-hidden",
 				]]
 			]
 	},
