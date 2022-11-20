@@ -11,6 +11,11 @@ frappe.ui.form.on('Mosyr Form', {
 				};
 			}
 		});
+		frm.set_query( 'role', "permissions", function(doc) {
+			return {
+				query: "mosyr.api.get_roles",
+			};
+		});
 		if (frm.is_new()) {
 			if (!(frm.doc.permissions && frm.doc.permissions.length)) {
 				frm.add_child('permissions', { role: 'System Manager' });
