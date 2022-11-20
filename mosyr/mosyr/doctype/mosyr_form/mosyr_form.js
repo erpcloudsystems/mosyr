@@ -11,22 +11,11 @@ frappe.ui.form.on('Mosyr Form', {
 				};
 			}
 		});
-		if (!frm.is_new() && !frm.doc.istable) {
-			if (frm.doc.docstatus == 1) {
-				frm.add_custom_button(__('Customzie {0}', [__(frm.doc.name)]), () => {
-					window.open(`/app/doctype/${frm.doc.name}`);
-				});
-				if (frm.doc.issingle) {
-					frm.add_custom_button(__('Go to {0}', [__(frm.doc.name)]), () => {
-						window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
-					});
-				} else {
-					frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
-						window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
-					});
-				}
-			}
-		}
+		frm.set_query( 'role', "permissions", function(doc) {
+			return {
+				query: "mosyr.api.get_roles",
+			};
+		});
 		if (frm.is_new()) {
 			if (!(frm.doc.permissions && frm.doc.permissions.length)) {
 				frm.add_child('permissions', { role: 'System Manager' });
@@ -34,10 +23,6 @@ frappe.ui.form.on('Mosyr Form', {
 		} else {
 			frm.toggle_enable("engine", 0);
 		}
-		// set label for "In List View" for child tables
-		frm.get_docfield('fields', 'in_list_view').label = frm.doc.istable ?
-			__('In Grid View') : __('In List View');
-		frm.events.autoname(frm);
 	},
 	autoname: function (frm) {
 		frm.set_df_property('fields', 'reqd', frm.doc.autoname !== 'Prompt');

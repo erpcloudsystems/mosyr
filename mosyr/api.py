@@ -282,3 +282,16 @@ def set_user_type(doc,method):
     if doc.email != "Administrator":
         doc.user_type = "Employee Self Service"
         doc.save()
+
+def set_employee_number(doc,method):
+    doc.employee_number = doc.number
+
+def set_date_of_joining(doc,method):
+    doc.date_of_joining = doc.custom_date_of_joining
+
+@frappe.whitelist()
+def get_roles(doctype, txt, searchfield, start, page_len, filters):
+    result = frappe.db.sql("""
+        select name from `tabRole`
+        where is_custom = 1 and name LIKE %(txt)s  LIKE %(txt)s""" ,{"txt": "%" + txt + "%"})
+    return result

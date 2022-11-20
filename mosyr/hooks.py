@@ -122,7 +122,9 @@ doc_events = {
 			"mosyr.api.validate_social_insurance",
 			"mosyr.api.notify_expired_dates",
 			"mosyr.api.set_employee_gender",
-			"mosyr.api.translate_employee"
+			"mosyr.api.translate_employee",
+			"mosyr.api.set_employee_number",
+			"mosyr.api.set_date_of_joining",
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
@@ -301,7 +303,9 @@ fixtures = [
 				"Shift Type-in_lateness_permission",
 				"Shift Request-lateness_permission",
 				"Additional Salary-employee_deduction",
-				"Employee-employee_bank"
+				"Employee-employee_bank",
+				"Employee-number",
+				"Employee-custom_date_of_joining"
             ]]
         ]
     },
@@ -317,7 +321,16 @@ fixtures = [
 					"Employee-company-in_standard_filter",
 					"Employee-gender-hidden",
 					"Employee-gender-default",
-					"Employee-bank_name-hidden"
+					"Employee-bank_name-hidden",
+					"Employee-employee_number-hidden",
+					"Employee-job_applicant-hidden",
+					"Employee-scheduled_confirmation_date-hidden",
+					"Employee-notice_number_of_days-hidden",
+					"Employee-date_of_retirement-hidden",
+					"Employee-date_of_joining-default",
+					"Employee-date_of_joining-hidden",
+					"Loan-applicant_type-default",
+					"Loan-applicant_type-read_only"
 				]]
 			]
 	},
