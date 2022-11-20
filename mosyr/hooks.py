@@ -329,6 +329,8 @@ fixtures = [
 					"Employee-date_of_retirement-hidden",
 					"Employee-date_of_joining-default",
 					"Employee-date_of_joining-hidden",
+					"Loan-applicant_type-default",
+					"Loan-applicant_type-read_only"
 				]]
 			]
 	},

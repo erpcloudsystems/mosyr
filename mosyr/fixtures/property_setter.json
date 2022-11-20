@@ -270,5 +270,39 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Loan",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "applicant_type",
+  "modified": "2022-11-20 13:48:26.937473",
+  "name": "Loan-applicant_type-default",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "default",
+  "property_type": "Text",
+  "row_name": null,
+  "value": "Employee"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Loan",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "applicant_type",
+  "modified": "2022-11-20 13:48:27.038261",
+  "name": "Loan-applicant_type-read_only",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "read_only",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
