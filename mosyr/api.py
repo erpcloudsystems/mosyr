@@ -282,3 +282,6 @@ def set_user_type(doc,method):
     if doc.email != "Administrator":
         doc.user_type = "Employee Self Service"
         doc.save()
+
+def set_employee_number(doc,method):
+    doc.employee_number = doc.number
