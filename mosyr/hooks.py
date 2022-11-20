@@ -38,7 +38,7 @@ app_include_js = [
 
 # include js in doctype views
 doctype_js = {"Employee" : "public/js/employee.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_list_js = {"Loan" : "public/js/loan_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -305,7 +305,8 @@ fixtures = [
 				"Additional Salary-employee_deduction",
 				"Employee-employee_bank",
 				"Employee-number",
-				"Employee-custom_date_of_joining"
+				"Employee-custom_date_of_joining",
+				"Loan-total_amount_remaining"
             ]]
         ]
     },
@@ -330,7 +331,17 @@ fixtures = [
 					"Employee-date_of_joining-default",
 					"Employee-date_of_joining-hidden",
 					"Loan-applicant_type-default",
-					"Loan-applicant_type-read_only"
+					"Loan-applicant_type-read_only",
+					"Loan-rate_of_interest-default",
+					"Loan-rate_of_interest-hidden",
+					"Loan-main-title_field",
+					"Loan-total_payment-in_list_view",
+					"Loan-loan_type-in_list_view",
+					"Loan-total_amount_paid-in_list_view",
+					"Loan-total_interest_payable-hidden",
+					"Loan Type-disabled-hidden",
+					"Loan Type-is_term_loan-hidden",
+					"Loan Type-grace_period_in_days-hidden",
 				]]
 			]
 	},

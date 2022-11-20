@@ -2,6 +2,7 @@ from dataclasses import field
 from warnings import filters
 import frappe
 from frappe import _
+from frappe.utils import flt
 from frappe.utils.nestedset import NestedSet, rebuild_tree
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
@@ -393,6 +394,26 @@ class CustomLoanRepayment(LoanRepayment):
         if not self.penalty_income_account:
             account = create_account("Loans Penalty", self.company, "Income", "Income", "", False)
             self.penalty_income_account = account
+
+    def update_paid_amount(self):
+        super().update_paid_amount()
+        loan = frappe.get_value(
+            "Loan",
+            self.against_loan,
+            [
+                "total_amount_paid",
+                "loan_amount"
+            ],
+            as_dict=1,
+        )
+        frappe.db.sql(
+            """ UPDATE `tabLoan`
+            SET total_amount_remaining = %s
+            WHERE name = %s """,
+            (flt(loan.loan_amount - loan.total_amount_paid), self.against_loan),
+        )
+
+
 
 class CustomLoanWriteOff(LoanWriteOff):
     def validate(self):
