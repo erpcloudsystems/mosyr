@@ -9,7 +9,6 @@
  "field_order": [
   "sb0",
   "is_submittable",
-  "istable",
   "cb01",
   "track_seen",
   "track_views",
@@ -41,16 +40,6 @@
    "fieldname": "is_submittable",
    "fieldtype": "Check",
    "label": "Is Submittable"
-  },
-  {
-   "default": "0",
-   "description": "Child Tables are shown as a Table in other Forms",
-   "fieldname": "istable",
-   "fieldtype": "Check",
-   "in_standard_filter": 1,
-   "label": "Is Child Table",
-   "oldfieldname": "istable",
-   "oldfieldtype": "Check"
   },
   {
    "fieldname": "cb01",
@@ -162,7 +151,7 @@
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-20 10:56:42.274384",
+ "modified": "2022-11-20 12:01:36.070535",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
