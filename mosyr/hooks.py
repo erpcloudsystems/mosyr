@@ -338,7 +338,7 @@ fixtures = [
 					"Loan-total_payment-in_list_view",
 					"Loan-loan_type-in_list_view",
 					"Loan-total_amount_paid-in_list_view",
-					""
+					"Loan-total_interest_payable-hidden"
 				]]
 			]
 	},
