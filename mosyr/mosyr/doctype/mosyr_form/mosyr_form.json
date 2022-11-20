@@ -22,8 +22,6 @@
   "title_field",
   "search_fields",
   "column_break_23",
-  "allow_import",
-  "allow_auto_repeat",
   "show_name_in_global_search",
   "sb2",
   "permissions",
@@ -133,18 +131,6 @@
   },
   {
    "default": "0",
-   "fieldname": "allow_import",
-   "fieldtype": "Check",
-   "label": "Allow Import (via Data Import Tool)"
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_auto_repeat",
-   "fieldtype": "Check",
-   "label": "Allow Auto Repeat"
-  },
-  {
-   "default": "0",
    "fieldname": "show_name_in_global_search",
    "fieldtype": "Check",
    "label": "Make \"name\" searchable in Global Search"
@@ -176,7 +162,7 @@
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-25 15:40:15.893405",
+ "modified": "2022-11-20 10:56:42.274384",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
