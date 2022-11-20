@@ -320,7 +320,11 @@ fixtures = [
 					"Employee-gender-hidden",
 					"Employee-gender-default",
 					"Employee-bank_name-hidden",
-					"Employee-employee_number-hidden"
+					"Employee-employee_number-hidden",
+					"Employee-job_applicant-hidden",
+					"Employee-scheduled_confirmation_date-hidden",
+					"Employee-notice_number_of_days-hidden",
+					"Employee-date_of_retirement-hidden",
 				]]
 			]
 	},
