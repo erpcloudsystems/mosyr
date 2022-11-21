@@ -342,6 +342,7 @@ fixtures = [
 					"Loan Type-disabled-hidden",
 					"Loan Type-is_term_loan-hidden",
 					"Loan Type-grace_period_in_days-hidden",
+					"Loan-posting_date-in_list_view"
 				]]
 			]
 	},
