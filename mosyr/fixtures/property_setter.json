@@ -474,5 +474,22 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Loan",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "posting_date",
+  "modified": "2022-11-21 12:06:27.204109",
+  "name": "Loan-posting_date-in_list_view",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "in_list_view",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "0"
  }
 ]
