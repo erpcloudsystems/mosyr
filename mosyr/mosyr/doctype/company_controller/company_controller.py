@@ -29,15 +29,19 @@ class CompanyController(Document):
             has_new_letter_head = True
             image = self.logo
             html_header_content = '''<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6 text-left">
-            <img src="{}" style="max-width: 124px; max-height: 124px;">
-        </div>
-        <div class="col-sm-6 text-right">
-            <h3>{}</h3>
-        </div>
-    </div>
-</div>'''.format(self.logo, company_name)
+                                        <div class="row">
+                                            <div class="col-sm-4 text-left">
+                                                <h3>{}</h3>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <img src="{}" style="max-width: 100px; max-height: 100px;">
+                                                <h3>{}</h3>
+                                            </div>
+                                            <div class="col-sm-4 text-right" >
+                                                <h3>{}</h3>
+                                            </div>
+                                        </div>
+                                    </div>'''.format(self.left_header,self.logo, company_name,self.right_header)
         
         if len(self.signatures) > 0:
             has_new_letter_head = True

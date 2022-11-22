@@ -29,6 +29,10 @@
   "cr_document",
   "column_break_20",
   "baladiya_license",
+  "header_section",
+  "left_header",
+  "column_break_26",
+  "right_header",
   "settings_section",
   "employee_day_working",
   "employee_day_annual_vacation",
@@ -399,11 +403,30 @@
    "fieldname": "agreement_number_for_customer",
    "fieldtype": "Data",
    "label": "Agreement Number for Customer"
+  },
+  {
+   "fieldname": "header_section",
+   "fieldtype": "Section Break",
+   "label": "Header"
+  },
+  {
+   "fieldname": "left_header",
+   "fieldtype": "Small Text",
+   "label": "Left Header"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "right_header",
+   "fieldtype": "Small Text",
+   "label": "Right Header"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-20 09:47:42.969289",
+ "modified": "2022-11-22 15:10:23.479415",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Company Controller",
