@@ -7,6 +7,3 @@ def process_auto_attendance_for_all_shifts():
     for shift in shift_list:
         doc = frappe.get_cached_doc("Shift Type", shift)
         doc.process_auto_attendance()
-    note = frappe.new_doc("Note")
-    note.title = make_autoname("NJ.###.###") # "Note Job!"
-    note.save()
