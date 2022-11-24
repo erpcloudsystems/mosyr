@@ -137,15 +137,15 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 scheduler_events = {
+	"cron":{	
+		"0/1 * * * *" :[
+			"mosyr.cron.process_auto_attendance_for_all_shifts",
+		]
+	},
 	"daily": [
 		"mosyr.daily.update_status_for_contracts",
 		"mosyr.daily.notify_expired_dates",
-	],
-	"cron":{	
-		"*/5 * * * *" :[
-			"erpnext.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
-		]
-	}
+	]
 }
 # scheduler_events = {
 # 	"all": [
