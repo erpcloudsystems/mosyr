@@ -138,7 +138,7 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"cron":{	
-		"0/1 * * * *" :[
+		"0/5 * * * *" :[
 			"mosyr.cron.process_auto_attendance_for_all_shifts",
 		]
 	},
