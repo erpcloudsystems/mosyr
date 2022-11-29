@@ -54,7 +54,7 @@ class EmployeeDeduction(Document):
 				fields=["month_days"]
 			)
 			if len(mdays) > 0:
-				months_days = cint(mdays[0].months_days)
+				months_days = cint(mdays[0].month_days)
 				if months_days not in [22, 28, 29, 30]:
 					months_days = 22
 			base = base / months_days
