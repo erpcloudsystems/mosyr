@@ -110,6 +110,7 @@ override_doctype_class = {
 	"Salary Structure Assignment": "mosyr.overrides.CustomSalaryStructureAssignment",
 	"Salary Slip": "mosyr.overrides.CustomSalarySlip",
 	"Payroll Entry": "mosyr.overrides.CustomPayrollEntry",
+	"Shift Type": "mosyr.overrides.CustomShiftType",
 }
 
 # Document Events
@@ -138,8 +139,8 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"cron":{	
-		"0/5 * * * *" :[
-			"mosyr.cron.process_auto_attendance_for_all_shifts",
+		"0/1 * * * *" :[
+			"mosyr.cron.process_auto_attendance_for_all_shifts"
 		]
 	},
 	"daily": [
