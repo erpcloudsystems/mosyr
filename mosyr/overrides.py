@@ -425,7 +425,7 @@ def regenerate_repayment_schedule(repayment , loan, cancel=0):
     self = frappe.get_doc("Loan Repayment", repayment)
     repayment_schedule_length = len(loan_doc.get("repayment_schedule"))
 
-    repayment_amount = self.paid_amount
+    repayment_amount = self.amount_paid
     if repayment_schedule_length:
         for row in loan_doc.repayment_schedule:
             if row.paid_amount >= row.principal_amount: continue
