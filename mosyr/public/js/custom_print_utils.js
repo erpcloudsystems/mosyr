@@ -1,3 +1,4 @@
+frappe.provide('frappe.ui');
 frappe.ui.get_print_settings = function (
     pdf,
     callback,
