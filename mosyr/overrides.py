@@ -30,7 +30,11 @@ from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
 
 from mosyr import create_account, create_cost_center, create_mode_payment, create_bank_account
-
+from erpnext.hr.doctype.employee_checkin.employee_checkin import mark_attendance_and_link_log
+from mosyr.api import custom_mark_attendance_and_link_log
+from erpnext.hr.doctype.shift_type.shift_type import ShiftType
+from frappe.utils import cint
+import itertools
 class CustomCompany(Company, NestedSet):
     def on_update(self):
         NestedSet.on_update(self)
@@ -525,3 +529,34 @@ class CustomPayrollEntry(PayrollEntry):
         if not self.payment_account:
             account = create_account("Payroll Payment", self.company, "Loans and Advances (Assets)", "Asset", "Bank", False)
             self.payment_account = account
+
+class CustomShiftType(ShiftType):
+    @frappe.whitelist()
+    def process_auto_attendance(self):
+        super().process_auto_attendance()
+        self.custom_process_auto_attendance()
+
+    def custom_process_auto_attendance(self):
+        if (not cint(self.enable_auto_attendance) or not self.process_attendance_after or not self.last_sync_of_checkin):
+            return
+
+        filters = {
+            "time": (">=", self.process_attendance_after),
+            "shift_actual_end": ("<", self.last_sync_of_checkin),
+            "shift": self.name,
+        }
+        logs = frappe.db.get_list("Employee Checkin", fields="*", filters=filters, order_by="employee,time")
+        for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_actual_start"])):
+            single_shift_logs = list(group)
+            (attendance_status, working_hours, late_entry, early_exit, in_time, out_time) = self.get_attendance(single_shift_logs)
+            custom_mark_attendance_and_link_log(
+                single_shift_logs,
+                attendance_status,
+                key[1].date(),
+                working_hours,
+                late_entry,
+                early_exit,
+                in_time,
+                out_time,
+                self.name,
+            )
