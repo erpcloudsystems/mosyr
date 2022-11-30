@@ -353,6 +353,8 @@ fixtures = [
 					"Loan Application-applicant_type-default",
 					"Loan Application-applicant_type-read_only",
 					"Repayment Schedule-is_accrued-hidden",
+					"Loan Type-is_term_loan-default",
+					"Repayment Schedule-interest_amount-hidden"
 					"Loan Type-is_term_loan-default"
 				]]
 			]

@@ -425,16 +425,16 @@ def regenerate_repayment_schedule(repayment , loan, cancel=0):
     self = frappe.get_doc("Loan Repayment", repayment)
     repayment_schedule_length = len(loan_doc.get("repayment_schedule"))
 
-    repayment_amount = self.amount_paid
+    repayment_amount = self.paid_amount
     if repayment_schedule_length:
         for row in loan_doc.repayment_schedule:
-            if row.amount_paid >= row.principal_amount: continue
-            if repayment_amount > row.principal_amount-row.amount_paid:
-                diff = row.principal_amount - row.amount_paid
-                row.amount_paid = row.amount_paid + diff
+            if row.paid_amount >= row.principal_amount: continue
+            if repayment_amount > row.principal_amount-row.paid_amount:
+                diff = row.principal_amount - row.paid_amount
+                row.paid_amount = row.paid_amount + diff
                 repayment_amount = repayment_amount - diff
             else:
-                row.amount_paid = row.amount_paid + repayment_amount 
+                row.paid_amount = row.paid_amount + repayment_amount 
                 repayment_amount = 0
             if repayment_amount <= 0: break
         loan_doc.save(ignore_permissions=True)
