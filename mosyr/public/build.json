@@ -3,7 +3,7 @@
         "public/js/utils.js",
         "public/js/custom_desk.js",
         "public/js/custum_list_view.js",
-        "public/js/custom_print_utils"
+        "public/js/custom_print_utils.js"
     ],
     "mosyr/css/mosyr.min.css": [
         "public/css/mosyr.css"
