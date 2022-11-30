@@ -412,8 +412,28 @@ class CustomLoanRepayment(LoanRepayment):
             WHERE name = %s """,
             (flt(loan.loan_amount - loan.total_amount_paid), self.against_loan),
         )
+    def update_repayment_schedule(self, cancel=0):
+        if self.is_term_loan and self.principal_amount_paid > self.payable_principal_amount:
+            regenerate_repayment_schedule(self.name ,self.against_loan, cancel)
 
+def regenerate_repayment_schedule(repayment , loan, cancel=0):
+    loan_doc = frappe.get_doc("Loan", loan)
+    self = frappe.get_doc("Loan Repayment", repayment)
+    repayment_schedule_length = len(loan_doc.get("repayment_schedule"))
 
+    repayment_amount = self.amount_paid
+    if repayment_schedule_length:
+        for row in loan_doc.repayment_schedule:
+            if row.amount_paid >= row.principal_amount: continue
+            if repayment_amount > row.principal_amount-row.amount_paid:
+                diff = row.principal_amount - row.amount_paid
+                row.amount_paid = row.amount_paid + diff
+                repayment_amount = repayment_amount - diff
+            else:
+                row.amount_paid = row.amount_paid + repayment_amount 
+                repayment_amount = 0
+            if repayment_amount <= 0: break
+        loan_doc.save(ignore_permissions=True)
 
 class CustomLoanWriteOff(LoanWriteOff):
     def validate(self):

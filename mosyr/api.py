@@ -295,3 +295,10 @@ def get_roles(doctype, txt, searchfield, start, page_len, filters):
         select name from `tabRole`
         where is_custom = 1 and name LIKE %(txt)s  LIKE %(txt)s""" ,{"txt": "%" + txt + "%"})
     return result
+
+def validate_remaining_loan(doc,method):
+    loan_doc = frappe.get_doc("Loan", doc.against_loan)
+    if loan_doc.total_payment - loan_doc.total_amount_paid == 0:
+        frappe.throw(f"The Remaining in this loan equal zero")
+    if loan_doc.total_amount_paid + doc.amount_paid >  loan_doc.total_payment:
+        frappe.throw(f"Remaining in your loan is {loan_doc.total_amount_remaining}, Not {doc.amount_paid}, Please change the amount paid to {loan_doc.total_amount_remaining}")
