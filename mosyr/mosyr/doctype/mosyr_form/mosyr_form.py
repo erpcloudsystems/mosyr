@@ -6,6 +6,9 @@ import frappe
 from frappe.model.document import Document
 
 class MosyrForm(Document):
+	def validate(self):
+		pass
+
 	def on_submit(self):
 		module = "HR"
 		allow_rename = 0
@@ -22,3 +25,6 @@ class MosyrForm(Document):
 		new_doc = frappe.new_doc('DocType')
 		new_doc.update(copy_doc)
 		new_doc.insert(ignore_permissions=True)
+	
+	def create_doctype():
+		pass
