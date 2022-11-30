@@ -559,5 +559,22 @@
   "property_type": "Text",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Repayment Schedule",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "interest_amount",
+  "modified": "2022-11-30 16:26:32.724928",
+  "name": "Repayment Schedule-interest_amount-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
