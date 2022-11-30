@@ -132,6 +132,11 @@ doc_events = {
 	},
 	"User" :{
 		"after_insert" : "mosyr.api.set_user_type"
+	},
+	"Loan Repayment" : {
+		"validate" :[
+			"mosyr.api.validate_remaining_loan"
+		]
 	}
 }
 
@@ -307,7 +312,8 @@ fixtures = [
 				"Employee-employee_bank",
 				"Employee-number",
 				"Employee-custom_date_of_joining",
-				"Loan-total_amount_remaining"
+				"Loan-total_amount_remaining",
+				"Repayment Schedule-paid_amount"
             ]]
         ]
     },
@@ -345,7 +351,8 @@ fixtures = [
 					"Loan Type-grace_period_in_days-hidden",
 					"Loan-posting_date-in_list_view",
 					"Loan Application-applicant_type-default",
-					"Loan Application-applicant_type-read_only"
+					"Loan Application-applicant_type-read_only",
+					"Repayment Schedule-is_accrued-hidden",
 				]]
 			]
 	},
