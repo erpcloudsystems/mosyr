@@ -110,6 +110,7 @@ override_doctype_class = {
 	"Salary Structure Assignment": "mosyr.overrides.CustomSalaryStructureAssignment",
 	"Salary Slip": "mosyr.overrides.CustomSalarySlip",
 	"Payroll Entry": "mosyr.overrides.CustomPayrollEntry",
+	"Shift Type": "mosyr.overrides.CustomShiftType",
 }
 
 # Document Events
@@ -131,6 +132,11 @@ doc_events = {
 	},
 	"User" :{
 		"after_insert" : "mosyr.api.set_user_type"
+	},
+	"Loan Repayment" : {
+		"validate" :[
+			"mosyr.api.validate_remaining_loan"
+		]
 	}
 }
 
@@ -138,8 +144,8 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"cron":{	
-		"0/5 * * * *" :[
-			"mosyr.cron.process_auto_attendance_for_all_shifts",
+		"0/1 * * * *" :[
+			"mosyr.cron.process_auto_attendance_for_all_shifts"
 		]
 	},
 	"daily": [
@@ -306,7 +312,8 @@ fixtures = [
 				"Employee-employee_bank",
 				"Employee-number",
 				"Employee-custom_date_of_joining",
-				"Loan-total_amount_remaining"
+				"Loan-total_amount_remaining",
+				"Repayment Schedule-paid_amount"
             ]]
         ]
     },
@@ -344,7 +351,11 @@ fixtures = [
 					"Loan Type-grace_period_in_days-hidden",
 					"Loan-posting_date-in_list_view",
 					"Loan Application-applicant_type-default",
-					"Loan Application-applicant_type-read_only"
+					"Loan Application-applicant_type-read_only",
+					"Repayment Schedule-is_accrued-hidden",
+					"Loan Type-is_term_loan-default",
+					"Repayment Schedule-interest_amount-hidden"
+					"Loan Type-is_term_loan-default"
 				]]
 			]
 	},

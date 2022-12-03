@@ -1,3 +1,5 @@
+frappe.provide('frappe.ui');
+
 frappe.ui.get_print_settings = function (
     pdf,
     callback,
@@ -97,4 +99,4 @@ frappe.ui.get_print_settings = function (
         },
         __("Print Settings")
     );
-};
+}; 
