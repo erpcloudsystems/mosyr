@@ -1,26 +1,19 @@
 {
  "actions": [],
- "autoname": "Prompt",
+ "allow_rename": 1,
  "creation": "2022-08-21 15:49:58.123950",
  "description": "DocType is a Table / Form in the application.",
  "doctype": "DocType",
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
+  "form_title",
   "sb0",
   "is_submittable",
-  "cb01",
-  "track_seen",
-  "track_views",
   "fields_section_break",
   "fields",
   "sb1",
-  "autoname",
-  "form_settings_section",
-  "image_field",
   "title_field",
-  "search_fields",
-  "column_break_23",
   "show_name_in_global_search",
   "sb2",
   "permissions",
@@ -40,26 +33,6 @@
    "fieldname": "is_submittable",
    "fieldtype": "Check",
    "label": "Is Submittable"
-  },
-  {
-   "fieldname": "cb01",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:!doc.istable",
-   "description": "If enabled, the document is marked as seen, the first time a user opens it",
-   "fieldname": "track_seen",
-   "fieldtype": "Check",
-   "label": "Track Seen"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:!doc.istable",
-   "description": "If enabled, document views are tracked, this can happen multiple times",
-   "fieldname": "track_views",
-   "fieldtype": "Check",
-   "label": "Track Views"
   },
   {
    "fieldname": "fields_section_break",
@@ -82,41 +55,10 @@
    "label": "Naming"
   },
   {
-   "description": "Naming Options:\n<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>\n<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>",
-   "fieldname": "autoname",
-   "fieldtype": "Data",
-   "label": "Auto Name",
-   "oldfieldname": "autoname",
-   "oldfieldtype": "Data"
-  },
-  {
-   "fieldname": "form_settings_section",
-   "fieldtype": "Section Break",
-   "label": "Form/View Settings"
-  },
-  {
-   "description": "Must be of type \"Attach Image\"",
-   "fieldname": "image_field",
-   "fieldtype": "Data",
-   "label": "Image Field"
-  },
-  {
    "depends_on": "eval:!doc.istable",
    "fieldname": "title_field",
    "fieldtype": "Data",
    "label": "Title Field"
-  },
-  {
-   "depends_on": "eval:!doc.istable",
-   "fieldname": "search_fields",
-   "fieldtype": "Data",
-   "label": "Search Fields",
-   "oldfieldname": "search_fields",
-   "oldfieldtype": "Data"
-  },
-  {
-   "fieldname": "column_break_23",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -146,12 +88,19 @@
    "options": "Mosyr Form",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "form_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Form Title",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-20 12:01:36.070535",
+ "modified": "2022-11-30 17:05:26.869318",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
@@ -179,6 +128,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "form_title",
  "track_changes": 1,
  "track_views": 1
 }
