@@ -96,9 +96,7 @@ def execute(filters=None):
 		)
 		data += record
 	chart_data = get_chart_data(emp_att_map, days)
-
 	return columns, data, None, chart_data
-
 
 def get_chart_data(emp_att_map, days):
 	labels = []
@@ -114,14 +112,14 @@ def get_chart_data(emp_att_map, days):
 		total_present_on_day = 0
 		for emp in emp_att_map.keys():
 			if emp_att_map[emp][idx]:
-				if emp_att_map[emp][idx] == "Absent":
+				if "Absent" in emp_att_map[emp][idx]:
 					total_absent_on_day += 1
-				if emp_att_map[emp][idx] in ["Present", "Work From Home"]:
+				if "Present" in emp_att_map[emp][idx] or "Work From Home" in emp_att_map[emp][idx]:
 					total_present_on_day += 1
-				if emp_att_map[emp][idx] == "Half Day":
+				if "Half Day" in emp_att_map[emp][idx]:
 					total_present_on_day += 0.5
 					total_leave_on_day += 0.5
-				if emp_att_map[emp][idx] == "On Leave":
+				if "On Leave" in emp_att_map[emp][idx]:
 					total_leave_on_day += 1
 
 		datasets[0]["values"].append(total_absent_on_day)
@@ -145,7 +143,6 @@ def add_data(
 		if not emp_det or emp not in att_map:
 			continue
 		row = []
-		print(emp_det)
 		if filters.group_by:
 			row += [" "]
 		row += [emp, emp_det.employee_name, emp_det.department, emp_det.branch]
@@ -165,20 +162,22 @@ def add_data(
 							else:
 								status = "Holiday"
 							total_h += 1
-			abbr = status_map.get(status, "")
+			
+			abbr = status
 			emp_status_map.append(abbr)
 			if filters.summarized_view:
-				if status == "Present" or status == "Work From Home":
-					total_p += 1
-				elif status == "Absent":
-					total_a += 1
-				elif status == "On Leave":
-					total_l += 1
-				elif status == "Half Day":
-					total_p += 0.5
-					total_l += 0.5
-				elif not status:
-					total_um += 1
+				if status:
+					if "Present" in status or "Work From Home" in status:
+						total_p += 1
+					elif "Absent" in  status:
+						total_a += 1
+					elif "On Leave" in status:
+						total_l += 1
+					elif "Half Day" in status:
+						total_p += 0.5
+						total_l += 0.5
+					elif not status:
+						total_um += 1
 
 		if not filters.summarized_view:
 			row += emp_status_map
@@ -252,10 +251,9 @@ def get_columns(filters):
 		]
 	return columns, days
 
-
 def get_attendance_list(conditions, filters):
 	attendance_list = frappe.db.sql(
-		f"""select employee, attendance_date as day_of_month,
+		f"""select employee, attendance_date as day_of_month, in_time,  out_time,
 		status from tabAttendance where docstatus = 1 %s and (attendance_date BETWEEN '{filters.get('from')}' AND '{filters.get('to')}') order by employee, attendance_date"""
 		% conditions,
 		filters,
@@ -268,7 +266,8 @@ def get_attendance_list(conditions, filters):
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
 		att_map[d.employee][d.day_of_month] = d.status
-
+		if d.status == "Present":
+			att_map[d.employee][d.day_of_month] = f"<p style='margin:0'>{d.status}</p><p style='margin:0'>{f'In Time: {d.in_time.hour}' if d.in_time else ''} {f':{d.in_time.minute}' if d.in_time else ''}</p><p style='margin:0'>{f'Out Time: {d.out_time.hour}' if d.out_time else ''} {f':{d.out_time.minute}' if d.out_time else ''}</p>"
 	return att_map
 
 

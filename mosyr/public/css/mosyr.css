@@ -2,3 +2,20 @@ div[data-fieldtype="Attach"] .btn,
 div[data-fieldtype="Attach Image"] .btn {
     background-color: rgb(244, 245, 246) !important;
 }
+
+body[data-route="query-report/Employee Attendance Sheet"] .empty-table .dt-scrollable {
+    height     : initial!important;
+    min-height : initial!important;
+}
+/* end fix tall tables when empty */
+
+/* begin dynamicRowHeight fix */
+body[data-route="query-report/Employee Attendance Sheet"] .dt-row {
+    position : relative!important;
+    top      : auto!important;
+    height   : initial!important;
+}
+body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
+    height : initial!important;
+}
+/* end dynamicRowHeight fix */
