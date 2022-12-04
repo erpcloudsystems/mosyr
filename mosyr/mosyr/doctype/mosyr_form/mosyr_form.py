@@ -333,3 +333,32 @@ class MosyrForm(Document):
             # trans_doc.flags.ignore_permissions = True
             trans_doc.save(ignore_permissions=True)
         frappe.db.commit()
+    
+    def on_cancel(self):
+        # Delete only Created Docs from the form ( Custom DocType)
+        # Child Table ==> start with FRMCHLD
+        # Base Docs   ==> start with FRMOPT
+        system_doc = frappe.db.exists("DocType", self.name)
+        if system_doc:
+            system_doc = frappe.get_doc("DocType", system_doc)
+            if system_doc.custom == 0: return
+            for field in system_doc.fields:
+                if field.fieldtype != "Table MultiSelect": continue
+                self.clear_child_doc(field.options)
+            system_doc.delete()
+            frappe.db.commit()
+                
+    
+    def clear_child_doc(self, options):
+        child_doc = frappe.db.exists("DocType", options)
+        if child_doc and f"{options}".startswith("FRMCHLD"):
+            child_doc = frappe.get_doc("DocType", child_doc)
+            if child_doc.custom == 0: return
+            for field in child_doc.fields:
+                if field.fieldtype != "Link": continue
+                linked_doc = frappe.db.exists("DocType", field.options)
+                if linked_doc and f"{field.options}".startswith("FRMOPT"):
+                    linked_doc = frappe.get_doc("DocType", field.options)
+                    if linked_doc.custom == 0: continue
+                    linked_doc.delete()
+            child_doc.delete()

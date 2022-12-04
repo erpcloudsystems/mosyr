@@ -81,6 +81,13 @@
    "options": "DocPerm"
   },
   {
+   "fieldname": "form_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Form Title",
+   "reqd": 1
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -88,34 +95,30 @@
    "options": "Mosyr Form",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "form_title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Form Title",
-   "reqd": 1
   }
  ],
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-30 17:05:26.869318",
+ "modified": "2022-12-04 16:34:33.993165",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
    "print": 1,
    "read": 1,
    "role": "System Manager",
+   "submit": 1,
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -123,6 +126,7 @@
    "read": 1,
    "role": "Administrator",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],
