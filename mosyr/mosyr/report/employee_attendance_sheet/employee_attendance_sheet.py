@@ -266,11 +266,11 @@ def get_attendance_list(conditions, filters):
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
 		att_map[d.employee][d.day_of_month] = d.status
-		if d.status == "Absent": att_map[d.employee][d.day_of_month] = f"<p style=color:red;>{d.status}</p>"
+		if d.status == "Absent": att_map[d.employee][d.day_of_month] = f"<p style=color:#F683AE;>{d.status}</p>"
 		if d.status == "Work From Home":att_map[d.employee][d.day_of_month] = f"<p style=color:green;>{d.status}</p>"
-		if d.status == "On Leave":att_map[d.employee][d.day_of_month] = f"<p style=color:#696cff;>{d.status}</p>"
+		if d.status == "On Leave":att_map[d.employee][d.day_of_month] = f"<p style=color:green;>{d.status}</p>"
 		if d.status == "Half Day":att_map[d.employee][d.day_of_month] = f"<p style=color:blue;>{d.status}</p>"
-		if d.status == "Present":att_map[d.employee][d.day_of_month] = f"<p style='margin:0 ;text-align: left !important; color : green'>{d.status}</p><p style='margin:0;color:#ffab00'>{f'In Time: {d.in_time.hour}' if d.in_time else ''} {f':{d.in_time.minute}' if d.in_time else ''}</p><p style='margin:0;color:#ffab00'>{f'Out Time: {d.out_time.hour}' if d.out_time else ''} {f':{d.out_time.minute}' if d.out_time else ''}</p>"
+		if d.status == "Present":att_map[d.employee][d.day_of_month] = f"<p style='margin:0 ;text-align: left !important; color:#318AD8 '>{d.status}</p><p style='margin:0;color:#ffab00'>{f'In Time: {d.in_time.hour}' if d.in_time else ''} {f':{d.in_time.minute}' if d.in_time else ''}</p><p style='margin:0;color:#ffab00'>{f'Out Time: {d.out_time.hour}' if d.out_time else ''} {f':{d.out_time.minute}' if d.out_time else ''}</p>"
 	return att_map
 
 
