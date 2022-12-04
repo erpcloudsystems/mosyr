@@ -1,0 +1,19 @@
+[
+ {
+  "_assign": null,
+  "_comments": null,
+  "_liked_by": null,
+  "_user_tags": null,
+  "app_name": "mosyr",
+  "custom": 1,
+  "docstatus": 0,
+  "doctype": "Module Def",
+  "modified": "2022-11-30 11:59:28.146714",
+  "module_name": "Mosyr Forms",
+  "name": "Mosyr Forms",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "restrict_to_domain": null
+ }
+]

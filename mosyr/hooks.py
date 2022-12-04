@@ -430,4 +430,15 @@ fixtures = [
 			]
 		]
 	},
+	{
+	"dt": "Module Def",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"Mosyr Forms"
+				]
+			]
+		]
+	},
 ]
