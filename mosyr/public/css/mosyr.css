@@ -19,3 +19,6 @@ body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
     height : initial!important;
 }
 /* end dynamicRowHeight fix */
+.dt-cell__content {
+    text-align: left !important;
+}
