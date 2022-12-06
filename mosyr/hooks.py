@@ -358,7 +358,8 @@ fixtures = [
 					"Repayment Schedule-is_accrued-hidden",
 					"Loan Type-is_term_loan-default",
 					"Repayment Schedule-interest_amount-hidden"
-					"Loan Type-is_term_loan-default"
+					"Loan Type-is_term_loan-default",
+					"Repayment Schedule-balance_loan_amount-hidden"
 				]]
 			]
 	},

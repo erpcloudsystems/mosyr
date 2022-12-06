@@ -323,6 +323,8 @@ class CustomLoan(Loan):
         super().validate()
     
     def set_missing_custome_values(self):
+        if self.is_new():
+            self.total_amount_remaining = flt(self.total_payment)
         if not self.loan_account:
             account = create_account("Loans Account", self.company, "Loans and Advances (Assets)", "Asset", "", False)
             self.loan_account = account
