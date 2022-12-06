@@ -2,10 +2,11 @@
 import json
 
 import frappe 
-from frappe.utils import nowdate, getdate, today, flt, cint
+from frappe.utils import nowdate, getdate, today, flt, cint, date_diff
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from erpnext.hr.doctype.employee_checkin.employee_checkin import skip_attendance_in_checkins ,add_comment_in_checkins
+from json import loads
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -376,7 +377,61 @@ def custom_mark_attendance_and_link_log(
                 duplicate_att.db_set("out_time", out_time, update_modified=False)
                 duplicate_att.db_set("status", attendance_status, update_modified=False)
                 add_comment_in_checkins(log_names, duplicate)
-                print("done")
             return None
     else:
         frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
+
+@frappe.whitelist()
+def get_repayment_schedule(doc_name):
+    repayment_schedule = frappe.db.sql(f"""
+        SELECT rs.idx, rs.name, rs.paid_amount, rs.total_payment, rs.payment_date, rs.payment_date as new_payment_date
+        FROM `tabLoan` l 
+        LEFT JOIN `tabRepayment Schedule` rs ON rs.parent=l.name 
+        WHERE rs.parent='{doc_name}' AND rs.total_payment>rs.paid_amount AND l.docstatus=1
+        ORDER BY rs.payment_date""", as_dict=1)
+
+    return repayment_schedule
+
+@frappe.whitelist()
+def set_new_date_in_repayment(rows, doc_name):
+    loan_doc = frappe.db.exists("Loan", doc_name)
+    if not loan_doc:
+        frappe.throw(_("Loan {} not found".format((doc_name))))
+        return
+    try:
+        loan_doc = frappe.get_doc("Loan", doc_name)
+        rows = loads(rows)
+        errors = []
+        for tidx, row in enumerate(rows, 1):
+            new_payment_date = row.get("new_date", "")
+            repayment = frappe.get_doc("Repayment Schedule", row.get("row_name", ""))
+            if date_diff(repayment.payment_date, new_payment_date) > 0:
+                errors.append({
+                    "date": repayment.payment_date,
+                    "idx": tidx
+                })
+        
+        if len(errors) > 0:
+            errors_str = ''
+            for err in errors:
+                errors_str += "Choose Date after {} in row {}".format(err.get("date", ""), err.get("idx", ""))+"<br>"
+            frappe.msgprint(_(errors_str))
+            return "err"
+        
+        for tidx, row in enumerate(rows, 1):
+            new_payment_date = row.get("new_date", "")
+            repayment = frappe.get_doc("Repayment Schedule", row.get("row_name", ""))
+            repayment.db_set("payment_date", new_payment_date, update_modified=False)
+        reorder_payments_by_dates(loan_doc.name)
+        
+    except Exception as e:
+        frappe.throw(_("Incorrect format"))
+
+def reorder_payments_by_dates(row_parent):
+    repayment_schedule = frappe.db.sql(f"""
+           SELECT name 
+           FROM `tabRepayment Schedule` 
+           WHERE parent='{row_parent}' ORDER BY payment_date""", as_dict=1)
+    for new_idx, row in enumerate(repayment_schedule, 1):
+        doc = frappe.get_doc("Repayment Schedule" ,row.name)
+        doc.db_set("idx", new_idx, update_modified=False)
