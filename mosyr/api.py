@@ -6,6 +6,7 @@ from frappe.utils import nowdate, getdate, today, flt, cint
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from erpnext.hr.doctype.employee_checkin.employee_checkin import skip_attendance_in_checkins ,add_comment_in_checkins
+from json import loads
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -376,7 +377,30 @@ def custom_mark_attendance_and_link_log(
                 duplicate_att.db_set("out_time", out_time, update_modified=False)
                 duplicate_att.db_set("status", attendance_status, update_modified=False)
                 add_comment_in_checkins(log_names, duplicate)
-                print("done")
             return None
     else:
         frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
+
+@frappe.whitelist()
+def get_repayment_schedule(doc):
+    doc = loads(doc)
+    doc_name = doc.get("name")
+    repayment_schedule = frappe.db.sql(f"""select idx,name,paid_amount,total_payment,payment_date from `tabRepayment Schedule` where parent='{doc_name}' and total_payment>paid_amount order by payment_date""",as_dict=1)
+    return repayment_schedule
+
+@frappe.whitelist()
+def set_new_date_in_repayment(row):
+    row = loads(row)
+    row_parent = ''
+    for i in row:
+        new_payment_date = i.get("new_date")
+        repayment = frappe.get_doc("Repayment Schedule", i.get("row_name"))
+        row_parent = repayment.parent
+        repayment.db_set("payment_date", new_payment_date, update_modified=False)
+    
+    repayment_schedule = frappe.db.sql(f"""select name from `tabRepayment Schedule` where parent='{row_parent}' order by payment_date""",as_dict=1)
+
+    for new_idx, row in enumerate(repayment_schedule, 1) :
+        doc = frappe.get_doc("Repayment Schedule" ,row.name)
+        doc.db_set("idx", new_idx)
+    frappe.db.commit()
