@@ -1,22 +1,37 @@
-import frappe
 from typing import Dict, List
+import itertools
+
+# Import From Frappe
+import frappe
 from frappe import _
-from frappe.utils import flt
+from frappe.query_builder import Criterion
 from frappe.utils.nestedset import NestedSet, rebuild_tree
+from frappe.utils import (
+    cstr,
+    get_datetime,
+    get_link_to_form,
+    get_time,
+    getdate,
+    now_datetime,
+    cint,
+    flt,
+)
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
+# Import From ERPNext (setup)
 from erpnext.setup.doctype.company.company import Company, install_country_fixtures
 
+# Import (HR) DocTypes
 from erpnext.hr.doctype.employee.employee import Employee
 from erpnext.hr.doctype.department.department import Department
 from erpnext.hr.doctype.travel_request.travel_request import TravelRequest
 from erpnext.hr.doctype.expense_claim.expense_claim import ExpenseClaim
 from erpnext.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
 from erpnext.hr.doctype.expense_claim_type.expense_claim_type import ExpenseClaimType
+from erpnext.hr.doctype.shift_type.shift_type import ShiftType
 from erpnext.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 
-from erpnext.accounts.doctype.mode_of_payment.mode_of_payment import ModeofPayment
-
+# Import (Loan) DocTypes
 from erpnext.loan_management.doctype.loan_type.loan_type import LoanType
 from erpnext.loan_management.doctype.loan.loan import Loan
 from erpnext.loan_management.doctype.loan_disbursement.loan_disbursement import (
@@ -25,6 +40,7 @@ from erpnext.loan_management.doctype.loan_disbursement.loan_disbursement import 
 from erpnext.loan_management.doctype.loan_repayment.loan_repayment import LoanRepayment
 from erpnext.loan_management.doctype.loan_write_off.loan_write_off import LoanWriteOff
 
+# Import (Payroll) DocTypes
 from erpnext.payroll.doctype.salary_component.salary_component import SalaryComponent
 from erpnext.payroll.doctype.salary_structure.salary_structure import SalaryStructure
 from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
@@ -33,30 +49,17 @@ from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assign
 from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
 
+# Import (Accounts) DocTypes
+from erpnext.accounts.doctype.mode_of_payment.mode_of_payment import ModeofPayment
+
+# Import From Mosyr
 from mosyr import (
     create_account,
     create_cost_center,
     create_mode_payment,
     create_bank_account,
 )
-from erpnext.hr.doctype.employee_checkin.employee_checkin import (
-    mark_attendance_and_link_log,
-)
 from mosyr.api import custom_mark_attendance_and_link_log
-from erpnext.hr.doctype.shift_type.shift_type import ShiftType
-from frappe.utils import cint
-
-from frappe.query_builder import Criterion
-from frappe.utils import (
-    cstr,
-    get_datetime,
-    get_link_to_form,
-    get_time,
-    getdate,
-    now_datetime,
-)
-
-import itertools
 
 
 class CustomCompany(Company, NestedSet):
