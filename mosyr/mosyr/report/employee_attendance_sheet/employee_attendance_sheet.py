@@ -3,10 +3,17 @@
 
 import frappe
 from frappe import _, msgprint
-from frappe.utils import cint, cstr, getdate
+from frappe.utils import cint, cstr, getdate,time_diff
 import pandas
 from datetime import date,timedelta
 import datetime
+from json import loads
+from random import randint
+from six import iteritems, string_types
+import json
+from frappe.desk.query_report import run,get_columns_dict,handle_duration_fieldtype_values,build_xlsx_data
+from io import StringIO
+from frappe.utils import flt
 status_map = {
 	"Absent": "Absent",
 	"Half Day": "Half Day",
@@ -25,8 +32,8 @@ def execute(filters=None):
 	if not filters:
 		filters = {}
 
-	if filters.hide_year_field == 1:
-		filters.year = 2020
+	# if filters.hide_year_field == 1:
+	# 	filters.year = 2020
 
 	conditions, filters = get_conditions(filters)
 	columns, days = get_columns(filters)
@@ -368,3 +375,155 @@ def get_attendance_years():
 		year_list = [getdate().year]
 
 	return "\n".join(str(year) for year in year_list)
+
+
+@frappe.whitelist()
+def export_query(data):
+	data = loads(data)
+	holiday_days = frappe.get_list("Holiday" ,{"holiday_date" : ['BETWEEN', (f'{data.get("from")}', f'{data.get("to")}')]},pluck="holiday_date", order_by='holiday_date')
+	employee_name = frappe.get_doc("Employee" ,data.get("employee")).employee_name
+	start_day = frappe.utils.getdate(data.get("from")).strftime("%A")
+	end_day = frappe.utils.getdate(data.get("to")).strftime("%A")
+
+	xlsx_data = [
+		[employee_name , "Attendance Report" , 'From Date' ,data.get("from"), start_day, 'To Date', data.get("to"),end_day],
+		['Date', 'Shift', 'Entry', 'Exit', 'Dereliction', 'Early', 'Additional', 'Working Hours', 'Actual', 'Status']]
+
+	column_widths = [20.0, 13.0, 13.0, 20.0, 13.0, 13.0, 25.0, 13.0, 13.0, 25.0, 13.0]
+	date_range = pandas.date_range(data.get("from"),data.get("to"))
+	shift_type = frappe.get_doc("Shift Assignment", {'employee' : data.get("employee")}).shift_type
+	shift_doc = frappe.get_doc("Shift Type", shift_type)
+	shift_working_hours = (shift_doc.end_time - shift_doc.start_time).seconds/60/60
+
+	dereliction_hours = 0
+	early_hours = 0
+	additional_hours = 0
+
+	for day in date_range:
+		day_name = (frappe.utils.getdate(day.date())).strftime("%a")
+		attendance_list = frappe.get_list("Attendance" ,{"employee" : data.get("employee") , "attendance_date": day.date()},pluck="name")
+		if day.date() in holiday_days:
+			xlsx_data.append([f'{day.date()} {day_name}', shift_type, '', '', '', '', '' , '', '', 'Holiday'])
+		elif len(attendance_list) > 0:
+			attendance_doc = frappe.get_doc("Attendance" , attendance_list[0])
+			actual = attendance_doc.working_hours
+			working_hours = actual
+			dereliction = ''
+			if shift_working_hours < actual:
+				working_hours = shift_working_hours
+			elif shift_working_hours > actual:
+				if actual > 0:
+					dereliction = shift_working_hours - attendance_doc.working_hours
+					dereliction_hours += dereliction
+					dereliction = pandas.to_datetime(dereliction, unit='h').strftime('%H:%M:%S')
+			shift_time_in = (datetime.datetime.min + (shift_doc.start_time)).time()
+			attendance_time_in = frappe.utils.data.get_datetime(attendance_doc.in_time).time()
+			early_entry = ''
+			if shift_time_in > attendance_time_in:
+				attendance_time_in = datetime.datetime.strptime(str(attendance_time_in), "%H:%M:%S")
+				shift_time_in = datetime.datetime.strptime(str(shift_time_in), "%H:%M:%S")
+				early_entry = shift_time_in - attendance_time_in
+			if early_entry :
+				early_hours += early_entry.seconds/60/60
+				early_entry = datetime.datetime.strptime(str(early_entry),"%H:%M:%S")
+				early_entry = (early_entry + timedelta(days=1)).strftime("%H:%M:%S")
+
+			shift_time_out = (datetime.datetime.min + (shift_doc.end_time)).time()
+			attendance_time_out = frappe.utils.data.get_datetime(attendance_doc.out_time).time()
+			additional = ''
+			if attendance_doc.out_time:
+				if shift_time_out < attendance_time_out:
+					attendance_time_out = datetime.datetime.strptime(attendance_time_out.strftime("%H:%M:%S"), "%H:%M:%S")
+					shift_time_out = datetime.datetime.strptime(shift_time_out.strftime("%H:%M:%S"), "%H:%M:%S")
+					additional = attendance_time_out - shift_time_out
+				if additional:
+					additional_hours += additional.seconds/60/60
+					additional = datetime.datetime.strptime(str(additional),"%H:%M:%S")
+					additional = (additional + timedelta(days=1)).strftime("%H:%M:%S")
+				
+			status = attendance_doc.status
+			in_time, out_time = '' ,''
+			if attendance_doc.in_time:
+				in_time = attendance_doc.in_time.strftime("%H:%M:%S")
+			if attendance_doc.out_time:
+				out_time = attendance_doc.out_time.strftime("%H:%M:%S")
+			if attendance_doc.status == 'Present' and (in_time == '' and out_time != ''):
+				status = 'No fingerprint entry'
+			if attendance_doc.status == 'Present' and (out_time == '' and in_time != ''):
+				status = 'Exit is not marked'
+			if attendance_doc.status == "Absent":
+				xlsx_data.append([f'{day.date()} {day_name}', shift_type, '', '', '', '', '' , '', '', "Absent"])
+			else:
+				if actual == 0:
+					actual = ''
+				else :
+					actual = pandas.to_datetime(actual, unit='h').strftime('%H:%M:%S')
+				if working_hours == 0:
+					working_hours = ''
+				else:
+					working_hours = pandas.to_datetime(str(working_hours), unit='h').strftime('%H:%M:%S')
+				xlsx_data.append([f'{day.date()} {day_name}', shift_type, in_time, out_time , dereliction, early_entry, additional , working_hours, actual, status])
+		else:
+			xlsx_data.append([f'{day.date()} {day_name}', shift_type , '', '', '', '', '', '', '', ''])
+
+	early_entry_time = ''
+	if early_hours > 0:
+		early_entry_time = pandas.to_datetime(early_hours, unit='h').strftime('%H:%M:%S')
+	early_entry_days = 0
+
+	extra_exit_time = ''
+	if additional_hours > 0:
+		extra_exit_time = pandas.to_datetime(additional_hours, unit='h').strftime('%H:%M:%S')
+	extra_exit_days = 0
+
+	total_early_and_extra = early_hours + additional_hours
+	total_early_and_extra = pandas.to_datetime(total_early_and_extra, unit='h').strftime('%H:%M:%S')
+
+	dereliction_time = 0
+	dereliction_days = 0
+	
+	weekly_off_days = 0
+	absent_days = 0
+	no_entry_days = 0
+	no_exit_days = 0
+	
+	attendance_days = 0
+	leave_days = 0
+	all_days = len(xlsx_data) - 2
+	if len(xlsx_data) > 2:
+		for day in xlsx_data[2:]:
+			if day[4]:
+				dereliction_days += 1
+			if day[2]:
+				attendance_days += 1
+			if day[9] == "Holiday" :
+				weekly_off_days +=1
+			if day[9] == "Absent" :
+				absent_days +=1
+			if day[9] == "No fingerprint entry":
+				no_entry_days += 1
+			if day[9] == "Exit is not marked":
+				no_exit_days += 1
+			if day[9] == "On Leave":
+				leave_days += 1
+			if day[5]:
+				early_entry_days += 1
+			if day[6]:
+				extra_exit_days += 1
+				
+		dereliction_time = pandas.to_datetime(str(dereliction_hours), unit='h').strftime('%H:%M')
+		total_table = [
+			[],
+			["","Time","Number","","Time","Number","","Time","Number","","Number" ],
+			["Early Entry", early_entry_time, early_entry_days, "", "", "", "No fingerprint entry", "00:00", no_entry_days, "Absence due to delay", 0],
+			["Extra Exit", extra_exit_time, extra_exit_days, "Dereliction", dereliction_time, dereliction_days, "Exit is not marked", "00:00", no_exit_days, "Absence due to dereliction", 0 ],
+			["Total", total_early_and_extra, early_entry_days + extra_exit_days, "Total", dereliction_time, dereliction_days, "", "", "", "Absence", absent_days],
+			[],
+			["Attendance Days", attendance_days, "", "Weekly Off Days", weekly_off_days, "", "Leave Days", leave_days,  "","Total Days", all_days, ""],
+		]
+		xlsx_data.extend(total_table)
+		from frappe.utils.xlsxutils import make_xlsx
+		xlsx_file = make_xlsx(xlsx_data, "Query Report", column_widths=column_widths)
+		frappe.response["filename"] = 'Attendance Report' + ".xlsx"
+		frappe.response["filecontent"] = xlsx_file.getvalue()
+		frappe.response["type"] = "binary"
