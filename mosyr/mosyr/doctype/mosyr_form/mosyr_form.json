@@ -12,9 +12,6 @@
   "is_submittable",
   "fields_section_break",
   "fields",
-  "sb1",
-  "title_field",
-  "show_name_in_global_search",
   "sb2",
   "permissions",
   "amended_from"
@@ -50,23 +47,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "sb1",
-   "fieldtype": "Section Break",
-   "label": "Naming"
-  },
-  {
-   "depends_on": "eval:!doc.istable",
-   "fieldname": "title_field",
-   "fieldtype": "Data",
-   "label": "Title Field"
-  },
-  {
-   "default": "0",
-   "fieldname": "show_name_in_global_search",
-   "fieldtype": "Check",
-   "label": "Make \"name\" searchable in Global Search"
-  },
-  {
    "depends_on": "eval:!doc.istable",
    "fieldname": "sb2",
    "fieldtype": "Section Break",
@@ -78,7 +58,7 @@
    "label": "Permissions",
    "oldfieldname": "permissions",
    "oldfieldtype": "Table",
-   "options": "DocPerm"
+   "options": "MosyrDocPerm"
   },
   {
    "fieldname": "form_title",
@@ -100,7 +80,7 @@
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-04 16:34:33.993165",
+ "modified": "2022-12-13 12:23:44.269801",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
