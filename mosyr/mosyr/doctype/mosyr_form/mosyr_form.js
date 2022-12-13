@@ -2,6 +2,13 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Mosyr Form', {
+	onload: function(frm){
+		if (frm.is_new()) {
+			if (!(frm.doc.permissions && frm.doc.permissions.length)) {
+				frm.add_child('permissions', { role: 'System Manager' });
+			}
+		}
+	},
 	refresh: function (frm) {
 		frm.set_query('role', 'permissions', function (doc) {
 			if (doc.custom && frappe.session.user != 'Administrator') {
@@ -20,8 +27,6 @@ frappe.ui.form.on('Mosyr Form', {
 			if (!(frm.doc.permissions && frm.doc.permissions.length)) {
 				frm.add_child('permissions', { role: 'System Manager' });
 			}
-		} else {
-			frm.toggle_enable("engine", 0);
 		}
 	},
 	autoname: function (frm) {
