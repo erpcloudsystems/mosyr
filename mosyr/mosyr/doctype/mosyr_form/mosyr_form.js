@@ -11,7 +11,7 @@ frappe.ui.form.on('Mosyr Form', {
 	},
 	refresh: function (frm) {
 		if (!frm.is_new() && !frm.doc.istable && frm.doc.docstatus == 1) {
-			frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
+			frm.add_custom_button(__('Go to {0} List', [frm.doc.form_title]), () => {
 				window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
 			});
 		}
