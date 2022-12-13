@@ -306,13 +306,13 @@ class MosyrForm(Document):
         try:
             attatched_req = []
             for idx, field in enumerate(new_erp_doc.fields):
-                if field.fieldtype in ["Attach", "Attach Image"] and cint(field.req) == 1:
+                if field.fieldtype in ["Attach", "Attach Image"] and cint(field.reqd) == 1:
                     field.in_list_view = 0
-                    field.req = 0
+                    field.reqd = 0
                     attatched_req.append(idx)
             new_erp_doc.save(ignore_permissions=True)
             for att_req in attatched_req:
-                new_erp_doc.fields[att_req].req = 1
+                new_erp_doc.fields[att_req].reqd = 1
             new_erp_doc.save(ignore_permissions=True)
             self.prepare_trans_for_docname(self.name, self.form_title)
             frappe.db.commit()
