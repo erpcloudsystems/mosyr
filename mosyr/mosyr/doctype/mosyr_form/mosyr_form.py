@@ -91,9 +91,10 @@ class MosyrForm(Document):
         self.check_fields()
         self.check_roles()
 
-        clean_fields = self.prepare_fields()
-        self.build_system_doc(clean_fields)
-
+        clean_fields, title_field = self.prepare_fields()
+        self.build_system_doc(clean_fields, title_field)
+    
+    title_field = ""
     def prepare_fields(self):
         numeric_fields_prop = (
             "length",
@@ -138,12 +139,12 @@ class MosyrForm(Document):
 
             for prop in bool_fields_prop:
                 val = cint(field.get(f"{prop}", ""))
-                prop = prop.replace("_", "")
+                # prop = prop.replace("_", "")
                 clean_field.update({f"{prop}": val})
 
             for prop in str_fields_props:
                 val = field.get(f"{prop}", "")
-                prop = prop.replace("_", "")
+                # prop = prop.replace("_", "")
                 clean_field.update({f"{prop}": val})
             clean_field.update({"fieldname": fieldname, "options": ""})
 
@@ -168,10 +169,15 @@ class MosyrForm(Document):
                     return
                 child_name = self.prepare_for_multiselect(multiselect_options)
                 clean_field.update({"options": child_name})
-
+            
+            if fieldtype in ["Attach", "Attach Image"]:
+                clean_field.update({"in_list_view": 0})
+            
+            if cint(field.get("use_for_title", 0)) == 1 and fieldtype == "Data":
+                title_field = fieldname
             clean_fields.append(clean_field)
 
-        return clean_fields
+        return clean_fields, title_field
 
     def prepare_for_multiselect(self, options):
         doc_name = make_autoname("FRMOPT.YY.MM.DD.#####")
@@ -257,15 +263,15 @@ class MosyrForm(Document):
 
         return child_doc_name
 
-    def build_system_doc(self, clean_fields):
+    def build_system_doc(self, clean_fields, title_field):
         erp_doc = {
             "__newname": self.name,
             "module": "Mosyr Forms",
             "allow_rename": 0,
             "custom": 1,
             "is_submittable": self.is_submittable,
-            "title_field": self.title_field,
-            "show_name_in_global_search": cint(self.show_name_in_global_search),
+            "title_field": title_field,
+            "show_name_in_global_search": 1,
         }
         new_erp_doc = frappe.new_doc("DocType")
         new_erp_doc.update(erp_doc)
@@ -278,7 +284,7 @@ class MosyrForm(Document):
                 {
                     "role": perm.role,
                     "if_owner": perm.if_owner,
-                    "permlevel": perm.permlevel,
+                    "permlevel": 0,
                     "select": perm.select,
                     "read": perm.read,
                     "write": perm.write,
