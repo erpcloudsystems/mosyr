@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Mosyr Form', {
-	onload: function(frm){
+	onload: function (frm) {
 		if (frm.is_new()) {
 			if (!(frm.doc.permissions && frm.doc.permissions.length)) {
 				frm.add_child('permissions', { role: 'System Manager' });
@@ -10,6 +10,11 @@ frappe.ui.form.on('Mosyr Form', {
 		}
 	},
 	refresh: function (frm) {
+		if (!frm.is_new() && !frm.doc.istable && frm.doc.docstatus == 1) {
+			frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
+				window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+			});
+		}
 		frm.set_query('role', 'permissions', function (doc) {
 			if (doc.custom && frappe.session.user != 'Administrator') {
 				return {
@@ -18,16 +23,16 @@ frappe.ui.form.on('Mosyr Form', {
 				};
 			}
 		});
-		frm.set_query( 'role', "permissions", function(doc) {
+		frm.set_query('role', "permissions", function (doc) {
 			return {
 				query: "mosyr.api.get_roles",
 			};
 		});
-		if (frm.is_new()) {
-			if (!(frm.doc.permissions && frm.doc.permissions.length)) {
-				frm.add_child('permissions', { role: 'System Manager' });
-			}
-		}
+		// if (frm.is_new()) {
+		// 	if (!(frm.doc.permissions && frm.doc.permissions.length)) {
+		// 		frm.add_child('permissions', { role: 'System Manager' });
+		// 	}
+		// }
 	},
 	autoname: function (frm) {
 		frm.set_df_property('fields', 'reqd', frm.doc.autoname !== 'Prompt');
