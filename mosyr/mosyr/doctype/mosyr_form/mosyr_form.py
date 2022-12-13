@@ -304,6 +304,9 @@ class MosyrForm(Document):
             )
 
         try:
+            for field in new_erp_doc:
+                if field.fieldtype in ["Attach", "Attach Image"]:
+                    field.in_list_view = 0
             new_erp_doc.save(ignore_permissions=True)
             self.prepare_trans_for_docname(self.name, self.form_title)
             frappe.db.commit()
