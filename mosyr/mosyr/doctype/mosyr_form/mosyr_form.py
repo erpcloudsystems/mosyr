@@ -304,7 +304,7 @@ class MosyrForm(Document):
             )
 
         try:
-            for field in new_erp_doc:
+            for field in new_erp_doc.fields:
                 if field.fieldtype in ["Attach", "Attach Image"]:
                     field.in_list_view = 0
             new_erp_doc.save(ignore_permissions=True)
