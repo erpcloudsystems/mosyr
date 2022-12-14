@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestEmergencyContact(unittest.TestCase):
-    pass
+	pass

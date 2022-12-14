@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestHRNotificationSettings(unittest.TestCase):
-    pass
+	pass

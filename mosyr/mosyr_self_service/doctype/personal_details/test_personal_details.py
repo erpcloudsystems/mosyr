@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestPersonalDetails(unittest.TestCase):
-    pass
+	pass

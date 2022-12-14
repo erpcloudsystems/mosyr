@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestLatenessPermission(unittest.TestCase):
-    pass
+	pass

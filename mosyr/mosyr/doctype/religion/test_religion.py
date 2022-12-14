@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestReligion(unittest.TestCase):
-    pass
+	pass

@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestDependantsDetails(unittest.TestCase):
-    pass
+	pass
