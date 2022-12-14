@@ -3,6 +3,48 @@
 /* eslint-disable */
 
 frappe.query_reports["Employee Attendance Sheet"] = {
+	onload: function(report) {
+		report.page.add_inner_button(__("Export For Employee"), function() {
+			if (frappe.model.can_export(report.report_name)) {
+				var d = new frappe.ui.Dialog({
+					title: __('Choose Employee'),
+					fields: [
+						{
+							"label" : "Employee",
+							"fieldname": "employee",
+							"fieldtype": "Link",
+							"options" : "Employee" ,
+							"reqd": 1,
+						},
+						{
+							"label" : "From Date",
+							"fieldname": "from",
+							"fieldtype": "Date",
+							"reqd": 1,
+						},
+						{
+							"label" : "To Date",
+							"fieldname": "to",
+							"fieldtype": "Date",
+							"reqd": 1,
+						}
+					],
+					primary_action: function() {
+						d.hide()
+						var data = d.get_values();
+						const args = {
+							cmd: 'mosyr.mosyr.report.employee_attendance_sheet.employee_attendance_sheet.export_query',
+							data : data
+						};
+						open_url_post(frappe.request.url, args);
+					},
+					primary_action_label: __('Export')
+				});
+				d.show();	
+
+			}
+		   })
+		},
 	"filters": [
 		{
 			"fieldname":"from",
