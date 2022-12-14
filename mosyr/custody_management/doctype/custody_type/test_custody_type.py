@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestCustodyType(unittest.TestCase):
-    pass
+	pass

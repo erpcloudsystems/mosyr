@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestCashCustody(unittest.TestCase):
-    pass
+	pass

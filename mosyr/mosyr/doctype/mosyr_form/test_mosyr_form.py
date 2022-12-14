@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestMosyrForm(unittest.TestCase):
-    pass
+	pass

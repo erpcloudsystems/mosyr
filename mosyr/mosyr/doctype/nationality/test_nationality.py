@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestNationality(unittest.TestCase):
-    pass
+	pass

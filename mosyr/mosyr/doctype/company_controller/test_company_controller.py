@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestCompanyController(unittest.TestCase):
-    pass
+	pass

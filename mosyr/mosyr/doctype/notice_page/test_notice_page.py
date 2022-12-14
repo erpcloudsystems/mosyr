@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestNoticePage(unittest.TestCase):
-    pass
+	pass

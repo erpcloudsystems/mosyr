@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestEmployeeDeduction(unittest.TestCase):
-    pass
+	pass

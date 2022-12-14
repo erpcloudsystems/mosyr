@@ -9,11 +9,8 @@ from frappe.model.document import Document
 from frappe.utils import cint, flt, formatdate, getdate
 
 from erpnext.hr.utils import validate_active_employee
-
-
 class OverlapError(frappe.ValidationError):
     pass
-
 
 class LatenessPermission(Document):
     def validate(self):
@@ -37,20 +34,14 @@ class LatenessPermission(Document):
             sr.submit()
 
     def on_cancel(self):
-        shift_request_list = frappe.get_list(
-            "Shift Request", {"lateness_permission": self.name}
-        )
+        shift_request_list = frappe.get_list("Shift Request", {"lateness_permission": self.name})
         if shift_request_list:
             for shift in shift_request_list:
                 shift_request_doc = frappe.get_doc("Shift Request", shift["name"])
                 shift_request_doc.cancel()
 
     def validate_dates(self):
-        if (
-            self.from_date
-            and self.to_date
-            and (getdate(self.to_date) < getdate(self.from_date))
-        ):
+        if self.from_date and self.to_date and (getdate(self.to_date) < getdate(self.from_date)):
             frappe.throw(_("To date cannot be before from date"))
 
     def validate_overlap_dates(self):
@@ -81,11 +72,8 @@ class LatenessPermission(Document):
                 self.throw_overlap_error(date_overlap)
 
     def throw_overlap_error(self, d):
-        msg = _(
-            "Employee {0} has already applied for Lateness between {1} and {2} : "
-        ).format(
+        msg = _("Employee {0} has already applied for Lateness between {1} and {2} : ").format(
             self.employee, formatdate(d["from_date"]), formatdate(d["to_date"])
-        ) + """ <b><a href="/app/Form/Lateness Permission/{0}">{0}</a></b>""".format(
-            d["name"]
-        )
+        ) + """ <b><a href="/app/Form/Lateness Permission/{0}">{0}</a></b>""".format(d["name"])
         frappe.throw(msg, OverlapError)
+

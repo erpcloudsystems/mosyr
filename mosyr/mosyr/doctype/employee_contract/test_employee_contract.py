@@ -4,6 +4,5 @@
 # import frappe
 import unittest
 
-
 class TestEmployeeContract(unittest.TestCase):
-    pass
+	pass
