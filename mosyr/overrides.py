@@ -88,12 +88,12 @@
 #         for sc in frappe.get_list("Salary Component"):
 #             sc = frappe.get_doc("Salary Component", sc.name)
 #             sc.save()
-        
+
 #         # Setup For salayr components
 #         for ect in frappe.get_list("Expense Claim Type"):
 #             ect = frappe.get_doc("Expense Claim Type", ect.name)
 #             ect.save()
-    
+
 #     def create_default_departments(self):
 #         records = [
 #             # Department
@@ -194,7 +194,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if self.payroll_cost_center: return
 #         cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
@@ -204,7 +204,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if self.payroll_cost_center: return
 #         cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
@@ -214,7 +214,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if self.cost_center: return
 #         cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
@@ -224,11 +224,11 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         self.set_missing_custom_account()
 #         self.set_missing_custom_cost_center()
-    
+
 #     def set_missing_custom_cost_center(self):
 #         if not self.cost_center:
 #             cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
@@ -246,7 +246,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if not self.advance_account:
 #             account = create_account("Employees Advances", self.company, "Loans and Advances (Assets)", "Asset", "Payable", True, "default_employee_advance_account")
@@ -259,7 +259,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         self.accounts = []
 #         companies = frappe.get_list("Company")
@@ -274,7 +274,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         self.accounts = []
 #         companies = frappe.get_list("Company")
@@ -307,11 +307,11 @@
 #         if not self.interest_income_account:
 #             account = create_account("Loans Inreset", self.company, "Income", "Income", "", False)
 #             self.interest_income_account = account
-        
+
 #         if not self.penalty_income_account:
 #             account = create_account("Loans Penalty", self.company, "Income", "Income", "", False)
 #             self.penalty_income_account = account
-        
+
 #         if not self.mode_of_payment:
 #             mop = create_mode_payment("Loans Payment", "Bank")
 #             self.mode_of_payment = mop
@@ -320,7 +320,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if self.is_new():
 #             self.total_amount_remaining = flt(self.total_payment)
@@ -339,7 +339,7 @@
 #         if not self.interest_income_account:
 #             account = create_account("Loans Inreset", self.company, "Income", "Income", "", False)
 #             self.interest_income_account = account
-        
+
 #         if not self.penalty_income_account:
 #             account = create_account("Loans Penalty", self.company, "Income", "Income", "", False)
 #             self.penalty_income_account = account
@@ -347,7 +347,7 @@
 #         if not self.mode_of_payment:
 #             mop = create_mode_payment("Loans Payment", "Bank")
 #             self.mode_of_payment = mop
-        
+
 #         if not self.cost_center:
 #             cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
 #             self.cost_center = cost_center
@@ -356,20 +356,20 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if not self.cost_center:
 #             cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
 #             self.cost_center = cost_center
-        
+
 #         if not self.disbursement_account:
 #             account = create_account("Loans Disbursement", self.company, "Loans and Advances (Assets)", "Asset", "", False)
 #             self.disbursement_account = account
-        
+
 #         if not self.loan_account:
 #             account = create_account("Loans Account", self.company, "Loans and Advances (Assets)", "Asset", "", False)
 #             self.loan_account = account
-        
+
 #         if not self.bank_account:
 #             bank_account = create_bank_account(self.company)
 #             self.bank_account = bank_account
@@ -378,24 +378,24 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if not self.cost_center:
 #             cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
 #             self.cost_center = cost_center
-        
+
 #         if not self.loan_account:
 #             account = create_account("Loans Account", self.company, "Loans and Advances (Assets)", "Asset", "", False)
 #             self.loan_account = account
-        
+
 #         if not self.payment_account:
 #             account = create_account("Loans Repayment", self.company, "Loans and Advances (Assets)", "Asset", "", False)
 #             self.payment_account = account
-        
+
 #         if not self.payroll_payable_account:
 #             account = create_account("Payroll Payable", self.company, "Accounts Payable", "Liability", "", True, "default_payroll_payable_account")
 #             self.payroll_payable_account = account
-        
+
 #         if not self.penalty_income_account:
 #             account = create_account("Loans Penalty", self.company, "Income", "Income", "", False)
 #             self.penalty_income_account = account
@@ -435,7 +435,7 @@
 #                 row.paid_amount = row.paid_amount + diff
 #                 repayment_amount = repayment_amount - diff
 #             else:
-#                 row.paid_amount = row.paid_amount + repayment_amount 
+#                 row.paid_amount = row.paid_amount + repayment_amount
 #                 repayment_amount = 0
 #             if repayment_amount <= 0: break
 #         loan_doc.save(ignore_permissions=True)
@@ -449,7 +449,7 @@
 #         if not self.cost_center:
 #             cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
 #             self.cost_center = cost_center
-        
+
 #         if not self.write_off_account:
 #             account = create_account("Loans Write Off", self.company, "Expenses", "Expense", "", False)
 #             self.write_off_account = account
@@ -458,7 +458,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         self.accounts = []
 #         companies = frappe.get_list("Company")
@@ -473,13 +473,13 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if not self.mode_of_payment:
 #             mop = create_mode_payment("Payroll Payment", "Bank")
 #             self.mode_of_payment = mop
 #         if not self.payment_account:
-#             accounts = frappe.get_list("Mode of Payment Account", 
+#             accounts = frappe.get_list("Mode of Payment Account",
 #                                             filters={'parent': self.mode_of_payment or "", 'company': self.company},
 #                                             fields=['*'])
 #             if len(accounts) > 0:
@@ -489,7 +489,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if not self.payroll_payable_account:
 #             account = create_account("Payroll Payable", self.company, "Accounts Payable", "Liability", "", True, "default_payroll_payable_account")
@@ -499,7 +499,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         # No need to set default ( Field Type is Select)
 #         # if not self.mode_of_payment:
@@ -513,7 +513,7 @@
 #     def validate(self):
 #         self.set_missing_custome_values()
 #         super().validate()
-    
+
 #     def set_missing_custome_values(self):
 #         if not self.payroll_payable_account:
 #             account = create_account("Payroll Payable", self.company, "Accounts Payable", "Liability", "", True, "default_payroll_payable_account")
@@ -522,7 +522,7 @@
 #         if not self.cost_center:
 #             cost_center = create_cost_center("Main", self.company, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
 #             self.cost_center = cost_center
-        
+
 #         if not self.bank_account:
 #             bank_account = create_bank_account(self.company)
 #             self.bank_account = bank_account
@@ -586,7 +586,7 @@
 #     if attendance_status == "Skip":
 #         skip_attendance_in_checkins(log_names)
 #         return None
-    
+
 #     elif attendance_status in ("Present", "Absent", "Half Day"):
 #         company = frappe.get_cached_value("Employee", employee, "company")
 #         duplicate = frappe.db.exists(

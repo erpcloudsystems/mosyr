@@ -4,8 +4,15 @@ from frappe.custom.doctype.property_setter.property_setter import make_property_
 from frappe.installer import update_site_config
 from erpnext.setup.install import create_user_type
 from erpnext.setup.install import create_custom_role
-from mosyr import create_account, create_cost_center, create_mode_payment, create_bank_account, update_fields_props
+from mosyr import (
+    create_account,
+    create_cost_center,
+    create_mode_payment,
+    create_bank_account,
+    update_fields_props,
+)
 from frappe.permissions import update_permission_property
+
 
 def after_install():
     edit_gender_list()
@@ -21,8 +28,11 @@ def after_install():
     create_role_and_set_to_admin()
     set_home_page_login()
 
+
 def edit_gender_list():
-    genders_to_del = frappe.get_list("Gender", filters={"name": ["not in", ["Female", "Male"]]})
+    genders_to_del = frappe.get_list(
+        "Gender", filters={"name": ["not in", ["Female", "Male"]]}
+    )
     for gender in genders_to_del:
         try:
             gender = frappe.get_doc("Gender", gender.name)
@@ -31,24 +41,80 @@ def edit_gender_list():
             pass
         frappe.db.commit()
 
+
 def create_dafault_bank_accounts(companies):
     for company in companies:
         create_bank_account(company.name)
 
+
 def create_dafault_accounts(companies):
     for company in companies:
-        create_account("Employees Advances", company.name, "Loans and Advances (Assets)", "Asset", "Payable", True, "default_employee_advance_account")
+        create_account(
+            "Employees Advances",
+            company.name,
+            "Loans and Advances (Assets)",
+            "Asset",
+            "Payable",
+            True,
+            "default_employee_advance_account",
+        )
         create_account("Expense Claims", company.name, "Expenses", "Expense", "", False)
-        create_account("Expense Payable", company.name, "Accounts Payable", "Liability", "Payable", True, "default_payable_account")
-        create_account("Loans Account", company.name, "Loans and Advances (Assets)", "Asset", "", False)
-        create_account("Loans Disbursement", company.name, "Loans and Advances (Assets)", "Asset", "", False)
-        create_account("Loans Repayment", company.name, "Loans and Advances (Assets)", "Asset", "", False)
+        create_account(
+            "Expense Payable",
+            company.name,
+            "Accounts Payable",
+            "Liability",
+            "Payable",
+            True,
+            "default_payable_account",
+        )
+        create_account(
+            "Loans Account",
+            company.name,
+            "Loans and Advances (Assets)",
+            "Asset",
+            "",
+            False,
+        )
+        create_account(
+            "Loans Disbursement",
+            company.name,
+            "Loans and Advances (Assets)",
+            "Asset",
+            "",
+            False,
+        )
+        create_account(
+            "Loans Repayment",
+            company.name,
+            "Loans and Advances (Assets)",
+            "Asset",
+            "",
+            False,
+        )
         create_account("Loans Inreset", company.name, "Income", "Income", "", False)
         create_account("Loans Penalty", company.name, "Income", "Income", "", False)
-        create_account("Loans Write Off", company.name, "Expenses", "Expense", "", False)
-        create_account("Payroll Payable", company.name, "Accounts Payable", "Liability", "", True, "default_payroll_payable_account")
-        create_account("Payroll Payment", company.name, "Loans and Advances (Assets)", "Asset", "Bank", False)
-        
+        create_account(
+            "Loans Write Off", company.name, "Expenses", "Expense", "", False
+        )
+        create_account(
+            "Payroll Payable",
+            company.name,
+            "Accounts Payable",
+            "Liability",
+            "",
+            True,
+            "default_payroll_payable_account",
+        )
+        create_account(
+            "Payroll Payment",
+            company.name,
+            "Loans and Advances (Assets)",
+            "Asset",
+            "Bank",
+            False,
+        )
+
     # Setup For mode of payments
     for mop in frappe.get_list("Mode of Payment"):
         mop = frappe.get_doc("Mode of Payment", mop.name)
@@ -58,25 +124,34 @@ def create_dafault_accounts(companies):
     for sc in frappe.get_list("Salary Component"):
         sc = frappe.get_doc("Salary Component", sc.name)
         sc.save()
-    
+
     # Setup For salayr components
     for ect in frappe.get_list("Expense Claim Type"):
         ect = frappe.get_doc("Expense Claim Type", ect.name)
         ect.save()
 
+
 def create_default_cost_centers(companies):
     for company in companies:
-        create_cost_center("Main", company.name, True, ["cost_center", "round_off_cost_center", "depreciation_cost_center"])
+        create_cost_center(
+            "Main",
+            company.name,
+            True,
+            ["cost_center", "round_off_cost_center", "depreciation_cost_center"],
+        )
+
 
 def create_dafault_mode_of_payments():
     create_mode_payment("Advance Payment", "Bank")
     create_mode_payment("Loans Payment", "Bank")
     create_mode_payment("Parroll Payment", "Bank")
 
+
 def hide_accounts_and_taxs_from_system():
     for key in update_fields_props.keys():
         fields_props = update_fields_props.get(f"{key}", [])
         add_property_setter(fields_props)
+
 
 def setup_doctypes_user_type():
     user_types = get_user_types_data()
@@ -88,6 +163,7 @@ def setup_doctypes_user_type():
     for user_type, data in iteritems(user_types):
         create_user_type(user_type, data)
     frappe.db.commit()
+
 
 def get_user_types_data():
     return {
@@ -102,26 +178,196 @@ def get_user_types_data():
                 "Leave Application": ["read", "write", "create", "delete"],
                 "Attendance Request": ["read", "write", "create", "delete"],
                 "Compensatory Leave Request": ["read", "write", "create", "delete"],
-                "Employee Tax Exemption Declaration": ["read", "write", "create", "delete"],
-                "Employee Tax Exemption Proof Submission": ["read", "write", "create", "delete"],
-                "Timesheet": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                
-                "Work Experience": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Dependants Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Passport Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Salary Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Health Insurance": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Contact Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Emergency Contact": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Educational Qualification": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Personal Details": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Employee ID": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
-                "Lateness Permission": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+                "Employee Tax Exemption Declaration": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                ],
+                "Employee Tax Exemption Proof Submission": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                ],
+                "Timesheet": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Work Experience": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Dependants Details": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Passport Details": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Salary Details": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Health Insurance": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Contact Details": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Emergency Contact": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Educational Qualification": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Personal Details": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Employee ID": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Lateness Permission": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
             },
         },
     }
 
-permission_saas_manager = ["Company Controller","Department","Branch","Employee Group","Designation","Employee Grade","Employment Type","Shift Type","Staffing Plan","Holiday List","Leave Type","Leave Period","Leave Policy","Leave Policy Assignment","Leave Allocation","Leave Encashment","Employee Health Insurance","Employee","Salary Structure","Mosyr Form","Leave Application","Shift Request","Contact Details","Educational Qualification","Emergency Contact","Health Insurance","Personal Details","Salary Details","Attendance","Employee Attendance Tool","Attendance Request","Upload Attendance","Employee Checkin","Payroll Settings","Payroll Entry","Payroll Period","Salary Structure","Salary Structure Assignment","Salary Slip","Additional Salary","Retention Bonus","Employee Incentive","Appraisal","Appraisal Template","Leave Application","Compensatory Leave Request","Travel Request","Employee Advance","Expense Claim","Loan Type","Loan","Loan Application","Vehicle","Vehicle Log","Employee Contract","Salary Structure Assignment","Leave Encashment","End Of Service","Document Manager","Document Type","User","Users Permission Manager"]
+
+permission_saas_manager = [
+    "Company Controller",
+    "Department",
+    "Branch",
+    "Employee Group",
+    "Designation",
+    "Employee Grade",
+    "Employment Type",
+    "Shift Type",
+    "Staffing Plan",
+    "Holiday List",
+    "Leave Type",
+    "Leave Period",
+    "Leave Policy",
+    "Leave Policy Assignment",
+    "Leave Allocation",
+    "Leave Encashment",
+    "Employee Health Insurance",
+    "Employee",
+    "Salary Structure",
+    "Mosyr Form",
+    "Leave Application",
+    "Shift Request",
+    "Contact Details",
+    "Educational Qualification",
+    "Emergency Contact",
+    "Health Insurance",
+    "Personal Details",
+    "Salary Details",
+    "Attendance",
+    "Employee Attendance Tool",
+    "Attendance Request",
+    "Upload Attendance",
+    "Employee Checkin",
+    "Payroll Settings",
+    "Payroll Entry",
+    "Payroll Period",
+    "Salary Structure",
+    "Salary Structure Assignment",
+    "Salary Slip",
+    "Additional Salary",
+    "Retention Bonus",
+    "Employee Incentive",
+    "Appraisal",
+    "Appraisal Template",
+    "Leave Application",
+    "Compensatory Leave Request",
+    "Travel Request",
+    "Employee Advance",
+    "Expense Claim",
+    "Loan Type",
+    "Loan",
+    "Loan Application",
+    "Vehicle",
+    "Vehicle Log",
+    "Employee Contract",
+    "Salary Structure Assignment",
+    "Leave Encashment",
+    "End Of Service",
+    "Document Manager",
+    "Document Type",
+    "User",
+    "Users Permission Manager",
+]
+
 
 def add_non_standard_user_types():
     user_types = install_user_types()
@@ -130,52 +376,69 @@ def add_non_standard_user_types():
     for user_type, data in iteritems(user_types):
         user_type_limit.setdefault(frappe.scrub(user_type), 100)
     update_site_config("user_type_doctype_limit", user_type_limit)
-    
+
     for user_type, data in iteritems(user_types):
         create_custom_role(data)
         create_user_type(user_type, data)
     frappe.db.commit()
 
+
 def install_user_types():
-    doctypes={}
+    doctypes = {}
     for document in permission_saas_manager:
-        doctypes.update({document: ["read", "write", "create", "delete", "submit", "cancel", "amend"]})
+        doctypes.update(
+            {
+                document: [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ]
+            }
+        )
 
     types = {
         "SaaS Manager": {
             "role": "SaaS Manager",
             "apply_user_permission_on": "Employee",
             "user_id_field": "user_id",
-            "doctypes": doctypes
+            "doctypes": doctypes,
         }
     }
     return types
 
+
 def create_role_and_set_to_admin():
-    data = {'role' :"Read User Type"}
+    data = {"role": "Read User Type"}
     create_custom_role(data)
-    frappe.get_doc("User", 'Administrator').add_roles("Read User Type")
+    frappe.get_doc("User", "Administrator").add_roles("Read User Type")
     frappe.db.commit()
-    update_permission_property("User", "Read User Type", 3, "read" , 1)
-    update_permission_property("User", "Read User Type", 3, "write" , 1)
+    update_permission_property("User", "Read User Type", 3, "read", 1)
+    update_permission_property("User", "Read User Type", 3, "write", 1)
     frappe.db.commit()
-    
+
+
 def create_banks():
     banks = [
-        {"bank_name":"Al Inma Bank","swift_number" :"INMA" },
-        {"bank_name":"Riyadh Bank","swift_number" :"RIBL" },
-        {"bank_name":"The National Commercial Bank","swift_number" :"NCBK" },
-        {"bank_name":"Samba Financial Group","swift_number" :"SAMB" },
-        {"bank_name":"Al Rajhi Bank","swift_number" :"RJHI" },
-        {"bank_name":"Al Araby Bank","swift_number" :"ARNB" },
+        {"bank_name": "Al Inma Bank", "swift_number": "INMA"},
+        {"bank_name": "Riyadh Bank", "swift_number": "RIBL"},
+        {"bank_name": "The National Commercial Bank", "swift_number": "NCBK"},
+        {"bank_name": "Samba Financial Group", "swift_number": "SAMB"},
+        {"bank_name": "Al Rajhi Bank", "swift_number": "RJHI"},
+        {"bank_name": "Al Araby Bank", "swift_number": "ARNB"},
     ]
     for bank in banks:
-        banks_list = frappe.get_list("Bank", filters={"name": bank['bank_name']})
+        banks_list = frappe.get_list("Bank", filters={"name": bank["bank_name"]})
         if len(banks_list) == 0:
             bank_doc = frappe.new_doc("Bank")
             bank_doc.update(bank)
             bank_doc.save()
     frappe.db.commit()
+
+
 def add_property_setter(fields_props):
     for props in fields_props:
         doctype = props.get("doctype", False)
@@ -183,18 +446,43 @@ def add_property_setter(fields_props):
         property = props.get("prop", False)
         value = props.get("value", False)
         property_type = props.get("prop_type", False)
-        if not doctype or not fieldname or not property or not value or not property_type:
+        if (
+            not doctype
+            or not fieldname
+            or not property
+            or not value
+            or not property_type
+        ):
             continue
-        
-        try: make_property_setter(doctype,fieldname,property, value,property_type,validate_fields_for_doctype=False,)
-        except: pass
+
+        try:
+            make_property_setter(
+                doctype,
+                fieldname,
+                property,
+                value,
+                property_type,
+                validate_fields_for_doctype=False,
+            )
+        except:
+            pass
     frappe.db.commit()
 
     def set_missing_custom_account(self):
-        if self.payable_account: return
-        account = create_account("Expense Claims", self.company, "Accounts Payable", "Liability", "Payable", True, "default_payable_account")
+        if self.payable_account:
+            return
+        account = create_account(
+            "Expense Claims",
+            self.company,
+            "Accounts Payable",
+            "Liability",
+            "Payable",
+            True,
+            "default_payable_account",
+        )
         self.payable_account = account
 
+
 def set_home_page_login():
-    frappe.db.set_value('Website Settings', 'Website Settings', 'home_page', 'login')
+    frappe.db.set_value("Website Settings", "Website Settings", "home_page", "login")
     frappe.db.commit()

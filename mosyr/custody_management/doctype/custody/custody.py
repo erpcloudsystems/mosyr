@@ -5,6 +5,7 @@ import frappe
 from frappe import _, throw
 from frappe.model.document import Document
 
+
 class Custody(Document):
     def validate(self):
         if self.employee == self.recipient:

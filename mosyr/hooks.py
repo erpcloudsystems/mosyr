@@ -14,13 +14,10 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 app_include_css = [
-	"/assets/mosyr/css/mosyr.min.css",
-	"/assets/mosyr/css/hcalendar.min.css"
+    "/assets/mosyr/css/mosyr.min.css",
+    "/assets/mosyr/css/hcalendar.min.css",
 ]
-app_include_js = [
-	"/assets/mosyr/js/mosyr.min.js",
-	"/assets/mosyr/js/hcalendar.min.js"
-]
+app_include_js = ["/assets/mosyr/js/mosyr.min.js", "/assets/mosyr/js/hcalendar.min.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/mosyr/css/mosyr.css"
@@ -38,10 +35,10 @@ app_include_js = [
 
 # include js in doctype views
 doctype_js = {
-	"Employee" : "public/js/employee.js",
-	"Loan" : "public/js/loan.js",
-	}
-doctype_list_js = {"Loan" : "public/js/loan_list.js"}
+    "Employee": "public/js/employee.js",
+    "Loan": "public/js/loan.js",
+}
+doctype_list_js = {"Loan": "public/js/loan_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -53,7 +50,7 @@ doctype_list_js = {"Loan" : "public/js/loan_list.js"}
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# 	"Role": "home_page"
 # }
 
 # Generators
@@ -93,33 +90,29 @@ after_install = "mosyr.install.after_install"
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Mode of Payment": 		"mosyr.overrides.accounts.CustomModeofPayment",
-
-	"Company": 				"mosyr.overrides.hr.CustomCompany",
-	"Employee": 			"mosyr.overrides.hr.CustomEmployee",
-	"Department": 			"mosyr.overrides.hr.CustomDepartment",
-	"Travel Request": 		"mosyr.overrides.hr.CustomTravelRequest",
-	"Expense Claim": 		"mosyr.overrides.hr.CustomExpenseClaim",
-	"Employee Advance": 	"mosyr.overrides.hr.CustomEmployeeAdvance",
-	"Expense Claim Type": 	"mosyr.overrides.hr.CustomExpenseClaimType",
-	
-	"Loan Type": 			"mosyr.overrides.loans.CustomLoanType",
-	"Loan": 				"mosyr.overrides.loans.CustomLoan",
-	"Loan Disbursement": 	"mosyr.overrides.loans.CustomLoanDisbursement",
-	"Loan Repayment": 		"mosyr.overrides.loans.CustomLoanRepayment",
-	"Loan Write Off": 		"mosyr.overrides.loans.CustomLoanWriteOff",
-	
-	"Salary Component": 			"mosyr.overrides.payrolls.CustomSalaryComponent",
-	"Salary Structure": 			"mosyr.overrides.payrolls.CustomSalaryStructure",
-	"Salary Structure Assignment": 	"mosyr.overrides.payrolls.CustomSalaryStructureAssignment",
-	"Salary Slip": 					"mosyr.overrides.payrolls.CustomSalarySlip",
-	"Payroll Entry": 				"mosyr.overrides.payrolls.CustomPayrollEntry",
-
-	"Shift Assignment": 			"mosyr.overrides.shifts.CustomShiftAssignment",
-	"Shift Request": 				"mosyr.overrides.shifts.CustomShiftRequest",
-	"Attendance": 					"mosyr.overrides.shifts.CustomAttendance",
-	"Employee Checkin": 			"mosyr.overrides.shifts.CustomEmployeeCheckin",
-	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
+    "Mode of Payment": "mosyr.overrides.accounts.CustomModeofPayment",
+    "Company": "mosyr.overrides.hr.CustomCompany",
+    "Employee": "mosyr.overrides.hr.CustomEmployee",
+    "Department": "mosyr.overrides.hr.CustomDepartment",
+    "Travel Request": "mosyr.overrides.hr.CustomTravelRequest",
+    "Expense Claim": "mosyr.overrides.hr.CustomExpenseClaim",
+    "Employee Advance": "mosyr.overrides.hr.CustomEmployeeAdvance",
+    "Expense Claim Type": "mosyr.overrides.hr.CustomExpenseClaimType",
+    "Loan Type": "mosyr.overrides.loans.CustomLoanType",
+    "Loan": "mosyr.overrides.loans.CustomLoan",
+    "Loan Disbursement": "mosyr.overrides.loans.CustomLoanDisbursement",
+    "Loan Repayment": "mosyr.overrides.loans.CustomLoanRepayment",
+    "Loan Write Off": "mosyr.overrides.loans.CustomLoanWriteOff",
+    "Salary Component": "mosyr.overrides.payrolls.CustomSalaryComponent",
+    "Salary Structure": "mosyr.overrides.payrolls.CustomSalaryStructure",
+    "Salary Structure Assignment": "mosyr.overrides.payrolls.CustomSalaryStructureAssignment",
+    "Salary Slip": "mosyr.overrides.payrolls.CustomSalarySlip",
+    "Payroll Entry": "mosyr.overrides.payrolls.CustomPayrollEntry",
+    "Shift Assignment": "mosyr.overrides.shifts.CustomShiftAssignment",
+    "Shift Request": "mosyr.overrides.shifts.CustomShiftRequest",
+    "Attendance": "mosyr.overrides.shifts.CustomAttendance",
+    "Employee Checkin": "mosyr.overrides.shifts.CustomEmployeeCheckin",
+    "Shift Type": "mosyr.overrides.shifts.CustomShiftType",
 }
 
 # Document Events
@@ -127,40 +120,29 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
-	"Employee": {
-		"validate": [
-			"mosyr.api.validate_social_insurance",
-			"mosyr.api.notify_expired_dates",
-			"mosyr.api.set_employee_gender",
-			"mosyr.api.translate_employee",
-			"mosyr.api.set_employee_number",
-			"mosyr.api.set_date_of_joining",
-	]},
-	"Leave Type": {
-		"validate": "mosyr.api.check_other_annual_leaves"
-	},
-	"User" :{
-		"after_insert" : "mosyr.api.set_user_type"
-	},
-	"Loan Repayment" : {
-		"validate" :[
-			"mosyr.api.validate_remaining_loan"
-		]
-	}
+    "Employee": {
+        "validate": [
+            "mosyr.api.validate_social_insurance",
+            "mosyr.api.notify_expired_dates",
+            "mosyr.api.set_employee_gender",
+            "mosyr.api.translate_employee",
+            "mosyr.api.set_employee_number",
+            "mosyr.api.set_date_of_joining",
+        ]
+    },
+    "Leave Type": {"validate": "mosyr.api.check_other_annual_leaves"},
+    "User": {"after_insert": "mosyr.api.set_user_type"},
+    "Loan Repayment": {"validate": ["mosyr.api.validate_remaining_loan"]},
 }
 
 # Scheduled Tasks
 # ---------------
 scheduler_events = {
-	"cron":{	
-		"0/1 * * * *" :[
-			"mosyr.cron.process_auto_attendance_for_all_shifts"
-		]
-	},
-	"daily": [
-		"mosyr.daily.update_status_for_contracts",
-		"mosyr.daily.notify_expired_dates",
-	]
+    "cron": {"0/1 * * * *": ["mosyr.cron.process_auto_attendance_for_all_shifts"]},
+    "daily": [
+        "mosyr.daily.update_status_for_contracts",
+        "mosyr.daily.notify_expired_dates",
+    ],
 }
 # scheduler_events = {
 # 	"all": [
@@ -208,24 +190,22 @@ scheduler_events = {
 # --------------------
 
 user_data_fields = [
-	{
-		"doctype": "{doctype_1}",
-		"filter_by": "{filter_by}",
-		"redact_fields": ["{field_1}", "{field_2}"],
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_2}",
-		"filter_by": "{filter_by}",
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_3}",
-		"strict": False,
-	},
-	{
-		"doctype": "{doctype_4}"
-	}
+    {
+        "doctype": "{doctype_1}",
+        "filter_by": "{filter_by}",
+        "redact_fields": ["{field_1}", "{field_2}"],
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_2}",
+        "filter_by": "{filter_by}",
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_3}",
+        "strict": False,
+    },
+    {"doctype": "{doctype_4}"},
 ]
 
 # Authentication and authorization
@@ -239,216 +219,180 @@ fixtures = [
     {
         "dt": "Custom Field",
         "filters": [
-            ["name", "in", [
-				"Employee-full_name_en",
-				"Employee-from_api",
-				"Employee-key",
-				"Employee-valid_data",
-				"Employee-hijri_date_of_birth",
-				"Employee-employee_signature",
-				"Employee-api_employee_status",
-				"Employee-birth_place",
-				"Employee-direct_manager",
-				"Employee-nationality",
-				"Employee-payment_type",
-				"Employee-religion",
-				"Employee-handicap",
-				"Employee-self_service",
-				"Employee-payroll_card_number",
-				"Employee-insurance_card_expire",
-				"Employee-insurance_card_class",
-				"Employee-health_certificate",
-				"Employee-employee_status",
-				"Employee-passport",
-				"Employee-employee_passport",
-				"Employee-identity",
-				"Employee-employee_identity",
-				"Employee-dependent",
-				"Employee-employee_dependent",
-				"Employee-mosyr_employee_status",
-				"Employee-moyser_employee_status",
-				
-				"Employee-social_insurance",
-				"Employee-include_housing",
-				"Employee-s_subscription_date",
-				"Employee-s_insurance_no",
-				"Employee-column_break_88",
-				
-				"Employee-social_insurance_type",
-				"Employee-include_housing",
-				"Employee-risk_on_company",
-				"Employee-pension_on_company",
-				"Employee-risk_on_employee",
-				"Employee-pension_on_employee",
-				"Employee-e_gender",
-
-				"Employee Education-attachment",
-				"Employee Education-qualification_location",
-				"Employee Education-qualification_institute",
-				"Employee Education-gpa_rate",
-				"Employee Education-qualification_held_date",
-				"Employee Education-qualification_attendance_date",
-				"Employee Education-qualification_degree",
-				"Employee Education-key",
-				"Employee Education-column_break_7",
-
-				"Employee External Work History-reason_of_termination",
-				"Employee External Work History-end_date",
-				"Employee External Work History-start_date",
-				"Employee External Work History-notes",
-				"Employee External Work History-certificate_experience",
-				"Employee External Work History-key",
-				"Employee External Work History-column_break_7",
-				
-				"Employee-notify_id",
-				"Employee-notify_passport",
-				"Employee-notify_insurance_d",
-				"Employee-notify_insurance_e",
-
-				"Leave Application-key",
-				"Leave Application-leave_attachments",
-
-				"Additional Salary-reason",
-				"Additional Salary-employee_benefit",
-				"Employee-departement_location",
-
-				"Leave Type-is_annual_leave",
-
-				"Shift Assignment-lateness_permission",
-				"Shift Type-in_lateness_permission",
-				"Shift Request-lateness_permission",
-				"Additional Salary-employee_deduction",
-				"Employee-employee_bank",
-				"Employee-number",
-				"Employee-custom_date_of_joining",
-				"Loan-total_amount_remaining",
-				"Repayment Schedule-paid_amount"
-            ]]
-        ]
+            [
+                "name",
+                "in",
+                [
+                    "Employee-full_name_en",
+                    "Employee-from_api",
+                    "Employee-key",
+                    "Employee-valid_data",
+                    "Employee-hijri_date_of_birth",
+                    "Employee-employee_signature",
+                    "Employee-api_employee_status",
+                    "Employee-birth_place",
+                    "Employee-direct_manager",
+                    "Employee-nationality",
+                    "Employee-payment_type",
+                    "Employee-religion",
+                    "Employee-handicap",
+                    "Employee-self_service",
+                    "Employee-payroll_card_number",
+                    "Employee-insurance_card_expire",
+                    "Employee-insurance_card_class",
+                    "Employee-health_certificate",
+                    "Employee-employee_status",
+                    "Employee-passport",
+                    "Employee-employee_passport",
+                    "Employee-identity",
+                    "Employee-employee_identity",
+                    "Employee-dependent",
+                    "Employee-employee_dependent",
+                    "Employee-mosyr_employee_status",
+                    "Employee-moyser_employee_status",
+                    "Employee-social_insurance",
+                    "Employee-include_housing",
+                    "Employee-s_subscription_date",
+                    "Employee-s_insurance_no",
+                    "Employee-column_break_88",
+                    "Employee-social_insurance_type",
+                    "Employee-include_housing",
+                    "Employee-risk_on_company",
+                    "Employee-pension_on_company",
+                    "Employee-risk_on_employee",
+                    "Employee-pension_on_employee",
+                    "Employee-e_gender",
+                    "Employee Education-attachment",
+                    "Employee Education-qualification_location",
+                    "Employee Education-qualification_institute",
+                    "Employee Education-gpa_rate",
+                    "Employee Education-qualification_held_date",
+                    "Employee Education-qualification_attendance_date",
+                    "Employee Education-qualification_degree",
+                    "Employee Education-key",
+                    "Employee Education-column_break_7",
+                    "Employee External Work History-reason_of_termination",
+                    "Employee External Work History-end_date",
+                    "Employee External Work History-start_date",
+                    "Employee External Work History-notes",
+                    "Employee External Work History-certificate_experience",
+                    "Employee External Work History-key",
+                    "Employee External Work History-column_break_7",
+                    "Employee-notify_id",
+                    "Employee-notify_passport",
+                    "Employee-notify_insurance_d",
+                    "Employee-notify_insurance_e",
+                    "Leave Application-key",
+                    "Leave Application-leave_attachments",
+                    "Additional Salary-reason",
+                    "Additional Salary-employee_benefit",
+                    "Employee-departement_location",
+                    "Leave Type-is_annual_leave",
+                    "Shift Assignment-lateness_permission",
+                    "Shift Type-in_lateness_permission",
+                    "Shift Request-lateness_permission",
+                    "Additional Salary-employee_deduction",
+                    "Employee-employee_bank",
+                    "Employee-number",
+                    "Employee-custom_date_of_joining",
+                    "Loan-total_amount_remaining",
+                    "Repayment Schedule-paid_amount",
+                ],
+            ]
+        ],
     },
-	{
-	"dt": "Property Setter",
-			"filters": [
-				["name", "in", [
-					"Employee-employee_name-hidden",
-					"Employee-last_name-hidden",
-					"Employee-middle_name-hidden",
-					"Employee-first_name-label",
-					"Employee-erpnext_user-label",
-					"Employee-company-in_standard_filter",
-					"Employee-gender-hidden",
-					"Employee-gender-default",
-					"Employee-bank_name-hidden",
-					"Employee-employee_number-hidden",
-					"Employee-job_applicant-hidden",
-					"Employee-scheduled_confirmation_date-hidden",
-					"Employee-notice_number_of_days-hidden",
-					"Employee-date_of_retirement-hidden",
-					"Employee-date_of_joining-default",
-					"Employee-date_of_joining-hidden",
-					"Loan-applicant_type-default",
-					"Loan-applicant_type-read_only",
-					"Loan-rate_of_interest-default",
-					"Loan-rate_of_interest-hidden",
-					"Loan-main-title_field",
-					"Loan-total_payment-in_list_view",
-					"Loan-loan_type-in_list_view",
-					"Loan-total_amount_paid-in_list_view",
-					"Loan-total_interest_payable-hidden",
-					"Loan Type-disabled-hidden",
-					"Loan Type-is_term_loan-hidden",
-					"Loan Type-grace_period_in_days-hidden",
-					"Loan-posting_date-in_list_view",
-					"Loan Application-applicant_type-default",
-					"Loan Application-applicant_type-read_only",
-					"Repayment Schedule-is_accrued-hidden",
-					"Loan Type-is_term_loan-default",
-					"Repayment Schedule-interest_amount-hidden"
-					"Loan Type-is_term_loan-default",
-					"Repayment Schedule-balance_loan_amount-hidden"
-				]]
-			]
-	},
-	{
-	"dt": "Workflow",
-	"filters": 
-		[
-			["name", "in", 
-				[
-					"Employee Contract",
-					"Personal Details",
-					"Health Insurance",
-					"Salary Details",
-					"Educational Qualification",
-					"Emergency Contact",
-					"Contact Details",
-					"Dependants Details",
-					"Passport Details",
-					"Work Experience",
-					"Lateness Permission",
-					"Employee ID"
-				]
-			]
-		]
-	},
-	{
-	"dt": "Workflow State",
-	"filters": 
-		[
-			["name", "in", 
-				[
-					"Draft",
-					"Approved And Applied",
-					"Approved And Not Applied",
-					"Cancelled",
-					"Approved by HR",
-					"Ended"
-				]
-			]
-		]
-	},
-	{
-	"dt": "Workflow Action Master",
-	"filters": 
-		[
-			["name", "in", 
-				[
-					"Approve No Apply", "Cancel"
-				]
-			]
-		]
-	},
-	{
-	"dt": "Role",
-	"filters": 
-		[
-			["name", "in", 
-				[
-					"HR Notification"
-				]
-			]
-		]
-	},
-	{
-	"dt": "Print Format",
-	"filters": 
-		[
-			["name", "in", 
-				[
-					"Data Import Log"
-				]
-			]
-		]
-	},
-	{
-	"dt": "Module Def",
-	"filters": 
-		[
-			["name", "in", 
-				[
-					"Mosyr Forms"
-				]
-			]
-		]
-	},
+    {
+        "dt": "Property Setter",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Employee-employee_name-hidden",
+                    "Employee-last_name-hidden",
+                    "Employee-middle_name-hidden",
+                    "Employee-first_name-label",
+                    "Employee-erpnext_user-label",
+                    "Employee-company-in_standard_filter",
+                    "Employee-gender-hidden",
+                    "Employee-gender-default",
+                    "Employee-bank_name-hidden",
+                    "Employee-employee_number-hidden",
+                    "Employee-job_applicant-hidden",
+                    "Employee-scheduled_confirmation_date-hidden",
+                    "Employee-notice_number_of_days-hidden",
+                    "Employee-date_of_retirement-hidden",
+                    "Employee-date_of_joining-default",
+                    "Employee-date_of_joining-hidden",
+                    "Loan-applicant_type-default",
+                    "Loan-applicant_type-read_only",
+                    "Loan-rate_of_interest-default",
+                    "Loan-rate_of_interest-hidden",
+                    "Loan-main-title_field",
+                    "Loan-total_payment-in_list_view",
+                    "Loan-loan_type-in_list_view",
+                    "Loan-total_amount_paid-in_list_view",
+                    "Loan-total_interest_payable-hidden",
+                    "Loan Type-disabled-hidden",
+                    "Loan Type-is_term_loan-hidden",
+                    "Loan Type-grace_period_in_days-hidden",
+                    "Loan-posting_date-in_list_view",
+                    "Loan Application-applicant_type-default",
+                    "Loan Application-applicant_type-read_only",
+                    "Repayment Schedule-is_accrued-hidden",
+                    "Loan Type-is_term_loan-default",
+                    "Repayment Schedule-interest_amount-hidden"
+                    "Loan Type-is_term_loan-default",
+                    "Repayment Schedule-balance_loan_amount-hidden",
+                ],
+            ]
+        ],
+    },
+    {
+        "dt": "Workflow",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Employee Contract",
+                    "Personal Details",
+                    "Health Insurance",
+                    "Salary Details",
+                    "Educational Qualification",
+                    "Emergency Contact",
+                    "Contact Details",
+                    "Dependants Details",
+                    "Passport Details",
+                    "Work Experience",
+                    "Lateness Permission",
+                    "Employee ID",
+                ],
+            ]
+        ],
+    },
+    {
+        "dt": "Workflow State",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Draft",
+                    "Approved And Applied",
+                    "Approved And Not Applied",
+                    "Cancelled",
+                    "Approved by HR",
+                    "Ended",
+                ],
+            ]
+        ],
+    },
+    {
+        "dt": "Workflow Action Master",
+        "filters": [["name", "in", ["Approve No Apply", "Cancel"]]],
+    },
+    {"dt": "Role", "filters": [["name", "in", ["HR Notification"]]]},
+    {"dt": "Print Format", "filters": [["name", "in", ["Data Import Log"]]]},
+    {"dt": "Module Def", "filters": [["name", "in", ["Mosyr Forms"]]]},
 ]

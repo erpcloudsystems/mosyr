@@ -7,12 +7,12 @@ from mosyr.api import _get_employee_from_user
 
 
 class EducationalQualification(Document):
-	def before_insert(self):
-		self.employee = _get_employee_from_user(frappe.session.user)
-		
-	def on_submit(self):
-		doc = frappe.get_doc("Employee", self.employee)
-		doc.education = self.education
+    def before_insert(self):
+        self.employee = _get_employee_from_user(frappe.session.user)
 
-		doc.save()
-		frappe.db.commit()
+    def on_submit(self):
+        doc = frappe.get_doc("Employee", self.employee)
+        doc.education = self.education
+
+        doc.save()
+        frappe.db.commit()
