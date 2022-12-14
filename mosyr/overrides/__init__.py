@@ -6,16 +6,13 @@ import frappe
 from frappe import _
 from frappe.query_builder import Criterion
 from frappe.utils import (
-    cstr,
     get_datetime,
-    get_link_to_form,
     get_time,
     getdate,
     now_datetime,
 )
 from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
-from mosyr.overrides import has_overlapping_timings, get_shift_for_time
 
 
 ############################################
