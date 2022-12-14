@@ -5,11 +5,18 @@ import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate, flt
 from erpnext.hr.doctype.leave_application.leave_application import get_leave_details
-from erpnext.hr.report.employee_leave_balance.employee_leave_balance import get_department_leave_approver_map
-from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import	get_assigned_salary_structure
+from erpnext.hr.report.employee_leave_balance.employee_leave_balance import (
+    get_department_leave_approver_map,
+)
+from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+    get_assigned_salary_structure,
+)
+
 
 def execute(filters=None):
-    leave_types = frappe.db.sql_list("select name from `tabLeave Type` WHERE allow_encashment=1 AND is_annual_leave=1 order by name asc")
+    leave_types = frappe.db.sql_list(
+        "select name from `tabLeave Type` WHERE allow_encashment=1 AND is_annual_leave=1 order by name asc"
+    )
 
     columns = get_columns(leave_types)
     data = get_data(filters, leave_types)
@@ -56,14 +63,18 @@ def get_data(filters, leave_types):
         fields=["name", "employee_name", "department", "user_id", "leave_approver"],
     )
 
-    department_approver_map = get_department_leave_approver_map(filters.get("department"))
-    ss_date = filters.get('date', getdate(nowdate())) or getdate(nowdate())
+    department_approver_map = get_department_leave_approver_map(
+        filters.get("department")
+    )
+    ss_date = filters.get("date", getdate(nowdate())) or getdate(nowdate())
     data = []
     for employee in active_employees:
         leave_approvers = department_approver_map.get(employee.department_name, [])
-        salary_structure = get_assigned_salary_structure(employee['name'], ss_date)
-        per_day_encashment = frappe.db.get_value("Salary Structure", salary_structure, "leave_encashment_amount_per_day")
-        
+        salary_structure = get_assigned_salary_structure(employee["name"], ss_date)
+        per_day_encashment = frappe.db.get_value(
+            "Salary Structure", salary_structure, "leave_encashment_amount_per_day"
+        )
+
         if employee.leave_approver:
             leave_approvers.append(employee.leave_approver)
 
@@ -80,8 +91,12 @@ def get_data(filters, leave_types):
                 remaining_amount = 0
                 if leave_type in available_leave["leave_allocation"]:
                     # opening balance
-                    total_leaves = available_leave["leave_allocation"][leave_type]["total_leaves"]
-                    remaining = available_leave["leave_allocation"][leave_type]["remaining_leaves"]
+                    total_leaves = available_leave["leave_allocation"][leave_type][
+                        "total_leaves"
+                    ]
+                    remaining = available_leave["leave_allocation"][leave_type][
+                        "remaining_leaves"
+                    ]
                     remaining_amount = flt(per_day_encashment) * remaining
 
                 row += [total_leaves]

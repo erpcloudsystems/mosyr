@@ -4,5 +4,6 @@
 # import frappe
 import unittest
 
+
 class TestAgreementSymbol(unittest.TestCase):
-	pass
+    pass

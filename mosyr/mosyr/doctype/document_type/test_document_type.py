@@ -4,5 +4,6 @@
 # import frappe
 import unittest
 
+
 class TestDocumentType(unittest.TestCase):
-	pass
+    pass

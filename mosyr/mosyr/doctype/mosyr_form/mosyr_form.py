@@ -93,8 +93,9 @@ class MosyrForm(Document):
 
         clean_fields, title_field = self.prepare_fields()
         self.build_system_doc(clean_fields, title_field)
-    
+
     title_field = ""
+
     def prepare_fields(self):
         numeric_fields_prop = (
             "length",
@@ -169,10 +170,10 @@ class MosyrForm(Document):
                     return
                 child_name = self.prepare_for_multiselect(multiselect_options)
                 clean_field.update({"options": child_name})
-            
+
             # if fieldtype in ["Attach", "Attach Image"]:
             #     clean_field.update({"in_list_view": 0})
-            
+
             if cint(field.get("use_for_title", 0)) == 1 and fieldtype == "Data":
                 title_field = fieldname
             clean_fields.append(clean_field)
@@ -306,7 +307,10 @@ class MosyrForm(Document):
         try:
             attatched_req = []
             for idx, field in enumerate(new_erp_doc.fields):
-                if field.fieldtype in ["Attach", "Attach Image"] and cint(field.reqd) == 1:
+                if (
+                    field.fieldtype in ["Attach", "Attach Image"]
+                    and cint(field.reqd) == 1
+                ):
                     field.in_list_view = 0
                     field.reqd = 0
                     attatched_req.append(idx)
@@ -348,7 +352,7 @@ class MosyrForm(Document):
             # trans_doc.flags.ignore_permissions = True
             trans_doc.save(ignore_permissions=True)
         frappe.db.commit()
-    
+
     def on_cancel(self):
         # Delete only Created Docs from the form ( Custom DocType)
         # Child Table ==> start with FRMCHLD
@@ -356,24 +360,28 @@ class MosyrForm(Document):
         system_doc = frappe.db.exists("DocType", self.name)
         if system_doc:
             system_doc = frappe.get_doc("DocType", system_doc)
-            if system_doc.custom == 0: return
+            if system_doc.custom == 0:
+                return
             for field in system_doc.fields:
-                if field.fieldtype != "Table MultiSelect": continue
+                if field.fieldtype != "Table MultiSelect":
+                    continue
                 self.clear_child_doc(field.options)
             system_doc.delete()
             frappe.db.commit()
-                
-    
+
     def clear_child_doc(self, options):
         child_doc = frappe.db.exists("DocType", options)
         if child_doc and f"{options}".startswith("FRMCHLD"):
             child_doc = frappe.get_doc("DocType", child_doc)
-            if child_doc.custom == 0: return
+            if child_doc.custom == 0:
+                return
             for field in child_doc.fields:
-                if field.fieldtype != "Link": continue
+                if field.fieldtype != "Link":
+                    continue
                 linked_doc = frappe.db.exists("DocType", field.options)
                 if linked_doc and f"{field.options}".startswith("FRMOPT"):
                     linked_doc = frappe.get_doc("DocType", field.options)
-                    if linked_doc.custom == 0: continue
+                    if linked_doc.custom == 0:
+                        continue
                     linked_doc.delete()
             child_doc.delete()

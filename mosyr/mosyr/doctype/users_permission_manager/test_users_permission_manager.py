@@ -4,5 +4,6 @@
 # import frappe
 import unittest
 
+
 class TestUsersPermissionManager(unittest.TestCase):
-	pass
+    pass

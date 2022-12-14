@@ -4,5 +4,6 @@
 # import frappe
 import unittest
 
+
 class TestSalaryDetails(unittest.TestCase):
-	pass
+    pass

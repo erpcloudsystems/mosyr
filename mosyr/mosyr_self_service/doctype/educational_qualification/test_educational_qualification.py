@@ -4,5 +4,6 @@
 # import frappe
 import unittest
 
+
 class TestEducationalQualification(unittest.TestCase):
-	pass
+    pass
