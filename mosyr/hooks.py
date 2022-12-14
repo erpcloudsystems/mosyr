@@ -93,27 +93,33 @@ after_install = "mosyr.install.after_install"
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Company": "mosyr.overrides.CustomCompany",
-	"Employee": "mosyr.overrides.CustomEmployee",
-	"Department": "mosyr.overrides.CustomDepartment",
-	"TravelRequest": "mosyr.overrides.CustomTravelRequest",
-	"Expense Claim": "mosyr.overrides.CustomExpenseClaim",
-	"Employee Advance": "mosyr.overrides.CustomEmployeeAdvance",
-	"Expense Claim Type": "mosyr.overrides.CustomExpenseClaimType",
-	"Mode of Payment": "mosyr.overrides.CustomModeofPayment",
-	"Loan Type": "mosyr.overrides.CustomLoanType",
+	"Mode of Payment": 		"mosyr.overrides.accounts.CustomModeofPayment",
+
+	"Company": 				"mosyr.overrides.hr.CustomCompany",
+	"Employee": 			"mosyr.overrides.hr.CustomEmployee",
+	"Department": 			"mosyr.overrides.hr.CustomDepartment",
+	"Travel Request": 		"mosyr.overrides.hr.CustomTravelRequest",
+	"Expense Claim": 		"mosyr.overrides.hr.CustomExpenseClaim",
+	"Employee Advance": 	"mosyr.overrides.hr.CustomEmployeeAdvance",
+	"Expense Claim Type": 	"mosyr.overrides.hr.CustomExpenseClaimType",
 	
-	"Loan": "mosyr.overrides.CustomLoan",
-	"Loan Disbursement": "mosyr.overrides.CustomLoanDisbursement",
-	"Loan Repayment": "mosyr.overrides.CustomLoanRepayment",
-	"Loan Write Off": "mosyr.overrides.CustomLoanWriteOff",
+	"Loan Type": 			"mosyr.overrides.loans.CustomLoanType",
+	"Loan": 				"mosyr.overrides.loans.CustomLoan",
+	"Loan Disbursement": 	"mosyr.overrides.loans.CustomLoanDisbursement",
+	"Loan Repayment": 		"mosyr.overrides.loans.CustomLoanRepayment",
+	"Loan Write Off": 		"mosyr.overrides.loans.CustomLoanWriteOff",
 	
-	"Salary Component": "mosyr.overrides.CustomSalaryComponent",
-	"Salary Structure": "mosyr.overrides.CustomSalaryStructure",
-	"Salary Structure Assignment": "mosyr.overrides.CustomSalaryStructureAssignment",
-	"Salary Slip": "mosyr.overrides.CustomSalarySlip",
-	"Payroll Entry": "mosyr.overrides.CustomPayrollEntry",
-	"Shift Type": "mosyr.overrides.CustomShiftType",
+	"Salary Component": 			"mosyr.overrides.payrolls.CustomSalaryComponent",
+	"Salary Structure": 			"mosyr.overrides.payrolls.CustomSalaryStructure",
+	"Salary Structure Assignment": 	"mosyr.overrides.payrolls.CustomSalaryStructureAssignment",
+	"Salary Slip": 					"mosyr.overrides.payrolls.CustomSalarySlip",
+	"Payroll Entry": 				"mosyr.overrides.payrolls.CustomPayrollEntry",
+
+	"Shift Assignment": 			"mosyr.overrides.shifts.CustomShiftAssignment",
+	"Shift Request": 				"mosyr.overrides.shifts.CustomShiftRequest",
+	"Attendance": 					"mosyr.overrides.shifts.CustomAttendance",
+	"Employee Checkin": 			"mosyr.overrides.shifts.CustomEmployeeCheckin",
+	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
 }
 
 # Document Events
