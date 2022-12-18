@@ -643,3 +643,22 @@ def time_diff_in_hours(start, end):
 
 def find_index_in_dict(dict_list, key, value):
     return next((index for (index, d) in enumerate(dict_list) if d[key] == value), None)
+
+def regenerate_repayment_schedule(repayment , loan, cancel=0):
+    loan_doc = frappe.get_doc("Loan", loan)
+    self = frappe.get_doc("Loan Repayment", repayment)
+    repayment_schedule_length = len(loan_doc.get("repayment_schedule"))
+
+    repayment_amount = self.amount_paid
+    if repayment_schedule_length:
+        for row in loan_doc.repayment_schedule:
+            if row.paid_amount >= row.principal_amount: continue
+            if repayment_amount > row.principal_amount-row.paid_amount:
+                diff = row.principal_amount - row.paid_amount
+                row.paid_amount = row.paid_amount + diff
+                repayment_amount = repayment_amount - diff
+            else:
+                row.paid_amount = row.paid_amount + repayment_amount 
+                repayment_amount = 0
+            if repayment_amount <= 0: break
+        loan_doc.save(ignore_permissions=True)
