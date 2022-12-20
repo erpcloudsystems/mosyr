@@ -1159,3 +1159,13 @@ def create_bank(title):
     bank.flags.ignore_permissions = True
     bank.insert(ignore_if_duplicate=True)
     return bank.name
+
+
+
+#################
+### Overrides ###
+#################
+from erpnext.hr.report.monthly_attendance_sheet import monthly_attendance_sheet
+from mosyr.overrides.reports.monthly_attendance_sheet import execute
+
+monthly_attendance_sheet.execute = execute
