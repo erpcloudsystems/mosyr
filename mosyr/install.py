@@ -15,7 +15,7 @@ from frappe.permissions import update_permission_property
 
 
 docs_for_manager = [
-    "System Controller",
+    # "System Controller",
     "Company Controller",
     "Translation",
     "User",
