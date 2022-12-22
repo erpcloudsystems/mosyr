@@ -3,17 +3,12 @@
 
 import frappe
 from frappe import _, msgprint
-from frappe.utils import cint, cstr, getdate,time_diff
+from frappe.utils import cstr, getdate
 import pandas
-from datetime import date,timedelta
+from datetime import timedelta
 import datetime
 from json import loads
-from random import randint
-from six import iteritems, string_types
-import json
-from frappe.desk.query_report import run,get_columns_dict,handle_duration_fieldtype_values,build_xlsx_data
-from io import StringIO
-from frappe.utils import flt
+
 status_map = {
 	"Absent": "Absent",
 	"Half Day": "Half Day",
