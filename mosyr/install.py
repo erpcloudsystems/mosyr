@@ -13,9 +13,16 @@ from mosyr import (
 )
 from frappe.permissions import update_permission_property
 
-
 docs_for_manager = [
     # "System Controller",
+    "Expense Claim",
+    "Employee Tax Exemption Declaration",
+    "Employee Tax Exemption Proof Submission",
+    "Work Experience",
+    "Dependants Details",
+    "Employee ID",
+    "Passport Details",
+    "Lateness Permission",
     "Company Controller",
     "Company Id",
     "Translation",
@@ -104,6 +111,7 @@ def after_install():
     hide_accounts_and_taxs_from_system()
     create_non_standard_user_types()
     allow_read_for_reports()
+    add_select_perm_for_all()
     create_role_and_set_to_admin()
     set_home_page_login()
 
@@ -464,6 +472,23 @@ def update_custom_roles(role_args, args):
         frappe.get_doc(args).insert()
     frappe.db.commit()
 
+def add_select_perm_for_all():
+    docs_for_manager
+    reports_for_manager
+    for doc in docs_for_manager:
+        # Add Select for Doctype and for all links fields
+        doc = frappe.db.exists("DocType", doc)
+        if not doc: continue
+        doc = frappe.get_doc("DocType", doc)
+
+        for field in doc.fields:
+            if field.fieldtype != "Link": continue
+            doc_field = frappe.db.exists("DocType", field.options)
+            if not doc_field: continue
+            update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
+            update_permission_property(doc_field, "Employee Self Service", 0, "select", 1)
+        update_permission_property(doc.name, "Employee Self Service", 0, "select", 1)
+        frappe.db.commit()
 
 def create_role_and_set_to_admin():
     data = {"role": "Read User Type"}
