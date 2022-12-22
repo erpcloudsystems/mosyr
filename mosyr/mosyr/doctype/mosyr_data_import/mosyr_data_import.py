@@ -411,6 +411,7 @@ class MosyrDataImport(Document):
                     is_new, v = self.check_link_data('Branch', v, 'branch')
                 if k == 'gender' and v != '':
                     is_new, v = self.check_link_data('Gender', v, 'gender')
+                    k = "e_gender"
                 if k == 'self_service':
                     v = cint(v)
                 if k == 'hijri_date_of_birth' and v != '':
