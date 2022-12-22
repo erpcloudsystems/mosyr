@@ -127,7 +127,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-22 09:14:32.003374",
+ "modified": "2022-12-22 18:46:29.313172",
  "modified_by": "Administrator",
  "module": "Custody Management",
  "name": "Cash Custody",
@@ -171,6 +171,21 @@
    "role": "Employee",
    "select": 1,
    "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

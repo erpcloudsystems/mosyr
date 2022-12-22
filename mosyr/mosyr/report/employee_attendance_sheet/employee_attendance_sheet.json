@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2022-10-23 15:09:19.289132",
+ "modified": "2022-12-22 18:49:04.089982",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Attendance Sheet",
@@ -27,6 +27,9 @@
   },
   {
    "role": "HR Manager"
+  },
+  {
+   "role": "SaaS Manager"
   }
  ]
 }

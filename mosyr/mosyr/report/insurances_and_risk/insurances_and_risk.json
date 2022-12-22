@@ -9,8 +9,8 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "letter_head": "Test",
- "modified": "2022-08-24 15:50:48.047517",
+ "letter_head": "",
+ "modified": "2022-12-22 18:50:20.101961",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Insurances and Risk",
@@ -25,6 +25,9 @@
   },
   {
    "role": "HR Manager"
+  },
+  {
+   "role": "SaaS Manager"
   }
  ]
 }
