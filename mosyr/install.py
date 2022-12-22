@@ -17,6 +17,7 @@ from frappe.permissions import update_permission_property
 docs_for_manager = [
     # "System Controller",
     "Company Controller",
+    "Company Id",
     "Translation",
     "User",
     "Users Permission Manager",
@@ -263,6 +264,7 @@ def create_non_standard_user_types():
     update_site_config("user_type_doctype_limit", user_type_limit)
 
     for user_type, data in iteritems(non_stadard_users):
+        create_custom_role(data)
         create_user_type(user_type, data)
     frappe.db.commit()
 
