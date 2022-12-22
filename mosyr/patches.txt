@@ -4,3 +4,4 @@ mosyr.patches.delete_attendance_report
 mosyr.patches.set_home_page_to_login
 mosyr.patches.delete_property_setter
 mosyr.patches.setup_roles_for_reports_v2
+mosyr.patches.rebuild_non_standard_users_types
