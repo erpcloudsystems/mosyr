@@ -1,524 +1,426 @@
-# Copyright (c) 2022, AnvilERP and contributors
-# For license information, please see license.txt
+from calendar import monthrange
+
+from typing import Dict, List, Optional, Tuple
+from pypika import CustomFunction
 
 import frappe
-from frappe import _, msgprint
-from frappe.utils import cstr, getdate
-import pandas
-from datetime import timedelta
-import datetime
-from json import loads
+from frappe import _
+
+from frappe.utils import date_diff, add_days, get_date_str, get_datetime
+
+Filters = frappe._dict
 
 status_map = {
-	"Absent": "Absent",
-	"Half Day": "Half Day",
-	"Holiday": "<b>Holiday</b>",
-	"Weekly Off": "<b>Weekly Off</b>",
-	"On Leave": "On Leave",
-	"Present": "Present",
-	"Work From Home": "Work From Home",
+    "Present": "Present",
+    "Absent": "Absent",
+    "Half Day": "Half Day",
+    "Work From Home": "Work From Home",
+    "On Leave": "On Leave",
+    "Holiday": "Holiday",
+    "Weekly Off": "Weekly Off",
 }
 
-day_abbr = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+DateDiff = CustomFunction("DATEDIFF", ["start_date", "end_date"])
 
-def execute(filters=None):
-	_from,to = filters.get('from'),filters.get('to')
+def execute(filters: Optional[Filters] = None) -> Tuple:
+    filters = frappe._dict(filters or {})
 
-	if not filters:
-		filters = {}
+    if not (filters.from_date and filters.to_date):
+        frappe.throw(_("Please select date range."))
 
-	# if filters.hide_year_field == 1:
-	# 	filters.year = 2020
+    attendance_map = get_attendance_map(filters)
+    if not attendance_map:
+        frappe.msgprint(
+            _("No attendance records found."), alert=True, indicator="orange"
+        )
+        return [], [], None, None
 
-	conditions, filters = get_conditions(filters)
-	columns, days = get_columns(filters)
-	att_map = get_attendance_list(conditions, filters)
-	if not att_map:
-		return columns, [], None, None
+    columns = get_columns(filters)
+    data = get_data(filters, attendance_map)
 
-	if filters.group_by:
-		emp_map, group_by_parameters = get_employee_details(filters.group_by, filters.company, filters.branch, filters.department)
-		holiday_list = []
-		for parameter in group_by_parameters:
-			h_list = [
-				emp_map[parameter][d]["holiday_list"]
-				for d in emp_map[parameter]
-				if emp_map[parameter][d]["holiday_list"]
-			]
-			holiday_list += h_list
-	else:
-		emp_map = get_employee_details(filters.group_by, filters.company, filters.branch, filters.department)
-		holiday_list = [emp_map[d]["holiday_list"] for d in emp_map if emp_map[d]["holiday_list"]]
+    if not data:
+        frappe.msgprint(
+            _("No attendance records found for this criteria."),
+            alert=True,
+            indicator="orange",
+        )
+        return columns, [], None, None
 
-	default_holiday_list = frappe.get_cached_value(
-		"Company", filters.get("company"), "default_holiday_list"
-	)
-	holiday_list.append(default_holiday_list)
-	holiday_list = list(set(holiday_list))
-	holiday_map = get_holiday(holiday_list, _from,to)
-
-	data = []
-
-	leave_types = None
-	if filters.summarized_view:
-		leave_types = frappe.get_all("Leave Type", pluck="name")
-		columns.extend([leave_type + ":Float:120" for leave_type in leave_types])
-		columns.extend([_("Total Late Entries") + ":Float:120", _("Total Early Exits") + ":Float:120"])
-
-	if filters.group_by:
-		emp_att_map = {}
-		for parameter in group_by_parameters:
-			emp_map_set = set([key for key in emp_map[parameter].keys()])
-			att_map_set = set([key for key in att_map.keys()])
-			if att_map_set & emp_map_set:
-				parameter_row = ["<b>" + parameter + "</b>"] + [
-					"" for day in range(filters["total_days_in_month"] + 2)
-				]
-				data.append(parameter_row)
-				record, emp_att_data = add_data(
-					emp_map[parameter],
-					att_map,
-					filters,
-					holiday_map,
-					conditions,
-					default_holiday_list,
-					leave_types=leave_types,
-				)
-				emp_att_map.update(emp_att_data)
-				data += record
-	else:
-		record, emp_att_map = add_data(
-			emp_map,
-			att_map,
-			filters,
-			holiday_map,
-			conditions,
-			default_holiday_list,
-			leave_types=leave_types,
-		)
-		data += record
-	chart_data = get_chart_data(emp_att_map, days)
-	return columns, data, None, chart_data
-
-def get_chart_data(emp_att_map, days):
-	labels = []
-	datasets = [
-		{"name": "Absent", "values": []},
-		{"name": "Present", "values": []},
-		{"name": "Leave", "values": []},
-	]
-	for idx, day in enumerate(days, start=0):
-		labels.append(day.replace("::130", ""))
-		total_absent_on_day = 0
-		total_leave_on_day = 0
-		total_present_on_day = 0
-		for emp in emp_att_map.keys():
-			if emp_att_map[emp][idx]:
-				if "Absent" in emp_att_map[emp][idx]:
-					total_absent_on_day += 1
-				if "Present" in emp_att_map[emp][idx] or "Work From Home" in emp_att_map[emp][idx]:
-					total_present_on_day += 1
-				if "Half Day" in emp_att_map[emp][idx]:
-					total_present_on_day += 0.5
-					total_leave_on_day += 0.5
-				if "On Leave" in emp_att_map[emp][idx]:
-					total_leave_on_day += 1
-
-		datasets[0]["values"].append(total_absent_on_day)
-		datasets[1]["values"].append(total_present_on_day)
-		datasets[2]["values"].append(total_leave_on_day)
-
-	chart = {"data": {"labels": labels, "datasets": datasets}}
-
-	chart["type"] = "line"
-
-	return chart
+    message = get_message()
+    chart = get_chart_data(attendance_map, filters)
+    return columns, data, message, chart
 
 
-def add_data(
-	employee_map, att_map, filters, holiday_map, conditions, default_holiday_list, leave_types=None
-):
-	record = []
-	emp_att_map = {}
-	for emp in employee_map:
-		emp_det = employee_map.get(emp)
-		if not emp_det or emp not in att_map:
-			continue
-		row = []
-		if filters.group_by:
-			row += [" "]
-		row += [emp, emp_det.employee_name, emp_det.department, emp_det.branch]
-		total_p = total_a = total_l = total_h = total_um = 0.0
-		emp_status_map = []
-		date_list = pandas.date_range(filters.get("from"),filters.get("to"))
-		for day in date_list:
-			status = None
-			status = att_map.get(emp).get(datetime.date(day.year,day.month,day.day))
-			if status is None and holiday_map:
-				emp_holiday_list = emp_det.holiday_list if emp_det.holiday_list else default_holiday_list
-				if emp_holiday_list in holiday_map:
-					for idx, ele in enumerate(holiday_map[emp_holiday_list]):
-						if day == holiday_map[emp_holiday_list][idx][0]:
-							if holiday_map[emp_holiday_list][idx][1]:
-								status = "Weekly Off"
-							else:
-								status = "Holiday"
-							total_h += 1
-			
-			abbr = status
-			emp_status_map.append(abbr)
-			if filters.summarized_view:
-				if status:
-					if "Present" in status or "Work From Home" in status:
-						total_p += 1
-					elif "Absent" in  status:
-						total_a += 1
-					elif "On Leave" in status:
-						total_l += 1
-					elif "Half Day" in status:
-						total_p += 0.5
-						total_l += 0.5
-					elif not status:
-						total_um += 1
+def get_message() -> str:
+    message = ""
+    colors = ["green", "red", "orange", "green", "#318AD8", "", ""]
 
-		if not filters.summarized_view:
-			row += emp_status_map
-		if filters.summarized_view:
-			row += [total_p, total_l, total_a, total_h, total_um]
-		if not filters.get("employee"):
-			filters.update({"employee": emp})
-			conditions += " and employee = %(employee)s"
-		elif not filters.get("employee") == emp:
-			filters.update({"employee": emp})
-		if filters.summarized_view:
-			leave_details = frappe.db.sql(
-				"""select leave_type, status, count(*) as count from `tabAttendance`\
-				where leave_type is not NULL %s group by leave_type, status"""
-				% conditions,
-				filters,
-				as_dict=1,
-			)
-			time_default_counts = frappe.db.sql(
-				"""select (select count(*) from `tabAttendance` where \
-				late_entry = 1 %s) as late_entry_count, (select count(*) from tabAttendance where \
-				early_exit = 1 %s) as early_exit_count"""
-				% (conditions, conditions),
-				filters,
-			)
-			leaves = {}
-			for d in leave_details:
-				if d.status == "Half Day":
-					d.count = d.count * 0.5
-				if d.leave_type in leaves:
-					leaves[d.leave_type] += d.count
-				else:
-					leaves[d.leave_type] = d.count
+    count = 0
+    for status in status_map.keys():
+        message += f"""
+            <span style='border-left: 2px solid {colors[count]}; padding-right: 12px; padding-left: 5px; margin-right: 3px;'>
+                {status}
+            </span>
+        """
+        count += 1
 
-			for d in leave_types:
-				if d in leaves:
-					row.append(leaves[d])
-				else:
-					row.append("0.0")
-
-			row.extend([time_default_counts[0][0], time_default_counts[0][1]])
-		emp_att_map[emp] = emp_status_map
-		record.append(row)
-	return record, emp_att_map
+    return message
 
 
-def get_columns(filters):
-	columns = []
-	if filters.group_by:
-		columns = [_(filters.group_by) + ":Link/Branch:120"]
-	columns += [_("Employee") + ":Link/Employee:108", _("Employee Name") + ":Data/:150"]
-	columns += [_("Department") + ":Link/Department:108", _("Branch") + ":Link/Branch:108"]
-	days = []
-	from_date = filters.get("from")
-	to_date = filters.get("to")
-	date_list = pandas.date_range(from_date,to_date)
-	for day in date_list:
-		date = day.date()
-		day_name = day_abbr[getdate(date).weekday()]
-		days.append(cstr(date.day) + " " + day_name + "::130")
-	if not filters.summarized_view:
-		columns += days
+def get_columns(filters: Filters) -> List[Dict]:
+    columns = []
+    columns.extend(
+        [
+            {
+                "label": _("Employee"),
+                "fieldname": "employee",
+                "fieldtype": "Link",
+                "options": "Employee",
+                "width": 135,
+            },
+            {
+                "label": _("Employee Name"),
+                "fieldname": "employee_name",
+                "fieldtype": "Data",
+                "width": 120,
+            },
+        ]
+    )
 
-	if filters.summarized_view:
-		columns += [
-			_("Total Present") + ":Float:120",
-			_("Total Leaves") + ":Float:120",
-			_("Total Absent") + ":Float:120",
-			_("Total Holidays") + ":Float:120",
-			_("Unmarked Days") + ":Float:120",
-		]
-	return columns, days
+    columns.append(
+        {"label": _("Shift"), "fieldname": "shift", "fieldtype": "Data", "width": 120}
+    )
+    columns.extend(get_columns_for_days(filters))
 
-def get_attendance_list(conditions, filters):
-	attendance_list = frappe.db.sql(
-		f"""select employee, attendance_date as day_of_month, in_time,  out_time,
-		status from tabAttendance where docstatus = 1 %s and (attendance_date BETWEEN '{filters.get('from')}' AND '{filters.get('to')}') order by employee, attendance_date"""
-		% conditions,
-		filters,
-		as_dict=1,
-	)
-	if not attendance_list:
-		msgprint(_("No attendance record found"), alert=True, indicator="orange")
-
-	att_map = {}
-	for d in attendance_list:
-		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
-		att_map[d.employee][d.day_of_month] = d.status
-		if d.status == "Absent": att_map[d.employee][d.day_of_month] = f"<p style=color:#F683AE;>{d.status}</p>"
-		if d.status == "Work From Home":att_map[d.employee][d.day_of_month] = f"<p style=color:green;>{d.status}</p>"
-		if d.status == "On Leave":att_map[d.employee][d.day_of_month] = f"<p style=color:green;>{d.status}</p>"
-		if d.status == "Half Day":att_map[d.employee][d.day_of_month] = f"<p style=color:blue;>{d.status}</p>"
-		if d.status == "Present":att_map[d.employee][d.day_of_month] = f"<p style='margin:0 ;text-align: left !important; color:#318AD8 '>{d.status}</p><p style='margin:0;color:#ffab00'>{f'In Time: {d.in_time.hour}' if d.in_time else ''} {f':{d.in_time.minute}' if d.in_time else ''}</p><p style='margin:0;color:#ffab00'>{f'Out Time: {d.out_time.hour}' if d.out_time else ''} {f':{d.out_time.minute}' if d.out_time else ''}</p>"
-	return att_map
+    return columns
 
 
-def get_conditions(filters):
-	if not (filters.get("from") and filters.get("to")):
-		msgprint(_("Please select from date and to date"), raise_exception=1)
+def get_columns_for_days(filters: Filters) -> List[Dict]:
+    total_days = get_total_days(filters)
+    from_date = filters.from_date
+    days = []
 
-	filters["total_days_in_month"] = (days_between(filters.get("from"), filters.get("to"))) + 1
-	conditions = f" and (attendance_date BETWEEN '{filters.get('from')}' AND '{filters.get('to')}')"
-	
+    for day in range(1, total_days + 1):
+        label_str = from_date
+        day_name = get_datetime(label_str).strftime("%A")
+        label = f"<p class='text-center' style='margin:0'>{day_name}<br>{label_str}</p>"
+        days.append(
+            {"label": f"{label}", "fieldtype": "Data", "fieldname": label_str, "width": 170}
+        )
+        from_date = add_days(from_date, 1)
 
-	if filters.get("company"):
-		conditions += " and company = %(company)s"
-	if filters.get("employee"):
-		conditions += " and employee = %(employee)s"
-
-	return conditions, filters
-def days_between(d1, d2):
-			from datetime import datetime
-			d1 = datetime.strptime(d1, "%Y-%m-%d")
-			d2 = datetime.strptime(d2, "%Y-%m-%d")
-			return abs((d2 - d1).days)
-		
-
-def get_employee_details(group_by, company, branch=None, department=None):
-	emp_map = {}
-	conds = []
-	if branch:
-		conds.append(" branch='{}' ".format(branch))
-	if department:
-		conds.append(" department='{}' ".format(department))
-	if len(conds) > 0:
-		conds = " AND ".join(conds)
-		conds = " AND {}".format(conds)
-	else:
-		conds = ""
-
-	query = """select name, employee_name, designation, department, branch, company,
-		holiday_list from `tabEmployee` where company = %s """ % frappe.db.escape(
-		company
-	)
-
-	query = f" {query} {conds} "
-	if group_by:
-		group_by = group_by.lower()
-		query += " order by " + group_by + " ASC"
-
-	employee_details = frappe.db.sql(query, as_dict=1)
-
-	group_by_parameters = []
-	if group_by:
-
-		group_by_parameters = list(
-			set(detail.get(group_by, "") for detail in employee_details if detail.get(group_by, ""))
-		)
-		for parameter in group_by_parameters:
-			emp_map[parameter] = {}
-
-	for d in employee_details:
-		if group_by and len(group_by_parameters):
-			if d.get(group_by, None):
-
-				emp_map[d.get(group_by)][d.name] = d
-		else:
-			emp_map[d.name] = d
-
-	if not group_by:
-		return emp_map
-	else:
-		return emp_map, group_by_parameters
+    return days
 
 
-def get_holiday(holiday_list, _from , to):
-	holiday_map = frappe._dict()
-	for d in holiday_list:
-		if d:
-			holiday_map.setdefault(
-				d,
-				frappe.db.sql(
-					f"""select holiday_date, weekly_off from `tabHoliday`
-				where parent=%s and (holiday_date BETWEEN '{_from}' AND '{to}')""",
-					(d),
-				),
-			)
+def get_total_days(filters: Filters) -> int:
+    return date_diff(filters.to_date, filters.from_date)+1
 
-	return holiday_map
+def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
+    employee_details = get_employee_related_details(filters.company)
+    holiday_map = get_holiday_map(filters)
+
+    data = []
+    data = get_rows(employee_details, filters, holiday_map, attendance_map)
+    return data
 
 
-@frappe.whitelist()
-def get_attendance_years():
-	year_list = frappe.db.sql_list(
-		"""select distinct YEAR(attendance_date) from tabAttendance ORDER BY YEAR(attendance_date) DESC"""
-	)
-	if not year_list:
-		year_list = [getdate().year]
+def get_attendance_map(filters: Filters) -> Dict:
+    """Returns a dictionary of employee wise attendance map as per shifts for all the days of the month like
+    {
+            'employee1': {
+                    'Morning Shift': {attendance_date: 'Present', attendance_date: 'Absent', ...}
+                    'Evening Shift': {attendance_date: 'Absent', attendance_date: 'Present', ...}
+            },
+            'employee2': {
+                    'Afternoon Shift': {attendance_date: 'Present', attendance_date: 'Absent', ...}
+                    'Night Shift': {attendance_date: 'Absent', attendance_date: 'Absent', ...}
+            }
+    }
+    """
+    Attendance = frappe.qb.DocType("Attendance")
+    query = (
+        frappe.qb.from_(Attendance)
+        .select(
+            Attendance.employee,
+            (Attendance.attendance_date).as_("day_of_month"),
+            Attendance.status,
+            Attendance.working_hours,
+            Attendance.in_time,
+            Attendance.out_time,
+            Attendance.late_entry,
+            Attendance.early_exit,
+            Attendance.shift,
+        )
+        .where(
+            (Attendance.docstatus == 1)
+            & (Attendance.company == filters.company)
+            & (DateDiff(Attendance.attendance_date, filters.from_date)>=0)
+            & (DateDiff(Attendance.attendance_date, filters.to_date)<=0)
+        )
+    )
+    if filters.employee:
+        query = query.where(Attendance.employee == filters.employee)
+    query = query.orderby(Attendance.employee, Attendance.attendance_date)
 
-	return "\n".join(str(year) for year in year_list)
+    attendance_list = query.run(as_dict=1)
+    attendance_map = {}
+    for d in attendance_list:
+        attendance_map.setdefault(d.employee, frappe._dict()).setdefault(
+            d.shift, frappe._dict()
+        )
+        attendance_map[d.employee][d.shift][get_date_str(d.day_of_month)] = d
+
+    return attendance_map
 
 
-@frappe.whitelist()
-def export_query(data):
-	data = loads(data)
-	holiday_days = frappe.get_list("Holiday" ,{"holiday_date" : ['BETWEEN', (f'{data.get("from")}', f'{data.get("to")}')]},pluck="holiday_date", order_by='holiday_date')
-	employee_name = frappe.get_doc("Employee" ,data.get("employee")).employee_name
-	start_day = frappe.utils.getdate(data.get("from")).strftime("%A")
-	end_day = frappe.utils.getdate(data.get("to")).strftime("%A")
+def get_employee_related_details(company: str) -> Tuple[Dict, List]:
+    """Returns
+    1. nested dict for employee details
+    """
+    Employee = frappe.qb.DocType("Employee")
+    query = (
+        frappe.qb.from_(Employee)
+        .select(
+            Employee.name,
+            Employee.employee_name,
+            Employee.designation,
+            Employee.grade,
+            Employee.department,
+            Employee.branch,
+            Employee.company,
+            Employee.holiday_list,
+        )
+        .where(Employee.company == company)
+    )
+    employee_details = query.run(as_dict=True)
+    emp_map = {}
+    for emp in employee_details:
+        emp_map[emp.name] = emp
 
-	xlsx_data = [
-		[employee_name , "Attendance Report" , 'From Date' ,data.get("from"), start_day, 'To Date', data.get("to"),end_day],
-		['Date', 'Shift', 'Entry', 'Exit', 'Dereliction', 'Early', 'Additional', 'Working Hours', 'Actual', 'Status']]
+    return emp_map
 
-	column_widths = [20.0, 13.0, 13.0, 20.0, 13.0, 13.0, 25.0, 13.0, 13.0, 25.0, 13.0]
-	date_range = pandas.date_range(data.get("from"),data.get("to"))
-	shift_type = frappe.get_doc("Shift Assignment", {'employee' : data.get("employee")}).shift_type
-	shift_doc = frappe.get_doc("Shift Type", shift_type)
-	shift_working_hours = (shift_doc.end_time - shift_doc.start_time).seconds/60/60
 
-	dereliction_hours = 0
-	early_hours = 0
-	additional_hours = 0
+def get_holiday_map(filters: Filters) -> Dict[str, List[Dict]]:
+    """
+    Returns a dict of holidays falling in the filter month and year
+    with list name as key and list of holidays as values like
+    {
+            'Holiday List 1': [
+                    {'day_of_month': '0' , 'weekly_off': 1},
+                    {'day_of_month': '1', 'weekly_off': 0}
+            ],
+            'Holiday List 2': [
+                    {'day_of_month': '0' , 'weekly_off': 1},
+                    {'day_of_month': '1', 'weekly_off': 0}
+            ]
+    }
+    """
+    # add default holiday list too
+    holiday_lists = frappe.db.get_all("Holiday List", pluck="name")
+    default_holiday_list = frappe.get_cached_value(
+        "Company", filters.company, "default_holiday_list"
+    )
+    holiday_lists.append(default_holiday_list)
 
-	for day in date_range:
-		day_name = (frappe.utils.getdate(day.date())).strftime("%a")
-		attendance_list = frappe.get_list("Attendance" ,{"employee" : data.get("employee") , "attendance_date": day.date()},pluck="name")
-		if day.date() in holiday_days:
-			xlsx_data.append([f'{day.date()} {day_name}', shift_type, '', '', '', '', '' , '', '', 'Holiday'])
-		elif len(attendance_list) > 0:
-			attendance_doc = frappe.get_doc("Attendance" , attendance_list[0])
-			actual = attendance_doc.working_hours
-			working_hours = actual
-			dereliction = ''
-			if shift_working_hours < actual:
-				working_hours = shift_working_hours
-			elif shift_working_hours > actual:
-				if actual > 0:
-					dereliction = shift_working_hours - attendance_doc.working_hours
-					dereliction_hours += dereliction
-					dereliction = pandas.to_datetime(dereliction, unit='h').strftime('%H:%M:%S')
-			shift_time_in = (datetime.datetime.min + (shift_doc.start_time)).time()
-			attendance_time_in = frappe.utils.data.get_datetime(attendance_doc.in_time).time()
-			early_entry = ''
-			if shift_time_in > attendance_time_in:
-				attendance_time_in = datetime.datetime.strptime(str(attendance_time_in), "%H:%M:%S")
-				shift_time_in = datetime.datetime.strptime(str(shift_time_in), "%H:%M:%S")
-				early_entry = shift_time_in - attendance_time_in
-			if early_entry :
-				early_hours += early_entry.seconds/60/60
-				early_entry = datetime.datetime.strptime(str(early_entry),"%H:%M:%S")
-				early_entry = (early_entry + timedelta(days=1)).strftime("%H:%M:%S")
+    holiday_map = frappe._dict()
+    Holiday = frappe.qb.DocType("Holiday")
 
-			shift_time_out = (datetime.datetime.min + (shift_doc.end_time)).time()
-			attendance_time_out = frappe.utils.data.get_datetime(attendance_doc.out_time).time()
-			additional = ''
-			if attendance_doc.out_time:
-				if shift_time_out < attendance_time_out:
-					attendance_time_out = datetime.datetime.strptime(attendance_time_out.strftime("%H:%M:%S"), "%H:%M:%S")
-					shift_time_out = datetime.datetime.strptime(shift_time_out.strftime("%H:%M:%S"), "%H:%M:%S")
-					additional = attendance_time_out - shift_time_out
-				if additional:
-					additional_hours += additional.seconds/60/60
-					additional = datetime.datetime.strptime(str(additional),"%H:%M:%S")
-					additional = (additional + timedelta(days=1)).strftime("%H:%M:%S")
-				
-			status = attendance_doc.status
-			in_time, out_time = '' ,''
-			if attendance_doc.in_time:
-				in_time = attendance_doc.in_time.strftime("%H:%M:%S")
-			if attendance_doc.out_time:
-				out_time = attendance_doc.out_time.strftime("%H:%M:%S")
-			if attendance_doc.status == 'Present' and (in_time == '' and out_time != ''):
-				status = 'No fingerprint entry'
-			if attendance_doc.status == 'Present' and (out_time == '' and in_time != ''):
-				status = 'Exit is not marked'
-			if attendance_doc.status == "Absent":
-				xlsx_data.append([f'{day.date()} {day_name}', shift_type, '', '', '', '', '' , '', '', "Absent"])
-			else:
-				if actual == 0:
-					actual = ''
-				else :
-					actual = pandas.to_datetime(actual, unit='h').strftime('%H:%M:%S')
-				if working_hours == 0:
-					working_hours = ''
-				else:
-					working_hours = pandas.to_datetime(str(working_hours), unit='h').strftime('%H:%M:%S')
-				xlsx_data.append([f'{day.date()} {day_name}', shift_type, in_time, out_time , dereliction, early_entry, additional , working_hours, actual, status])
-		else:
-			xlsx_data.append([f'{day.date()} {day_name}', shift_type , '', '', '', '', '', '', '', ''])
+    for d in holiday_lists:
+        if not d:
+            continue
 
-	early_entry_time = ''
-	if early_hours > 0:
-		early_entry_time = pandas.to_datetime(early_hours, unit='h').strftime('%H:%M:%S')
-	early_entry_days = 0
+        holidays = (
+            frappe.qb.from_(Holiday)
+            .select(
+                (Holiday.holiday_date).as_("day_of_month"),
+                Holiday.weekly_off,
+            )
+            .where(
+                (Holiday.parent == d)
+                & (DateDiff(Holiday.holiday_date, filters.from_date)>=0)
+                & (DateDiff(Holiday.holiday_date, filters.to_date)<=0)
+            )
+        ).run(as_dict=True)
+        result = []
+        for hd in holidays:
+            result.append({
+                "weekly_off": hd.weekly_off,
+                "day_of_month": get_date_str(hd.day_of_month),
+            })
+        holiday_map.setdefault(d, result)
 
-	extra_exit_time = ''
-	if additional_hours > 0:
-		extra_exit_time = pandas.to_datetime(additional_hours, unit='h').strftime('%H:%M:%S')
-	extra_exit_days = 0
+    return holiday_map
 
-	total_early_and_extra = early_hours + additional_hours
-	total_early_and_extra = pandas.to_datetime(total_early_and_extra, unit='h').strftime('%H:%M:%S')
 
-	dereliction_time = 0
-	dereliction_days = 0
-	
-	weekly_off_days = 0
-	absent_days = 0
-	no_entry_days = 0
-	no_exit_days = 0
-	
-	attendance_days = 0
-	leave_days = 0
-	all_days = len(xlsx_data) - 2
-	if len(xlsx_data) > 2:
-		for day in xlsx_data[2:]:
-			if day[4]:
-				dereliction_days += 1
-			if day[2]:
-				attendance_days += 1
-			if day[9] == "Holiday" :
-				weekly_off_days +=1
-			if day[9] == "Absent" :
-				absent_days +=1
-			if day[9] == "No fingerprint entry":
-				no_entry_days += 1
-			if day[9] == "Exit is not marked":
-				no_exit_days += 1
-			if day[9] == "On Leave":
-				leave_days += 1
-			if day[5]:
-				early_entry_days += 1
-			if day[6]:
-				extra_exit_days += 1
-				
-		dereliction_time = pandas.to_datetime(str(dereliction_hours), unit='h').strftime('%H:%M')
-		total_table = [
-			[],
-			["","Time","Number","","Time","Number","","Time","Number","","Number" ],
-			["Early Entry", early_entry_time, early_entry_days, "", "", "", "No fingerprint entry", "00:00", no_entry_days, "Absence due to delay", 0],
-			["Extra Exit", extra_exit_time, extra_exit_days, "Dereliction", dereliction_time, dereliction_days, "Exit is not marked", "00:00", no_exit_days, "Absence due to dereliction", 0 ],
-			["Total", total_early_and_extra, early_entry_days + extra_exit_days, "Total", dereliction_time, dereliction_days, "", "", "", "Absence", absent_days],
-			[],
-			["Attendance Days", attendance_days, "", "Weekly Off Days", weekly_off_days, "", "Leave Days", leave_days,  "","Total Days", all_days, ""],
-		]
-		xlsx_data.extend(total_table)
-		from frappe.utils.xlsxutils import make_xlsx
-		xlsx_file = make_xlsx(xlsx_data, "Query Report", column_widths=column_widths)
-		frappe.response["filename"] = 'Attendance Report' + ".xlsx"
-		frappe.response["filecontent"] = xlsx_file.getvalue()
-		frappe.response["type"] = "binary"
+def get_rows(
+    employee_details: Dict, filters: Filters, holiday_map: Dict, attendance_map: Dict
+) -> List[Dict]:
+    records = []
+    default_holiday_list = frappe.get_cached_value(
+        "Company", filters.company, "default_holiday_list"
+    )
+
+    for employee, details in employee_details.items():
+        emp_holiday_list = details.holiday_list or default_holiday_list
+        holidays = holiday_map.get(emp_holiday_list)
+
+        employee_attendance = attendance_map.get(employee)
+        if not employee_attendance:
+            continue
+        
+        attendance_for_employee = get_attendance_status_for_detailed_view(
+            employee, filters, employee_attendance, holidays
+        )
+        # set employee details in the first row
+        attendance_for_employee[0].update(
+            {"employee": employee, "employee_name": details.employee_name}
+        )
+
+        records.extend(attendance_for_employee)
+
+    return records
+
+
+def get_attendance_status_for_detailed_view(
+    employee: str, filters: Filters, employee_attendance: Dict, holidays: List
+) -> List[Dict]:
+    """Returns list of shift-wise attendance status for employee
+    [
+            {'shift': 'Morning Shift', 1: 'A', 2: 'P', 3: 'A'....},
+            {'shift': 'Evening Shift', 1: 'P', 2: 'A', 3: 'P'....}
+    ]
+    """
+    total_days = get_total_days(filters)
+    attendance_values = []
+    for shift, status_dict in employee_attendance.items():
+        row = {"shift": shift}
+        from_date = filters.from_date
+        for day in range(1, total_days + 1):
+            label = from_date
+            status = status_dict.get(label, {}).get("status")
+            
+            update_in_holiday = False 
+            if status is None and holidays:
+                status = get_holiday_status(label, holidays)
+                update_in_holiday = True
+
+            abbr = status_map.get(status, "")
+            if update_in_holiday:
+                row[label] = abbr
+            else:
+                trans_st_label = _("Status")
+                trans_st_wh = _("Working Hours")
+                trans_st_int = _("In Time")
+                trans_st_ott = _("Out Time")
+                trans_is_late = _("Is Late")
+                trans_is_early = _("is Early Exit")
+
+                working_hours = status_dict.get(label, {}).get("working_hours", 0)
+                in_time = status_dict.get(label, {}).get("in_time", "-")
+                out_time = status_dict.get(label, {}).get("out_time", "-")
+                late_entry = status_dict.get(label, {}).get("late_entry", 0)
+                early_exit = status_dict.get(label, {}).get("early_exit", 0)
+                if in_time:
+                    in_time = str(in_time).split(" ")
+                    if len(in_time) > 1:
+                        in_time = in_time[1]
+                
+                if out_time:
+                    out_time = str(out_time).split(" ")
+                    if len(out_time) > 1:
+                        out_time = out_time[1]
+                    
+                abbr =  f"<div>{trans_st_label}</div>"
+
+                if status in ["Present", "Work From Home"]:
+                    styles_status = "<span style='color:green'>" + status + "</span>"
+                elif status in ["Absent"]:
+                    styles_status = "<span style='color:red'>" + status + "</span>"
+                elif status in ["Half Day"]:
+                    styles_status = "<span style='color:orange'>" + status + "</span>"
+                elif status in ["On Leave"]:
+                    styles_status = "<span style='color:#318AD8'>" + status + "</span>"
+                else:
+                    styles_status = status
+                abbr += f"<div>{styles_status}</div>"
+
+                abbr += f"<div>{trans_st_wh}</div>"
+                abbr += f"<div style='color:green'>{working_hours}</div>"
+
+                abbr += f"<div>{trans_st_int}</div>"
+                abbr += f"<div style='color:orange'>{in_time}</div>"
+
+                abbr += f"<div>{trans_st_ott}</div>"
+                abbr += f"<div style='color:orange'>{out_time}</div>"
+
+                abbr += f"<div>{trans_is_late}</div>"
+                late_entry = _("Yes") if late_entry == 1 else  _("No")
+                abbr += f"<div>{late_entry}</div>"
+                
+                abbr += f"<div>{trans_is_early}</div>"
+                early_exit = _("Yes") if early_exit == 1 else  _("No")
+                abbr += f"<div>{early_exit}</div>"
+
+                abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0'>{abbr}</div>"
+                row[label] = abbr
+            from_date = add_days(from_date, 1)
+
+        attendance_values.append(row)
+
+    return attendance_values
+
+
+def get_holiday_status(day: int, holidays: List) -> str:
+    status = None
+    for holiday in holidays:
+        if day == holiday.get("day_of_month"):
+            if holiday.get("weekly_off"):
+                status = "Weekly Off"
+            else:
+                status = "Holiday"
+            break
+    return status
+
+
+def get_chart_data(attendance_map: Dict, filters: Filters) -> Dict:
+    days = get_columns_for_days(filters)
+    labels = []
+    absent = []
+    present = []
+    leave = []
+
+    for day in days:
+        labels.append(day["label"])
+        total_absent_on_day = total_leaves_on_day = total_present_on_day = 0
+
+        for employee, attendance_dict in attendance_map.items():
+            for shift, attendance in attendance_dict.items():
+                attendance_on_day = attendance.get(day["fieldname"])
+
+                if attendance_on_day == "Absent":
+                    total_absent_on_day += 1
+                elif attendance_on_day in ["Present", "Work From Home"]:
+                    total_present_on_day += 1
+                elif attendance_on_day == "Half Day":
+                    total_present_on_day += 0.5
+                    total_leaves_on_day += 0.5
+                elif attendance_on_day == "On Leave":
+                    total_leaves_on_day += 1
+
+        absent.append(total_absent_on_day)
+        present.append(total_present_on_day)
+        leave.append(total_leaves_on_day)
+
+    return {
+        "data": {
+            "labels": labels,
+            "datasets": [
+                {"name": "Absent", "values": absent},
+                {"name": "Present", "values": present},
+                {"name": "Leave", "values": leave},
+            ],
+        },
+        "type": "line",
+        "colors": ["red", "green", "blue"],
+    }
