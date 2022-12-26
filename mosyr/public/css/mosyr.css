@@ -22,3 +22,33 @@ body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
 .dt-cell__content {
     text-align: left !important;
 }
+.dt-instance-1 .dt-cell,
+.datatable .dt-row{
+    height: 45px !important;
+}
+.datatable .dt-header .dt-cell--header .dt-cell__content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.datatable-table-2cols-6rows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(6, 1fr);
+}
+.datatable-table-2cols-6rows > div {
+    padding: 2px;
+    text-align: center;
+}
+.datatable-table-2cols-6rows > div{
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+.datatable-table-2cols-6rows > div:nth-child(odd){
+    border-left: 1px solid #ccc;
+}
+.datatable-table-2cols-6rows > div:nth-child(11),
+.datatable-table-2cols-6rows > div:nth-child(12){
+    border-bottom: 1px solid #ccc;
+}
