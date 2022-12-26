@@ -449,14 +449,18 @@ def allow_read_for_reports():
         "roles": [{"role": "SaaS Manager", "parenttype": "Custom Role"}],
     }
     for report in reports_for_manager:
+        ref_doctype = frappe.db.get_value("Report", report, "ref_doctype")
         args.update(
             {
                 "report": report,
-                "ref_doctype": frappe.db.get_value("Report", report, "ref_doctype"),
+                "ref_doctype": ref_doctype,
             }
         )
         update_custom_roles({"report": report}, args)
-
+        update_permission_property(ref_doctype, "SaaS Manager", 0, "select", 1)
+        update_permission_property(ref_doctype, "SaaS Manager", 0, "read", 1)
+        update_permission_property(ref_doctype, "SaaS Manager", 0, "report", 1)
+    frappe.db.commit()
 
 def update_custom_roles(role_args, args):
     name = frappe.db.get_value("Custom Role", role_args, "name")
@@ -485,9 +489,14 @@ def add_select_perm_for_all():
             doc_field = frappe.db.exists("DocType", field.options)
             if not doc_field: continue
             update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
             update_permission_property(doc_field, "Employee Self Service", 0, "select", 1)
+        update_permission_property(doc.name, "SaaS Manager", 0, "select", 1)
+        update_permission_property(doc.name, "SaaS Manager", 0, "read", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
         update_permission_property(doc.name, "Employee Self Service", 0, "select", 1)
-        frappe.db.commit()
+    frappe.db.commit()
 
 def create_role_and_set_to_admin():
     data = {"role": "Read User Type"}
