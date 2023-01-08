@@ -49,6 +49,13 @@ def execute(filters: Optional[Filters] = None) -> Tuple:
 
     message = get_message()
     chart = get_chart_data(attendance_map, filters)
+    columns = [{
+                "label": col.get("label_html", col.get("label")),
+                "fieldname": col.get("fieldname"),
+                "fieldtype": col.get("fieldtype"),
+                "options": col.get("options"),
+                "width": col.get("width"),
+            } for col in columns]
     return columns, data, message, chart
 
 
@@ -106,7 +113,7 @@ def get_columns_for_days(filters: Filters) -> List[Dict]:
         day_name = get_datetime(label_str).strftime("%A")
         label = f"<p class='text-center' style='margin:0'>{day_name}<br>{label_str}</p>"
         days.append(
-            {"label": f"{label}", "fieldtype": "Data", "fieldname": label_str, "width": 170}
+            {"label": f"{label_str}", "label_html": f"{label}", "fieldtype": "Data", "fieldname": label_str, "width": 170}
         )
         from_date = add_days(from_date, 1)
 
@@ -299,14 +306,16 @@ def get_attendance_status_for_detailed_view(
         for day in range(1, total_days + 1):
             label = from_date
             status = status_dict.get(label, {}).get("status")
-            
+
             update_in_holiday = False 
             if status is None and holidays:
                 status = get_holiday_status(label, holidays)
                 update_in_holiday = True
-
-            abbr = status_map.get(status, "")
+            
+            abbr = status_map.get(status)
             if update_in_holiday:
+                abbr = abbr if abbr else f"<div style='margin:0; text-align:center;font-weight:bold'>{status}</div>"
+                abbr = f"<div style='margin:0'>{abbr}</div>"
                 row[label] = abbr
             else:
                 trans_st_label = _("Status")
@@ -343,26 +352,31 @@ def get_attendance_status_for_detailed_view(
                     styles_status = "<span style='color:#318AD8'>" + status + "</span>"
                 else:
                     styles_status = status
-                abbr += f"<div>{styles_status}</div>"
+                    
+                if styles_status is None:
+                    abbr = _("No Log")
+                    abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0; text-align:center;font-weight:bold'>{abbr}</div>"
+                else:
+                    abbr += f"<div>{styles_status}</div>"
 
-                abbr += f"<div>{trans_st_wh}</div>"
-                abbr += f"<div style='color:green'>{working_hours}</div>"
+                    abbr += f"<div>{trans_st_wh}</div>"
+                    abbr += f"<div style='color:green'>{working_hours}</div>"
 
-                abbr += f"<div>{trans_st_int}</div>"
-                abbr += f"<div style='color:orange'>{in_time}</div>"
+                    abbr += f"<div>{trans_st_int}</div>"
+                    abbr += f"<div style='color:orange'>{in_time}</div>"
 
-                abbr += f"<div>{trans_st_ott}</div>"
-                abbr += f"<div style='color:orange'>{out_time}</div>"
+                    abbr += f"<div>{trans_st_ott}</div>"
+                    abbr += f"<div style='color:orange'>{out_time}</div>"
 
-                abbr += f"<div>{trans_is_late}</div>"
-                late_entry = _("Yes") if late_entry == 1 else  _("No")
-                abbr += f"<div>{late_entry}</div>"
-                
-                abbr += f"<div>{trans_is_early}</div>"
-                early_exit = _("Yes") if early_exit == 1 else  _("No")
-                abbr += f"<div>{early_exit}</div>"
+                    abbr += f"<div>{trans_is_late}</div>"
+                    late_entry = _("Yes") if late_entry == 1 else  _("No")
+                    abbr += f"<div>{late_entry}</div>"
+                    
+                    abbr += f"<div>{trans_is_early}</div>"
+                    early_exit = _("Yes") if early_exit == 1 else  _("No")
+                    abbr += f"<div>{early_exit}</div>"
 
-                abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0'>{abbr}</div>"
+                    abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0'>{abbr}</div>"
                 row[label] = abbr
             from_date = add_days(from_date, 1)
 
@@ -372,7 +386,7 @@ def get_attendance_status_for_detailed_view(
 
 
 def get_holiday_status(day: int, holidays: List) -> str:
-    status = None
+    status = "No Log"
     for holiday in holidays:
         if day == holiday.get("day_of_month"):
             if holiday.get("weekly_off"):
@@ -396,8 +410,7 @@ def get_chart_data(attendance_map: Dict, filters: Filters) -> Dict:
 
         for employee, attendance_dict in attendance_map.items():
             for shift, attendance in attendance_dict.items():
-                attendance_on_day = attendance.get(day["fieldname"])
-
+                attendance_on_day = attendance.get(day["fieldname"], {}).get("status")
                 if attendance_on_day == "Absent":
                     total_absent_on_day += 1
                 elif attendance_on_day in ["Present", "Work From Home"]:
