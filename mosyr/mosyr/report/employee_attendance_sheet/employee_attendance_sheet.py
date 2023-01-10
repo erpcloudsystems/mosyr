@@ -274,11 +274,15 @@ def get_rows(
 
         employee_attendance = attendance_map.get(employee)
         if not employee_attendance:
-            continue
-        
-        attendance_for_employee = get_attendance_status_for_detailed_view(
-            employee, filters, employee_attendance, holidays
-        )
+            attendance_for_employee = []
+            no_logs = shifts_with_no_logs(employee, filters, [])
+            attendance_for_employee.extend(no_logs)
+        else:
+            shifts, attendance_for_employee = get_attendance_status_for_detailed_view(
+                employee, filters, employee_attendance, holidays
+            )
+            no_logs = shifts_with_no_logs(employee, filters, shifts)
+            attendance_for_employee.extend(no_logs)
         # set employee details in the first row
         attendance_for_employee[0].update(
             {"employee": employee, "employee_name": details.employee_name}
@@ -288,6 +292,24 @@ def get_rows(
 
     return records
 
+def shifts_with_no_logs(employee: str, filters: Filters, shifts: List):
+    total_days = get_total_days(filters)
+    other_shifts = frappe.get_list("Shift Assignment", filters={
+        'employee': employee,
+        'docstatus': 1,
+        'status': 'Active',
+        'shift_type': ['not in', shifts]
+    }, fields=['DISTINCT(shift_type) as shift_type'])
+    records = []
+    for shift in other_shifts:
+        shift = shift.shift_type
+        row = {"shift": shift}
+        from_date = filters.from_date
+        for day in range(1, total_days + 1):
+            row[from_date] = _("No Log")
+            from_date = add_days(from_date, 1)
+        records.append(row)
+    return records
 
 def get_attendance_status_for_detailed_view(
     employee: str, filters: Filters, employee_attendance: Dict, holidays: List
@@ -300,8 +322,10 @@ def get_attendance_status_for_detailed_view(
     """
     total_days = get_total_days(filters)
     attendance_values = []
+    shifts = set()
     for shift, status_dict in employee_attendance.items():
         row = {"shift": shift}
+        shifts.add(shift)
         from_date = filters.from_date
         for day in range(1, total_days + 1):
             label = from_date
@@ -382,7 +406,7 @@ def get_attendance_status_for_detailed_view(
 
         attendance_values.append(row)
 
-    return attendance_values
+    return list(shifts), attendance_values
 
 
 def get_holiday_status(day: int, holidays: List) -> str:
