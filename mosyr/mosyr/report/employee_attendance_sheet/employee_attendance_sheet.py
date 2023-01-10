@@ -23,6 +23,7 @@ status_map = {
 day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 DateDiff = CustomFunction("DATEDIFF", ["start_date", "end_date"])
 
+
 def execute(filters: Optional[Filters] = None) -> Tuple:
     filters = frappe._dict(filters or {})
 
@@ -49,13 +50,16 @@ def execute(filters: Optional[Filters] = None) -> Tuple:
 
     message = get_message()
     chart = get_chart_data(attendance_map, filters)
-    columns = [{
-                "label": col.get("label_html", col.get("label")),
-                "fieldname": col.get("fieldname"),
-                "fieldtype": col.get("fieldtype"),
-                "options": col.get("options"),
-                "width": col.get("width"),
-            } for col in columns]
+    columns = [
+        {
+            "label": col.get("label_html", col.get("label")),
+            "fieldname": col.get("fieldname"),
+            "fieldtype": col.get("fieldtype"),
+            "options": col.get("options"),
+            "width": col.get("width"),
+        }
+        for col in columns
+    ]
     return columns, data, message, chart
 
 
@@ -113,7 +117,13 @@ def get_columns_for_days(filters: Filters) -> List[Dict]:
         day_name = get_datetime(label_str).strftime("%A")
         label = f"<p class='text-center' style='margin:0'>{day_name}<br>{label_str}</p>"
         days.append(
-            {"label": f"{label_str}", "label_html": f"{label}", "fieldtype": "Data", "fieldname": label_str, "width": 170}
+            {
+                "label": f"{label_str}",
+                "label_html": f"{label}",
+                "fieldtype": "Data",
+                "fieldname": label_str,
+                "width": 170,
+            }
         )
         from_date = add_days(from_date, 1)
 
@@ -121,7 +131,8 @@ def get_columns_for_days(filters: Filters) -> List[Dict]:
 
 
 def get_total_days(filters: Filters) -> int:
-    return date_diff(filters.to_date, filters.from_date)+1
+    return date_diff(filters.to_date, filters.from_date) + 1
+
 
 def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
     employee_details = get_employee_related_details(filters.company)
@@ -162,8 +173,8 @@ def get_attendance_map(filters: Filters) -> Dict:
         .where(
             (Attendance.docstatus == 1)
             & (Attendance.company == filters.company)
-            & (DateDiff(Attendance.attendance_date, filters.from_date)>=0)
-            & (DateDiff(Attendance.attendance_date, filters.to_date)<=0)
+            & (DateDiff(Attendance.attendance_date, filters.from_date) >= 0)
+            & (DateDiff(Attendance.attendance_date, filters.to_date) <= 0)
         )
     )
     if filters.employee:
@@ -245,16 +256,18 @@ def get_holiday_map(filters: Filters) -> Dict[str, List[Dict]]:
             )
             .where(
                 (Holiday.parent == d)
-                & (DateDiff(Holiday.holiday_date, filters.from_date)>=0)
-                & (DateDiff(Holiday.holiday_date, filters.to_date)<=0)
+                & (DateDiff(Holiday.holiday_date, filters.from_date) >= 0)
+                & (DateDiff(Holiday.holiday_date, filters.to_date) <= 0)
             )
         ).run(as_dict=True)
         result = []
         for hd in holidays:
-            result.append({
-                "weekly_off": hd.weekly_off,
-                "day_of_month": get_date_str(hd.day_of_month),
-            })
+            result.append(
+                {
+                    "weekly_off": hd.weekly_off,
+                    "day_of_month": get_date_str(hd.day_of_month),
+                }
+            )
         holiday_map.setdefault(d, result)
 
     return holiday_map
@@ -292,14 +305,19 @@ def get_rows(
 
     return records
 
+
 def shifts_with_no_logs(employee: str, filters: Filters, shifts: List):
     total_days = get_total_days(filters)
-    other_shifts = frappe.get_list("Shift Assignment", filters={
-        'employee': employee,
-        'docstatus': 1,
-        'status': 'Active',
-        'shift_type': ['not in', shifts]
-    }, fields=['DISTINCT(shift_type) as shift_type'])
+    other_shifts = frappe.get_list(
+        "Shift Assignment",
+        filters={
+            "employee": employee,
+            "docstatus": 1,
+            "status": "Active",
+            "shift_type": ["not in", shifts],
+        },
+        fields=["DISTINCT(shift_type) as shift_type"],
+    )
     records = []
     for shift in other_shifts:
         shift = shift.shift_type
@@ -310,6 +328,7 @@ def shifts_with_no_logs(employee: str, filters: Filters, shifts: List):
             from_date = add_days(from_date, 1)
         records.append(row)
     return records
+
 
 def get_attendance_status_for_detailed_view(
     employee: str, filters: Filters, employee_attendance: Dict, holidays: List
@@ -331,14 +350,18 @@ def get_attendance_status_for_detailed_view(
             label = from_date
             status = status_dict.get(label, {}).get("status")
 
-            update_in_holiday = False 
+            update_in_holiday = False
             if status is None and holidays:
                 status = get_holiday_status(label, holidays)
                 update_in_holiday = True
-            
+
             abbr = status_map.get(status)
             if update_in_holiday:
-                abbr = abbr if abbr else f"<div style='margin:0; text-align:center;font-weight:bold'>{status}</div>"
+                abbr = (
+                    abbr
+                    if abbr
+                    else f"<div style='margin:0; text-align:center;font-weight:bold'>{status}</div>"
+                )
                 abbr = f"<div style='margin:0'>{abbr}</div>"
                 row[label] = abbr
             else:
@@ -358,13 +381,13 @@ def get_attendance_status_for_detailed_view(
                     in_time = str(in_time).split(" ")
                     if len(in_time) > 1:
                         in_time = in_time[1]
-                
+
                 if out_time:
                     out_time = str(out_time).split(" ")
                     if len(out_time) > 1:
                         out_time = out_time[1]
-                    
-                abbr =  f"<div>{trans_st_label}</div>"
+
+                abbr = f"<div>{trans_st_label}</div>"
 
                 if status in ["Present", "Work From Home"]:
                     styles_status = "<span style='color:green'>" + status + "</span>"
@@ -376,7 +399,7 @@ def get_attendance_status_for_detailed_view(
                     styles_status = "<span style='color:#318AD8'>" + status + "</span>"
                 else:
                     styles_status = status
-                    
+
                 if styles_status is None:
                     abbr = _("No Log")
                     abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0; text-align:center;font-weight:bold'>{abbr}</div>"
@@ -393,11 +416,11 @@ def get_attendance_status_for_detailed_view(
                     abbr += f"<div style='color:orange'>{out_time}</div>"
 
                     abbr += f"<div>{trans_is_late}</div>"
-                    late_entry = _("Yes") if late_entry == 1 else  _("No")
+                    late_entry = _("Yes") if late_entry == 1 else _("No")
                     abbr += f"<div>{late_entry}</div>"
-                    
+
                     abbr += f"<div>{trans_is_early}</div>"
-                    early_exit = _("Yes") if early_exit == 1 else  _("No")
+                    early_exit = _("Yes") if early_exit == 1 else _("No")
                     abbr += f"<div>{early_exit}</div>"
 
                     abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0'>{abbr}</div>"
