@@ -349,7 +349,7 @@ fixtures = [
 					"Loan-applicant_type-default",
 					"Loan-applicant_type-read_only",
 					"Loan-rate_of_interest-default",
-					"Loan-rate_of_interest-hidden",
+					# "Loan-rate_of_interest-hidden",
 					"Loan-main-title_field",
 					"Loan-total_payment-in_list_view",
 					"Loan-loan_type-in_list_view",

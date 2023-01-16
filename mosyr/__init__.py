@@ -451,6 +451,13 @@ update_fields_props = {
         },
         {
             "field": "rate_of_interest",
+            "prop": "reqd",
+            "prop_type": "Check",
+            "doctype":  "Loan Type",
+            "value": "0"
+        },
+        {
+            "field": "rate_of_interest",
             "prop": "hidden",
             "prop_type": "Check",
             "doctype":  "Loan Type",
@@ -473,6 +480,13 @@ update_fields_props = {
             "value": 1
         },
         # All Data fetched from Loan Type
+        {
+            "field": "rate_of_interest",
+            "prop": "reqd",
+            "prop_type": "Check",
+            "doctype":  "Loan",
+            "value": "0"
+        },
         {
             "field": "rate_of_interest",
             "prop": "hidden",
@@ -647,6 +661,13 @@ update_fields_props = {
     "Loan Repayment": [
         {
             "field": "rate_of_interest",
+            "prop": "reqd",
+            "prop_type": "Check",
+            "doctype":  "Loan Repayment",
+            "value": "0"
+        },
+        {
+            "field": "rate_of_interest",
             "prop": "hidden",
             "prop_type": "Check",
             "doctype":  "Loan Repayment",
@@ -768,6 +789,13 @@ update_fields_props = {
         },
     ],
     "Loan Application": [
+        {
+            "field": "rate_of_interest",
+            "prop": "reqd",
+            "prop_type": "Check",
+            "doctype":  "Loan Application",
+            "value": "0"
+        },
         {
             "field": "rate_of_interest",
             "prop": "hidden",
