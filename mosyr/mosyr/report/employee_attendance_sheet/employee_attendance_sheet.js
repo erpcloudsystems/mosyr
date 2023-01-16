@@ -10,8 +10,8 @@ const render_pdf = function (url, filters) {
     //Push the HTML content into an element
     const report_name = filters.report_name;
     const orientation = filters.orientation;
-    filters = JSON.stringify(filters)
-    formData.append("filters", filters);
+    // filters = JSON.stringify(filters)
+    formData.append("filters", JSON.stringify(filters));
     if (orientation) {
         formData.append("orientation", filters.orientation);
     }
