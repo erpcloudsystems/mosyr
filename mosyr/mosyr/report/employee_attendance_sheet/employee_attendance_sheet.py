@@ -535,8 +535,14 @@ def export_report(filters, orientation="Landscape"):
     employee_details = get_employee_related_details(filters.company, employees)
     holiday_map = get_holiday_map(filters)
     data = get_rows_for_pdf(employee_details, filters, holiday_map, attendance_map)
-
-    html = get_html_for_report(filters, data, employee_details)
+    if filters.report_type == "Monthly Attendance":
+        filters.update({
+            "summarized_view": 1
+        })
+        sdata = get_rows_for_pdf(employee_details, filters, holiday_map, attendance_map)
+        html = get_html_for_monthly_report(filters, data, sdata, employee_details)
+    else:
+        html = get_html_for_report(filters, data, employee_details)
     report_to_pdf(html, orientation)
 
 def get_attendance_summary_and_days(employee: str, filters: Filters) -> Tuple[Dict, List]:
@@ -558,16 +564,17 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> Tuple[Di
 
     half_day_case = frappe.qb.terms.Case().when(Attendance.status == "Half Day", 0.5).else_(0)
     sum_half_day = Sum(half_day_case).as_("total_half_days")
-
+    result = []
     summary = (
         frappe.qb.from_(Attendance)
         .select(
+            Attendance.shift.as_("shift"),
             sum_present,
             sum_absent,
             sum_leave,
             sum_half_day,
             sum_working_hours,
-        )
+        ).groupby(Attendance.shift)
         .where(
             (Attendance.docstatus == 1)
             & (Attendance.employee == employee)
@@ -576,21 +583,30 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> Tuple[Di
             & (DateDiff(Attendance.attendance_date, filters.to_date) <= 0)
         )
     ).run(as_dict=True)
-
-    days = (
-        frappe.qb.from_(Attendance)
-        .select((Attendance.attendance_date).as_("day_of_month"))
-        .distinct()
-        .where(
-            (Attendance.docstatus == 1)
-            & (Attendance.employee == employee)
-            & (Attendance.company == filters.company)
-            & (DateDiff(Attendance.attendance_date, filters.from_date) >= 0)
-            & (DateDiff(Attendance.attendance_date, filters.to_date) <= 0)
-        )
-    ).run(as_dict=True)
-
-    return summary[0], [get_date_str(day.day_of_month) for day in days]
+    for suma in summary:
+        row = {}
+        row.update(suma)
+        days = (
+            frappe.qb.from_(Attendance)
+            .select(
+                (Attendance.attendance_date).as_("day_of_month"),
+                Attendance.shift.as_("shift"),
+            ).distinct()
+            .where(
+                (Attendance.docstatus == 1)
+                & (Attendance.employee == employee)
+                & (Attendance.shift == suma.shift)
+                & (Attendance.company == filters.company)
+                & (DateDiff(Attendance.attendance_date, filters.from_date) >= 0)
+                & (DateDiff(Attendance.attendance_date, filters.to_date) <= 0)
+            )
+        ).run(as_dict=True)
+        row.update({
+            "attendance_days": [get_date_str(day.day_of_month) for day in days]
+        })
+        result.append(row)
+    
+    return result
 
 def get_attendance_status_for_summarized_view(
     employee: str, filters: Filters, holidays: List
@@ -598,31 +614,38 @@ def get_attendance_status_for_summarized_view(
     """Returns dict of attendance status for employee like
     {'total_present': 1.5, 'total_leaves': 0.5, 'total_absent': 13.5, 'total_holidays': 8, 'unmarked_days': 5}
     """
-    summary, attendance_days = get_attendance_summary_and_days(employee, filters)
-    if not any(summary.values()):
-        return {}
+    ss = get_attendance_summary_and_days(employee, filters)
     total_days = get_total_days(filters)
-    total_holidays = total_unmarked_days = 0
-    from_date = filters.from_date
-    for day in range(1, total_days + 1):
-        if from_date in attendance_days:
-            from_date = add_days(from_date, 1)
-            continue
-        status = get_holiday_status(from_date, holidays)
-        if status in ["Weekly Off", "Holiday"]:
-            total_holidays += 1
-        if not status or status in ["Unmarked Day"]:
-            total_unmarked_days += 1
-        from_date = add_days(from_date, 1)
+    
 
-    return {
-        "total_present": summary.total_present + summary.total_half_days,
-        "total_working_hours": summary.total_working_hours,
-        "total_leaves": summary.total_leaves + summary.total_half_days,
-        "total_absent": summary.total_absent + summary.total_half_days,
-        "total_holidays": total_holidays,
-        "unmarked_days": total_unmarked_days,
-    }
+    result = []
+    for s in ss:
+        total_holidays = total_unmarked_days = 0
+        attendance_days = s.get('attendance_days', [])
+        from_date = filters.from_date
+        row = {}
+        row.update(s)
+        for day in range(1, total_days + 1):
+            if from_date in attendance_days:
+                from_date = add_days(from_date, 1)
+                continue
+            status = get_holiday_status(from_date, holidays)
+            if status in ["Weekly Off", "Holiday"]:
+                total_holidays += 1
+            if not status or status in ["Unmarked Day"]:
+                total_unmarked_days += 1
+            from_date = add_days(from_date, 1)
+        row.update({
+            "shift": s.get("shift"),
+            "total_present": s.get("total_present", 0) + s.get("total_half_days", 0),
+            "total_working_hours": s.get("total_working_hours", 0),
+            "total_leaves": s.get("total_leaves", 0) + s.get("total_half_days", 0),
+            "total_absent": s.get("total_absent", 0) + s.get("total_half_days", 0),
+            "total_holidays": total_holidays,
+            "unmarked_days": total_unmarked_days,
+        })
+        result.append(row)
+    return result
 
 def get_leave_summary(employee: str, filters: Filters) -> Dict[str, float]:
     """Returns a dict of leave type and corresponding leaves taken by employee like:
@@ -695,14 +718,16 @@ def get_rows_for_pdf(
                 continue
             leave_summary = get_leave_summary(employee, filters)
             entry_exits_summary = get_entry_exits_summary(employee, filters)
-
-            row = {"employee": employee, "employee_name": details.employee_name}
+            # row = {"employee": employee, "employee_name": details.employee_name}
             # set_defaults_for_summarized_view(filters, row)
-            row.update(attendance)
-            row.update(leave_summary)
-            row.update(entry_exits_summary)
-
-            records.append(row)
+            result = []
+            for att in attendance:
+                row = {"employee": employee, "employee_name": details.employee_name}
+                row.update(att)
+                row.update(leave_summary)
+                row.update(entry_exits_summary)
+                records.append(row)
+            # records.extend(result)
         else:
             employee_attendance = attendance_map.get(employee)
             if not employee_attendance:
@@ -778,11 +803,8 @@ def get_html_for_report(filters: Filters, data: List, employee_details: Dict):
         """
     
     if filters.report_type == "Monthly Attendance":
-        for attendance in data:
-            report_letter_head = get_report_header(filters, "")
-            report_tbody, report_thead = get_report_body(
-                filters.report_type, data, employee_details
-            )
+        report_letter_head = ""
+        report_tbody, report_thead = "", ""
     else:
         report_letter_head = get_report_header(filters, "")
         report_tbody, report_thead = get_report_body(
@@ -802,6 +824,185 @@ def get_html_for_report(filters: Filters, data: List, employee_details: Dict):
         </table>
         """
 
+
+def get_html_for_monthly_report(filters: Filters, data: List, sdata: List, employee_details: Dict):
+    style = """
+        <style>
+            .styled-table { border-collapse: collapse; font-size: 0.9em; font-family: sans-serif; min-width: 400px; width:100%; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;}
+            .styled-table thead tr { background-color: #FFFFFF; color: #171717;}
+            .styled-table thead tr td{border: none;}
+            .styled-table th, .styled-table td { padding: 5px; text-align:center; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; }
+            .styled-table tbody tr{ font-weight: bold;}
+            .styled-table tbody tr.red { background-color: #FFEBEE;}
+            .styled-table tbody tr.orange { background-color: #FFF3E0;}
+            .styled-table tbody tr.green { background-color: #E8F5E9;}
+            .styled-table td { font-weight: normal; font-size: 15px}
+        </style>
+        """
+    
+    report_letter_head = ""
+    old_name = ""
+    old_employee_name = ""
+    sub_report = ""
+    if filters.report_type == "Monthly Attendance":
+        for att in data:
+            # sub_report = ""
+            employee = att.get('employee', False)
+            employee_name = att.get('employee_name')
+            shift = att.get('shift', False)
+            if employee and employee != old_name:
+                old_employee_name = employee_name
+                old_name = employee
+            sub_header = get_report_header(filters, old_employee_name)
+            
+            report_tbody, report_thead = get_report_body(filters, [], {})
+            report_letter_head += sub_header
+            report_tbody = ""
+            
+            for k, v in att.items():
+                if k in ['employee', 'employee_name', 'shift']: continue
+                date = k
+                if isinstance(v, str):
+                    color = ""
+                    if v == "Absent":
+                        color = "red"
+                    elif v == "Present":
+                        color = "green"
+                    report_tbody += f"""
+                        <tr class="{color}">
+                            <td>{date}</td>
+                            <td>{shift}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>{_(v)}</td>
+                        </tr>"""
+                elif isinstance(v, dict):
+                    if len(v.get("status_dict", {}).keys()) == 0:
+                        v = v.get("abbr", "")
+                        color = ""
+                        if v == "Absent":
+                            color = "red"
+                        elif v == "Present":
+                            color = "green"
+                        report_tbody += f"""
+                                <tr class="{color}">
+                                    <td>{date}</td>
+                                    <td>{shift}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{_(v)}</td>
+                                </tr>"""
+                    else:
+                        status_dict = v.get("status_dict", {})
+                        v = status_dict.get('status', 'Unmarked Day')
+                        in_time = status_dict.get('in_time', 0)
+                        out_time = status_dict.get('out_time', 0)
+
+                        is_late = "No" if status_dict.get("late_entry", "") == 0 else "Yes"
+                        is_early = "No" if status_dict.get("early_exit", "") == 0 else "Yes"
+                        req_hours = status_dict.get("req_hours", "")
+                        if req_hours:
+                            hours, remainder = divmod(req_hours.seconds, 3600)
+                            minutes, seconds = divmod(remainder, 60)
+                            req_hours = '{:02}:{:02}'.format(int(hours), int(minutes))
+                        working_hours = flt(status_dict.get("working_hours", 0))
+                        if working_hours != 0:
+                            from datetime import datetime
+                            from datetime import timedelta
+                            d1 = datetime(2022,5,8,0,0,0)
+                            d2 = d1 + timedelta(hours = flt(working_hours))
+                            working_hours = str(d2.time())[:-3]
+                        else:
+                            working_hours = "00:00"
+                        if in_time:
+                            in_time = str(in_time).split(" ")
+                            if len(in_time) > 1:
+                                in_time = in_time[1][:-3]
+                        else:
+                            in_time = "-"
+
+                        if out_time:
+                            out_time = str(out_time).split(" ")
+                            if len(out_time) > 1:
+                                out_time = out_time[1][:-3]
+                        else:
+                            out_time = "-"
+                        color = ""
+                        if v == "Absent":
+                            color = "red"
+                        elif v == "Present":
+                            color = "green"
+                        report_tbody += f"""
+                                <tr class="{color}">
+                                    <td>{date}</td>
+                                    <td>{shift}</td>
+                                    <td>{in_time}</td>
+                                    <td>{out_time}</td>
+                                    <td>{working_hours}</td>
+                                    <td>{req_hours}</td>
+                                    <td>{is_late}</td>
+                                    <td>{is_early}</td>
+                                    <td>{v}</td>
+                                </tr>"""
+            
+            summary = ""
+            for srow in sdata:
+                if employee == srow.get('employee'):
+                    summary += f"""<tr>
+                                        <td style="width: 100px">{srow.get("shift", "-")}</td>
+                                        <td>{srow.get("total_present", "-")}</td>
+                                        <td>{srow.get("total_leaves", "-")}</td>
+                                        <td>{srow.get("total_absent", "-")}</td>
+                                        <td>{srow.get("total_holidays", "-")}</td>
+                                        <td>{srow.get("unmarked_days", "-")}</td>
+                                        <td>{srow.get("total_late_entries", "-")}</td>
+                                        <td>{srow.get("total_early_exits", "-")}</td>
+                                    </tr>"""
+            if len(summary) > 0:
+                summary = f"""<table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px">{_("Shift")}</th>
+                                    <th>{_("Total Present")}</th>
+                                    <th>{_("Total Leaves")}</th>
+                                    <th>{_("Total Absent")}</th>
+                                    <th>{_("Total Holidays")}</th>
+                                    <th>{_("Unmarked Days")}</th>
+                                    <th>{_("Total Late Entries")}</th>
+                                    <th>{_("Total Early Exits")}</th>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    {summary}
+                                </tbody>
+                            </table>
+                        """
+            sub_report += f"""
+                        {style}
+                        {sub_header}
+                        <table class="styled-table">
+                            <thead>
+                                {report_thead}
+                        </thead>
+                            <tbody>
+                                {report_tbody}
+                            </tbody>
+                        </table>
+                        {summary}
+                        """
+    else:
+        report_letter_head = ""
+        report_tbody, report_thead = "", ""
+    
+    return sub_report
 
 def get_report_body(filters: Filters, data: List, employee_details: Dict):
     if filters.report_type == "Daily Attendance":
@@ -888,6 +1089,7 @@ def get_report_body(filters: Filters, data: List, employee_details: Dict):
         thead = f"""
             <tr>
                 <th>{_("Employee")}</th>
+                <th>{_("Shift")}</th>
                 <th>{_("Total Present")}</th>
                 <th>{_("Total Working Hours")}</th>
                 <th>{_("Total Leaves")}</th>
@@ -913,6 +1115,7 @@ def get_report_body(filters: Filters, data: List, employee_details: Dict):
             tbody += f"""
                 <tr>
                     <th>{row.get("employee_name")}</th>
+                    <th>{row.get("shift")}</th>
                     <th>{cint(row.get("total_present"))}</th>
                     <th>{total_working_hours}</th>
                     <th>{cint(row.get("total_leaves"))}</th>
@@ -955,9 +1158,7 @@ def get_report_header(filters: Filters, employee: str):
                 <span style="display: inline-block">{_("to Date")}</span>
                 <span style="display: inline-block">{filters.to_date}</span>
                 <span style="display: inline-block">{_(tweekday)}</span>
-            </h2>
-            <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
-                { employee }
+                <div>For Employee { employee }</div>
             </h2>
         """
     elif filters.report_type == "Summary Attendance":
