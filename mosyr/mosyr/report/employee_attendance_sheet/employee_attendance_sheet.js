@@ -2,58 +2,244 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
+const default_url = "/api/method/mosyr.mosyr.report.employee_attendance_sheet.employee_attendance_sheet.export_report"
+const render_pdf = function (url, filters) {
+    //Create a form to place the HTML content
+    var formData = new FormData();
+
+    //Push the HTML content into an element
+    const report_name = filters.report_name;
+    const orientation = filters.orientation;
+    filters = JSON.stringify(filters)
+    formData.append("filters", filters);
+    if (orientation) {
+        formData.append("orientation", filters.orientation);
+    }
+    var blob = new Blob([], { type: "text/xml" });
+    formData.append("blob", blob);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url || '/api/method/frappe.utils.print_format.report_to_pdf');
+    xhr.setRequestHeader("X-Frappe-CSRF-Token", frappe.csrf_token);
+    // xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.responseType = "arraybuffer";
+
+    xhr.onload = function (success) {
+        if (this.status === 200) {
+            var blob = new Blob([success.currentTarget.response], { type: "application/pdf" });
+            var objectUrl = URL.createObjectURL(blob);
+
+            // Create a hidden a tag to force set report name
+            // https://stackoverflow.com/questions/19327749/javascript-blob-filename-without-link
+            let hidden_a_tag = document.createElement("a");
+            document.body.appendChild(hidden_a_tag);
+            hidden_a_tag.style = "display: none";
+            hidden_a_tag.href = objectUrl;
+            hidden_a_tag.download = report_name || "report.pdf";
+
+            // Open report in a new window
+            hidden_a_tag.click();
+            window.URL.revokeObjectURL(objectUrl);
+        }
+    };
+    xhr.send(formData);
+}
 frappe.query_reports["Employee Attendance Sheet"] = {
     onload: function (report) {
-        report.page.add_inner_button(__("Export For Employee"), function () {
-            if (frappe.model.can_export(report.report_name)) {
+        if (frappe.model.can_export(report.report_name)) {
+            var company = frappe.query_report.get_filter_value("company")
+            // console.log(frappe.query_report.get_filter("company"));
+            report.page.add_inner_button(__("Summary Attendance"), function () {
                 var d = new frappe.ui.Dialog({
-                    title: __('Choose Employee'),
+                    title: __("Export Summary Attendance"),
                     fields: [
                         {
-                            "label": "Employee",
-                            "fieldname": "employee",
+                            "label": __("From Date"),
+                            "fieldname": "from_date",
+                            "fieldtype": "Date",
+                            "reqd": 1,
+                            "default": frappe.datetime.month_start()
+                        },
+                        {
+                            "fieldname": "cb1",
+                            "fieldtype": "Column Break",
+                        },
+                        {
+                            "label": __("To Date"),
+                            "fieldname": "to_date",
+                            "fieldtype": "Date",
+                            "reqd": 1,
+                            "default": frappe.datetime.month_end()
+                        },
+                        {
+                            "fieldname": "sb1",
+                            "fieldtype": "Section Break",
+                        },
+                        {
+                            "label": __("Company"),
+                            "fieldname": "company",
                             "fieldtype": "Link",
-                            "options": "Employee",
+                            "options": "Company",
+                            "default": company,
                             "reqd": 1,
+                            onchange() {
+                                company = d.get_value('company') || null;
+                            }
                         },
                         {
-                            "label": "From Date",
-                            "fieldname": "from",
+                            "label": `${__("Employees")} (${__("Optional")})`,
+                            "fieldname": "employees",
+                            "fieldtype": "Table MultiSelect",
+                            "options": "Mosyr Employee Multiselect",
+                            get_query: () => {
+                                return {
+                                    filters: {
+                                        "company": company
+                                    }
+                                };
+                            }
+                        },
+                    ],
+                    primary_action: function () {
+                        const from_date = d.get_values().from_date ? d.get_values().from_date + '_' : '';
+                        const to_date = d.get_values().to_date ? d.get_values().to_date + '_' : '';
+
+                        let filters = {
+                            "report_type": "Summary Attendance",
+                            "report_name": `${from_date}${to_date}summary_attendance.pdf`,
+                            "employees": [],
+                            ...d.get_values()
+                        }
+
+                        render_pdf(default_url, filters)
+                    },
+                    primary_action_label: __("Export")
+                });
+                d.show();
+            }, __("Export"));
+
+            report.page.add_inner_button(__("Monthly Attendance"), function () {
+                var d = new frappe.ui.Dialog({
+                    title: __("Export Monthly Attendance"),
+                    fields: [
+                        {
+                            "label": __("From Date"),
+                            "fieldname": "from_date",
                             "fieldtype": "Date",
                             "reqd": 1,
+                            "default": frappe.datetime.month_start()
                         },
                         {
-                            "label": "To Date",
-                            "fieldname": "to",
+                            "fieldname": "cb1",
+                            "fieldtype": "Column Break",
+                        },
+                        {
+                            "label": __("To Date"),
+                            "fieldname": "to_date",
                             "fieldtype": "Date",
                             "reqd": 1,
+                            "default": frappe.datetime.month_end()
+                        },
+                        {
+                            "fieldname": "sb1",
+                            "fieldtype": "Section Break",
+                        },
+                        {
+                            "label": __("Company"),
+                            "fieldname": "company",
+                            "fieldtype": "Link",
+                            "options": "Company",
+                            "default": company,
+                            "reqd": 1,
+                            onchange() {
+                                company = d.get_value('company') || null;
+                            }
+                        },
+                        {
+                            "label": `${__("Employees")} (${__("Optional")})`,
+                            "fieldname": "employees",
+                            "fieldtype": "Table MultiSelect",
+                            "options": "Mosyr Employee Multiselect",
+                            get_query: () => {
+                                return {
+                                    filters: {
+                                        "company": company
+                                    }
+                                };
+                            }
                         }
                     ],
                     primary_action: function () {
-                        d.hide()
-                        var data = d.get_values();
-                        const args = {
-                            cmd: 'mosyr.mosyr.report.employee_attendance_sheet.employee_attendance_sheet.export_query',
-                            data: data
-                        };
-                        open_url_post(frappe.request.url, args);
+                        const from_date = d.get_values().from_date ? d.get_values().from_date + '_' : '';
+                        const to_date = d.get_values().to_date ? d.get_values().to_date + '_' : '';
+                        let filters = {
+                            "report_type": "Monthly Attendance",
+                            "report_name": `${from_date}${to_date}monthly_attendance.pdf`,
+                            "employees": [],
+                            ...d.get_values()
+                        }
+                        render_pdf(default_url, filters)
                     },
-                    primary_action_label: __('Export')
+                    primary_action_label: __("Export")
                 });
                 d.show();
+            }, __("Export"));
 
-            }
-        })
-        return frappe.call({
-            method: "erpnext.hr.report.monthly_attendance_sheet.monthly_attendance_sheet.get_attendance_years",
-            callback: function (r) {
-                var year_filter = frappe.query_report.get_filter('year');
-                year_filter.df.options = r.message;
-                year_filter.df.default = r.message.split("\n")[0];
-                year_filter.refresh();
-                year_filter.set_input(year_filter.df.default);
-            }
-        });
+            report.page.add_inner_button(__("Daily Attendance"), function () {
+                var d = new frappe.ui.Dialog({
+                    title: __("Export for Day"),
+                    fields: [
+                        {
+                            "label": __("Select Date"),
+                            "fieldname": "from_date",
+                            "fieldtype": "Date",
+                            "reqd": 1,
+                            "default": frappe.datetime.now_date(),
+                        },
+                        {
+                            "fieldname": "cb1",
+                            "fieldtype": "Column Break",
+                        },
+                        {
+                            "label": __("Company"),
+                            "fieldname": "company",
+                            "fieldtype": "Link",
+                            "options": "Company",
+                            "default": company,
+                            "reqd": 1,
+                            onchange() {
+                                company = d.get_value('company') || null;
+                            }
+                        },
+                        {
+                            "label": `${__("Employees")} (${__("Optional")})`,
+                            "fieldname": "employees",
+                            "fieldtype": "Table MultiSelect",
+                            "options": "Mosyr Employee Multiselect",
+                            get_query: () => {
+                                return {
+                                    filters: {
+                                        "company": company
+                                    }
+                                };
+                            }
+                        }
+                    ],
+                    primary_action: function () {
+                        const from_date = d.get_values().from_date ? d.get_values().from_date + '_' : '';
+                        let filters = {
+                            "report_type": "Daily Attendance",
+                            "report_name": `${from_date}daily_attendance.pdf`,
+                            "employees": [],
+                            ...d.get_values()
+                        }
+                        render_pdf(default_url, filters)
+                    },
+                    primary_action_label: __("Export")
+                });
+                d.show();
+            }, __("Export"));
+        }
     },
     "filters": [
         {
@@ -61,14 +247,14 @@ frappe.query_reports["Employee Attendance Sheet"] = {
             "label": __("From"),
             "fieldtype": "Date",
             "default": frappe.datetime.get_today(),
-			"reqd": 1
+            "reqd": 1
         },
         {
             "fieldname": "to_date",
             "label": __("To"),
             "fieldtype": "Date",
             "default": frappe.datetime.get_today(),
-			"reqd": 1
+            "reqd": 1
         },
         {
             "fieldname": "employee",
@@ -76,10 +262,9 @@ frappe.query_reports["Employee Attendance Sheet"] = {
             "fieldtype": "Link",
             "options": "Employee",
             get_query: () => {
-                var company = frappe.query_report.get_filter_value('company');
                 return {
                     filters: {
-                        'company': company
+                        "company": company
                     }
                 };
             }

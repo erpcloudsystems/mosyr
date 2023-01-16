@@ -454,7 +454,7 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> Tuple[Di
             & (Extract("month", Attendance.attendance_date) == filters.month)
             & (Extract("year", Attendance.attendance_date) == filters.year)
         )
-    ).run(pluck=True)
+    ).run(as_dict=True)
 
     return summary[0], days
 
