@@ -290,7 +290,7 @@ def get_rows(
 
     for employee, details in employee_details.items():
         emp_holiday_list = details.holiday_list or default_holiday_list
-        holidays = holiday_map.get(emp_holiday_list)
+        holidays = holiday_map.get(emp_holiday_list, [])
 
         employee_attendance = attendance_map.get(employee)
         if not employee_attendance:
@@ -688,7 +688,7 @@ def get_rows_for_pdf(
     )
     for employee, details in employee_details.items():
         emp_holiday_list = details.holiday_list or default_holiday_list
-        holidays = holiday_map.get(emp_holiday_list)
+        holidays = holiday_map.get(emp_holiday_list, [])
         if filters.summarized_view:
             attendance = get_attendance_status_for_summarized_view(employee, filters, holidays)
             if not attendance:
@@ -948,7 +948,7 @@ def get_report_header(filters: Filters, employee: str):
         fweekday = get_weekday(get_datetime(filters.from_date))
         tweekday = get_weekday(get_datetime(filters.to_date))
         return f"""
-            <h2 style="background-color: #00aead; color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
+            <h2 style="background-color: #00aead; color: #ffffff;text-align: center; font-size: 15px; font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
                 <span style="display: inline-block">{_("Monthly Report from Date")}</span>
                 <span style="display: inline-block">{filters.from_date}</span>
                 <span style="display: inline-block">{_(fweekday)}</span>
@@ -956,7 +956,7 @@ def get_report_header(filters: Filters, employee: str):
                 <span style="display: inline-block">{filters.to_date}</span>
                 <span style="display: inline-block">{_(tweekday)}</span>
             </h2>
-            <h2 style="background-color: #00aead; color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
+            <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
                 { employee }
             </h2>
         """
@@ -964,7 +964,7 @@ def get_report_header(filters: Filters, employee: str):
         fweekday = get_weekday(get_datetime(filters.from_date))
         tweekday = get_weekday(get_datetime(filters.to_date))
         return f"""
-            <h2 style="background-color: #00aead; color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
+            <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
                 <span style="display: inline-block">{_("Summary Attendance Report from Date")}</span>
                 <span style="display: inline-block">{filters.from_date}</span>
                 <span style="display: inline-block">{_(fweekday)}</span>
@@ -977,7 +977,7 @@ def get_report_header(filters: Filters, employee: str):
         date = filters.from_date
         weekday = get_weekday(get_datetime(filters.from_date))
         return f"""
-            <h2 style="background-color: #00aead; color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
+            <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
                 <span style="display: inline-block">{_("Daily Report for Date")}</span>
                 <span style="display: inline-block">{date}</span>
                 <span style="display: inline-block">{_(weekday)}</span>
