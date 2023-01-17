@@ -304,6 +304,8 @@ def get_rows(
             no_logs = shifts_with_no_logs(employee, filters, shifts)
             attendance_for_employee.extend(no_logs)
         # set employee details in the first row
+        if len(attendance_for_employee) == 0:
+            continue
         attendance_for_employee[0].update(
             {"employee": employee, "employee_name": details.employee_name}
         )
@@ -543,6 +545,8 @@ def export_report(filters, orientation="Landscape"):
         html = get_html_for_monthly_report(filters, data, sdata, employee_details)
     else:
         html = get_html_for_report(filters, data, employee_details)
+    from frappe.core.doctype.access_log.access_log import make_access_log
+    make_access_log(file_type="PDF", method="PDF", page=html)
     report_to_pdf(html, orientation)
 
 def get_attendance_summary_and_days(employee: str, filters: Filters) -> Tuple[Dict, List]:
@@ -744,6 +748,8 @@ def get_rows_for_pdf(
                 no_logs = shifts_with_no_logs(employee, filters, shifts)
                 attendance_for_employee.extend(no_logs)
             # set employee details in the first row
+            if len(attendance_for_employee) == 0:
+                continue
             attendance_for_employee[0].update(
                 {"employee": employee, "employee_name": details.employee_name}
             )
@@ -1072,8 +1078,8 @@ def get_report_body(filters: Filters, data: List, employee_details: Dict):
 
             tbody += f"""
                 <tr class="{color}">
-                    <th>{employee_name}</th>
-                    <th>{shift}</th>
+                    <th>{_(employee_name)}</th>
+                    <th>{_(shift)}</th>
                     <th>{in_time}</th>
                     <th>{out_time}</th>
                     <th>{working_hours}</th>
@@ -1114,8 +1120,8 @@ def get_report_body(filters: Filters, data: List, employee_details: Dict):
                 total_working_hours = "00:00"
             tbody += f"""
                 <tr>
-                    <th>{row.get("employee_name")}</th>
-                    <th>{row.get("shift")}</th>
+                    <th>{_(row.get("employee_name"))}</th>
+                    <th>{_(row.get("shift"))}</th>
                     <th>{cint(row.get("total_present"))}</th>
                     <th>{total_working_hours}</th>
                     <th>{cint(row.get("total_leaves"))}</th>
@@ -1158,7 +1164,7 @@ def get_report_header(filters: Filters, employee: str):
                 <span style="display: inline-block">{_("to Date")}</span>
                 <span style="display: inline-block">{filters.to_date}</span>
                 <span style="display: inline-block">{_(tweekday)}</span>
-                <div>For Employee { employee }</div>
+                <div>For Employee { _(employee) }</div>
             </h2>
         """
     elif filters.report_type == "Summary Attendance":
