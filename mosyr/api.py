@@ -358,3 +358,11 @@ def reorder_payments_by_dates(row_parent):
     for new_idx, row in enumerate(repayment_schedule, 1):
         doc = frappe.get_doc("Repayment Schedule" ,row.name)
         doc.db_set("idx", new_idx, update_modified=False)
+
+
+@frappe.whitelist()
+def get_users(doctype, txt, searchfield, start, page_len, filters):
+    result = frappe.db.sql("""
+        select name, full_name from `tabUser`
+        where name LIKE %(txt)s and user_type <> 'SaaS Manager' and name not in ('Guest', 'Administrator', 'support@mosyr.io') """ ,{"txt": "%" + txt + "%"})
+    return result
