@@ -120,6 +120,8 @@ override_doctype_class = {
 	"Attendance": 					"mosyr.overrides.shifts.CustomAttendance",
 	"Employee Checkin": 			"mosyr.overrides.shifts.CustomEmployeeCheckin",
 	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
+
+	"User Type": 					"mosyr.overrides.core.CustomUserType",
 }
 
 # Document Events

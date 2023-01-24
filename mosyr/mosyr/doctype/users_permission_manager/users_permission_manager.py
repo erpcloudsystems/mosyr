@@ -142,9 +142,9 @@ class UsersPermissionManager(Document):
 					"apply_user_permission_on": data.get("apply_user_permission_on"),
 				}
 			)
-
+		frappe.flags.ignore_permissions = 1
 		create_role_permissions_for_doctype(doc, data)
-		doc.save(ignore_permissions=True)
+		doc.save(ignore_permissions=1)
 
 		update_select_perm_after_install()
 
