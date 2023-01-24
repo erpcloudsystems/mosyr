@@ -122,6 +122,7 @@ override_doctype_class = {
 	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
 
 	"User Type": 					"mosyr.overrides.core.CustomUserType",
+	"User": 					"mosyr.overrides.core.CustomUser",
 }
 
 # Document Events
@@ -329,7 +330,9 @@ fixtures = [
 				"Loan-total_amount_remaining",
 				"Repayment Schedule-paid_amount",
 
-				"Attendance-mosyr_employee_multiselect"
+				"Attendance-mosyr_employee_multiselect",
+
+				"Email Template-use_for_welcome_email",
             ]]
         ]
     },
