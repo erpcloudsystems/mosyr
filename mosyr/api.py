@@ -366,3 +366,11 @@ def get_users(doctype, txt, searchfield, start, page_len, filters):
         select name, full_name from `tabUser`
         where name LIKE %(txt)s and user_type <> 'SaaS Manager' and name not in ('Guest', 'Administrator', 'support@mosyr.io') """ ,{"txt": "%" + txt + "%"})
     return result
+
+def update_user_type_limits(doc,method):
+    from frappe.installer import update_site_config
+    types = frappe.get_list("User Type", filters={'is_standard': 0})
+    user_type_limit = {}
+    for utype in types:
+        user_type_limit.setdefault(frappe.scrub(utype.name), 10000)
+    update_site_config("user_type_doctype_limit", user_type_limit)

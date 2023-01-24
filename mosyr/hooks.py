@@ -148,7 +148,10 @@ doc_events = {
 		"validate" :[
 			"mosyr.api.validate_remaining_loan"
 		]
-	}
+	},
+	"User Type" :{
+		"on_update" : "mosyr.api.update_user_type_limits"
+	},
 }
 
 # Scheduled Tasks
