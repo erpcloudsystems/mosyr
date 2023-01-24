@@ -201,6 +201,7 @@ class CustomEmployee(Employee):
     def update_user(self):
         super().update_user()
         user = frappe.get_doc("User", self.user_id)
+        if user.user_type == "SaaS Manager": return
         user.flags.ignore_permissions = True
         user.user_type = "Employee Self Service"
         user.save()
