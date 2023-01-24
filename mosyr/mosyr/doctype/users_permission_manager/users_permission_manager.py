@@ -45,6 +45,12 @@ class UsersPermissionManager(Document):
 	@frappe.whitelist()
 	def apply_permissions(self, user, perms, rps):
 		if not frappe.db.exists("User", user): return ""
+
+		# if user == frappe.session.user: return ""
+		apply_user = frappe.get_doc("User", user)
+		if apply_user.name in ['Administrator', 'Guest', 'support@mosyr.io']: return ""
+		if apply_user.user_type == 'SaaS Manager': return ""
+
 		frappe.flags.ignore_permissions = 1
 		user_types = self.get_user_types_data(user, perms)
 		user_type_limit = {}
