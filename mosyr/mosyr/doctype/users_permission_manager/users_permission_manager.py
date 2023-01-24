@@ -19,9 +19,11 @@ class UsersPermissionManager(Document):
 	
 	@frappe.whitelist()
 	def get_permissions(self, user):
-		if user == frappe.session.user: return []
-		if not frappe.db.exists("User", user): return []
+		if user == frappe.session.user: return { 'docs': [] }
+		if not frappe.db.exists("User", user): return { 'docs': [] }
 		user = frappe.get_doc("User", user)
+		if user.name in ['Administrator', 'Guest', 'support@mosyr.io']: return { 'docs': [] }
+		if user.user_type == 'SaaS Manager': return { 'docs': [] }
 		user_type = frappe.get_doc("User Type", user.user_type)
 		if user_type.is_standard: return []
 
@@ -43,7 +45,13 @@ class UsersPermissionManager(Document):
 	@frappe.whitelist()
 	def apply_permissions(self, user, perms, rps):
 		if not frappe.db.exists("User", user): return ""
-		
+
+		# if user == frappe.session.user: return ""
+		apply_user = frappe.get_doc("User", user)
+		if apply_user.name in ['Administrator', 'Guest', 'support@mosyr.io']: return ""
+		if apply_user.user_type == 'SaaS Manager': return ""
+
+		frappe.flags.ignore_permissions = 1
 		user_types = self.get_user_types_data(user, perms)
 		user_type_limit = {}
 		for user_type, data in iteritems(user_types):
@@ -80,7 +88,7 @@ class UsersPermissionManager(Document):
 			# frappe.db.commit()
 	
 	def delete_old_roles(self, user_role):
-		for custom_role in frappe.get_list("Custom Role"):
+		for custom_role in frappe.get_all("Custom Role"):
 			custom_role = frappe.get_doc("Custom Role", custom_role.name)
 			for role in custom_role.roles:
 				if role.role == user_role:
@@ -97,9 +105,9 @@ class UsersPermissionManager(Document):
 				custom_role.append("roles", {
 					'role': rol
 				})
-			custom_role.save()
+			custom_role.save(ignore_permissions=1)
 		else:
-			frappe.get_doc(args).insert()
+			frappe.get_doc(args).insert(ignore_permissions=1)
 
 	def get_user_types_data(slef, user, perms):
 		doctypes_permissions = {
@@ -140,9 +148,9 @@ class UsersPermissionManager(Document):
 					"apply_user_permission_on": data.get("apply_user_permission_on"),
 				}
 			)
-
+		frappe.flags.ignore_permissions = 1
 		create_role_permissions_for_doctype(doc, data)
-		doc.save(ignore_permissions=True)
+		doc.save(ignore_permissions=1)
 
 		update_select_perm_after_install()
 

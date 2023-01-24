@@ -268,7 +268,7 @@ def create_non_standard_user_types():
 
     user_type_limit = {}
     for user_type, data in iteritems(non_stadard_users):
-        user_type_limit.setdefault(frappe.scrub(user_type), 120)
+        user_type_limit.setdefault(frappe.scrub(user_type), 10000)
     update_site_config("user_type_doctype_limit", user_type_limit)
 
     for user_type, data in iteritems(non_stadard_users):
@@ -290,6 +290,7 @@ def get_manager_user_data():
                     "submit",
                     "cancel",
                     "amend",
+                    "set_user_permissions"
                 ]
             }
         )
@@ -491,10 +492,12 @@ def add_select_perm_for_all():
             update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
             update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
             update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
             update_permission_property(doc_field, "Employee Self Service", 0, "select", 1)
         update_permission_property(doc.name, "SaaS Manager", 0, "select", 1)
         update_permission_property(doc.name, "SaaS Manager", 0, "read", 1)
         update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
         update_permission_property(doc.name, "Employee Self Service", 0, "select", 1)
     frappe.db.commit()
 

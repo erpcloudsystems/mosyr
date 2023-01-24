@@ -8,3 +8,4 @@ mosyr.patches.rebuild_non_standard_users_types
 mosyr.patches.add_select_perm
 mosyr.patches.remove_perms_for_docs_v1
 mosyr.patches.set_perms_for_reports
+mosyr.patches.add_apply_user_perms
