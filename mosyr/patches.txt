@@ -10,3 +10,4 @@ mosyr.patches.remove_perms_for_docs_v1
 mosyr.patches.set_perms_for_reports
 mosyr.patches.add_apply_user_perms
 mosyr.patches.update_types_limits
+mosyr.patches.update_perms_for_emails_docs

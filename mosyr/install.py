@@ -479,6 +479,9 @@ def update_custom_roles(role_args, args):
 
 def add_select_perm_for_all():
     docs_for_manager.append("Account")
+    docs_for_manager.append("Email Domain")
+    docs_for_manager.append("Email Template")
+    docs_for_manager.append("Email Account")
     for doc in docs_for_manager:
         # Add Select for Doctype and for all links fields
         doc = frappe.db.exists("DocType", doc)
