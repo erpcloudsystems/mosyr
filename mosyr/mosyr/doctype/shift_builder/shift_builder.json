@@ -166,6 +166,7 @@
    "fieldname": "shift_type",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Shift Type",
    "options": "\nDouble Shift Work Schedule\nWork Schedule with Different Times\nFlexible Work Schedule",
    "reqd": 1
@@ -514,6 +515,8 @@
    "default": "Enabled",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "Enabled\nDisabled",
    "reqd": 1
@@ -1039,7 +1042,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-30 18:53:41.266617",
+ "modified": "2023-01-30 20:23:56.107962",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Shift Builder",
