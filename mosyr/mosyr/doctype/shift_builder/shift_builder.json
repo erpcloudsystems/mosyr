@@ -1,0 +1,1081 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SHFTB.YYYY.MM.DD.####",
+ "creation": "2023-01-18 10:16:10.858203",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "shift_type",
+  "column_break_2",
+  "status",
+  "double_shift_work_schedule_section",
+  "first_period_start_time",
+  "second_period_start_time",
+  "minutes_of_late_entry",
+  "column_break_5",
+  "first_period_end_time",
+  "second_period_end_time",
+  "minutes_of_early_exit",
+  "column_break_14",
+  "heading_14",
+  "sunday_two_shift",
+  "monday_two_shift",
+  "tuesday_two_shift",
+  "wednesday_two_shift",
+  "thursday_two_shift",
+  "friday_two_shift",
+  "saturday_two_shift",
+  "work_schedule_at_different_times_section",
+  "sunday_different_times",
+  "f1_h",
+  "s1_h",
+  "g1_h",
+  "wednesday_different_times",
+  "f4_h",
+  "s4_h",
+  "g4_h",
+  "saturday_different_times",
+  "f6_h",
+  "s6_h",
+  "g6_h",
+  "column_break_30",
+  "in1",
+  "sunday_entering_the_first_period",
+  "sunday_entering_the_second_period",
+  "sunday_entry_grace_period",
+  "in4",
+  "wednesday_entering_the_first_period",
+  "wednesday_entering_the_second_period",
+  "wednesday_entry_grace_period",
+  "in6",
+  "saturday_entering_the_first_period",
+  "saturday_entering_the_second_period",
+  "saturday_entry_grace_period",
+  "column_break_32",
+  "out1",
+  "sunday_exit_the_first_period",
+  "sunday_exit_the_second_period",
+  "sunday_exit_grace_period",
+  "out4",
+  "wednesday_exit_the_first_period",
+  "wednesday_exit_the_second_period",
+  "wednesday_exit_grace_period",
+  "out6",
+  "saturday_exit_the_first_period",
+  "saturday_exit_the_second_period",
+  "saturday_exit_grace_period",
+  "column_break_28",
+  "monday_different_times",
+  "f2_h",
+  "s2_h",
+  "g2_h",
+  "thursday_different_times",
+  "f5_h",
+  "s5_h",
+  "g5_h",
+  "column_break_49",
+  "in2",
+  "monday_entering_the_first_period",
+  "monday_entering_the_second_period",
+  "monday_entry_grace_period",
+  "in5",
+  "thursday_entering_the_first_period",
+  "thursday_entering_the_second_period",
+  "thursday_entry_grace_period",
+  "column_break_54",
+  "out2",
+  "monday_exit_the_first_period",
+  "monday_exit_the_second_period",
+  "monday_exit_grace_period",
+  "out5",
+  "thursday_exit_the_first_period",
+  "thursday_exit_the_second_period",
+  "thursday_exit_grace_period",
+  "column_break_55",
+  "tuesday_different_times",
+  "f3_h",
+  "s3_h",
+  "g3_h",
+  "friday_different_times",
+  "f7_h",
+  "s7_h",
+  "g7_h",
+  "column_break_26",
+  "in3",
+  "tuesday_entering_the_first_period",
+  "tuesday_entering_the_second_period",
+  "tuesday_entry_grace_period",
+  "in7",
+  "friday_entering_the_first_period",
+  "friday_entering_the_second_period",
+  "friday_entry_grace_period",
+  "column_break_65",
+  "out3",
+  "tuesday_exit_the_first_period",
+  "tuesday_exit_the_second_period",
+  "tuesday_exit_grace_period",
+  "out7",
+  "friday_exit_the_first_period",
+  "friday_exit_the_second_period",
+  "friday_exit_grace_period",
+  "flexible_work_schedule_section",
+  "required_hours_per_day",
+  "attendance_from",
+  "attendance_to",
+  "flexible_grace_period",
+  "column_break_75",
+  "sunday_flexible",
+  "monday_flexible",
+  "tuesday_flexible",
+  "wednesday_flexible",
+  "thursday_flexible",
+  "friday_flexible",
+  "saturday_flexible",
+  "section_break_131",
+  "shift_builder_employees",
+  "sunday_different_times_shift1",
+  "sunday_different_times_shift2",
+  "monday_different_times_shift1",
+  "monday_different_times_shift2",
+  "tuesday_different_times_shift1",
+  "tuesday_different_times_shift2",
+  "wednesday_different_times_shift1",
+  "wednesday_different_times_shift2",
+  "thursday_different_times_shift1",
+  "thursday_different_times_shift2",
+  "friday_different_times_shift1",
+  "friday_different_times_shift2",
+  "saturday_different_times_shift1",
+  "saturday_different_times_shift2",
+  "double_shift_1",
+  "double_shift_2",
+  "flexible_shift_type",
+  "column_break_135",
+  "determine_check_in_and_check_out",
+  "working_hours_calculation_based_on",
+  "allow_entry_time",
+  "allow_exit_time",
+  "working_hours_threshold_for_half_day",
+  "working_hours_threshold_for_absent",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Shift Type",
+   "options": "\nDouble Shift Work Schedule\nWork Schedule with Different Times\nFlexible Work Schedule",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Work Schedule with Different Times\"",
+   "fieldname": "work_schedule_at_different_times_section",
+   "fieldtype": "Section Break",
+   "label": "Work schedule at different times"
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Flexible Work Schedule\"",
+   "fieldname": "flexible_work_schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Flexible work schedule"
+  },
+  {
+   "description": "The time before the shift start time during which Employee Check-in is considered for attendance.",
+   "fieldname": "allow_entry_time",
+   "fieldtype": "Int",
+   "label": "Begin check-in before shift start time (in minutes)",
+   "non_negative": 1
+  },
+  {
+   "description": "Time after the end of shift during which check-out is considered for attendance.",
+   "fieldname": "allow_exit_time",
+   "fieldtype": "Int",
+   "label": "Allow check-out after shift end time (in minutes)",
+   "non_negative": 1
+  },
+  {
+   "description": "The time after the shift start time when check-in is considered as late (in minutes).",
+   "fieldname": "minutes_of_late_entry",
+   "fieldtype": "Int",
+   "label": "Late Entry Grace Period",
+   "non_negative": 1
+  },
+  {
+   "description": "The time before the shift end time when check-out is considered as early (in minutes).",
+   "fieldname": "minutes_of_early_exit",
+   "fieldtype": "Int",
+   "label": "Early Exit Grace Period",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "sunday_two_shift",
+   "fieldtype": "Check",
+   "label": "Sunday"
+  },
+  {
+   "default": "0",
+   "fieldname": "monday_two_shift",
+   "fieldtype": "Check",
+   "label": "Monday"
+  },
+  {
+   "default": "0",
+   "fieldname": "tuesday_two_shift",
+   "fieldtype": "Check",
+   "label": "Tuesday"
+  },
+  {
+   "default": "0",
+   "fieldname": "wednesday_two_shift",
+   "fieldtype": "Check",
+   "label": "Wednesday"
+  },
+  {
+   "default": "0",
+   "fieldname": "thursday_two_shift",
+   "fieldtype": "Check",
+   "label": "Thursday"
+  },
+  {
+   "default": "0",
+   "fieldname": "friday_two_shift",
+   "fieldtype": "Check",
+   "label": "Friday"
+  },
+  {
+   "default": "0",
+   "fieldname": "saturday_two_shift",
+   "fieldtype": "Check",
+   "label": "Saturday"
+  },
+  {
+   "fieldname": "required_hours_per_day",
+   "fieldtype": "Int",
+   "label": "Required Hours Per Day",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Flexible Work Schedule\""
+  },
+  {
+   "fieldname": "attendance_from",
+   "fieldtype": "Time",
+   "label": "Attendance From"
+  },
+  {
+   "fieldname": "attendance_to",
+   "fieldtype": "Time",
+   "label": "Attendance To",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Flexible Work Schedule\""
+  },
+  {
+   "default": "0",
+   "fieldname": "sunday_flexible",
+   "fieldtype": "Check",
+   "label": "Sunday"
+  },
+  {
+   "default": "0",
+   "fieldname": "monday_flexible",
+   "fieldtype": "Check",
+   "label": "Monday"
+  },
+  {
+   "default": "0",
+   "fieldname": "tuesday_flexible",
+   "fieldtype": "Check",
+   "label": "Tuesday"
+  },
+  {
+   "default": "0",
+   "fieldname": "wednesday_flexible",
+   "fieldtype": "Check",
+   "label": "Wednesday"
+  },
+  {
+   "default": "0",
+   "fieldname": "thursday_flexible",
+   "fieldtype": "Check",
+   "label": "Thursday"
+  },
+  {
+   "default": "0",
+   "fieldname": "friday_flexible",
+   "fieldtype": "Check",
+   "label": "Friday"
+  },
+  {
+   "default": "0",
+   "fieldname": "saturday_flexible",
+   "fieldtype": "Check",
+   "label": "Saturday"
+  },
+  {
+   "default": "0",
+   "fieldname": "sunday_different_times",
+   "fieldtype": "Check",
+   "label": "Sunday"
+  },
+  {
+   "default": "0",
+   "fieldname": "monday_different_times",
+   "fieldtype": "Check",
+   "label": "Monday"
+  },
+  {
+   "default": "0",
+   "fieldname": "tuesday_different_times",
+   "fieldtype": "Check",
+   "label": "Tuesday"
+  },
+  {
+   "default": "0",
+   "fieldname": "wednesday_different_times",
+   "fieldtype": "Check",
+   "label": "Wednesday"
+  },
+  {
+   "default": "0",
+   "fieldname": "thursday_different_times",
+   "fieldtype": "Check",
+   "label": "Thursday"
+  },
+  {
+   "default": "0",
+   "fieldname": "friday_different_times",
+   "fieldtype": "Check",
+   "label": "Friday"
+  },
+  {
+   "default": "0",
+   "fieldname": "saturday_different_times",
+   "fieldtype": "Check",
+   "label": "Saturday"
+  },
+  {
+   "fieldname": "sunday_entering_the_first_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "sunday_different_times"
+  },
+  {
+   "fieldname": "sunday_entry_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "sunday_exit_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "monday_entering_the_first_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "monday_different_times"
+  },
+  {
+   "fieldname": "monday_entry_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "monday_exit_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "tuesday_entering_the_first_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "tuesday_different_times"
+  },
+  {
+   "fieldname": "tuesday_entry_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "tuesday_exit_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "wednesday_entering_the_first_period",
+   "fieldtype": "Time",
+   "label": "Entering The First Period",
+   "mandatory_depends_on": "wednesday_different_times"
+  },
+  {
+   "fieldname": "wednesday_entry_grace_period",
+   "fieldtype": "Int",
+   "label": "Entry Grace Period"
+  },
+  {
+   "fieldname": "wednesday_exit_grace_period",
+   "fieldtype": "Int",
+   "label": "Exit Grace Period"
+  },
+  {
+   "fieldname": "thursday_entering_the_first_period",
+   "fieldtype": "Time",
+   "label": "Entering The First Period",
+   "mandatory_depends_on": "thursday_different_times"
+  },
+  {
+   "fieldname": "thursday_entry_grace_period",
+   "fieldtype": "Int",
+   "label": "Entry Grace Period"
+  },
+  {
+   "fieldname": "thursday_exit_grace_period",
+   "fieldtype": "Int",
+   "label": "Exit Grace Period"
+  },
+  {
+   "fieldname": "friday_entering_the_first_period",
+   "fieldtype": "Time",
+   "label": "Entering The First Period",
+   "mandatory_depends_on": "friday_different_times"
+  },
+  {
+   "fieldname": "friday_entry_grace_period",
+   "fieldtype": "Int",
+   "label": "Entry Grace Period"
+  },
+  {
+   "fieldname": "friday_exit_grace_period",
+   "fieldtype": "Int",
+   "label": "Exit Grace Period"
+  },
+  {
+   "fieldname": "saturday_entering_the_first_period",
+   "fieldtype": "Time",
+   "label": "Entering The First Period",
+   "mandatory_depends_on": "saturday_different_times"
+  },
+  {
+   "fieldname": "saturday_entry_grace_period",
+   "fieldtype": "Int",
+   "label": "Entry Grace Period"
+  },
+  {
+   "fieldname": "saturday_exit_grace_period",
+   "fieldtype": "Int",
+   "label": "Exit Grace Period"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_75",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "first_period_start_time",
+   "fieldtype": "Time",
+   "label": "Start Time for First Period",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Double Shift Work Schedule\""
+  },
+  {
+   "fieldname": "second_period_start_time",
+   "fieldtype": "Time",
+   "label": "Start Time for Second Period",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Double Shift Work Schedule\""
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "first_period_end_time",
+   "fieldtype": "Time",
+   "label": "End Time for First Period",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Double Shift Work Schedule\""
+  },
+  {
+   "fieldname": "second_period_end_time",
+   "fieldtype": "Time",
+   "label": "End Time for Second Period",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Double Shift Work Schedule\""
+  },
+  {
+   "fieldname": "heading_14",
+   "fieldtype": "Heading",
+   "label": "Working Days"
+  },
+  {
+   "description": "Working hours below which Absent is marked. (Zero to disable)",
+   "fieldname": "working_hours_threshold_for_absent",
+   "fieldtype": "Float",
+   "label": "Working Hours Threshold for Absent",
+   "non_negative": 1,
+   "precision": "1"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Enabled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Enabled\nDisabled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Shift Builder",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_28",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_30",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_32",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_54",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "f1_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s1_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "sunday_entering_the_second_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "sunday_different_times"
+  },
+  {
+   "fieldname": "sunday_exit_the_first_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "sunday_different_times"
+  },
+  {
+   "fieldname": "sunday_exit_the_second_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "sunday_different_times"
+  },
+  {
+   "fieldname": "g1_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "in1",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "out1",
+   "fieldtype": "Heading",
+   "label": "out"
+  },
+  {
+   "fieldname": "f2_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s2_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "g2_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "column_break_49",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "in2",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "out2",
+   "fieldtype": "Heading",
+   "label": "Out"
+  },
+  {
+   "fieldname": "monday_exit_the_first_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "monday_different_times"
+  },
+  {
+   "fieldname": "monday_exit_the_second_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "monday_different_times"
+  },
+  {
+   "fieldname": "monday_entering_the_second_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "monday_different_times"
+  },
+  {
+   "fieldname": "column_break_55",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "f3_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s3_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "g3_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "in3",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "tuesday_entering_the_second_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "tuesday_different_times"
+  },
+  {
+   "fieldname": "column_break_65",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tuesday_exit_the_first_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "tuesday_different_times"
+  },
+  {
+   "fieldname": "tuesday_exit_the_second_period",
+   "fieldtype": "Time",
+   "mandatory_depends_on": "tuesday_different_times"
+  },
+  {
+   "fieldname": "f4_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s4_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "g4_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "in4",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "wednesday_entering_the_second_period",
+   "fieldtype": "Time",
+   "label": "Entering The Second  Period",
+   "mandatory_depends_on": "wednesday_different_times"
+  },
+  {
+   "fieldname": "wednesday_exit_the_first_period",
+   "fieldtype": "Time",
+   "label": "Exit The First  Period",
+   "mandatory_depends_on": "wednesday_different_times"
+  },
+  {
+   "fieldname": "wednesday_exit_the_second_period",
+   "fieldtype": "Time",
+   "label": "Exit The Second  Period",
+   "mandatory_depends_on": "wednesday_different_times"
+  },
+  {
+   "fieldname": "out4",
+   "fieldtype": "Heading",
+   "label": "out"
+  },
+  {
+   "fieldname": "f5_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s5_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "g5_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "in5",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "thursday_entering_the_second_period",
+   "fieldtype": "Time",
+   "label": "Entering The Second  Period",
+   "mandatory_depends_on": "thursday_different_times"
+  },
+  {
+   "fieldname": "out5",
+   "fieldtype": "Heading",
+   "label": "Out"
+  },
+  {
+   "fieldname": "thursday_exit_the_first_period",
+   "fieldtype": "Time",
+   "label": "Exit The First  Period",
+   "mandatory_depends_on": "thursday_different_times"
+  },
+  {
+   "fieldname": "thursday_exit_the_second_period",
+   "fieldtype": "Time",
+   "label": "Exit The Second  Period",
+   "mandatory_depends_on": "thursday_different_times"
+  },
+  {
+   "fieldname": "out3",
+   "fieldtype": "Heading",
+   "label": "Out"
+  },
+  {
+   "fieldname": "in6",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "f6_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s6_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "g6_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "saturday_entering_the_second_period",
+   "fieldtype": "Time",
+   "label": "Entering Second  Period",
+   "mandatory_depends_on": "saturday_different_times"
+  },
+  {
+   "fieldname": "out6",
+   "fieldtype": "Heading",
+   "label": "Out"
+  },
+  {
+   "fieldname": "saturday_exit_the_first_period",
+   "fieldtype": "Time",
+   "label": "Exit The First  Period",
+   "mandatory_depends_on": "saturday_different_times"
+  },
+  {
+   "fieldname": "saturday_exit_the_second_period",
+   "fieldtype": "Time",
+   "label": "Exit The Second  Period",
+   "mandatory_depends_on": "saturday_different_times"
+  },
+  {
+   "fieldname": "f7_h",
+   "fieldtype": "Heading",
+   "label": "First"
+  },
+  {
+   "fieldname": "s7_h",
+   "fieldtype": "Heading",
+   "label": "Second"
+  },
+  {
+   "fieldname": "g7_h",
+   "fieldtype": "Heading",
+   "label": "Grace Period"
+  },
+  {
+   "fieldname": "in7",
+   "fieldtype": "Heading",
+   "label": "In"
+  },
+  {
+   "fieldname": "out7",
+   "fieldtype": "Heading",
+   "label": "Out"
+  },
+  {
+   "fieldname": "friday_exit_the_first_period",
+   "fieldtype": "Time",
+   "label": "Exit The First  Period",
+   "mandatory_depends_on": "friday_different_times"
+  },
+  {
+   "fieldname": "friday_exit_the_second_period",
+   "fieldtype": "Time",
+   "label": "Exit The Second  Period",
+   "mandatory_depends_on": "friday_different_times"
+  },
+  {
+   "fieldname": "friday_entering_the_second_period",
+   "fieldtype": "Time",
+   "label": "Entering Second  Period",
+   "mandatory_depends_on": "friday_different_times"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "shift_builder_employees",
+   "fieldtype": "Table",
+   "label": "Employees",
+   "options": "Shift Builder Employee"
+  },
+  {
+   "fieldname": "section_break_131",
+   "fieldtype": "Section Break",
+   "label": "Employees and Auto Attendance Settings"
+  },
+  {
+   "fieldname": "flexible_grace_period",
+   "fieldtype": "Int",
+   "label": "Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Double Shift Work Schedule\"",
+   "fieldname": "double_shift_work_schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Double Shift Work Schedule"
+  },
+  {
+   "fieldname": "double_shift_1",
+   "fieldtype": "Link",
+   "label": "First Shift Type",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "double_shift_2",
+   "fieldtype": "Link",
+   "label": "Second Shift Type",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_135",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Alternating entries as IN and OUT during the same shift",
+   "fieldname": "determine_check_in_and_check_out",
+   "fieldtype": "Select",
+   "label": "Determine Check-in and Check-out",
+   "options": "Alternating entries as IN and OUT during the same shift\nStrictly based on Log Type in Employee Checkin"
+  },
+  {
+   "default": "First Check-in and Last Check-out",
+   "fieldname": "working_hours_calculation_based_on",
+   "fieldtype": "Select",
+   "label": "Working Hours Calculation Based On",
+   "options": "First Check-in and Last Check-out\nEvery Valid Check-in and Check-out"
+  },
+  {
+   "description": "Working hours below which Half Day is marked. (Zero to disable)",
+   "fieldname": "working_hours_threshold_for_half_day",
+   "fieldtype": "Float",
+   "label": "Working Hours Threshold for Half Day",
+   "precision": "1"
+  },
+  {
+   "fieldname": "column_break_14",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sunday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Sunday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sunday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Sunday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "monday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Monday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "monday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Monday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tuesday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Tuesday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tuesday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Tuesday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "wednesday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Wednesday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "wednesday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Wednesday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "thursday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Thursday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "thursday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Thursday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "friday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Friday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "friday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Friday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "saturday_different_times_shift1",
+   "fieldtype": "Link",
+   "label": "Saturday First Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "saturday_different_times_shift2",
+   "fieldtype": "Link",
+   "label": "Saturday Second Shift",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "flexible_shift_type",
+   "fieldtype": "Link",
+   "label": "Flexible Shift Type",
+   "no_copy": 1,
+   "options": "Shift Type",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-01-30 18:53:41.266617",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Shift Builder",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
