@@ -160,6 +160,9 @@ scheduler_events = {
 	"daily": [
 		"mosyr.daily.update_status_for_contracts",
 		"mosyr.daily.notify_expired_dates",
+	],
+	"daily_long": [
+		"mosyr.mosyr.doctype.shift_builder.shift_builder.daily_shift_requests_creation"
 	]
 }
 # scheduler_events = {
@@ -324,7 +327,9 @@ fixtures = [
 				"Loan-total_amount_remaining",
 				"Repayment Schedule-paid_amount",
 
-				"Attendance-mosyr_employee_multiselect"
+				"Attendance-mosyr_employee_multiselect",
+
+				"Shift Type-max_working_hours"
             ]]
         ]
     },
