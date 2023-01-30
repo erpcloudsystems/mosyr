@@ -120,6 +120,9 @@ override_doctype_class = {
 	"Attendance": 					"mosyr.overrides.shifts.CustomAttendance",
 	"Employee Checkin": 			"mosyr.overrides.shifts.CustomEmployeeCheckin",
 	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
+
+	"User Type": 					"mosyr.overrides.core.CustomUserType",
+	"User": 					"mosyr.overrides.core.CustomUser",
 }
 
 # Document Events
@@ -146,7 +149,10 @@ doc_events = {
 		"validate" :[
 			"mosyr.api.validate_remaining_loan"
 		]
-	}
+	},
+	"User Type" :{
+		"on_update" : "mosyr.api.update_user_type_limits"
+	},
 }
 
 # Scheduled Tasks
@@ -328,9 +334,9 @@ fixtures = [
 				"Repayment Schedule-paid_amount",
 
 				"Attendance-mosyr_employee_multiselect",
-
-				"Shift Type-max_working_hours"
-            ]]
+				"Shift Type-max_working_hours",
+				"Email Template-use_for_welcome_email",
+         ]]
         ]
     },
 	{

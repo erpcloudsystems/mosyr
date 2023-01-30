@@ -10,6 +10,12 @@ frappe.ui.form.on('Users Permission Manager', {
 
 			};
 		});
+		frm.set_query( 'user', function(doc) {
+			return {
+				query: "mosyr.api.get_users",
+
+			};
+		});
 		frm.clear_table('permissions')
 		frm.clear_table('page_or_report')
 		frm.set_value('user', '')

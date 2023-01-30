@@ -197,7 +197,14 @@ class CustomEmployee(Employee):
             ["cost_center", "round_off_cost_center", "depreciation_cost_center"],
         )
         self.payroll_cost_center = cost_center
-
+    
+    def update_user(self):
+        super().update_user()
+        user = frappe.get_doc("User", self.user_id)
+        if user.user_type == "SaaS Manager": return
+        user.flags.ignore_permissions = True
+        user.user_type = "Employee Self Service"
+        user.save()
 
 class CustomDepartment(Department):
     def validate(self):
