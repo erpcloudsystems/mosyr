@@ -1,0 +1,44 @@
+div[data-page-route="Shift Builder"] .form-page .form-section.card-section.visible-section:nth-child(3) .form-column.col-sm-1:nth-child(3),
+div[data-page-route="Shift Builder"] .form-page .form-section.card-section.visible-section:nth-child(3) .form-column.col-sm-1:nth-child(6){
+	margin-right: 75px;
+}
+
+
+div[data-page-route="Shift Builder"] div[data-fieldname="friday_different_times"],
+div[data-page-route="Shift Builder"] div[data-fieldname="thursday_different_times"],
+div[data-page-route="Shift Builder"] div[data-fieldname="saturday_different_times"],
+div[data-page-route="Shift Builder"] div[data-fieldname="wednesday_different_times"]{
+	margin-top: 60px;
+}
+div[data-page-route="Shift Builder"] div[data-fieldname="out4"],
+div[data-page-route="Shift Builder"] div[data-fieldname="in4"],
+div[data-page-route="Shift Builder"] div[data-fieldname="out5"],
+div[data-page-route="Shift Builder"] div[data-fieldname="in5"],
+div[data-page-route="Shift Builder"] div[data-fieldname="out6"],
+div[data-page-route="Shift Builder"] div[data-fieldname="in6"],
+div[data-page-route="Shift Builder"] div[data-fieldname="out7"],
+div[data-page-route="Shift Builder"] div[data-fieldname="in7"]{
+	margin-top: 50px;
+}
+div[data-page-route="Shift Builder"] div[data-fieldtype="Heading"]{
+	display: block !important;
+}
+div[data-page-route="Shift Builder"] div[data-fieldtype="Time"] input{
+	padding: 0 8px;
+}
+
+div[data-page-route="Shift Builder"] .form-section.card-section.visible-section:nth-child(3) .hide-control{
+	display: block !important;
+}
+div[data-page-route="Shift Builder"] .form-section.card-section.visible-section:nth-child(3) .hide-control .control-input-wrapper {
+    min-height: var(--input-height);
+    border-radius: var(--border-radius);
+    font-weight: 400;
+    padding: 8px 12px;
+    cursor: default;
+    color: var(--disabled-text-color);
+    background-color: var(--disabled-control-bg);
+}
+div[data-page-route="Shift Builder"] .frappe-control .control-value{
+	overflow-wrap: unset;
+}
