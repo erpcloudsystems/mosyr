@@ -10,6 +10,7 @@ from frappe.utils import (
     get_time,
     getdate,
     now_datetime,
+    flt,
 )
 from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
@@ -531,6 +532,11 @@ def mark_attendance_and_link_log(
     """
     log_names = [x.name for x in logs]
     employee = logs[0].employee
+    if flt(working_hours) > 0 and shift and frappe.db.exists("Shift Type", shift):
+        shift_doc = frappe.get_doc("Shift Type", shift)
+        if flt(shift_doc.max_working_hours) > 0 and flt(working_hours) > flt(shift_doc.max_working_hours):
+            working_hours = flt(shift_doc.max_working_hours)
+
     if attendance_status == "Skip":
         frappe.db.sql(
             """update `tabEmployee Checkin`
@@ -574,6 +580,14 @@ def mark_attendance_and_link_log(
                 where name in %s""",
                 ("1", log_names),
             )
+            if duplicate:
+                duplicate_att = frappe.get_doc("Attendance", duplicate)
+                duplicate_att.db_set("early_exit", early_exit, update_modified=False)
+                duplicate_att.db_set("late_entry", late_entry, update_modified=False)
+                duplicate_att.db_set("working_hours", working_hours, update_modified=False)
+                duplicate_att.db_set("in_time", in_time, update_modified=False)
+                duplicate_att.db_set("out_time", out_time, update_modified=False)
+                duplicate_att.db_set("status", attendance_status, update_modified=False)
             return None
     else:
         frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
