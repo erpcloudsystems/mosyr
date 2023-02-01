@@ -10,7 +10,6 @@ from frappe.utils import (
     nowdate,
     now_datetime,
     flt,
-    comma_and,
 )
 from frappe.model.naming import make_autoname
 
@@ -429,12 +428,10 @@ class ShiftBuilder(Document):
 
     def validate_employees(self):
         employees_lst = [employee.employee for employee in self.shift_builder_employees]
-        if len(employees_lst) == 1:
-            employees = f"'{employees_lst[0]}'"
-        elif len(employees_lst) == 0:
-            employees = ""
+        if len(employees_lst) > 0:
+            employees = ",".join([ f"'{d}'" for d in employees_lst])
         else:
-            employees = comma_and(employees_lst)
+            employees = "''"
         employee_in_other_shifts = frappe.db.sql(
             """SELECT sbe.employee as employee
                         FROM `tabShift Builder` sb
