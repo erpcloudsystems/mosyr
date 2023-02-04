@@ -1,2 +1,3 @@
 # frappe -- https://github.com/frappe/frappe is installed via 'bench init'
 hijri-converter==2.2.4
+WeasyPrint==52.5
