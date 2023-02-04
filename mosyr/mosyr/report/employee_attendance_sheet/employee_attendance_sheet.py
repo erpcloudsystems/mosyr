@@ -1,13 +1,28 @@
+from json import loads
+from PyPDF2 import PdfFileWriter
 from typing import Dict, List, Optional, Tuple
 from pypika import CustomFunction
-from frappe.query_builder.functions import Count, Extract, Sum
+
 import frappe
 from frappe import _
 
-from frappe.utils import date_diff, add_days, get_date_str, get_datetime, flt, cint
+from frappe.query_builder.functions import Count, Sum
+
+from frappe.utils import date_diff, add_days, get_date_str, get_datetime, flt, cint, get_weekday
+from frappe.utils.print_format import report_to_pdf
+from weasyprint import HTML
 
 Filters = frappe._dict
 
+page_length = 20
+
+style = """
+<style>
+table, th, td { border: 1px solid #ccc; border-collapse: collapse; margin:0; }
+table{ width: 100%; }
+th{ text-align: center; }
+@page { size: A4; margin: 1mm; }
+</style>"""
 status_map = {
     "Present": "Present",
     "Absent": "Absent",
@@ -497,9 +512,6 @@ def get_chart_data(attendance_map: Dict, filters: Filters) -> Dict:
 
 @frappe.whitelist()
 def export_report(filters, orientation="Landscape"):
-    from json import loads
-    from frappe.utils.print_format import report_to_pdf
-
     try:
         filters = loads(filters)
     except:
@@ -538,16 +550,30 @@ def export_report(filters, orientation="Landscape"):
     holiday_map = get_holiday_map(filters)
     data = get_rows_for_pdf(employee_details, filters, holiday_map, attendance_map)
     if filters.report_type == "Monthly Attendance":
-        filters.update({
-            "summarized_view": 1
-        })
+        filters.update({ "summarized_view": 1 })
         sdata = get_rows_for_pdf(employee_details, filters, holiday_map, attendance_map)
-        html = get_html_for_monthly_report(filters, data, sdata, employee_details)
+        try: download_pdf_for_monthly_attendance(filters, data, sdata)
+        except Exception as e:
+            print(e)
+            print(e)
+            print(e)
+            print(e)
+    elif filters.report_type == "Daily Attendance":
+        try:
+            download_pdf_for_daily_attendance(filters, data)
+        except Exception as e:
+            print(e)
+            report_to_pdf(f"<h1>Error Report {e}</h1>", orientation)
+        return
+    elif filters.report_type == "Summary Attendance":
+        try:
+            download_pdf_for_summary_attendance(filters, data)
+        except Exception as e:
+            print(e)
+            report_to_pdf(f"<h1>Error Report {e}</h1>", orientation)
+        return
     else:
-        html = get_html_for_report(filters, data, employee_details)
-    from frappe.core.doctype.access_log.access_log import make_access_log
-    make_access_log(file_type="PDF", method="PDF", page=html)
-    report_to_pdf(html, orientation)
+        report_to_pdf("<h1>Error Report Type</h1>", orientation)
 
 def get_attendance_summary_and_days(employee: str, filters: Filters) -> Tuple[Dict, List]:
     Attendance = frappe.qb.DocType("Attendance")
@@ -756,7 +782,6 @@ def get_rows_for_pdf(
             records.extend(attendance_for_employee)
     return records
 
-
 def get_attendance_status_for_pdf_detailed_view(
     employee: str, filters: Filters, employee_attendance: Dict, holidays: List
 ) -> List[Dict]:
@@ -794,304 +819,8 @@ def get_attendance_status_for_pdf_detailed_view(
     return list(shifts), attendance_values
 
 
-def get_html_for_report(filters: Filters, data: List, employee_details: Dict):
-    style = """
-        <style>
-            .styled-table { border-collapse: collapse; font-size: 0.9em; font-family: sans-serif; min-width: 400px; width:100%; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;}
-            .styled-table thead tr { background-color: #FFFFFF; color: #171717;}
-            .styled-table thead tr td{border: none;}
-            .styled-table th, .styled-table td { padding: 12px 15px; text-align:center; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; }
-            .styled-table tbody tr{ font-weight: bold;}
-            .styled-table tbody tr.red { background-color: #FFEBEE;}
-            .styled-table tbody tr.orange { background-color: #FFF3E0;}
-            .styled-table tbody tr.green { background-color: #E8F5E9;}
-        </style>
-        """
-    
-    if filters.report_type == "Monthly Attendance":
-        report_letter_head = ""
-        report_tbody, report_thead = "", ""
-    else:
-        report_letter_head = get_report_header(filters, "")
-        report_tbody, report_thead = get_report_body(
-            filters, data, employee_details
-        )
-    
-    return f"""
-        {style}
-        {report_letter_head}
-        <table class="styled-table">
-            <thead>
-                {report_thead}
-        </thead>
-            <tbody>
-                {report_tbody}
-            </tbody>
-        </table>
-        """
-
-
-def get_html_for_monthly_report(filters: Filters, data: List, sdata: List, employee_details: Dict):
-    style = """
-        <style>
-            .styled-table { border-collapse: collapse; font-size: 0.9em; font-family: sans-serif; min-width: 400px; width:100%; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;}
-            .styled-table thead tr { background-color: #FFFFFF; color: #171717;}
-            .styled-table thead tr td{border: none;}
-            .styled-table th, .styled-table td { padding: 5px; text-align:center; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; }
-            .styled-table tbody tr{ font-weight: bold;}
-            .styled-table tbody tr.red { background-color: #FFEBEE;}
-            .styled-table tbody tr.orange { background-color: #FFF3E0;}
-            .styled-table tbody tr.green { background-color: #E8F5E9;}
-            .styled-table td { font-weight: normal; font-size: 15px}
-        </style>
-        """
-    
-    report_letter_head = ""
-    old_name = ""
-    old_employee_name = ""
-    sub_report = ""
-    if filters.report_type == "Monthly Attendance":
-        for att in data:
-            # sub_report = ""
-            employee = att.get('employee', False)
-            employee_name = att.get('employee_name')
-            shift = att.get('shift', False)
-            if employee and employee != old_name:
-                old_employee_name = employee_name
-                old_name = employee
-            sub_header = get_report_header(filters, old_employee_name)
-            
-            report_tbody, report_thead = get_report_body(filters, [], {})
-            report_letter_head += sub_header
-            report_tbody = ""
-            
-            for k, v in att.items():
-                if k in ['employee', 'employee_name', 'shift']: continue
-                date = k
-                if isinstance(v, str):
-                    color = ""
-                    if v == "Absent":
-                        color = "red"
-                    elif v == "Present":
-                        color = "green"
-                    report_tbody += f"""
-                        <tr class="{color}">
-                            <td>{date}</td>
-                            <td>{shift}</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>{_(v)}</td>
-                        </tr>"""
-                elif isinstance(v, dict):
-                    if len(v.get("status_dict", {}).keys()) == 0:
-                        v = v.get("abbr", "")
-                        color = ""
-                        if v == "Absent":
-                            color = "red"
-                        elif v == "Present":
-                            color = "green"
-                        report_tbody += f"""
-                                <tr class="{color}">
-                                    <td>{date}</td>
-                                    <td>{shift}</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>{_(v)}</td>
-                                </tr>"""
-                    else:
-                        status_dict = v.get("status_dict", {})
-                        v = status_dict.get('status', 'Unmarked Day')
-                        in_time = status_dict.get('in_time', 0)
-                        out_time = status_dict.get('out_time', 0)
-
-                        is_late = "No" if status_dict.get("late_entry", "") == 0 else "Yes"
-                        is_early = "No" if status_dict.get("early_exit", "") == 0 else "Yes"
-                        req_hours = status_dict.get("req_hours", "")
-                        if req_hours:
-                            hours, remainder = divmod(req_hours.seconds, 3600)
-                            minutes, seconds = divmod(remainder, 60)
-                            req_hours = '{:02}:{:02}'.format(int(hours), int(minutes))
-                        working_hours = flt(status_dict.get("working_hours", 0))
-                        if working_hours != 0:
-                            from datetime import datetime
-                            from datetime import timedelta
-                            d1 = datetime(2022,5,8,0,0,0)
-                            d2 = d1 + timedelta(hours = flt(working_hours))
-                            working_hours = str(d2.time())[:-3]
-                        else:
-                            working_hours = "00:00"
-                        if in_time:
-                            in_time = str(in_time).split(" ")
-                            if len(in_time) > 1:
-                                in_time = in_time[1][:-3]
-                        else:
-                            in_time = "-"
-
-                        if out_time:
-                            out_time = str(out_time).split(" ")
-                            if len(out_time) > 1:
-                                out_time = out_time[1][:-3]
-                        else:
-                            out_time = "-"
-                        color = ""
-                        if v == "Absent":
-                            color = "red"
-                        elif v == "Present":
-                            color = "green"
-                        report_tbody += f"""
-                                <tr class="{color}">
-                                    <td>{date}</td>
-                                    <td>{shift}</td>
-                                    <td>{in_time}</td>
-                                    <td>{out_time}</td>
-                                    <td>{working_hours}</td>
-                                    <td>{req_hours}</td>
-                                    <td>{is_late}</td>
-                                    <td>{is_early}</td>
-                                    <td>{v}</td>
-                                </tr>"""
-            
-            summary = ""
-            for srow in sdata:
-                if employee == srow.get('employee'):
-                    summary += f"""<tr>
-                                        <td style="width: 100px">{srow.get("shift", "-")}</td>
-                                        <td>{srow.get("total_present", "-")}</td>
-                                        <td>{srow.get("total_leaves", "-")}</td>
-                                        <td>{srow.get("total_absent", "-")}</td>
-                                        <td>{srow.get("total_holidays", "-")}</td>
-                                        <td>{srow.get("unmarked_days", "-")}</td>
-                                        <td>{srow.get("total_late_entries", "-")}</td>
-                                        <td>{srow.get("total_early_exits", "-")}</td>
-                                    </tr>"""
-            if len(summary) > 0:
-                summary = f"""<table class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 100px">{_("Shift")}</th>
-                                    <th>{_("Total Present")}</th>
-                                    <th>{_("Total Leaves")}</th>
-                                    <th>{_("Total Absent")}</th>
-                                    <th>{_("Total Holidays")}</th>
-                                    <th>{_("Unmarked Days")}</th>
-                                    <th>{_("Total Late Entries")}</th>
-                                    <th>{_("Total Early Exits")}</th>
-                                </tr>
-                            </thead>
-                                <tbody>
-                                    {summary}
-                                </tbody>
-                            </table>
-                        """
-            sub_report += f"""
-                        {style}
-                        {sub_header}
-                        <table class="styled-table">
-                            <thead>
-                                {report_thead}
-                        </thead>
-                            <tbody>
-                                {report_tbody}
-                            </tbody>
-                        </table>
-                        {summary}
-                        """
-    else:
-        report_letter_head = ""
-        report_tbody, report_thead = "", ""
-    
-    return sub_report
-
 def get_report_body(filters: Filters, data: List, employee_details: Dict):
-    if filters.report_type == "Daily Attendance":
-        thead = f"""
-            <tr>
-                <th>{_("Employee")}</th>
-                <th>{_("Shift")}</th>
-                <th>{_("In Time")}</th>
-                <th>{_("Out Time")}</th>
-                <th>{_("Working Hours")}</th>
-                <th>{_("Reqired Hours")}</th>
-                <th>{_("Is Late Entry")}</th>
-                <th>{_("Is Early Exit")}</th>
-                <th>{_("Status")}</th>
-            </tr>"""
-        tbody = ""
-        for row in data:
-            if not isinstance(row, dict):
-                continue
-            employee_name = row.get("employee_name", "")
-            shift = row.get("shift", "")
-            status = row.get(filters.from_date, "")
-            if isinstance(status, dict):
-                abbr = status.get("abbr", "Unmarked Day")
-                if abbr == "Absent":
-                    color = "red"
-                elif abbr == "Present":
-                    color = "green"
-                status_dict = status.get("status_dict", {})
-                in_time = status_dict.get("in_time", "")
-                out_time = status_dict.get("out_time", "")
-                
-                is_late = "No" if status_dict.get("late_entry", "") == 0 else "Yes"
-                is_early = "No" if status_dict.get("early_exit", "") == 0 else "Yes"
-                req_hours = status_dict.get("req_hours", "")
-                if req_hours:
-                    hours, remainder = divmod(req_hours.seconds, 3600)
-                    minutes, seconds = divmod(remainder, 60)
-                    req_hours = '{:02}:{:02}'.format(int(hours), int(minutes))
-                working_hours = flt(status_dict.get("working_hours", 0))
-                if working_hours != 0:
-                    from datetime import datetime
-                    from datetime import timedelta
-                    d1 = datetime(2022,5,8,0,0,0)
-                    d2 = d1 + timedelta(hours = flt(working_hours))
-                    working_hours = str(d2.time())[:-3]
-                else:
-                    working_hours = "00:00"
-                if in_time:
-                    in_time = str(in_time).split(" ")
-                    if len(in_time) > 1:
-                        in_time = in_time[1][:-3]
-
-                if out_time:
-                    out_time = str(out_time).split(" ")
-                    if len(out_time) > 1:
-                        out_time = out_time[1][:-3]
-            else:
-                color = "orange"
-                in_time = "-"
-                out_time = "-"
-                working_hours = "-"
-                req_hours = "-"
-                is_late = "-"
-                is_early = "-"
-                abbr = status
-
-            tbody += f"""
-                <tr class="{color}">
-                    <th>{_(employee_name)}</th>
-                    <th>{_(shift)}</th>
-                    <th>{in_time}</th>
-                    <th>{out_time}</th>
-                    <th>{working_hours}</th>
-                    <th>{req_hours}</th>
-                    <th>{is_late}</th>
-                    <th>{is_early}</th>
-                    <th>{abbr}</th>
-                </tr>"""
-        
-        return tbody, thead
-
-    elif filters.report_type == "Summary Attendance":
+    if filters.report_type == "Summary Attendance":
         thead = f"""
             <tr>
                 <th>{_("Employee")}</th>
@@ -1151,43 +880,438 @@ def get_report_body(filters: Filters, data: List, employee_details: Dict):
     return "", ""
 
 
-def get_report_header(filters: Filters, employee: str):
-    from frappe.utils import get_weekday, get_datetime
-    if filters.report_type == "Monthly Attendance":
-        fweekday = get_weekday(get_datetime(filters.from_date))
-        tweekday = get_weekday(get_datetime(filters.to_date))
-        return f"""
-            <h2 style="background-color: #00aead; color: #ffffff;text-align: center; font-size: 15px; font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
-                <span style="display: inline-block">{_("Monthly Report from Date")}</span>
-                <span style="display: inline-block">{filters.from_date}</span>
-                <span style="display: inline-block">{_(fweekday)}</span>
-                <span style="display: inline-block">{_("to Date")}</span>
-                <span style="display: inline-block">{filters.to_date}</span>
-                <span style="display: inline-block">{_(tweekday)}</span>
-                <div>For Employee { _(employee) }</div>
-            </h2>
-        """
-    elif filters.report_type == "Summary Attendance":
-        fweekday = get_weekday(get_datetime(filters.from_date))
-        tweekday = get_weekday(get_datetime(filters.to_date))
-        return f"""
-            <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
-                <span style="display: inline-block">{_("Summary Attendance Report from Date")}</span>
-                <span style="display: inline-block">{filters.from_date}</span>
-                <span style="display: inline-block">{_(fweekday)}</span>
-                <span style="display: inline-block">{_("to Date")}</span>
-                <span style="display: inline-block">{filters.to_date}</span>
-                <span style="display: inline-block">{_(tweekday)}</span>
-            </h2>
-        """
-    elif filters.report_type == "Daily Attendance":
-        date = filters.from_date
-        weekday = get_weekday(get_datetime(filters.from_date))
-        return f"""
-            <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
-                <span style="display: inline-block">{_("Daily Report for Date")}</span>
-                <span style="display: inline-block">{date}</span>
-                <span style="display: inline-block">{_(weekday)}</span>
-            </h2>
-        """
-    return ""
+def download_pdf_for_daily_attendance(filters, data):
+    date = filters.from_date
+    weekday = get_weekday(get_datetime(filters.from_date))
+    report_header = f"""
+        <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0 !important; padding: 14px;">
+            <span style="display: inline-block">{_("Daily Report for Date")}</span>
+            <span style="display: inline-block">{date}</span>
+            <span style="display: inline-block">{_(weekday)}</span>
+        </h2>""".replace("\n", "").replace("\t", "")
+    thead = f"""
+        <tr>
+            <th>{_("Employee")}</th>
+            <th>{_("Shift")}</th>
+            <th>{_("In Time")}</th>
+            <th>{_("Out Time")}</th>
+            <th>{_("Working Hours")}</th>
+            <th>{_("Reqired Hours")}</th>
+            <th>{_("Is Late Entry")}</th>
+            <th>{_("Is Early Exit")}</th>
+            <th>{_("Status")}</th>
+        </tr>""".replace("\n", "").replace("\t", "")
+    tbody = []
+    table = []
+    if frappe.lang == 'ar':
+        dirction = 'rtl'
+    else:
+        dirction = 'ltr'
+    for row in data:
+        if not isinstance(row, dict):
+            continue
+        employee_name = row.get("employee_name", "")
+        shift = row.get("shift", "")
+        status = row.get(filters.from_date, "")
+        if isinstance(status, dict):
+            abbr = status.get("abbr", "Unmarked Day")
+            status_dict = status.get("status_dict", {})
+            in_time = status_dict.get("in_time", "")
+            out_time = status_dict.get("out_time", "")
+            
+            is_late = "No" if status_dict.get("late_entry", "") == 0 else "Yes"
+            is_early = "No" if status_dict.get("early_exit", "") == 0 else "Yes"
+            req_hours = status_dict.get("req_hours", "")
+            if req_hours:
+                hours, remainder = divmod(req_hours.seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                req_hours = '{:02}:{:02}'.format(int(hours), int(minutes))
+            working_hours = flt(status_dict.get("working_hours", 0))
+            if working_hours != 0:
+                from datetime import datetime
+                from datetime import timedelta
+                d1 = datetime(2022,5,8,0,0,0)
+                d2 = d1 + timedelta(hours = flt(working_hours))
+                working_hours = str(d2.time())[:-3]
+            else:
+                working_hours = "00:00"
+            if in_time:
+                in_time = str(in_time).split(" ")
+                if len(in_time) > 1:
+                    in_time = in_time[1][:-3]
+
+            if out_time:
+                out_time = str(out_time).split(" ")
+                if len(out_time) > 1:
+                    out_time = out_time[1][:-3]
+        else:
+            in_time = "-"
+            out_time = "-"
+            working_hours = "-"
+            req_hours = "-"
+            is_late = "-"
+            is_early = "-"
+            abbr = status
+        tbody.append(f"""
+            <tr>
+                <td style="text-align:center">{_(employee_name)}</td>
+                <td style="text-align:center">{_(shift)}</td>
+                <td style="text-align:center">{in_time}</td>
+                <td style="text-align:center">{out_time}</td>
+                <td style="text-align:center">{working_hours}</td>
+                <td style="text-align:center">{req_hours}</td>
+                <td style="text-align:center">{is_late}</td>
+                <td style="text-align:center">{is_early}</td>
+                <td style="text-align:center">{abbr}</td>
+            </tr>""".replace("\n", "").replace("\t", ""))
+    split_tabels = []
+    for i in range(0, len(tbody), page_length):
+        table = [report_header, thead] + tbody[i:i+page_length]
+        split_tabels.append(table)
+    tables_as_pages = ""
+    for table in split_tabels:
+        if len(table) <= 2:
+            continue
+        report_header = table[0]
+        thead = table[1]
+        tbody = "".join(table[2:])
+        tables_as_pages += f"""
+            <table class="page">
+                <thead> {thead} </thead>
+                <tbody> {tbody} </tbody>
+            </table>"""
+    html_string = f"""
+        <html dir="{dirction}">
+            <head>
+                <meta charset='utf-8'>
+                <meta name="description" content="" />
+                <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+                {style}
+            </head>
+            <body>
+                {report_header}
+                {tables_as_pages}
+            </body>
+        </html>""".replace("\n", "")
+    html = HTML(string=html_string)
+    pdf_content = html.write_pdf()
+    frappe.local.response.filename = "report.pdf"
+    frappe.local.response.filecontent = pdf_content
+    frappe.local.response.type = "download"
+
+def download_pdf_for_summary_attendance(filters, data):
+    fweekday = get_weekday(get_datetime(filters.from_date))
+    tweekday = get_weekday(get_datetime(filters.to_date))
+
+    report_header = f"""
+        <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding-top: 10px;">
+            <span style="display: inline-block">{_("Summary Attendance Report from Date")}</span>
+        </h2>
+        <h2 style="background-color: #00aead; font-size: 15px;  color: #ffffff;text-align: center;font-family: sans-serif; margin:0; padding: 0 10px 10px 10px;">
+            <span style="display: inline-block">{filters.from_date}</span>
+            <span style="display: inline-block">{_(fweekday)}</span>
+            <span style="display: inline-block">{_("to Date")}</span>
+            <span style="display: inline-block">{filters.to_date}</span>
+            <span style="display: inline-block">{_(tweekday)}</span>
+        </h2>
+    """.replace("\n", "").replace("\t", "")
+    thead = f"""
+        <tr>
+            <th>{_("Employee")}</th>
+            <th>{_("Shift")}</th>
+            <th>{_("Total Present")}</th>
+            <th>{_("Total Working Hours")}</th>
+            <th>{_("Total Leaves")}</th>
+            <th>{_("Total Absent")}</th>
+            <th>{_("Total Holidays")}</th>
+            <th>{_("Unmarked Days")}</th>
+            <th>{_("Total Late Entries")}</th>
+            <th>{_("Total Early Exits")}</th>
+        </tr>""".replace("\n", "").replace("\t", "")
+    tbody = []
+    table = []
+    if frappe.lang == 'ar':
+        dirction = 'rtl'
+    else:
+        dirction = 'ltr'
+    for row in data:
+        if not isinstance(row, dict):
+            continue
+        total_working_hours = flt(row.get("total_working_hours"))
+        if total_working_hours != 0:
+            from datetime import datetime
+            from datetime import timedelta
+            d1 = datetime(2022,5,8,0,0,0)
+            d2 = d1 + timedelta(hours = flt(total_working_hours))
+            total_working_hours = str(d2.time())[:-3]
+        else:
+            total_working_hours = "00:00"
+        tbody.append(f"""
+            <tr>
+                <td>{_(row.get("employee_name"))}</td>
+                <td>{_(row.get("shift"))}</td>
+                <td style="text-align:center" >{cint(row.get("total_present"))}</td>
+                <td  style="text-align:center">{total_working_hours}</td>
+                <td  style="text-align:center">{cint(row.get("total_leaves"))}</td>
+                <td  style="text-align:center">{cint(row.get("total_absent"))}</td>
+                <td  style="text-align:center">{cint(row.get("total_holidays"))}</td>
+                <td  style="text-align:center">{cint(row.get("unmarked_days"))}</td>
+                <td  style="text-align:center">{cint(row.get("total_late_entries"))}</td>
+                <td  style="text-align:center">{cint(row.get("total_early_exits"))}</td>
+            </tr>""".replace("\n", "").replace("\t", ""))
+    
+    split_tabels = []
+    for i in range(0, len(tbody), page_length):
+        table = [report_header, thead] + tbody[i:i+page_length]
+        split_tabels.append(table)
+
+    tables_as_pages = ""
+    for table in split_tabels:
+        if len(table) <= 2:
+            continue
+        report_header = table[0]
+        thead = table[1]
+        tbody = "".join(table[2:])
+        tables_as_pages += f"""
+                <table class="page">
+                    <thead> {thead} </thead>
+                    <tbody> {tbody} </tbody>
+                </table>"""
+    html_string = f"""
+        <html dir="{dirction}">
+            <head>
+                <meta charset='utf-8'>
+                <meta name="description" content="" />
+                <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+                {style}
+            </head>
+            <body>
+                {report_header}
+                {tables_as_pages}
+            </body>
+            </html>""".replace("\n", "")
+    html = HTML(string=html_string)
+    pdf_content = html.write_pdf()
+    frappe.local.response.filename = "report.pdf"
+    frappe.local.response.filecontent = pdf_content
+    frappe.local.response.type = "download"
+
+def download_pdf_for_monthly_attendance(filters, data, sdata):
+    fweekday = get_weekday(get_datetime(filters.from_date))
+    tweekday = get_weekday(get_datetime(filters.to_date))
+    employee = ""
+    if frappe.lang == 'ar':
+        dirction = 'rtl'
+    else:
+        dirction = 'ltr'
+    thead = f"""
+        <tr>
+            <th>{_("Date")}</th>
+            <th>{_("Shift")}</th>
+            <th>{_("In Time")}</th>
+            <th>{_("Out Time")}</th>
+            <th>{_("Working Hours")}</th>
+            <th>{_("Reqired Hours")}</th>
+            <th>{_("Is Late Entry")}</th>
+            <th>{_("Is Early Exit")}</th>
+            <th>{_("Status")}</th>
+        </tr>""".replace("\n", "").replace("\t", "")
+    
+    total_repost = ""
+    for att in data:
+        # sub_report = ""
+        employee = att.get('employee', False)
+        employee_name = att.get('employee_name')
+        shift = att.get('shift', False)
+        old_name = ""
+        if employee and employee != old_name:
+            old_employee_name = employee_name
+            old_name = employee
+        tbody = []
+        table = []
+        sub_header = f"""
+                <h2 style="background-color: #00aead; color: #ffffff;text-align: center; font-size: 15px; font-family: sans-serif; margin:0; padding: 14px; box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;border-bottom: 3px solid white;">
+                    <span style="display: inline-block">{_("Monthly Report from Date")}</span>
+                    <span style="display: inline-block">{filters.from_date}</span>
+                    <span style="display: inline-block">{_(fweekday)}</span>
+                    <span style="display: inline-block">{_("to Date")}</span>
+                    <span style="display: inline-block">{filters.to_date}</span>
+                    <span style="display: inline-block">{_(tweekday)}</span>
+                    <div>For Employee { _(old_employee_name) }</div>
+                </h2>
+            """.replace("\n", "").replace("\t", "")        
+        for k, v in att.items():
+            if k in ['employee', 'employee_name', 'shift']: continue
+            date = k
+            if isinstance(v, str):
+                color = ""
+                if v == "Absent":
+                    color = "red"
+                elif v == "Present":
+                    color = "green"
+                tbody.append(f"""
+                    <tr class="{color}">
+                        <td>{date}</td>
+                        <td>{shift}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>{_(v)}</td>
+                    </tr>""".replace("\n", "").replace("\t", ""))
+            elif isinstance(v, dict):
+                if len(v.get("status_dict", {}).keys()) == 0:
+                    v = v.get("abbr", "")
+                    color = ""
+                    if v == "Absent":
+                        color = "red"
+                    elif v == "Present":
+                        color = "green"
+                    tbody.append(f"""
+                            <tr class="{color}">
+                                <td>{date}</td>
+                                <td>{shift}</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>{_(v)}</td>
+                            </tr>""".replace("\n", "").replace("\t", ""))
+                else:
+                    status_dict = v.get("status_dict", {})
+                    v = status_dict.get('status', 'Unmarked Day')
+                    in_time = status_dict.get('in_time', 0)
+                    out_time = status_dict.get('out_time', 0)
+
+                    is_late = "No" if status_dict.get("late_entry", "") == 0 else "Yes"
+                    is_early = "No" if status_dict.get("early_exit", "") == 0 else "Yes"
+                    req_hours = status_dict.get("req_hours", "")
+                    if req_hours:
+                        hours, remainder = divmod(req_hours.seconds, 3600)
+                        minutes, seconds = divmod(remainder, 60)
+                        req_hours = '{:02}:{:02}'.format(int(hours), int(minutes))
+                    working_hours = flt(status_dict.get("working_hours", 0))
+                    if working_hours != 0:
+                        from datetime import datetime
+                        from datetime import timedelta
+                        d1 = datetime(2022,5,8,0,0,0)
+                        d2 = d1 + timedelta(hours = flt(working_hours))
+                        working_hours = str(d2.time())[:-3]
+                    else:
+                        working_hours = "00:00"
+                    if in_time:
+                        in_time = str(in_time).split(" ")
+                        if len(in_time) > 1:
+                            in_time = in_time[1][:-3]
+                    else:
+                        in_time = "-"
+
+                    if out_time:
+                        out_time = str(out_time).split(" ")
+                        if len(out_time) > 1:
+                            out_time = out_time[1][:-3]
+                    else:
+                        out_time = "-"
+                    color = ""
+                    if v == "Absent":
+                        color = "red"
+                    elif v == "Present":
+                        color = "green"
+                    tbody.append(f"""
+                            <tr class="{color}">
+                                <td>{date}</td>
+                                <td>{shift}</td>
+                                <td>{in_time}</td>
+                                <td>{out_time}</td>
+                                <td>{working_hours}</td>
+                                <td>{req_hours}</td>
+                                <td>{is_late}</td>
+                                <td>{is_early}</td>
+                                <td>{v}</td>
+                            </tr>""".replace("\n", "").replace("\t", ""))
+        
+        split_tabels = []
+        for i in range(0, len(tbody), page_length):
+            table = [sub_header, thead] + tbody[i:i+page_length]
+            split_tabels.append(table)
+        tables_as_pages = ""
+        for table in split_tabels:
+            if len(table) <= 2:
+                continue
+            sub_header = table[0]
+            thead = table[1]
+            tbody = "".join(table[2:])
+            tables_as_pages += f"""
+                    <table class="page">
+                        <thead> {thead} </thead>
+                        <tbody> {tbody} </tbody>
+                    </table>"""
+        html_string = f"""
+            <html dir="{dirction}">
+                <head>
+                    <meta charset='utf-8'>
+                    <meta name="description" content="" />
+                    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+                    {style}
+                </head>
+                <body>
+                    {sub_header}
+                    {tables_as_pages}
+                </body>
+                </html>""".replace("\n", "")
+        total_repost += html_string
+    html = HTML(string=total_repost)
+    pdf_content = html.write_pdf()
+    frappe.local.response.filename = "report.pdf"
+    frappe.local.response.filecontent = pdf_content
+    frappe.local.response.type = "download"
+        # summary = ""
+        # for srow in sdata:
+        #     if employee == srow.get('employee'):
+        #         summary += f"""<tr>
+        #                 <td style="width: 100px">{srow.get("shift", "-")}</td>
+        #                 <td>{srow.get("total_present", "-")}</td>
+        #                 <td>{srow.get("total_leaves", "-")}</td>
+        #                 <td>{srow.get("total_absent", "-")}</td>
+        #                 <td>{srow.get("total_holidays", "-")}</td>
+        #                 <td>{srow.get("unmarked_days", "-")}</td>
+        #                 <td>{srow.get("total_late_entries", "-")}</td>
+        #                 <td>{srow.get("total_early_exits", "-")}</td>
+        #             </tr>"""
+        # if len(summary) > 0:
+        #     summary = f"""<table class="styled-table">
+        #                 <thead>
+        #                     <tr>
+        #                         <th style="width: 100px">{_("Shift")}</th>
+        #                         <th>{_("Total Present")}</th>
+        #                         <th>{_("Total Leaves")}</th>
+        #                         <th>{_("Total Absent")}</th>
+        #                         <th>{_("Total Holidays")}</th>
+        #                         <th>{_("Unmarked Days")}</th>
+        #                         <th>{_("Total Late Entries")}</th>
+        #                         <th>{_("Total Early Exits")}</th>
+        #                     </tr>
+        #                 </thead>
+        #                     <tbody>
+        #                         {summary}
+        #                     </tbody>
+        #                 </table>
+        #             """
+        # sub_report += f"""
+        #             {style}
+        #             {sub_header}
+        #             <table class="styled-table">
+        #                 <thead>
+        #                     {report_thead}
+        #             </thead>
+        #                 <tbody>
+        #                     {report_tbody}
+        #                 </tbody>
+        #             </table>
+        #             {summary}
+        #             """
+    
