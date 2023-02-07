@@ -11,3 +11,4 @@ mosyr.patches.set_perms_for_reports
 mosyr.patches.add_apply_user_perms
 mosyr.patches.update_types_limits
 mosyr.patches.update_perms_for_emails_docs
+mosyr.patches.update_perms_for_shift_builder
