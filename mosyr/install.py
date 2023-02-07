@@ -49,6 +49,7 @@ docs_for_manager = [
     "End Of Service",
     "Leave Application",
     "Shift Request",
+    "Shift Builder",
     "Contact Details",
     "Educational Qualification",
     "Emergency Contact",
