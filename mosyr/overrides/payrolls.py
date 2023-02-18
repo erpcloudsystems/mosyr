@@ -1,5 +1,8 @@
 import frappe
+from frappe import _
+from frappe.utils import flt
 
+import erpnext
 from erpnext.payroll.doctype.salary_component.salary_component import SalaryComponent
 from erpnext.payroll.doctype.salary_structure.salary_structure import SalaryStructure
 from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
@@ -7,7 +10,9 @@ from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assign
 )
 from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
-
+from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+    get_accounting_dimensions,
+)
 from mosyr import (
     create_account,
     create_cost_center,
@@ -142,3 +147,61 @@ class CustomPayrollEntry(PayrollEntry):
                 False,
             )
             self.payment_account = account
+    
+    def create_journal_entry(self, je_payment_amount, user_remark):
+        payroll_payable_account = self.payroll_payable_account
+        precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
+
+        accounts = []
+        currencies = []
+        multi_currency = 0
+        company_currency = erpnext.get_company_currency(self.company)
+        accounting_dimensions = get_accounting_dimensions() or []
+
+        exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
+            self.payment_account, je_payment_amount, company_currency, currencies
+        )
+        accounts.append(
+            self.update_accounting_dimensions(
+                {
+                    "account": self.payment_account,
+                    "bank_account": self.bank_account,
+                    "credit_in_account_currency": flt(amount, precision),
+                    "exchange_rate": flt(exchange_rate),
+                },
+                accounting_dimensions,
+            )
+        )
+
+        exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
+            payroll_payable_account, je_payment_amount, company_currency, currencies
+        )
+        accounts.append(
+            self.update_accounting_dimensions(
+                {
+                    "account": payroll_payable_account,
+                    "debit_in_account_currency": flt(amount, precision),
+                    "exchange_rate": flt(exchange_rate),
+                    "reference_type": self.doctype,
+                    "reference_name": self.name,
+                },
+                accounting_dimensions,
+            )
+        )
+
+        if len(currencies) > 1:
+            multi_currency = 1
+
+        journal_entry = frappe.new_doc("Journal Entry")
+        journal_entry.voucher_type = "Bank Entry"
+        journal_entry.user_remark = _("Payment of {0} from {1} to {2}").format(
+            user_remark, self.start_date, self.end_date
+        )
+        journal_entry.company = self.company
+        journal_entry.posting_date = self.posting_date
+        journal_entry.multi_currency = multi_currency
+        journal_entry.cheque_no = self.name
+        journal_entry.cheque_date = frappe.utils.nowdate()
+        journal_entry.set("accounts", accounts)
+        journal_entry.save(ignore_permissions=True)
+        journal_entry.submit()

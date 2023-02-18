@@ -40,7 +40,9 @@ app_include_js = [
 doctype_js = {
 	"Employee" : "public/js/employee.js",
 	"Loan" : "public/js/loan.js",
-	}
+    "Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
+}
+
 doctype_list_js = {"Loan" : "public/js/loan_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
