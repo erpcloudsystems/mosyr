@@ -24,9 +24,15 @@ class CustomSalaryComponent(SalaryComponent):
     def set_missing_custome_values(self):
         self.accounts = []
         companies = frappe.get_list("Company")
+        account_name = "Payroll Payable"
+        if self.type == "Earning":
+            account_name = "Payroll Payable - Earning"
+        elif self.type == "Deduction":
+            account_name = "Payroll Payable - Deduction"
+
         for company in companies:
             account = create_account(
-                "Payroll Payable",
+                account_name,
                 company.name,
                 "Accounts Payable",
                 "Liability",
