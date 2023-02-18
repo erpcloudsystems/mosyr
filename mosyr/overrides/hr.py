@@ -26,6 +26,9 @@ class CustomCompany(Company, NestedSet):
         super().validate()
 
     def on_update(self):
+        self.update_default_account = False
+        if self.is_new():
+            self.update_default_account = True
         NestedSet.on_update(self)
         if not frappe.db.sql(
             """select name from tabAccount
@@ -67,9 +70,6 @@ class CustomCompany(Company, NestedSet):
         if frappe.flags.parent_company_changed:
             rebuild_tree("Company", "parent_company")
         
-        self.update_default_account = False
-        if self.is_new():
-            self.update_default_account = True
         super().on_update()
         frappe.clear_cache()
 
