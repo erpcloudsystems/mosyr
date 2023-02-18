@@ -378,7 +378,27 @@ fixtures = [
 					"Loan Type-is_term_loan-default",
 					"Repayment Schedule-interest_amount-hidden"
 					"Loan Type-is_term_loan-default",
-					"Repayment Schedule-balance_loan_amount-hidden"
+					"Repayment Schedule-balance_loan_amount-hidden",
+                    
+					# Hide from Printing!
+					"Salary Detail-tax_on_additional_salary-print_hide",
+					"Salary Detail-tax_on_flexible_benefit-print_hide",
+					"Salary Slip-base_gross_pay-print_hide",
+					"Salary Slip-total_loan_repayment-print_hide",
+					"Salary Slip-leave_details-print_hide",
+					"Salary Slip-base_total_in_words-print_hide",
+					"Salary Slip-total_in_words-print_hide",
+					"Salary Slip-base_month_to_date-print_hide",
+					"Salary Slip-month_to_date-print_hide",
+					"Salary Slip-base_rounded_total-print_hide",
+					"Salary Slip-base_year_to_date-print_hide",
+					"Salary Slip-base_net_pay-print_hide",
+					"Salary Slip-total_interest_amount-print_hide",
+					"Salary Slip-total_principal_amount-print_hide",
+					"Salary Slip-base_total_deduction-print_hide",
+					"Salary Slip-total_deduction-print_hide_if_no_value",
+					"Salary Slip-base_gross_year_to_date-print_hide",
+					"Salary Slip-payroll_cost_center-print_hide",
 				]]
 			]
 	},
