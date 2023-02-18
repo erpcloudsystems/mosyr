@@ -23,7 +23,7 @@ class CustomCompany(Company, NestedSet):
         self.update_default_account = False
         if self.is_new():
             self.update_default_account = True
-        super().after_insert()
+        super().validate()
 
     def on_update(self):
         NestedSet.on_update(self)
@@ -67,7 +67,9 @@ class CustomCompany(Company, NestedSet):
         if frappe.flags.parent_company_changed:
             rebuild_tree("Company", "parent_company")
 
+        super().on_update()
         frappe.clear_cache()
+
 
     def after_insert(self):
         super().after_insert()
