@@ -1101,7 +1101,7 @@ def create_cost_center(cost_center_name, company, check_company=False, company_f
     cost_center = cc_doc.name
 
 def create_account(account_name, company, parent_account, root_type, account_type=None, check_company=False, company_field=None):
-    account_currency = frappe.get_value("Company", "default_currency") or "USD"
+    account_currency = frappe.get_value("Company", company, "default_currency") or "USD"
     # Check Company value First
     c_account_name = None
     if check_company and company_field:
