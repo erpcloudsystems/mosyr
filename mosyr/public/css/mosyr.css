@@ -52,3 +52,12 @@ body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
 .datatable-table-2cols-6rows > div:nth-child(12){
     border-bottom: 1px solid #ccc;
 }
+
+
+
+/*
+Hide Journal Entry in Payroll
+*/
+div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{
+    display: none !important;
+}
