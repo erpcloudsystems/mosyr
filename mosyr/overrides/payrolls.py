@@ -38,7 +38,7 @@ class CustomSalaryComponent(SalaryComponent):
                 "Liability",
                 "",
                 True,
-                "default_payroll_payable_account",
+                None,
             )
             self.append("accounts", {"company": company.name, "account": account})
 
