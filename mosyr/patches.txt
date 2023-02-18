@@ -13,4 +13,6 @@ mosyr.patches.update_types_limits
 mosyr.patches.update_perms_for_emails_docs
 mosyr.patches.update_perms_for_shift_builder
 mosyr.patches.update_account_salary_components
+mosyr.patches.recheck_company_accounts
 mosyr.patches.update_all_accounts_currency
+
