@@ -19,6 +19,12 @@ from mosyr import (
 
 
 class CustomCompany(Company, NestedSet):
+    def validate(self):
+        self.update_default_account = False
+        if self.is_new():
+            self.update_default_account = True
+        super().validate()
+
     def on_update(self):
         NestedSet.on_update(self)
         if not frappe.db.sql(
@@ -61,7 +67,9 @@ class CustomCompany(Company, NestedSet):
         if frappe.flags.parent_company_changed:
             rebuild_tree("Company", "parent_company")
 
+        super().on_update()
         frappe.clear_cache()
+
 
     def after_insert(self):
         super().after_insert()
