@@ -521,7 +521,7 @@ def add_select_perm_for_all():
     frappe.db.commit()
 
 def create_role_and_set_to_admin():
-    create_custom_role("Read User Type")
+    create_custom_role({"role": "Read User Type"})
     frappe.get_doc("User", "Administrator").add_roles("Read User Type")
     frappe.db.commit()
     update_permission_property("User", "Read User Type", 3, "read", 1)
