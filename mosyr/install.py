@@ -2,8 +2,7 @@ import frappe
 from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.installer import update_site_config
-from erpnext.setup.install import create_user_type
-from erpnext.setup.install import create_custom_role
+from erpnext.setup.install import create_role_permissions_for_doctype, create_custom_role
 from mosyr import (
     create_account,
     create_cost_center,
@@ -277,6 +276,24 @@ def create_non_standard_user_types():
         create_user_type(user_type, data)
     frappe.db.commit()
 
+def create_user_type(user_type, data):
+    if frappe.db.exists("User Type", user_type):
+        doc = frappe.get_cached_doc("User Type", user_type)
+        doc.user_doctypes = []
+    else:
+        doc = frappe.new_doc("User Type")
+        doc.update(
+            {
+                "name": user_type,
+                "role": data.get("role"),
+                "is_standard": 0,
+                "user_id_field": data.get("user_id_field"),
+                "apply_user_permission_on": data.get("apply_user_permission_on"),
+            }
+        )
+
+    create_role_permissions_for_doctype(doc, data)
+    doc.save(ignore_permissions=True)
 
 def get_manager_user_data():
     doctypes = {}
