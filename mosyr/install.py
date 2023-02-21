@@ -2,7 +2,7 @@ import frappe
 from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.installer import update_site_config
-from erpnext.setup.install import create_role_permissions_for_doctype
+from erpnext.setup.install import create_custom_role, create_user_type
 from mosyr import (
     create_account,
     create_cost_center,
@@ -271,39 +271,27 @@ def create_non_standard_user_types():
         user_type_limit.setdefault(frappe.scrub(user_type), 10000)
     update_site_config("user_type_doctype_limit", user_type_limit)
 
-    for role in ["SaaS Manager", "Employee Self Service"]:
-        create_custom_role(role)
-
     for user_type, data in iteritems(non_stadard_users):
-        # create_custom_role(data)
-        
+        create_custom_role(data)
+        if user_type == "SaaS Manager":
+            sm = frappe.db.exists("Role", "SaaS Manager")
+            if sm:
+                smr = frappe.get_doc("Role", sm)
+                smr.is_custom = 1
+                smr.desk_access = 1
+                smr.save(ignore_permissions=True)
+            else:
+                smr = frappe.new_doc()
+                smr.update({
+                    "role_name": "SaaS Manager",
+                    "desk_access": 1,
+                    "is_custom": 1
+                })
+                smr.save(ignore_permissions=True)
+            frappe.db.commit()
         create_user_type(user_type, data)
     frappe.db.commit()
 
-def create_custom_role(role):
-    if not frappe.db.exists("Role", role):
-        frappe.get_doc(
-            {"doctype": "Role", "role_name": role, "desk_access": 1, "is_custom": 1}
-        ).insert(ignore_permissions=True)
-        frappe.db.commit()
-
-def create_user_type(user_type, data):
-    if frappe.db.exists("User Type", user_type):
-        doc = frappe.get_cached_doc("User Type", user_type)
-        doc.user_doctypes = []
-    else:
-        doc = frappe.new_doc("User Type")
-        doc.update(
-            {
-                "name": user_type,
-                "role": data.get("role"),
-                "user_id_field": data.get("user_id_field"),
-                "apply_user_permission_on": data.get("apply_user_permission_on"),
-            }
-        )
-
-    create_role_permissions_for_doctype(doc, data)
-    doc.save(ignore_permissions=True)
 
 def get_manager_user_data():
     doctypes = {}
