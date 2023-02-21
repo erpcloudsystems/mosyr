@@ -2,7 +2,7 @@ import frappe
 from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.installer import update_site_config
-from erpnext.setup.install import create_role_permissions_for_doctype, create_custom_role
+from erpnext.setup.install import create_role_permissions_for_doctype
 from mosyr import (
     create_account,
     create_cost_center,
@@ -271,10 +271,21 @@ def create_non_standard_user_types():
         user_type_limit.setdefault(frappe.scrub(user_type), 10000)
     update_site_config("user_type_doctype_limit", user_type_limit)
 
+    for role in ["SaaS Manager", "Employee Self Service"]:
+        create_custom_role(role)
+
     for user_type, data in iteritems(non_stadard_users):
-        create_custom_role(data)
+        # create_custom_role(data)
+        
         create_user_type(user_type, data)
     frappe.db.commit()
+
+def create_custom_role(role):
+    if not frappe.db.exists("Role", role):
+        frappe.get_doc(
+            {"doctype": "Role", "role_name": role, "desk_access": 1, "is_custom": 1}
+        ).insert(ignore_permissions=True)
+        frappe.db.commit()
 
 def create_user_type(user_type, data):
     if frappe.db.exists("User Type", user_type):
@@ -286,7 +297,6 @@ def create_user_type(user_type, data):
             {
                 "name": user_type,
                 "role": data.get("role"),
-                "is_standard": 0,
                 "user_id_field": data.get("user_id_field"),
                 "apply_user_permission_on": data.get("apply_user_permission_on"),
             }
@@ -523,8 +533,7 @@ def add_select_perm_for_all():
     frappe.db.commit()
 
 def create_role_and_set_to_admin():
-    data = {"role": "Read User Type"}
-    create_custom_role(data)
+    create_custom_role("Read User Type")
     frappe.get_doc("User", "Administrator").add_roles("Read User Type")
     frappe.db.commit()
     update_permission_property("User", "Read User Type", 3, "read", 1)
