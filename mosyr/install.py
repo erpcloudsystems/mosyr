@@ -276,7 +276,7 @@ def create_non_standard_user_types():
         if user_type == "SaaS Manager":
             sm = frappe.db.exists("Role", "SaaS Manager")
             if sm:
-                smr = frappe.get_doc("Role", "SaaS Manager")
+                smr = frappe.get_doc("Role", sm)
                 smr.is_custom = 1
                 smr.desk_access = 1
                 smr.save(ignore_permissions=True)
