@@ -407,7 +407,7 @@ fixtures = [
 					"Payroll Entry-bank_account-print_hide",
 					"Payroll Entry-salary_slips_created-print_hide",
 					"Payroll Entry-salary_slips_submitted-print_hide",
-                    "Payroll Entry-cost_center-print_hide",
+                    			"Payroll Entry-cost_center-print_hide",
 
 					"Payroll Entry-main-default_print_format",
 				]]
@@ -480,7 +480,7 @@ fixtures = [
 			["name", "in", 
 				[
 					"Data Import Log",
-                    "Standard Printing for Payroll",
+                    			"Standard Printing for Payroll",
 				]
 			]
 		]
