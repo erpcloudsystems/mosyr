@@ -477,7 +477,8 @@ fixtures = [
 		[
 			["name", "in", 
 				[
-					"Data Import Log"
+					"Data Import Log",
+                    "Standard Printing for Payroll",
 				]
 			]
 		]
