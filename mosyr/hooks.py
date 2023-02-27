@@ -408,6 +408,8 @@ fixtures = [
 					"Payroll Entry-salary_slips_created-print_hide",
 					"Payroll Entry-salary_slips_submitted-print_hide",
                     "Payroll Entry-cost_center-print_hide",
+
+					"Payroll Entry-main-default_print_format",
 				]]
 			]
 	},
