@@ -401,6 +401,13 @@ fixtures = [
 					"Salary Slip-total_deduction-print_hide_if_no_value",
 					"Salary Slip-base_gross_year_to_date-print_hide",
 					"Salary Slip-payroll_cost_center-print_hide",
+                    
+					"Payroll Entry-payroll_payable_account-print_hide",
+					"Payroll Entry-payment_account-print_hide",
+					"Payroll Entry-bank_account-print_hide",
+					"Payroll Entry-salary_slips_created-print_hide",
+					"Payroll Entry-salary_slips_submitted-print_hide",
+                    "Payroll Entry-cost_center-print_hide",
 				]]
 			]
 	},
