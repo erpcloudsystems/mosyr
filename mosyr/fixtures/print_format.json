@@ -25,5 +25,32 @@
   "raw_printing": 0,
   "show_section_headings": 1,
   "standard": "Yes"
+ },
+ {
+  "absolute_value": 0,
+  "align_labels_right": 0,
+  "css": null,
+  "custom_format": 0,
+  "default_print_language": null,
+  "disabled": 0,
+  "doc_type": "Payroll Entry",
+  "docstatus": 0,
+  "doctype": "Print Format",
+  "font": "Default",
+  "format_data": "[{\"fieldname\": \"print_heading_template\", \"fieldtype\": \"Custom HTML\", \"options\": \"<div class=\\\"print-heading\\\">\\t\\t\\t\\t<h2><div>Payroll Entry</div><br><small class=\\\"sub-heading\\\">{{ doc.name }}</small>\\t\\t\\t\\t</h2></div>\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Select Employees\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"posting_date\", \"print_hide\": 0, \"label\": \"Posting Date\"}, {\"fieldname\": \"payroll_frequency\", \"print_hide\": 0, \"label\": \"Payroll Frequency\"}, {\"fieldname\": \"company\", \"print_hide\": 0, \"label\": \"Company\"}, {\"fieldname\": \"branch\", \"print_hide\": 0, \"label\": \"Branch\"}, {\"fieldname\": \"department\", \"print_hide\": 0, \"label\": \"Department\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"currency\", \"print_hide\": 0, \"label\": \"Currency\"}, {\"fieldname\": \"exchange_rate\", \"print_hide\": 0, \"label\": \"Exchange Rate\"}, {\"fieldname\": \"number_of_employees\", \"print_hide\": 0, \"label\": \"Number Of Employees\"}, {\"fieldname\": \"designation\", \"print_hide\": 0, \"label\": \"Designation\"}, {\"fieldtype\": \"Section Break\", \"label\": \"\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"_custom_html\", \"print_hide\": 0, \"label\": \"Custom HTML\", \"fieldtype\": \"HTML\", \"options\": \"{% set data = frappe.get_doc(\\\"Payroll Register Tool\\\").get_employees_payroll_details(doc.name) %}\\n<div data-fieldname=\\\"employees\\\" data-fieldtype=\\\"Table\\\">\\n    <table class=\\\"table table-bordered table-condensed\\\">\\n        <thead>\\n            <tr>\\n                <th class=\\\"text-center\\\" colspan=\\\"5\\\">Employee Details</th>\\n                {% if data.get(\\\"len_earnings\\\") > 0 %}\\n                    <th class=\\\"text-center\\\" colspan=\\\"{{data.get(\\\"len_earnings\\\")}}\\\">Earnings</th>\\n                {% endif %}\\n                {% if data.get(\\\"len_deductions\\\") > 0 %}\\n                    <th class=\\\"text-center\\\" colspan=\\\"{{data.get(\\\"len_deductions\\\")}}\\\">Deductions</th>\\n                {% endif %}\\n                <th class=\\\"text-center\\\" colspan=\\\"1\\\">Net Pay</th>\\n            </tr>\\n            <tr>\\n                <th class=\\\"table-sr\\\">Sr</th>\\n                <th data-fieldtype=\\\"Table\\\">Employee</th>\\n                <th data-fieldtype=\\\"Table\\\">Employee Name</th>\\n                <th data-fieldtype=\\\"Table\\\">Department</th>\\n                <th data-fieldtype=\\\"Table\\\">Designation</th>\\n                {% for earns in data.get(\\\"earnings\\\") %}\\n                    <th data-fieldtype=\\\"Table\\\">{{ earns }}</th>\\n                {% endfor %}\\n                {% for decs in data.get(\\\"deductions\\\") %}\\n                    <th data-fieldtype=\\\"Table\\\">{{ decs }}</th>\\n                {% endfor %}\\n                <th data-fieldtype=\\\"Table\\\">Total</th>\\n            </tr>\\n        </thead>\\n        <tbody>\\n            {% for row in data.get(\\\"data\\\") %}\\n            <tr>\\n                {% for r in row %}\\n                    <td>{{ r }}</td>\\n                {% endfor %}\\n            </tr>\\n            {% endfor %}\\n        </tbody>\\n    </table>\\n</div>\"}, {\"fieldtype\": \"Section Break\", \"label\": \"\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"validate_attendance\", \"print_hide\": 0, \"label\": \"Validate Attendance\"}, {\"fieldname\": \"attendance_detail_html\", \"print_hide\": 0}, {\"fieldtype\": \"Section Break\", \"label\": \"Select Payroll Period\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"start_date\", \"print_hide\": 0, \"label\": \"Start Date\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"end_date\", \"print_hide\": 0, \"label\": \"End Date\"}]",
+  "html": null,
+  "line_breaks": 0,
+  "modified": "2023-02-27 18:38:00.035353",
+  "module": "Payroll",
+  "name": "Standard Printing for Payroll",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "print_format_builder": 1,
+  "print_format_type": "Jinja",
+  "raw_commands": null,
+  "raw_printing": 0,
+  "show_section_headings": 0,
+  "standard": "No"
  }
 ]

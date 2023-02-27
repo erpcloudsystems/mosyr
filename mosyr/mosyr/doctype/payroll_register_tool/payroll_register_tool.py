@@ -161,3 +161,93 @@ class PayrollRegisterTool(Document):
 
 		frappe.msgprint(msg, _("Salary Structure Status"))
 		return { "status": ss_status }
+	
+	def get_employees_payroll_details(self, payroll):
+		earnings = [sc.name for sc in frappe.db.sql("select name from `tabSalary Component` where type='Earning'", as_dict=True)]
+		deductions = [sc.name for sc in frappe.db.sql("select name from `tabSalary Component` where type='Deduction'", as_dict=True)]
+		
+		zeros_earnings =   [True for i in range(len(earnings))]
+		zeros_deductions = [True for i in range(len(deductions))]
+		
+		data = []
+		
+		payroll = frappe.get_doc("Payroll Entry", payroll)
+		
+		for sr, employee in enumerate(payroll.employees, 1):
+			result_dict = frappe._dict()
+			result_dict.update({
+				"sr": sr,
+				"employee": employee.employee,
+				"employee_name": employee.employee_name,
+				"department": employee.department,
+				"designation": employee.designation,
+			})
+			slip = frappe.get_doc("Salary Slip", {
+				"payroll_entry": payroll.name, "employee": employee.employee
+			})
+			emp_earnings = [0 for i in range(len(earnings))]
+			emp_deductions = [0 for i in range(len(deductions))]
+			result_dict.update({
+				"sr": sr,
+				"employee": employee.employee,
+				"employee_name": employee.employee_name,
+				"department": employee.department,
+				"designation": employee.designation,
+				"net_pay": 0
+			})
+			if slip:
+				for e in slip.earnings:
+					try:
+						idx = earnings.index(e.salary_component)
+						amount = flt(e.amount)
+						if amount > 0:
+							zeros_earnings[idx] = False
+						emp_earnings[idx] = amount
+					except: pass
+				for d in slip.deductions:
+					try:
+						idx = deductions.index(d.salary_component)
+						amount = flt(d.amount)
+						if amount > 0:
+							zeros_deductions[idx] = False
+						emp_deductions[idx] = amount
+					except: pass
+				result_dict.update({
+					"net_pay": flt(slip.net_pay)
+				})
+			result_dict.update({
+				"earnings": emp_earnings,
+				"deductions": emp_deductions,
+			})
+			data.append(result_dict)
+		return self.get_clean_data(zeros_earnings, zeros_deductions, earnings, deductions, data)
+
+	def get_clean_data(self, ezeros, dzeros, erns, dedcs, data):
+		earnings = []
+		deductions = []
+		for idx, e in enumerate(ezeros):
+			if not e: earnings.append(erns[idx])
+		for idx, d in enumerate(dzeros): 
+			if not d: deductions.append(dedcs[idx])
+		
+		final_data = []
+		for d in data:
+			row = [
+				d.get("sr", '-'), d.get("employee", ''), d.get("employee_name", ''),
+				d.get("department", ''), d.get("designation", '')
+			]
+			erns = d.get("earnings", [])
+			for idx, e in enumerate(ezeros):
+				if not e: row.append(erns[idx])
+			dedcs = d.get("deductions", [])
+			for idx, de in enumerate(dzeros): 
+				if not de: row.append(dedcs[idx])
+			row.append(d.get("net_pay", 0))
+			final_data.append(row)
+		return {
+			"earnings": earnings,
+			"len_earnings": len(earnings),
+			"deductions": deductions,
+			"len_deductions": len(deductions),
+			"data": final_data
+		}
