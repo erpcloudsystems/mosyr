@@ -218,10 +218,13 @@ def add_employee_log(*args, **kwargs):
     if isinstance(logs_data, list):
         for log in logs_data:
             log_id = log.get("log_id", False)
-            device_id = log.get("device_id", "")
+            
             if log_id:
+                # Extract data from log
                 employee_field_value = log.get("employee_field_value", False)
+                device_id = log.get("device_id", "")
                 timestamp = log.get("timestamp", False)
+                log_type = log.get("log_type", '-')
                 if not employee_field_value or not timestamp:
                     errors.append({
                         "log_id": log_id,
@@ -239,27 +242,36 @@ def add_employee_log(*args, **kwargs):
                         "result": "no employee found for {}".format(employee_field_value or "")
                     })
                     continue
+                if not isinstance(log_type, str):
+                    log_type = None
+                else:
+                    log_type = f'{log_type}'.upper()
                 
-                log_type = log.get("log_id", '*****')
-                if log_type in ['0', 0]:
+                if log_type in ['0', 0, 'IN']:
                     log_type = "IN"
-                elif log_type in ['1', 1]:
+                elif log_type in ['1', 1, 'OUT']:
                     log_type = "OUT"
                 else:
                     log_type = None
 
                 frappe.logger("mosyr.biometric").debug({"resuest_data":" [!] logs_data"})
                 doc = frappe.new_doc("Employee Checkin")
-                doc.employee = employee.name
-                doc.employee_name = employee.employee_name
+                doc.employee = f'{employee.name}'
+                doc.employee_name = f'{employee.employee_name}'
                 doc.time = timestamp
-                doc.device_id = device_id
+                doc.device_id = f'{device_id}'
                 doc.log_type = log_type
-                doc.insert(ignore_permissions=True)
-                success.append({
-                    "log_id": log_id,
-                    "result": "success"
-                })
+                try:
+                    doc.insert(ignore_permissions=True)
+                    success.append({
+                        "log_id": log_id,
+                        "result": "success"
+                    })
+                except Exception as e:
+                    success.append({
+                        "log_id": log_id,
+                        "result": e
+                    })
     return {
         "errors": errors,
         "success": success,
