@@ -239,6 +239,14 @@ def add_employee_log(*args, **kwargs):
                         "result": "no employee found for {}".format(employee_field_value or "")
                     })
                     continue
+                
+                log_type = log.get("log_id", '*****')
+                if log_type in ['0', 0]:
+                    log_type = "IN"
+                elif log_type in ['1', 1]:
+                    log_type = "OUT"
+                else:
+                    log_type = None
 
                 frappe.logger("mosyr.biometric").debug({"resuest_data":" [!] logs_data"})
                 doc = frappe.new_doc("Employee Checkin")
@@ -246,7 +254,7 @@ def add_employee_log(*args, **kwargs):
                 doc.employee_name = employee.employee_name
                 doc.time = timestamp
                 doc.device_id = device_id
-                doc.log_type = None
+                doc.log_type = log_type
                 doc.insert(ignore_permissions=True)
                 success.append({
                     "log_id": log_id,
