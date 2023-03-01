@@ -268,7 +268,7 @@ def add_employee_log(*args, **kwargs):
                         "result": "success"
                     })
                 except Exception as e:
-                    success.append({
+                    errors.append({
                         "log_id": log_id,
                         "result": e
                     })
