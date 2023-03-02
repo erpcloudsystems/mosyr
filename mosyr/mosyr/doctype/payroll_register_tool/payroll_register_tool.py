@@ -196,6 +196,8 @@ class PayrollRegisterTool(Document):
 				"net_pay": 0
 			})
 			if slip:
+				total_e = 0
+				total_d = 0
 				for e in slip.earnings:
 					try:
 						idx = earnings.index(e.salary_component)
@@ -203,6 +205,7 @@ class PayrollRegisterTool(Document):
 						if amount > 0:
 							zeros_earnings[idx] = False
 						emp_earnings[idx] = amount
+						total_e += amount
 					except: pass
 				for d in slip.deductions:
 					try:
@@ -211,6 +214,7 @@ class PayrollRegisterTool(Document):
 						if amount > 0:
 							zeros_deductions[idx] = False
 						emp_deductions[idx] = amount
+						total_d += amount
 					except: pass
 				result_dict.update({
 					"net_pay": flt(slip.net_pay)
@@ -220,9 +224,9 @@ class PayrollRegisterTool(Document):
 				"deductions": emp_deductions,
 			})
 			data.append(result_dict)
-		return self.get_clean_data(zeros_earnings, zeros_deductions, earnings, deductions, data)
+		return self.get_clean_data(zeros_earnings, zeros_deductions, earnings, total_e, deductions, total_d, data)
 
-	def get_clean_data(self, ezeros, dzeros, erns, dedcs, data):
+	def get_clean_data(self, ezeros, dzeros, erns,total_e, dedcs, total_d,data):
 		earnings = []
 		deductions = []
 		for idx, e in enumerate(ezeros):
@@ -239,15 +243,27 @@ class PayrollRegisterTool(Document):
 			erns = d.get("earnings", [])
 			for idx, e in enumerate(ezeros):
 				if not e: row.append(erns[idx])
+			if total_e > 0:
+				row.append(total_e)
 			dedcs = d.get("deductions", [])
 			for idx, de in enumerate(dzeros): 
 				if not de: row.append(dedcs[idx])
+			if total_d > 0:
+				row.append(total_d)
 			row.append(d.get("net_pay", 0))
 			final_data.append(row)
+		len_earnings = len(earnings)
+		if total_d > 0:
+			len_earnings = len(earnings) +1
+		len_deductions = len(deductions)
+		if total_d > 0:
+			len_deductions = len(deductions) +1
 		return {
 			"earnings": earnings,
-			"len_earnings": len(earnings),
+			"len_earnings": len_earnings,
 			"deductions": deductions,
-			"len_deductions": len(deductions),
-			"data": final_data
+			"len_deductions": len_deductions,
+			"data": final_data,
+			"total_e" :total_e,
+			"total_d" :total_d,
 		}
