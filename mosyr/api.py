@@ -394,3 +394,28 @@ def update_user_type_limits(doc,method):
     for utype in types:
         user_type_limit.setdefault(frappe.scrub(utype.name), 10000)
     update_site_config("user_type_doctype_limit", user_type_limit)
+
+@frappe.whitelist(allow_guest=True)
+def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
+    from frappe.www.printview import validate_print_permission
+    from frappe.utils.pdf import get_pdf
+    doc = doc or frappe.get_doc(doctype, name)
+    try:
+        validate_print_permission(doc)
+    except frappe.exceptions.LinkExpired:
+        frappe.local.response.http_status_code = 410
+        frappe.local.response.message = _("Link Expired")
+        return
+    except frappe.exceptions.InvalidKeyError:
+        frappe.local.response.http_status_code = 401
+        frappe.local.response.message = _("Invalid Key")
+        return
+    pdf_options = None
+    if doctype == "Payroll Entry" and format == "Standard Printing for Payroll":
+        pdf_options = {"orientation": "landscape"}
+    html = frappe.get_print(doctype, name, format, doc=doc, no_letterhead=no_letterhead, pdf_options=pdf_options)
+    frappe.local.response.filename = "{name}.pdf".format(
+        name=name.replace(" ", "-").replace("/", "-")
+    )
+    frappe.local.response.filecontent = get_pdf(html)
+    frappe.local.response.type = "pdf"

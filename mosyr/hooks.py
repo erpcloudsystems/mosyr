@@ -202,6 +202,9 @@ scheduler_events = {
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "mosyr.event.get_events"
 # }
+override_whitelisted_methods = {
+	"frappe.utils.print_format.download_pdf": "mosyr.api.download_pdf"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
