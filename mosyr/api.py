@@ -287,11 +287,11 @@ def translate_employee(doc,method):
             tr = frappe.new_doc("Translation")
     if not tr: return
 
-    tr.flags.ignore_permissions = True
     tr.language = "en"
     tr.source_text = doc.first_name
     tr.translated_text = doc.full_name_en
-    # tr.save(ignore_permissions=True)
+    tr.flags.ignore_permissions = True
+    tr.save(ignore_permissions=True)
 
 @frappe.whitelist()
 def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
