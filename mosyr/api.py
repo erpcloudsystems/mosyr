@@ -135,7 +135,8 @@ def convert_date(gregorian_date=None, hijri_date=None):
         return str(gregorian)
 
 def validate_social_insurance(doc, method):
-    comapny_data = frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
+    comapny_data = frappe.db.sql("""SELECT * FROM `tabCompany Controller` WHERE company = %s""", doc.company, as_dict=1)
+    #  frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
     social_type = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
     if len(comapny_data) > 0:
         comapny_data = comapny_data[0]
@@ -291,7 +292,7 @@ def translate_employee(doc,method):
     tr.source_text = doc.first_name
     tr.translated_text = doc.full_name_en
     tr.flags.ignore_permissions = True
-    tr.save(ignore_permissions=True)
+    tr.insert(ignore_permissions=True)
 
 @frappe.whitelist()
 def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
