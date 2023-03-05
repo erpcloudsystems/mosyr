@@ -6,6 +6,7 @@ from frappe.utils import nowdate, getdate, today, flt, cint, date_diff
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from json import loads
+from frappe.utils import get_datetime
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -216,6 +217,7 @@ def add_employee_log(*args, **kwargs):
     logs_data = logs_data.get("logs", [])
     errors = []
     success = []
+    
     if isinstance(logs_data, list):
         for log in logs_data:
             log_id = log.get("log_id", False)
@@ -259,7 +261,7 @@ def add_employee_log(*args, **kwargs):
                 doc = frappe.new_doc("Employee Checkin")
                 doc.employee = f'{employee.name}'
                 doc.employee_name = f'{employee.employee_name}'
-                doc.time = timestamp
+                doc.time = get_datetime(timestamp)
                 doc.device_id = f'{device_id}'
                 doc.log_type = log_type
                 try:
