@@ -396,7 +396,7 @@ def update_user_type_limits(doc,method):
     update_site_config("user_type_doctype_limit", user_type_limit)
 
 @frappe.whitelist(allow_guest=True)
-def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
+def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0, letterhead=""):
     from frappe.www.printview import validate_print_permission
     from frappe.utils.pdf import get_pdf
     doc = doc or frappe.get_doc(doctype, name)
@@ -410,10 +410,15 @@ def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
         frappe.local.response.http_status_code = 401
         frappe.local.response.message = _("Invalid Key")
         return
-    pdf_options = None
+    html = frappe.get_print(doctype, name, format, doc=doc, no_letterhead=no_letterhead)
     if doctype == "Payroll Entry" and format == "Standard Printing for Payroll":
-        pdf_options = {"orientation": "landscape"}
-    html = frappe.get_print(doctype, name, format, doc=doc, no_letterhead=no_letterhead, pdf_options=pdf_options)
+        from frappe.utils.print_format import report_to_pdf
+        report_to_pdf(html, orientation="Landscape")
+        frappe.local.response.filename = "{name}.pdf".format(
+            name=name.replace(" ", "-").replace("/", "-")
+        )
+        return
+    html = frappe.get_print(doctype, name, format, doc=doc, no_letterhead=no_letterhead)
     frappe.local.response.filename = "{name}.pdf".format(
         name=name.replace(" ", "-").replace("/", "-")
     )
