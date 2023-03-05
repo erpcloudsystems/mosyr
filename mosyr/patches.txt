@@ -16,4 +16,3 @@ mosyr.patches.update_account_salary_components
 mosyr.patches.recheck_company_accounts
 mosyr.patches.update_all_accounts_currency
 mosyr.patches.delete_perms_for_all_restricted_managers
-mosyr.patches.update_saas_manager_permission

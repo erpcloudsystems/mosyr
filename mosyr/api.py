@@ -290,6 +290,7 @@ def translate_employee(doc,method):
     tr.language = "en"
     tr.source_text = doc.first_name
     tr.translated_text = doc.full_name_en
+    tr.flags.ignore_permissions = True
     tr.save()
 
 @frappe.whitelist()

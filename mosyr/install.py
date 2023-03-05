@@ -24,7 +24,7 @@ docs_for_manager = [
     "Lateness Permission",
     "Company Controller",
     "Company Id",
-    "Translation",
+    # "Translation",
     "User",
     "Users Permission Manager",
     "Department",
