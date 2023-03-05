@@ -396,7 +396,7 @@ def update_user_type_limits(doc,method):
     update_site_config("user_type_doctype_limit", user_type_limit)
 
 @frappe.whitelist(allow_guest=True)
-def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0, letterhead=""):
+def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
     from frappe.www.printview import validate_print_permission
     from frappe.utils.pdf import get_pdf
     doc = doc or frappe.get_doc(doctype, name)
