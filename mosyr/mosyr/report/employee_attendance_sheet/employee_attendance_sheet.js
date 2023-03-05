@@ -46,7 +46,7 @@ const render_pdf = function (url, filters) {
 }
 frappe.query_reports["Employee Attendance Sheet"] = {
     onload: function (report) {
-        if (frappe.model.can_export(report.report_name)) {
+        // if (frappe.model.can_export(report.report_name)) {
             var company = frappe.query_report.get_filter_value("company")
             // console.log(frappe.query_report.get_filter("company"));
             report.page.add_inner_button(__("Summary Attendance"), function () {
@@ -239,7 +239,7 @@ frappe.query_reports["Employee Attendance Sheet"] = {
                 });
                 d.show();
             }, __("Export"));
-        }
+        // }
     },
     "filters": [
         {
