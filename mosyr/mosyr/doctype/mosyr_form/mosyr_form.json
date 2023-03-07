@@ -14,7 +14,9 @@
   "fields",
   "sb2",
   "permissions",
-  "amended_from"
+  "amended_from",
+  "transition_rules_section",
+  "workflow_transition"
  ],
  "fields": [
   {
@@ -75,12 +77,23 @@
    "options": "Mosyr Form",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "workflow_transition",
+   "fieldtype": "Table",
+   "label": "Transition",
+   "options": "Mosyr Workflow"
+  },
+  {
+   "fieldname": "transition_rules_section",
+   "fieldtype": "Section Break",
+   "label": "Transition Rules"
   }
  ],
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-13 12:23:44.269801",
+ "modified": "2023-03-07 10:59:49.639068",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
