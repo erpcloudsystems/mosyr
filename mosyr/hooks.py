@@ -341,6 +341,10 @@ fixtures = [
 				"Attendance-mosyr_employee_multiselect",
 				"Shift Type-max_working_hours",
 				"Email Template-use_for_welcome_email",
+
+				"Payroll Entry-branches",
+				"Payroll Entry-departments",
+				"Payroll Entry-designations",
          ]]
         ]
     },
