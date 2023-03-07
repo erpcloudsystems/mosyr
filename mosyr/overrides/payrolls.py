@@ -217,12 +217,24 @@ class CustomPayrollEntry(PayrollEntry):
                 frappe.bold(self.company),
                 frappe.bold(self.currency),
             )
-            if self.branch:
-                error_msg += "<br>" + _("Branches: {0}").format(frappe.bold(self.branch))
-            if self.department:
-                error_msg += "<br>" + _("Departments: {0}").format(frappe.bold(self.department))
-            if self.designation:
-                error_msg += "<br>" + _("Designations: {0}").format(frappe.bold(self.designation))
+            if len(self.branches) > 0:
+                branches = []
+                for branch in self.branches:
+                    branches.append("<li>{0}</li>".format(frappe.bold(branch.branch)))
+                branches = "".join(branches)
+                error_msg += "<br>" + _("Branches: <ul>{0}</ul>").format(branches)
+            if len(self.departments) > 0:
+                departments = []
+                for department in self.departments:
+                    departments.append("<li>{0}</li>".format(frappe.bold(department.department)))
+                departments = "".join(departments)
+                error_msg += "<br>" + _("Departments: <ul>{0}</ul>").format(departments)
+            if len(self.designations) > 0:
+                designations = []
+                for designation in self.designations:
+                    designations.append("<li>{0}</li>".format(frappe.bold(designation.designation)))
+                designations = "".join(designations)
+                error_msg += "<br>" + _("Designations: <ul>{0}</ul>").format(designations)
             if self.start_date:
                 error_msg += "<br>" + _("Start date: {0}").format(frappe.bold(self.start_date))
             if self.end_date:
