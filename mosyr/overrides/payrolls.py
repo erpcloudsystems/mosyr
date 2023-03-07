@@ -9,7 +9,7 @@ from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assign
     SalaryStructureAssignment,
 )
 from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip
-from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
+from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry, get_joining_relieving_condition, get_sal_struct, remove_payrolled_employees, get_emp_list
 from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
     get_accounting_dimensions,
 )
@@ -205,3 +205,106 @@ class CustomPayrollEntry(PayrollEntry):
         journal_entry.set("accounts", accounts)
         journal_entry.save(ignore_permissions=True)
         journal_entry.submit()
+    
+    @frappe.whitelist()
+    def fill_employee_details(self):
+        self.set("employees", [])
+        employees = self.custom_get_emp_list()
+        if not employees:
+            error_msg = _(
+                "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>"
+            ).format(
+                frappe.bold(self.company),
+                frappe.bold(self.currency),
+            )
+            if self.branch:
+                error_msg += "<br>" + _("Branches: {0}").format(frappe.bold(self.branch))
+            if self.department:
+                error_msg += "<br>" + _("Departments: {0}").format(frappe.bold(self.department))
+            if self.designation:
+                error_msg += "<br>" + _("Designations: {0}").format(frappe.bold(self.designation))
+            if self.start_date:
+                error_msg += "<br>" + _("Start date: {0}").format(frappe.bold(self.start_date))
+            if self.end_date:
+                error_msg += "<br>" + _("End date: {0}").format(frappe.bold(self.end_date))
+            frappe.throw(error_msg, title=_("No employees found"))
+
+        for d in employees:
+            self.append("employees", d)
+
+        self.number_of_employees = len(self.employees)
+        if self.validate_attendance:
+            return self.validate_employee_attendance()
+    
+    def custom_make_filters(self):
+        filters = frappe._dict()
+        filters["company"] = self.company
+        branches = []
+        departments = []
+        designations = []
+
+        for branch in self.branches:
+            branches.append(branch.branch)
+
+        for department in self.departments:
+            departments.append(department.department)
+        
+        for designation in self.designations:
+            designations.append(designation.designation)
+
+        filters["branches"] = branches
+        filters["departments"] = departments
+        filters["designations"] = designations
+
+        return filters
+
+    def custom_get_emp_list(self):
+        """
+        Returns list of active employees based on selected criteria
+        and for which salary structure exists
+        """
+        self.check_mandatory()
+        filters = self.custom_make_filters()
+        cond = custom_get_filter_condition(filters)
+        cond += get_joining_relieving_condition(self.start_date, self.end_date)
+
+        condition = ""
+        if self.payroll_frequency:
+            condition = """and payroll_frequency = '%(payroll_frequency)s'""" % {
+                "payroll_frequency": self.payroll_frequency
+            }
+
+        sal_struct = get_sal_struct(
+            self.company, self.currency, self.salary_slip_based_on_timesheet, condition
+        )
+        if sal_struct:
+            cond += "and t2.salary_structure IN %(sal_struct)s "
+            cond += "and t2.payroll_payable_account = %(payroll_payable_account)s "
+            cond += "and %(from_date)s >= t2.from_date"
+            emp_list = get_emp_list(sal_struct, cond, self.end_date, self.payroll_payable_account)
+            emp_list = remove_payrolled_employees(emp_list, self.start_date, self.end_date)
+            return emp_list
+
+def custom_get_filter_condition(filters):
+    cond = ""
+    for f in ["company"]:
+        if filters.get(f):
+            cond += " and t1." + f + " = " + frappe.db.escape(filters.get(f))
+    for f in ["branches"]:
+        d = filters.get(f)
+        if isinstance(d, list) and len(d) > 0:
+            ind = ",".join([f" {frappe.db.escape(id_)} " for id_ in d])
+            cond += " and t1.branch in ( " + ind + " ) "
+    for f in ["departments"]:
+        d = filters.get(f)
+        if isinstance(d, list) and len(d) > 0:
+            ind = ",".join([f" {frappe.db.escape(id_)} " for id_ in d])
+            cond += " and t1.department in ( " + ind + " ) "
+
+    for f in ["designations"]:
+        d = filters.get(f)
+        if isinstance(d, list) and len(d) > 0:
+            ind = ",".join([f" {frappe.db.escape(id_)} " for id_ in d])
+            cond += " and t1.designation in ( " + ind + " ) "
+    
+    return cond
