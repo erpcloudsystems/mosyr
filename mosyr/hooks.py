@@ -341,6 +341,10 @@ fixtures = [
 				"Attendance-mosyr_employee_multiselect",
 				"Shift Type-max_working_hours",
 				"Email Template-use_for_welcome_email",
+
+				"Payroll Entry-branches",
+				"Payroll Entry-departments",
+				"Payroll Entry-designations",
          ]]
         ]
     },
@@ -410,9 +414,11 @@ fixtures = [
 					"Payroll Entry-bank_account-print_hide",
 					"Payroll Entry-salary_slips_created-print_hide",
 					"Payroll Entry-salary_slips_submitted-print_hide",
-                    			"Payroll Entry-cost_center-print_hide",
-
+                    "Payroll Entry-cost_center-print_hide",
 					"Payroll Entry-main-default_print_format",
+                    "Payroll Entry-designation-hidden",
+                    "Payroll Entry-department-hidden",
+                    "Payroll Entry-branch-hidden",
 				]]
 			]
 	},
