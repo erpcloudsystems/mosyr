@@ -80,7 +80,7 @@ frappe.query_reports["Employee Attendance Sheet"] = {
                             "fieldname": "company",
                             "fieldtype": "Link",
                             "options": "Company",
-                            "default": company,
+                            "default": frappe.query_report.get_filter_value("company"),
                             "reqd": 1,
                             onchange() {
                                 company = d.get_value('company') || null;
@@ -94,7 +94,7 @@ frappe.query_reports["Employee Attendance Sheet"] = {
                             get_query: () => {
                                 return {
                                     filters: {
-                                        "company": company
+                                        "company": frappe.query_report.get_filter_value("company")
                                     }
                                 };
                             }
