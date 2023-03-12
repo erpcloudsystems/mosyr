@@ -5,13 +5,19 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 from erpnext.hr.utils import validate_active_employee
+from frappe.utils import time_diff_in_hours
 
 class ExitPermission(Document):
     def validate(self):
         validate_active_employee(self.employee)
-        self.validate_dates()
+        self.validate_exit_times()
 
 
-    def validate_dates(self):
-        if self.from_time and self.to_time and frappe.utils.time_diff_in_seconds(self.to_time , self.from_time) < 0:
-            frappe.throw(_("To time cannot be before from time"))
+    def validate_exit_times(self):
+        if not self.to_time or not self.from_time:
+            return
+        
+        exit_hours = time_diff_in_hours(self.from_time, self.to_time)
+        if exit_hours <= 0:
+            frappe.throw(_("To Time must be after From Time"))
+        self.exit_hours = exit_hours
