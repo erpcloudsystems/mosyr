@@ -17,7 +17,7 @@ class ExitPermission(Document):
         if not self.to_time or not self.from_time:
             return
         
-        exit_hours = time_diff_in_hours(self.from_time, self.to_time)
-        if exit_hours >= 0:
+        exit_hours = time_diff_in_hours(self.to_time, self.from_time)
+        if exit_hours <= 0:
             frappe.throw(_("To Time must be after From Time"))
         self.exit_hours = exit_hours
