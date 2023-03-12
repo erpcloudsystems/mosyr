@@ -581,13 +581,14 @@ def mark_attendance_and_link_log(
                 ("1", log_names),
             )
             if duplicate:
-                duplicate_att = frappe.get_doc("Attendance", duplicate)
-                duplicate_att.db_set("early_exit", early_exit, update_modified=False)
-                duplicate_att.db_set("late_entry", late_entry, update_modified=False)
-                duplicate_att.db_set("working_hours", working_hours, update_modified=False)
-                duplicate_att.db_set("in_time", in_time, update_modified=False)
-                duplicate_att.db_set("out_time", out_time, update_modified=False)
-                duplicate_att.db_set("status", attendance_status, update_modified=False)
+                for dattendance in duplicate:
+                    duplicate_att = frappe.get_doc("Attendance", dattendance.name)
+                    duplicate_att.db_set("early_exit", early_exit, update_modified=False)
+                    duplicate_att.db_set("late_entry", late_entry, update_modified=False)
+                    duplicate_att.db_set("working_hours", working_hours, update_modified=False)
+                    duplicate_att.db_set("in_time", in_time, update_modified=False)
+                    duplicate_att.db_set("out_time", out_time, update_modified=False)
+                    duplicate_att.db_set("status", attendance_status, update_modified=False)
             return None
     else:
         frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
