@@ -100,7 +100,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-12 16:58:38.692190",
+ "modified": "2023-03-13 14:28:13.125467",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Exit Permission",
@@ -142,6 +142,18 @@
    "role": "HR User",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "share": 1,
    "write": 1
   }
  ],
