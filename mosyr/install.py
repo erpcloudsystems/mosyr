@@ -22,6 +22,7 @@ docs_for_manager = [
     "Employee ID",
     "Passport Details",
     "Lateness Permission",
+    "Exit Permission",
     "Company Controller",
     "Company Id",
     "Translation",
@@ -448,6 +449,15 @@ def get_self_service_data():
                     "amend",
                 ],
                 "Lateness Permission": [
+                    "read",
+                    "write",
+                    "create",
+                    "delete",
+                    "submit",
+                    "cancel",
+                    "amend",
+                ],
+                "Exit Permission": [
                     "read",
                     "write",
                     "create",
