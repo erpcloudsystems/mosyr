@@ -988,7 +988,7 @@
   "doctype": "Workflow",
   "document_type": "Exit Permission",
   "is_active": 1,
-  "modified": "2023-03-12 14:30:39.161427",
+  "modified": "2023-03-14 01:30:26.851794",
   "name": "Exit Permission",
   "override_status": 0,
   "parent": null,
@@ -1040,7 +1040,7 @@
    {
     "action": "Approve",
     "allow_self_approval": 1,
-    "allowed": "HR Manager",
+    "allowed": "SaaS Manager",
     "condition": null,
     "next_state": "Approved by HR",
     "parent": "Exit Permission",
@@ -1051,7 +1051,7 @@
    {
     "action": "Reject",
     "allow_self_approval": 1,
-    "allowed": "HR Manager",
+    "allowed": "SaaS Manager",
     "condition": null,
     "next_state": "Rejected",
     "parent": "Exit Permission",
