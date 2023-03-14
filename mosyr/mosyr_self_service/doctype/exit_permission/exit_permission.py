@@ -33,18 +33,14 @@ class ExitPermission(Document):
             doc.insert()
             frappe.db.commit()
         if self.workflow_state == "Approved by HR":
-            shift_actual_timings = get_actual_start_end_datetime_of_shift(
-                self.employee, get_datetime(self.from_time), True
-            )
-            if shift_actual_timings:
-                if shift_actual_timings[0] and shift_actual_timings[1]:
-                    shift_type = frappe.get_doc("Shift Type", self.shift)
-                    if time_diff_in_seconds(str(self.from_time), str(shift_type.start_time)) <= 0:
-                        if time_diff_in_seconds(str(self.to_time), str(shift_type.start_time)) >= 0:
-                            create_checkin(self.employee, "IN", f'{self.date} {shift_type.start_time}')
-                    if time_diff_in_seconds(str(self.from_time), str(shift_type.end_time)) <= 0:
-                        if time_diff_in_seconds(str(self.to_time), str(shift_type.end_time)) >= 0:
-                            create_checkin(self.employee, "OUT", f'{self.date} {shift_type.end_time}')
+            if self.shift:
+                shift_type = frappe.get_doc("Shift Type", self.shift)
+                if time_diff_in_seconds(str(self.from_time), str(shift_type.start_time)) <= 0:
+                    if time_diff_in_seconds(str(self.to_time), str(shift_type.start_time)) >= 0:
+                        create_checkin(self.employee, "IN", f'{self.date} {shift_type.start_time}')
+                if time_diff_in_seconds(str(self.from_time), str(shift_type.end_time)) <= 0:
+                    if time_diff_in_seconds(str(self.to_time), str(shift_type.end_time)) >= 0:
+                        create_checkin(self.employee, "OUT", f'{self.date} {shift_type.end_time}')
     @frappe.whitelist()
     def get_employee_shift(self, employee):
         shift_actual_timings = get_actual_start_end_datetime_of_shift(
