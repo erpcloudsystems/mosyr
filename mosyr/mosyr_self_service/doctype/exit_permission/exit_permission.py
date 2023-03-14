@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from frappe import _
 from erpnext.hr.utils import validate_active_employee
 from frappe.utils import time_diff_in_hours
-from frappe.utils import get_datetime ,time_diff_in_seconds, datetime
+from frappe.utils import get_datetime ,time_diff_in_seconds, get_datetime_str
 from erpnext.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
 
 class ExitPermission(Document):
@@ -33,11 +33,10 @@ class ExitPermission(Document):
         if self.workflow_state == "Approved by HR":
             if self.shift:
                 shift_type = frappe.get_doc("Shift Type", self.shift)
-                exit_permission_datetime_from = frappe.utils.get_datetime_str(f'{self.date} {self.from_time}')
-                exit_permission_datetime_to = frappe.utils.get_datetime_str(f'{self.date} {self.to_time}')
-                shift_datetime_start_time = frappe.utils.get_datetime_str(f'{self.date} {shift_type.start_time}')
-                shift_datetime_end_time = frappe.utils.get_datetime_str(f'{self.date} {shift_type.end_time}')
-
+                exit_permission_datetime_from = get_datetime_str(f'{self.date} {self.from_time}')
+                exit_permission_datetime_to = get_datetime_str(f'{self.date} {self.to_time}')
+                shift_datetime_start_time = get_datetime_str(f'{self.date} {shift_type.start_time}')
+                shift_datetime_end_time = get_datetime_str(f'{self.date} {shift_type.end_time}')
 
                 if time_diff_in_seconds(exit_permission_datetime_from, shift_datetime_start_time) <= 0:
                     if time_diff_in_seconds(exit_permission_datetime_to, shift_datetime_start_time) >= 0:
