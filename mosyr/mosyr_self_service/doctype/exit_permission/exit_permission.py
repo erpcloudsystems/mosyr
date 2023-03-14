@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from frappe import _
 from erpnext.hr.utils import validate_active_employee
 from frappe.utils import time_diff_in_hours
-from frappe.utils import get_datetime ,time_diff_in_seconds, get_time
+from frappe.utils import get_datetime ,time_diff_in_seconds, datetime
 from erpnext.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
 
 class ExitPermission(Document):
@@ -37,10 +37,14 @@ class ExitPermission(Document):
                 shift_type = frappe.get_doc("Shift Type", self.shift)
                 if time_diff_in_seconds(str(self.from_time), str(shift_type.start_time)) <= 0:
                     if time_diff_in_seconds(str(self.to_time), str(shift_type.start_time)) >= 0:
-                        create_checkin(self.employee, "IN", f'{self.date} {shift_type.start_time}')
+                        shift_datetime = f'{self.date} {shift_type.start_time}'
+                        shift_datetime = datetime.datetime.strptime(shift_datetime, "%Y-%m-%d %H:%M:%S")
+                        create_checkin(self.employee, "IN", shift_datetime)
                 if time_diff_in_seconds(str(self.from_time), str(shift_type.end_time)) <= 0:
                     if time_diff_in_seconds(str(self.to_time), str(shift_type.end_time)) >= 0:
-                        create_checkin(self.employee, "OUT", f'{self.date} {shift_type.end_time}')
+                        shift_datetime = f'{self.date} {shift_type.end_time}'
+                        shift_datetime = datetime.datetime.strptime(shift_datetime, "%Y-%m-%d %H:%M:%S")
+                        create_checkin(self.employee, "OUT", shift_datetime)
     @frappe.whitelist()
     def get_employee_shift(self, employee):
         shift_actual_timings = get_actual_start_end_datetime_of_shift(
