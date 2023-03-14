@@ -28,7 +28,7 @@ class ExitPermission(Document):
             doc.employee = employee
             doc.log_type = log_type
             doc.time = time
-            doc.insert()
+            doc.save()
             frappe.db.commit()
         if self.workflow_state == "Approved by HR":
             if self.shift:
