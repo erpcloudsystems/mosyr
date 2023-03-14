@@ -414,6 +414,10 @@ class CustomShiftType(ShiftType):
                 mark_attendance(employee, date, "Absent", self.name)
 
     @frappe.whitelist()
+    def process_auto_attendance_v2(self):
+        self.process_auto_attendance()
+
+    @frappe.whitelist()
     def process_auto_attendance(self):
         if (
             not cint(self.enable_auto_attendance)

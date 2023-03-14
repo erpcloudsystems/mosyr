@@ -53,3 +53,14 @@ def notify_expired_dates(skip_check_olds=True):
             if getdate(edep.insurance_card_expire) < getdate(today()):
                 need_update = True
         if need_update: emp.db_set("notify_insurance_d", 1, update_modified=False)
+
+def process_auto_attendance_for_all_shifts():
+    frappe.log_error("5min", "Error log every 5 minutes")
+    shift_list = frappe.get_all("Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name")
+    for shift in shift_list:
+        doc = frappe.get_cached_doc("Shift Type", shift)
+        try:
+            doc.process_auto_attendance_v2()
+            doc.db_set("last_sync_of_checkin", frappe.utils.now_datetime(), update_modified=False)
+        except Exception as e:
+            frappe.log_error(e, "faild to process auto-attendance")

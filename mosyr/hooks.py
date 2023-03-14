@@ -161,13 +161,13 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"cron":{	
-		"0/1 * * * *" :[
-			"mosyr.cron.process_auto_attendance_for_all_shifts"
+		"0/5 * * * *" :[
+			"mosyr.tasks.process_auto_attendance_for_all_shifts"
 		]
 	},
 	"daily": [
-		"mosyr.daily.update_status_for_contracts",
-		"mosyr.daily.notify_expired_dates",
+		"mosyr.tasks.update_status_for_contracts",
+		"mosyr.tasks.notify_expired_dates",
 	],
 	"daily_long": [
 		"mosyr.mosyr.doctype.shift_builder.shift_builder.daily_shift_requests_creation"
