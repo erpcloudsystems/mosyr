@@ -55,7 +55,6 @@ def notify_expired_dates(skip_check_olds=True):
         if need_update: emp.db_set("notify_insurance_d", 1, update_modified=False)
 
 def process_auto_attendance_for_all_shifts():
-    frappe.log_error("5min", "Error log every 5 minutes")
     shift_list = frappe.get_all("Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name")
     for shift in shift_list:
         doc = frappe.get_cached_doc("Shift Type", shift)
