@@ -14,7 +14,7 @@ from frappe.permissions import update_permission_property
 
 docs_for_manager = [
     # "System Controller",
-    "DocPerm",
+    "Custom DocPerm",
     "Expense Claim",
     "Employee Tax Exemption Declaration",
     "Employee Tax Exemption Proof Submission",
