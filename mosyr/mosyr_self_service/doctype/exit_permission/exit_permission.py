@@ -43,11 +43,11 @@ class ExitPermission(Document):
                         shift_datetime = f'{self.date} {shift_type.end_time}'
                         shift_datetime = datetime.datetime.strptime(shift_datetime, "%Y-%m-%d %H:%M:%S")
                         create_checkin(self.employee, "OUT", shift_datetime)
-    @frappe.whitelist()
-    def get_employee_shift(self, employee):
-        shift_actual_timings = get_actual_start_end_datetime_of_shift(
-        employee, get_datetime(self.from_time), True
-        )
-        if shift_actual_timings[0] and shift_actual_timings[1]:
-            return shift_actual_timings[2].shift_type.name
-        return False
+    # @frappe.whitelist()
+    # def get_employee_shift(self, employee):
+    #     shift_actual_timings = get_actual_start_end_datetime_of_shift(
+    #     employee, get_datetime(self.from_time), True
+    #     )
+    #     if shift_actual_timings[0] and shift_actual_timings[1]:
+    #         return shift_actual_timings[2].shift_type.name
+    #     return False
