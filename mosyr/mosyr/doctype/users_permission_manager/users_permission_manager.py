@@ -109,7 +109,7 @@ class UsersPermissionManager(Document):
 		else:
 			frappe.get_doc(args).insert(ignore_permissions=1)
 
-	def get_user_types_data(slef, user, perms):
+	def get_user_types_data(self, user, perms):
 		doctypes_permissions = {
 			"Company": ['read'],
 		}
