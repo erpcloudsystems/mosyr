@@ -14,7 +14,6 @@ from frappe.permissions import update_permission_property
 
 docs_for_manager = [
     # "System Controller",
-    "Custom DocPerm",
     "Expense Claim",
     "Employee Tax Exemption Declaration",
     "Employee Tax Exemption Proof Submission",
@@ -523,12 +522,30 @@ def add_select_perm_for_all():
             update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
             update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
             update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "write", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "create", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "print", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "delete", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "import", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "export", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
             update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
+            update_permission_property(doc_field, "SaaS Manager", 0, "share", 1)
             update_permission_property(doc_field, "Employee Self Service", 0, "select", 1)
-        update_permission_property(doc.name, "SaaS Manager", 0, "select", 1)
-        update_permission_property(doc.name, "SaaS Manager", 0, "read", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
         update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "write", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "create", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "print", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "delete", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "import", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "export", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
         update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
+        update_permission_property(doc_field, "SaaS Manager", 0, "share", 1)
         update_permission_property(doc.name, "Employee Self Service", 0, "select", 1)
     frappe.db.commit()
 
