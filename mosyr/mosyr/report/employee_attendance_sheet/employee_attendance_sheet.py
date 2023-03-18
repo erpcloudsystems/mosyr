@@ -1,14 +1,14 @@
 from json import loads
 from PyPDF2 import PdfFileWriter
 from typing import Dict, List, Optional, Tuple
-from pypika import CustomFunction
+from pypika import functions, CustomFunction
 
 import frappe
 from frappe import _
 
 from frappe.query_builder.functions import Count, Sum
 
-from frappe.utils import date_diff, add_days, get_date_str, get_datetime, flt, cint, get_weekday
+from frappe.utils import date_diff, add_days, get_date_str, get_datetime, flt, cint, get_weekday, time_diff_in_hours
 from frappe.utils.print_format import report_to_pdf
 from weasyprint import HTML, CSS
 
@@ -51,6 +51,8 @@ day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 DateDiff = CustomFunction("DATEDIFF", ["start_date", "end_date"])
 TimeDiff = CustomFunction("TIMEDIFF", ["end_time", "start_time"])
 
+from .utils import get_employee_checkin_map
+
 def execute(filters: Optional[Filters] = None) -> Tuple:
     filters = frappe._dict(filters or {})
 
@@ -58,11 +60,12 @@ def execute(filters: Optional[Filters] = None) -> Tuple:
         frappe.throw(_("Please select date range."))
 
     attendance_map = get_attendance_map(filters)
-    if not attendance_map:
-        frappe.msgprint(
-            _("No attendance records found."), alert=True, indicator="orange"
-        )
-        return [], [], None, None
+    # checkin_map = get_employee_checkin_map(filters)
+    # if not attendance_map:
+    #     frappe.msgprint(
+    #         _("No attendance records found."), alert=True, indicator="orange"
+    #     )
+    #     return [], [], None, None
 
     columns = get_columns(filters)
     data = get_data(filters, attendance_map)
@@ -322,6 +325,7 @@ def get_rows(
         holidays = holiday_map.get(emp_holiday_list, [])
 
         employee_attendance = attendance_map.get(employee)
+        try_to_get_from_employee_checkin(employee, employee_attendance, filters)
         if not employee_attendance:
             attendance_for_employee = []
             no_logs = shifts_with_no_logs(employee, filters, [])
@@ -367,6 +371,221 @@ def shifts_with_no_logs(employee: str, filters: Filters, shifts: List):
         records.append(row)
     return records
 
+def try_to_get_from_employee_checkin(employee: str, employee_attendance: Dict, filters: Filters) -> Dict:
+    dates_with_attendance = []
+    if employee_attendance is None:
+        employee_attendance = {}
+    
+    if employee_attendance is not None:    
+        for shift, details in employee_attendance.items():
+            dates_with_attendance.extend(list(details.keys()))
+        dates_with_attendance = list(set(dates_with_attendance))
+    
+    total_days = get_total_days(filters)
+    from_date = filters.from_date
+    
+    attendance_map_from_checkin = {}
+    
+    for day in range(1, total_days + 1):
+        if from_date in dates_with_attendance:
+            from_date = add_days(from_date, 1)
+            continue
+        checkin_list = read_checkin_list(employee, from_date)
+        
+        if checkin_list is None:
+            from_date = add_days(from_date, 1)
+            continue
+        
+        for k, v in checkin_list.items():
+            logs = v.get("logs", [])
+            if len(logs) == 0:
+                continue
+            status = "Unmarked"
+            check_in_out_type = logs[0].get('determine_check_in_and_check_out', False)
+            working_hours_calc_type = logs[0].get('working_hours_calculation_based_on', False)
+            start_time = logs[0].get('start_time')
+            end_time = logs[0].get('end_time')
+            req_hours = logs[0].get('req_hours')
+            enable_exit_grace_period = logs[0].get('enable_exit_grace_period')
+            early_exit_grace_period = logs[0].get('early_exit_grace_period')
+            enable_entry_grace_period = logs[0].get('enable_entry_grace_period')
+            late_entry_grace_period = logs[0].get('late_entry_grace_period')
+            total_hours = 0
+            in_time = out_time = None
+            late_entry = early_exit = False
+            if check_in_out_type and working_hours_calc_type:
+                total_hours, in_time, out_time, late_entry, early_exit = calculate_working_hours(
+                    logs, check_in_out_type, working_hours_calc_type,
+                    enable_exit_grace_period, early_exit_grace_period, 
+                    enable_entry_grace_period, late_entry_grace_period,
+                    start_time, end_time
+                )
+                if in_time:
+                    status = "Present"
+            if employee  == "HR-EMP-00008":
+                print(employee, total_hours, in_time, out_time)
+            attendance_map_from_checkin.setdefault(k, frappe._dict())
+            attendance_map_from_checkin[k][get_date_str(from_date)] = {
+                "employee": "HR-EMP-00031",
+                "day_of_month": from_date,
+                "status": status,
+                "working_hours": total_hours,
+                "in_time": in_time,
+                "out_time": out_time,
+                "late_entry": late_entry,
+                "early_exit": early_exit,
+                "shift": k,
+                "start_time": start_time,
+                "end_time": end_time,
+                "req_hours": req_hours,
+            }
+
+        from_date = add_days(from_date, 1)
+    if len(attendance_map_from_checkin) == 0:
+        return None
+    for k, v in employee_attendance.items():
+        employee_attendance.get(k).update(attendance_map_from_checkin.get(k, {}))
+    
+    return attendance_map_from_checkin
+
+def find_index_in_dict(dict_list, key, value):
+    return next((index for (index, d) in enumerate(dict_list) if d[key] == value), None)
+
+def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type,
+                            enable_exit_grace_period, early_exit_grace_period, 
+                            enable_entry_grace_period, late_entry_grace_period,
+                            start_time, end_time):
+    """Given a set of logs in chronological order calculates the total working hours based on the parameters.
+    Zero is returned for all invalid cases.
+
+    :param logs: The List of 'Employee Checkin'.
+    :param check_in_out_type: One of: 'Alternating entries as IN and OUT during the same shift', 'Strictly based on Log Type in Employee Checkin'
+    :param working_hours_calc_type: One of: 'First Check-in and Last Check-out', 'Every Valid Check-in and Check-out'
+    """
+    from datetime import timedelta
+    total_hours = 0
+    in_time = out_time = None
+    late_entry = early_exit = False
+    if check_in_out_type == "Alternating entries as IN and OUT during the same shift":
+        in_time = logs[0].time
+        if len(logs) >= 2:
+            out_time = logs[-1].time
+        if working_hours_calc_type == "First Check-in and Last Check-out":
+            # assumption in this case: First log always taken as IN, Last log always taken as OUT
+            total_hours = time_diff_in_hours(in_time, logs[-1].time)
+        elif working_hours_calc_type == "Every Valid Check-in and Check-out":
+            logs = logs[:]
+            while len(logs) >= 2:
+                total_hours += time_diff_in_hours(logs[0].time, logs[1].time)
+                del logs[:2]
+
+    elif check_in_out_type == "Strictly based on Log Type in Employee Checkin":
+        if working_hours_calc_type == "First Check-in and Last Check-out":
+            first_in_log_index = find_index_in_dict(logs, "log_type", "IN")
+            first_in_log = (
+                logs[first_in_log_index] if first_in_log_index or first_in_log_index == 0 else None
+            )
+            last_out_log_index = find_index_in_dict(reversed(logs), "log_type", "OUT")
+            last_out_log = (
+                logs[len(logs) - 1 - last_out_log_index]
+                if last_out_log_index or last_out_log_index == 0
+                else None
+            )
+            if first_in_log:
+                in_time = first_in_log.time
+            if last_out_log:
+                out_time = last_out_log.time
+            if first_in_log and last_out_log:
+                in_time, out_time = first_in_log.time, last_out_log.time
+                total_hours = time_diff_in_hours(in_time, out_time)
+        elif working_hours_calc_type == "Every Valid Check-in and Check-out":
+            in_log = out_log = None
+            for log in logs:
+                if in_log and out_log:
+                    if not in_time:
+                        in_time = in_log.time
+                    out_time = out_log.time
+                    total_hours += time_diff_in_hours(in_log.time, out_log.time)
+                    in_log = out_log = None
+                if not in_log:
+                    in_log = log if log.log_type == "IN" else None
+                    if in_log and not in_time:
+                        in_time = in_log.time
+                elif not out_log:
+                    out_log = log if log.log_type == "OUT" else None
+
+            if in_log and out_log:
+                out_time = out_log.time
+                total_hours += time_diff_in_hours(in_log.time, out_log.time)
+
+    # if (
+    #     cint(enable_entry_grace_period) 
+    #     and in_time and start_time
+    #     and in_time > start_time + timedelta(minutes=cint(late_entry_grace_period))):
+    #     late_entry = True
+
+    # if (
+    #     cint(enable_exit_grace_period)
+    #     and out_time and end_time
+    #     and out_time < end_time - timedelta(minutes=cint(early_exit_grace_period))
+    # ):
+    #     early_exit = True
+
+    return total_hours, in_time, out_time, late_entry, early_exit
+
+def read_checkin_list(employee: str, from_date) -> List:
+    EmployeeCheckin = frappe.qb.DocType("Employee Checkin")
+    ShiftType = frappe.qb.DocType("Shift Type")
+    
+    query = (
+        frappe.qb.from_(EmployeeCheckin)
+        .select(
+            EmployeeCheckin.employee,
+            (EmployeeCheckin.time).as_("day_of_month"),
+            EmployeeCheckin.time,
+            EmployeeCheckin.log_type,
+            EmployeeCheckin.shift,
+            ShiftType.determine_check_in_and_check_out,
+            ShiftType.working_hours_calculation_based_on,
+            ShiftType.start_time,
+            ShiftType.end_time,
+            ShiftType.enable_exit_grace_period,
+            ShiftType.early_exit_grace_period,
+            ShiftType.enable_entry_grace_period,
+            ShiftType.late_entry_grace_period,
+            TimeDiff(ShiftType.end_time, ShiftType.start_time).as_("req_hours"),
+        )
+        .left_join(ShiftType)
+        .on(ShiftType.name == EmployeeCheckin.shift)
+        .where(
+            (EmployeeCheckin.employee == employee)
+            & (DateDiff(EmployeeCheckin.time, from_date) == 0)
+        ).orderby(EmployeeCheckin.time)
+    )
+    
+    checkin_list = query.run(as_dict=1)
+    if len(checkin_list) == 0:
+        return None
+    
+    # group by shift
+    checkins_map = {}
+    for d in checkin_list:
+        if checkins_map.get(d.shift):
+            lst = checkins_map.get(d.shift).get('logs', [])
+            lst.append(d)
+        else:
+            checkins_map.update({
+                d.shift: {
+                    "logs": [d],
+                    "start_time": d.start_time,
+                    "end_time": d.end_time,
+                    "shift": d.shift,
+                    "day_of_month": d.day_of_month,
+                    "req_hours": d.req_hours,
+                }
+            })
+    return checkins_map
+    # calculate_working_hours(checkin_list, check_in_out_type, working_hours_calc_type)
 
 def get_attendance_status_for_detailed_view(
     employee: str, filters: Filters, employee_attendance: Dict, holidays: List
