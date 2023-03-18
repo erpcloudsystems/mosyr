@@ -51,8 +51,6 @@ day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 DateDiff = CustomFunction("DATEDIFF", ["start_date", "end_date"])
 TimeDiff = CustomFunction("TIMEDIFF", ["end_time", "start_time"])
 
-from .utils import get_employee_checkin_map
-
 def execute(filters: Optional[Filters] = None) -> Tuple:
     filters = frappe._dict(filters or {})
 
