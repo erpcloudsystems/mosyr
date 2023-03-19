@@ -77,7 +77,7 @@ def execute(filters: Optional[Filters] = None) -> Tuple:
         return columns, [], None, None
 
     message = get_message()
-    chart = get_chart_data(attendance_map, filters)
+    # chart = get_chart_data(attendance_map, filters)
     columns = [
         {
             "label": col.get("label_html", col.get("label")),
@@ -88,7 +88,7 @@ def execute(filters: Optional[Filters] = None) -> Tuple:
         }
         for col in columns
     ]
-    return columns, data, message, chart
+    return columns, data, message, None
 
 
 def get_message() -> str:
@@ -163,7 +163,10 @@ def get_total_days(filters: Filters) -> int:
 
 
 def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
-    employee_details = get_employee_related_details(filters.company)
+    employees = []
+    if filters.employee:
+        employees = [filters.employee]
+    employee_details = get_employee_related_details(filters.company, employees)
     holiday_map = get_holiday_map(filters)
 
     data = []
@@ -243,6 +246,7 @@ def get_employee_related_details(company: str, employees: list = []) -> Tuple[Di
             Employee.branch,
             Employee.company,
             Employee.holiday_list,
+            Employee.default_shift,
         )
         .where(Employee.company == company)
     )
@@ -323,16 +327,17 @@ def get_rows(
         holidays = holiday_map.get(emp_holiday_list, [])
 
         employee_attendance = attendance_map.get(employee)
-        try_to_get_from_employee_checkin(employee, employee_attendance, filters)
+        employee_attendance = try_to_get_from_employee_checkin(employee, employee_attendance, filters)
+        # employee_attendance = update_with_holiday_list(employee_attendance, holidays)
         if not employee_attendance:
             attendance_for_employee = []
-            no_logs = shifts_with_no_logs(employee, filters, [])
+            no_logs = shifts_with_no_logs(employee, details, filters, [])
             attendance_for_employee.extend(no_logs)
         else:
             shifts, attendance_for_employee = get_attendance_status_for_detailed_view(
                 employee, filters, employee_attendance, holidays
             )
-            no_logs = shifts_with_no_logs(employee, filters, shifts)
+            no_logs = shifts_with_no_logs(employee, details, filters, shifts)
             attendance_for_employee.extend(no_logs)
         # set employee details in the first row
         if len(attendance_for_employee) == 0:
@@ -346,9 +351,10 @@ def get_rows(
     return records
 
 
-def shifts_with_no_logs(employee: str, filters: Filters, shifts: List):
+def shifts_with_no_logs(employee: str, details, filters: Filters, shifts: List):
+    return []
     total_days = get_total_days(filters)
-    other_shifts = frappe.get_list(
+    other_shifts = [shift.shift_type for shift in frappe.get_list(
         "Shift Assignment",
         filters={
             "employee": employee,
@@ -357,10 +363,13 @@ def shifts_with_no_logs(employee: str, filters: Filters, shifts: List):
             "shift_type": ["not in", shifts],
         },
         fields=["DISTINCT(shift_type) as shift_type"],
-    )
+    )]
+    if details.get("default_shift", None):
+        other_shifts.append(details.get("default_shift"))
+    other_shifts = list(set(other_shifts))
+
     records = []
     for shift in other_shifts:
-        shift = shift.shift_type
         row = {"shift": shift}
         from_date = filters.from_date
         for day in range(1, total_days + 1):
@@ -389,7 +398,6 @@ def try_to_get_from_employee_checkin(employee: str, employee_attendance: Dict, f
             from_date = add_days(from_date, 1)
             continue
         checkin_list = read_checkin_list(employee, from_date)
-        
         if checkin_list is None:
             from_date = add_days(from_date, 1)
             continue
@@ -420,11 +428,9 @@ def try_to_get_from_employee_checkin(employee: str, employee_attendance: Dict, f
                 )
                 if in_time:
                     status = "Present"
-            if employee  == "HR-EMP-00008":
-                print(employee, total_hours, in_time, out_time)
             attendance_map_from_checkin.setdefault(k, frappe._dict())
             attendance_map_from_checkin[k][get_date_str(from_date)] = {
-                "employee": "HR-EMP-00031",
+                "employee": employee,
                 "day_of_month": from_date,
                 "status": status,
                 "working_hours": total_hours,
@@ -437,14 +443,21 @@ def try_to_get_from_employee_checkin(employee: str, employee_attendance: Dict, f
                 "end_time": end_time,
                 "req_hours": req_hours,
             }
-
         from_date = add_days(from_date, 1)
-    if len(attendance_map_from_checkin) == 0:
-        return None
+    records = {}
     for k, v in employee_attendance.items():
-        employee_attendance.get(k).update(attendance_map_from_checkin.get(k, {}))
-    
-    return attendance_map_from_checkin
+        from_checkin = attendance_map_from_checkin.get(k, {})
+        from_checkin.update(v)
+        records.update({
+            k: from_checkin,
+        })
+    for k, v in attendance_map_from_checkin.items():
+        from_att = employee_attendance.get(k, {})
+        from_att.update(v)
+        records.update({
+            k: from_att,
+        })
+    return records
 
 def find_index_in_dict(dict_list, key, value):
     return next((index for (index, d) in enumerate(dict_list) if d[key] == value), None)
@@ -568,6 +581,8 @@ def read_checkin_list(employee: str, from_date) -> List:
     # group by shift
     checkins_map = {}
     for d in checkin_list:
+        if not d.shift:
+            continue
         if checkins_map.get(d.shift):
             lst = checkins_map.get(d.shift).get('logs', [])
             lst.append(d)
