@@ -21,3 +21,4 @@ mosyr.patches.rebuild_non_standard_users_typesv3
 mosyr.patches.rebuild_non_standard_users_types_v4
 mosyr.patches.rebuild_non_standard_users_types_v5
 mosyr.patches.add_permission_for_saas_manager
+mosyr.patches.rebuild_non_standard_users_types_v6

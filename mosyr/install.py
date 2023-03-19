@@ -89,7 +89,8 @@ docs_for_manager = [
     "Custody",
     "Cash Custody",
     "Cash Custody Expense",
-    "Shift Assignment"
+    "Shift Assignment",
+    "User Permission"
 ]
 reports_for_manager = [
     "Insurances and Risk",
