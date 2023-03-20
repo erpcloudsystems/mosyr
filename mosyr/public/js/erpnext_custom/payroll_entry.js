@@ -17,6 +17,14 @@ make_bank_entry = function (frm) {
     }
 };
 
+render_employee_attendance = function (frm, data) {
+	frm.fields_dict.attendance_detail_html.html(
+		frappe.render_template('employees_to_mark_attendance', {
+			data: data
+		})
+	);
+};
+
 frappe.ui.form.on("Payroll Entry", {
     refresh: function (frm) {
         if (frm.doc.docstatus == 0) {
@@ -25,7 +33,7 @@ frappe.ui.form.on("Payroll Entry", {
                 frm.page.clear_primary_action();
                 frm.add_custom_button(__("Get Employees"),
                     function () {
-                        frm.events.get_employee_details(frm);
+                        frm.events.get_employee_details_v2(frm);
                     }
                 ).toggleClass('btn-primary', !(frm.doc.employees || []).length);
             }
@@ -44,6 +52,60 @@ frappe.ui.form.on("Payroll Entry", {
             if (frm.custom_buttons) frm.clear_custom_buttons();
             frm.events.add_context_buttons(frm);
         }
+        frm.trigger('check_if_leaves');
     },
+    get_employee_details_v2: function (frm) {
+		return frappe.call({
+			doc: frm.doc,
+			method: 'fill_employee_details',
+		}).then(r => {
+			if (r.docs && r.docs[0].employees) {
+				frm.employees = r.docs[0].employees;
+				frm.dirty();
+				frm.save();
+				frm.refresh();
+				if (r.docs[0].validate_attendance) {
+					render_employee_attendance(frm, r.message);
+				}
+                frm.trigger('check_if_leaves');
+			}
+		});
+	},
+    check_if_leaves: function(frm){
+        $(`div[data-fieldname="employees"] .rows .grid-row`)
+                  .css('background-color', 'transparent');
+        frm.doc.employees.forEach(row => {
+            if(flt(row.total_leaves_taken) > 0){
+                $(`div[data-fieldname="employees"] .rows .grid-row[data-idx="${row.idx}"]`)
+                  .css('background-color', 'rgba(255, 0,0 , 0.05)');
+            }
+        });
+    }
 });
 
+frappe.ui.form.on("Payroll Employee Detail", {
+    employee: function(frm,cdt,cdn) {
+        const row = locals[cdt][cdn]
+        return frappe.call({
+			doc: frm.doc,
+			method: 'get_employee_details_for_payroll',
+            args:{employee: row['employee']}
+		}).then(r => {
+            if(r.message && r.message.total_leaves_taken){
+                row['total_leaves_taken'] = r.message.total_leaves_taken;
+            }else{
+                row['total_leaves_taken'] = 0;
+            }
+            frm.trigger('check_if_leaves');
+		});
+    },
+    employees_remove: function(frm) {
+        frm.trigger('check_if_leaves');
+    },
+    employees_add: function(frm) {
+        frm.trigger('check_if_leaves');
+    },
+    employees_move: function(frm) {
+        frm.trigger('check_if_leaves');
+    }
+});
