@@ -305,8 +305,8 @@ def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
 
 def set_user_type(doc,method):
     if doc.email != "Administrator":
-        doc.user_type = "Employee Self Service"
-        doc.save()
+        doc.db_set("user_type","Employee Self Service")
+        frappe.db.commit()
 
 def set_employee_number(doc,method):
     doc.employee_number = doc.number
