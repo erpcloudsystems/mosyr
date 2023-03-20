@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt, getdate
 
 import erpnext
 from erpnext.payroll.doctype.salary_component.salary_component import SalaryComponent
@@ -90,8 +90,48 @@ class CustomSalarySlip(SalarySlip):
     def validate(self):
         self.set_missing_custome_values()
         super().validate()
+        # Check if payroll entry
+        if self.payroll_entry:
+            payroll_entry = frappe.get_doc("Payroll Entry", self.payroll_entry)
+            for employee in payroll_entry.employees:
+                if (
+                    employee.employee == self.employee 
+                    and flt(employee.deduct_from_salary) == 1
+                    and flt(employee.deduction_per_day) > 0
+                    and flt(employee.deduction_days) > 0):
+                    found = False
+                    for deduction in self.deductions:
+                        if deduction.is_leave_deduction == 1:
+                            deduction.amount = flt(employee.deduction_per_day) * flt(employee.deduction_days)
+                            found = True
+                            super().validate()
+                            break
+                    if not found:
+                        self.append("deductions", {
+                            "salary_component": "Leave Deduction",
+                            "amount": flt(employee.deduction_per_day) * flt(employee.deduction_days),
+                            "is_leave_deduction": 1
+                        })
+                        super().validate()
+
+        
 
     def set_missing_custome_values(self):
+        # Check Leave Deduction Salary Component
+        ld = frappe.db.exists("Salary Component", "Leave Deduction")
+        if ld:
+            ld = frappe.get_doc("Salary Component", ld)
+            if ld.type != "Deduction":
+                ld.type = "Deduction"
+                ld.save()
+                frappe.db.commit()
+        else:
+            ld = frappe.new_doc("Salary Component")
+            ld.salary_component = "Leave Deduction"
+            ld.abbr = f"LD-{frappe.utils.now_datetime().timestamp()}"
+            ld.depends_on_payment_days = 0
+            ld.save()
+            frappe.db.commit()
         # No need to set default ( Field Type is Select)
         # if not self.mode_of_payment:
         #     mop = create_mode_payment("Loans Payment", "Bank")
@@ -242,12 +282,24 @@ class CustomPayrollEntry(PayrollEntry):
             frappe.throw(error_msg, title=_("No employees found"))
 
         for d in employees:
-            self.append("employees", d)
+            total_leaves = get_total_leaves_taken(d.employee, self.start_date, self.end_date)
+            dd = {
+                "total_leaves_taken": total_leaves,
+            }
+            dd.update(d)
+            self.append("employees", dd)
 
         self.number_of_employees = len(self.employees)
         if self.validate_attendance:
             return self.validate_employee_attendance()
-    
+
+    @frappe.whitelist()
+    def get_employee_details_for_payroll(self, employee):
+        total_leaves = get_total_leaves_taken(employee, self.start_date, self.end_date) or 0
+        return {
+            "total_leaves_taken": total_leaves
+        }
+
     def custom_make_filters(self):
         filters = frappe._dict()
         filters["company"] = self.company
@@ -320,3 +372,15 @@ def custom_get_filter_condition(filters):
             cond += " and t1.designation in ( " + ind + " ) "
     
     return cond
+
+
+def get_total_leaves_taken(employee, from_date, to_date):
+    from erpnext.hr.doctype.leave_application.leave_application import get_leaves_for_period
+    allocation_records = [lt.name for lt in frappe.db.sql("select name from `tabLeave Type`", as_dict=True)]
+    total_leaves_taken = 0
+
+    for d in allocation_records:
+        leaves_taken = get_leaves_for_period(employee, d, from_date, to_date) * -1
+        total_leaves_taken += leaves_taken
+
+    return total_leaves_taken

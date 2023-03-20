@@ -345,6 +345,15 @@ fixtures = [
 				"Payroll Entry-branches",
 				"Payroll Entry-departments",
 				"Payroll Entry-designations",
+                
+				"Payroll Employee Detail-leaves",
+                "Payroll Employee Detail-total_leaves_taken",
+                "Payroll Employee Detail-deduct_from_salary",
+                "Payroll Employee Detail-column_break_8",
+                "Payroll Employee Detail-deduction_days",
+                "Payroll Employee Detail-deduction_per_day",
+                
+                "Salary Detail-is_leave_deduction",
          ]]
         ]
     },
