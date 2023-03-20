@@ -117,6 +117,21 @@ class CustomSalarySlip(SalarySlip):
         
 
     def set_missing_custome_values(self):
+        # Check Leave Deduction Salary Component
+        ld = frappe.db.exists("Salary Component", "Leave Deduction")
+        if ld:
+            ld = frappe.get_doc("Salary Component", ld)
+            if ld.type != "Deduction":
+                ld.type = "Deduction"
+                ld.save()
+                frappe.db.commit()
+        else:
+            ld = frappe.new_doc("Salary Component")
+            ld.salary_component = "Leave Deduction"
+            ld.abbr = f"LD-{frappe.utils.now_datetime().timestamp()}"
+            ld.depends_on_payment_days = 0
+            ld.save()
+            frappe.db.commit()
         # No need to set default ( Field Type is Select)
         # if not self.mode_of_payment:
         #     mop = create_mode_payment("Loans Payment", "Bank")
