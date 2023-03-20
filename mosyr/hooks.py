@@ -419,6 +419,7 @@ fixtures = [
                     "Payroll Entry-designation-hidden",
                     "Payroll Entry-department-hidden",
                     "Payroll Entry-branch-hidden",
+                    "User Permission Document Type-document_type-read_only"
 				]]
 			]
 	},
