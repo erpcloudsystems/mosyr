@@ -86,12 +86,13 @@ class UsersPermissionManager(Document):
 
     @frappe.whitelist()
     def apply_permissions(self, user, perms, rps):
-        saas = frappe.db.exists("User", {"user_type": "SaaS Manager"})
+        saas = frappe.db.exists("User", {"name": frappe.conf.email_address})
         if saas:
             saas_manager  = frappe.get_doc("User", saas)
             saas_manager.db_set("user_type", "System User")
             frappe.db.commit()
             add_role(saas, "System Manager")
+            frappe.db.commit()
         if not frappe.db.exists("User", user): return ""
 
         # if user == frappe.session.user: return ""
@@ -132,8 +133,8 @@ class UsersPermissionManager(Document):
                     })
                     self.update_custom_roles({'page': rpr.get("page_or_report")}, args)
 
-        saas = frappe.db.exists("User", {"user_type": "System User"})
-        if saas and saas !="support@mosyr.io" and saas != "Administrator":
+        saas = frappe.db.exists("User", {"name": frappe.conf.email_address})
+        if saas:
             saas_manager  = frappe.get_doc("User", saas)
             saas_manager.remove_roles("System User")
             saas_manager.save()
@@ -225,5 +226,5 @@ def create_role_permissions_for_doctype(doc, data):
             for perm in perms:
                 args[perm] = 1
             doc.append("user_doctypes", args)
-            doc.save(ignore_permissions=True)
-            frappe.db.commit()
+    doc.save(ignore_permissions=True)
+    frappe.db.commit()
