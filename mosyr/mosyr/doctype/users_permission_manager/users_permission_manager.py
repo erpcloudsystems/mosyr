@@ -12,7 +12,7 @@ from erpnext.setup.install import create_custom_role, update_select_perm_after_i
 
 class UsersPermissionManager(Document):
     doctypes = [
-        {"system_management" : ["System Controller", "Company Controller", "Translation"]},
+        {"system_management" : ["Company Controller"]},
         {"user_management": ["User", "Users Permission Manager"]},
         {"hr_management": [ "Department", "Branch", "Employee Group", "Designation", "Employee Grade", "Employment Type", "Shift Type", "Shift Builder", "Staffing Plan", "Holiday List", "Leave Type", "Leave Period", "Leave Policy", "Leave Policy Assignment", "Leave Allocation", "Leave Encashment", "Employee Health Insurance", "Leave Block List"]},
         {"employees_list": ["Employee", "End Of Service"]},
