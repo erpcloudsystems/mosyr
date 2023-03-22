@@ -4,19 +4,19 @@ div[data-fieldtype="Attach Image"] .btn {
 }
 
 body[data-route="query-report/Employee Attendance Sheet"] .empty-table .dt-scrollable {
-    height     : initial!important;
-    min-height : initial!important;
+    height     : initial !important;
+    min-height : initial !important;
 }
 /* end fix tall tables when empty */
 
 /* begin dynamicRowHeight fix */
 body[data-route="query-report/Employee Attendance Sheet"] .dt-row {
-    position : relative!important;
-    top      : auto!important;
-    height   : initial!important;
+    position : relative !important;
+    top      : auto !important;
+    height   : initial !important;
 }
 body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
-    height : initial!important;
+    height : initial !important;
 }
 /* end dynamicRowHeight fix */
 .dt-cell__content {
@@ -63,6 +63,3 @@ Hide Journal Entry in Payroll
 div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{
     display: none !important;
 }
-
-#page-Users\ Permission\ Manager > div.container.page-body > div.page-wrapper > div > div.row.layout-main > div > div.layout-main-section > div:nth-child(2) > div > div > div.form-page > div > div.section-body > div > form > div > div.small.form-clickable-section.grid-footer{display: none !important;}
-#page-Users\ Permission\ Manager > div.container.page-body > div.page-wrapper > div > div.row.layout-main > div > div.layout-main-section > div:nth-child(2) > div > div > div.form-page > div:nth-child(16) > div.section-body > div > form > div > div.small.form-clickable-section.grid-footer{display: block !important;}
