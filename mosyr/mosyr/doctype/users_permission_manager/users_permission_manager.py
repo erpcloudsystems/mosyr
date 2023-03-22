@@ -62,6 +62,7 @@ class UsersPermissionManager(Document):
         
         for item in controller.sidebar_item:
             for perm in user_type.user_doctypes:
+                # if item.doc_name == 'System Controller' or item.doc_name == 'Translation': continue
                 if perm.document_type != item.doc_name: continue
                 parent = item.parent_name
                 if ' ' in item.parent_name:
