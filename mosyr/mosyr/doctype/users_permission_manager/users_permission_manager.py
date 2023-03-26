@@ -9,6 +9,7 @@ from six import iteritems
 from frappe.utils.user import add_role
 
 from erpnext.setup.install import create_custom_role, update_select_perm_after_install
+from frappe.permissions import add_permission, update_permission_property
 
 class UsersPermissionManager(Document):
     doctypes = [
@@ -123,11 +124,14 @@ class UsersPermissionManager(Document):
                 args = { 'doctype': 'Custom Role', 'roles': [{'role': user.name, 'parenttype': 'Custom Role'}]}
                 if rpr.get('set_role_for', "") == "Report":
                     report_name = rpr.get("page_or_report")
+                    ref_doctype = frappe.db.get_value("Report", report_name, "ref_doctype")
                     args.update({
                         'report': report_name,
-                        "ref_doctype": frappe.db.get_value("Report", report_name, "ref_doctype")
+                        "ref_doctype": ref_doctype
                     })
                     self.update_custom_roles({'report': report_name}, args)
+                    add_permission(ref_doctype, user.name, permlevel=0)
+                    update_permission_property(ref_doctype , user.name , permlevel=0, ptype="report" ,value=1)
                 elif rpr.get('set_role_for', "")  == "Page":
                     args.update({
                         'page': rpr.get("page_or_report")

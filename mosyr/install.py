@@ -100,6 +100,7 @@ reports_for_manager = [
     "Employee Leave Balance",
     "Employee Leave Balance Summary",
     "Leave Balance Encashment",
+    "Exit Permissions Summary"
 ]
 
 

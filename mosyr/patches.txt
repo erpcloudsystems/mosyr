@@ -23,3 +23,5 @@ mosyr.patches.rebuild_non_standard_users_types_v5
 mosyr.patches.add_permission_for_saas_manager
 mosyr.patches.rebuild_non_standard_users_types_v6
 mosyr.patches.convert_website_user_to_self_service
+mosyr.patches.delete_exit_permession_total_report
+mosyr.patches.rebuild_permession_in_reports_for_saas_manager
