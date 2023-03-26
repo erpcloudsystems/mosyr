@@ -530,6 +530,7 @@ def mark_attendance_and_link_log(
     :param attendance_date: Date of the attendance to be created.
     :param working_hours: (optional)Number of working hours for the given date.
     """
+
     log_names = [x.name for x in logs]
     employee = logs[0].employee
     if flt(working_hours) > 0 and shift and frappe.db.exists("Shift Type", shift):
@@ -644,6 +645,8 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
                     in_log = out_log = None
                 if not in_log:
                     in_log = log if log.log_type == "IN" else None
+                    if in_log and not in_time:
+                        in_time = in_log.time
                 elif not out_log:
                     out_log = log if log.log_type == "OUT" else None
             if in_log and out_log:
