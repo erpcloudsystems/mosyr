@@ -264,7 +264,7 @@ frappe.query_reports["Employee Attendance Sheet"] = {
             get_query: () => {
                 return {
                     filters: {
-                        "company": company
+                        "company": frappe.defaults.get_user_default("Company")
                     }
                 };
             }

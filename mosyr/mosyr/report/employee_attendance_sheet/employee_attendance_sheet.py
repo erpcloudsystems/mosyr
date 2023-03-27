@@ -53,7 +53,10 @@ TimeDiff = CustomFunction("TIMEDIFF", ["end_time", "start_time"])
 
 def execute(filters: Optional[Filters] = None) -> Tuple:
     filters = frappe._dict(filters or {})
-
+    user_type = frappe.get_doc("User", frappe.session.user).user_type
+    if user_type != "SaaS Manager" and user_type != "System User":
+        employee = get_employee_by_user_id(frappe.session.user)
+        filters.update({"employee": employee})
     if not (filters.from_date and filters.to_date):
         frappe.throw(_("Please select date range."))
 
@@ -1613,3 +1616,10 @@ def get_rows_for_pdf2(
             )
             records.extend(attendance_for_employee)
     return records
+
+
+def get_employee_by_user_id(user_id):
+    emp_id = frappe.db.exists("Employee", {"user_id": user_id})
+    if emp_id:
+        return frappe.get_doc("Employee", emp_id).name
+    return None
