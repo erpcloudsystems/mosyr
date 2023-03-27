@@ -241,7 +241,7 @@
  "icon": "fa fa-file-text",
  "issingle": 1,
  "links": [],
- "modified": "2022-09-05 15:37:18.268147",
+ "modified": "2023-03-27 23:12:33.765067",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
@@ -264,6 +264,17 @@
    "print": 1,
    "read": 1,
    "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   }
