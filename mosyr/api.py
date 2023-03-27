@@ -428,3 +428,29 @@ def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
     )
     frappe.local.response.filecontent = get_pdf(html)
     frappe.local.response.type = "pdf"
+
+@frappe.whitelist()
+def get_salary_per_day(employee):
+    base = 0
+    months_days = 22
+
+    lst = frappe.get_list(
+        "Salary Structure Assignment",
+        filters={"employee": employee, "docstatus": 1},
+        fields=["from_date", "base", "company"],
+        order_by="from_date desc",
+    )
+    if len(lst) > 0:
+        base = flt(lst[0].base)
+        company = lst[0].company
+        mdays = frappe.get_list(
+            "Company Controller",
+            filters={"company": company},
+            fields=["month_days"]
+        )
+        if len(mdays) > 0:
+            months_days = cint(mdays[0].month_days)
+            if months_days not in [22, 28, 29, 30]:
+                months_days = 22
+        base = base / months_days
+    return base

@@ -86,6 +86,22 @@ frappe.ui.form.on("Payroll Entry", {
 frappe.ui.form.on("Payroll Employee Detail", {
     employee: function(frm,cdt,cdn) {
         const row = locals[cdt][cdn]
+        if (frm.doc.employee != "") {
+            frappe.call({
+              method: "mosyr.api.get_salary_per_day",
+              args: {
+                employee: row.employee,
+              },
+              callback: function (r) {
+                const deduction_per_day = flt(r.message);
+                row.deduction_per_day =  deduction_per_day;
+                frm.refresh_fields();
+              },
+            });
+          } else {
+            row.deduction_per_day = 0 
+            row.refresh_field("deduction_per_day");
+          }
         return frappe.call({
 			doc: frm.doc,
 			method: 'get_employee_details_for_payroll',
