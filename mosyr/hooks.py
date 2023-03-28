@@ -429,7 +429,13 @@ fixtures = [
                     "Payroll Entry-department-hidden",
                     "Payroll Entry-branch-hidden",
                     "User Permission Document Type-document_type-read_only",
-                    "User Permission Document Type-read-default"
+                    "User Permission Document Type-read-default",
+                    "Loan Application-is_term_loan-default",
+                    "Loan Application-is_secured_loan-hidden",
+                    "Loan Application-is_term_loan-hidden",
+                    "Loan-is_secured_loan-hidden",
+                    "Loan-is_term_loan-default",
+                    "Loan-is_term_loan-hidden"
 				]]
 			]
 	},

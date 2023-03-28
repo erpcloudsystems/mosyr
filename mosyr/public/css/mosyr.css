@@ -66,3 +66,7 @@ div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{
 
 #page-Users\ Permission\ Manager > div.container.page-body > div.page-wrapper > div > div.row.layout-main > div > div.layout-main-section > div:nth-child(2) > div > div > div.form-page > div > div.section-body > div > form > div > div.small.form-clickable-section.grid-footer{display: none !important;}
 #page-Users\ Permission\ Manager > div.container.page-body > div.page-wrapper > div > div.row.layout-main > div > div.layout-main-section > div:nth-child(2) > div > div > div.form-page > div:nth-child(16) > div.section-body > div > form > div > div.small.form-clickable-section.grid-footer{display: block !important;}
+#page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(1) > div:nth-child(2),
+#page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(1) > div:nth-child(3),
+#page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(2) > div:nth-child(3),
+#page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(2) > div:nth-child(5){display: none !important;}
