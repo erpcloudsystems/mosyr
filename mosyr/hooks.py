@@ -352,8 +352,8 @@ fixtures = [
                 "Payroll Employee Detail-column_break_8",
                 "Payroll Employee Detail-deduction_days",
                 "Payroll Employee Detail-deduction_per_day",
-                
                 "Salary Detail-is_leave_deduction",
+                "Employee-payment_type_2"
          ]]
         ]
     },
@@ -435,7 +435,8 @@ fixtures = [
                     "Loan Application-is_term_loan-hidden",
                     "Loan-is_secured_loan-hidden",
                     "Loan-is_term_loan-default",
-                    "Loan-is_term_loan-hidden"
+                    "Loan-is_term_loan-hidden",
+                    ""
 				]]
 			]
 	},
@@ -522,5 +523,9 @@ fixtures = [
 				]
 			]
 		]
+	},
+    {
+	"dt": "Nationality",
+	"filters": []
 	},
 ]

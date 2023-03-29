@@ -92,8 +92,9 @@ class UsersPermissionManager(Document):
         if saas:
             saas_manager  = frappe.get_doc("User", saas)
             saas_manager.db_set("user_type", "System User")
+            saas_manager.save(ignore_permissions=True)
             frappe.db.commit()
-            add_role(saas, "System Manager")
+            saas_manager.add_roles("System Manager")
             frappe.db.commit()
         if not frappe.db.exists("User", user): return ""
 
@@ -142,7 +143,7 @@ class UsersPermissionManager(Document):
         if saas:
             saas_manager  = frappe.get_doc("User", saas)
             saas_manager.remove_roles("System User")
-            saas_manager.save()
+            saas_manager.save(ignore_permissions=True)
             frappe.db.commit()
             saas_manager.db_set("user_type", "SaaS Manager")
             frappe.db.commit()
