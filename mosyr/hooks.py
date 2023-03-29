@@ -264,7 +264,6 @@ fixtures = [
 				"Employee-birth_place",
 				"Employee-direct_manager",
 				"Employee-nationality",
-				"Employee-payment_type",
 				"Employee-religion",
 				"Employee-handicap",
 				"Employee-self_service",

@@ -26,3 +26,4 @@ mosyr.patches.convert_website_user_to_self_service
 mosyr.patches.delete_exit_permession_total_report
 mosyr.patches.rebuild_permession_in_reports_for_saas_manager
 mosyr.patches.rebuild_non_standard_users_types_v7
+mosyr.patches.delete_payment_type_field
