@@ -622,7 +622,7 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
             first_in_log_index = find_index_in_dict(logs, "log_type", "IN")
             first_in_log = (
                 logs[first_in_log_index]
-                if first_in_log_index or first_in_log_index == 0
+                if first_in_log_index or first_in_log_index == 0 
                 else None
             )
             last_out_log_index = find_index_in_dict(reversed(logs), "log_type", "OUT")
@@ -631,6 +631,10 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
                 if last_out_log_index or last_out_log_index == 0
                 else None
             )
+            if first_in_log:
+                in_time = first_in_log.time
+            if last_out_log:
+                out_time = last_out_log.time
             if first_in_log and last_out_log:
                 in_time, out_time = first_in_log.time, last_out_log.time
                 total_hours = time_diff_in_hours(in_time, out_time)
