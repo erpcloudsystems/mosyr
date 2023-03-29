@@ -1,0 +1,2252 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.377409",
+  "name": "Afghan",
+  "nationality": "Afghan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.421779",
+  "name": "Albanian",
+  "nationality": "Albanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.428870",
+  "name": "Algerian",
+  "nationality": "Algerian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.434324",
+  "name": "American",
+  "nationality": "American",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.439138",
+  "name": "Andorran",
+  "nationality": "Andorran",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.450104",
+  "name": "Angolan",
+  "nationality": "Angolan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.455326",
+  "name": "Anguillan",
+  "nationality": "Anguillan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.460523",
+  "name": "Argentine",
+  "nationality": "Argentine",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.464896",
+  "name": "Armenian",
+  "nationality": "Armenian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.469232",
+  "name": "Australian",
+  "nationality": "Australian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.473704",
+  "name": "Austrian",
+  "nationality": "Austrian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.477877",
+  "name": "Azerbaijani",
+  "nationality": "Azerbaijani",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.481826",
+  "name": "Bahamian",
+  "nationality": "Bahamian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.485879",
+  "name": "Bahraini",
+  "nationality": "Bahraini",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.489977",
+  "name": "Bangladeshi",
+  "nationality": "Bangladeshi",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.494089",
+  "name": "Barbadian",
+  "nationality": "Barbadian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.498022",
+  "name": "Belarusian",
+  "nationality": "Belarusian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.502179",
+  "name": "Belgian",
+  "nationality": "Belgian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.506424",
+  "name": "Belizean",
+  "nationality": "Belizean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.510487",
+  "name": "Beninese",
+  "nationality": "Beninese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.515583",
+  "name": "Bermudian",
+  "nationality": "Bermudian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.521768",
+  "name": "Bhutanese",
+  "nationality": "Bhutanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.528040",
+  "name": "Bolivian",
+  "nationality": "Bolivian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.532989",
+  "name": "Botswanan",
+  "nationality": "Botswanan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.537564",
+  "name": "Brazilian",
+  "nationality": "Brazilian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.541800",
+  "name": "British",
+  "nationality": "British",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.545985",
+  "name": "British Virgin Islander",
+  "nationality": "British Virgin Islander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.550281",
+  "name": "Bruneian",
+  "nationality": "Bruneian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.554674",
+  "name": "Bulgarian",
+  "nationality": "Bulgarian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.558782",
+  "name": "Burkinan",
+  "nationality": "Burkinan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.563475",
+  "name": "Burmese",
+  "nationality": "Burmese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.568343",
+  "name": "Burundian",
+  "nationality": "Burundian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.572825",
+  "name": "Cambodian",
+  "nationality": "Cambodian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.576810",
+  "name": "Cameroonian",
+  "nationality": "Cameroonian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.580522",
+  "name": "Canadian",
+  "nationality": "Canadian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.584283",
+  "name": "Cape Verdean",
+  "nationality": "Cape Verdean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.588011",
+  "name": "Cayman Islander",
+  "nationality": "Cayman Islander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.591826",
+  "name": "Central African",
+  "nationality": "Central African",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.595570",
+  "name": "Chadian",
+  "nationality": "Chadian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.599188",
+  "name": "Chilean",
+  "nationality": "Chilean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.602864",
+  "name": "Chinese",
+  "nationality": "Chinese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.606593",
+  "name": "Citizen of Antigua and Barbuda",
+  "nationality": "Citizen of Antigua and Barbuda",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.610349",
+  "name": "Citizen of Bosnia and Herzegovina",
+  "nationality": "Citizen of Bosnia and Herzegovina",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.614089",
+  "name": "Citizen of Guinea-Bissau",
+  "nationality": "Citizen of Guinea-Bissau",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.618048",
+  "name": "Citizen of Kiribati",
+  "nationality": "Citizen of Kiribati",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.621722",
+  "name": "Citizen of Seychelles",
+  "nationality": "Citizen of Seychelles",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.625381",
+  "name": "Citizen of the Dominican Republic",
+  "nationality": "Citizen of the Dominican Republic",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.629092",
+  "name": "Citizen of Vanuatu",
+  "nationality": "Citizen of Vanuatu",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.632749",
+  "name": "Colombian",
+  "nationality": "Colombian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.636558",
+  "name": "Comoran",
+  "nationality": "Comoran",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.640166",
+  "name": "Congolese (Congo)",
+  "nationality": "Congolese (Congo)",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.644110",
+  "name": "Congolese (DRC)",
+  "nationality": "Congolese (DRC)",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.648645",
+  "name": "Cook Islander",
+  "nationality": "Cook Islander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.653098",
+  "name": "Costa Rican",
+  "nationality": "Costa Rican",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.657975",
+  "name": "Croatian",
+  "nationality": "Croatian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.662729",
+  "name": "Cuban",
+  "nationality": "Cuban",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.666869",
+  "name": "Cymraes",
+  "nationality": "Cymraes",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.671687",
+  "name": "Cymro",
+  "nationality": "Cymro",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.677222",
+  "name": "Cypriot",
+  "nationality": "Cypriot",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.683923",
+  "name": "Czech",
+  "nationality": "Czech",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.690299",
+  "name": "Danish",
+  "nationality": "Danish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.695647",
+  "name": "Djiboutian",
+  "nationality": "Djiboutian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.700717",
+  "name": "Dominican",
+  "nationality": "Dominican",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.705941",
+  "name": "Dutch",
+  "nationality": "Dutch",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.710594",
+  "name": "East Timorese",
+  "nationality": "East Timorese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.715193",
+  "name": "Ecuadorean",
+  "nationality": "Ecuadorean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.719617",
+  "name": "Egyptian",
+  "nationality": "Egyptian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.723907",
+  "name": "Emirati",
+  "nationality": "Emirati",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.728379",
+  "name": "English",
+  "nationality": "English",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.733326",
+  "name": "Equatorial Guinean",
+  "nationality": "Equatorial Guinean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.737966",
+  "name": "Eritrean",
+  "nationality": "Eritrean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.742566",
+  "name": "Estonian",
+  "nationality": "Estonian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.747401",
+  "name": "Ethiopian",
+  "nationality": "Ethiopian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.752010",
+  "name": "Faroese",
+  "nationality": "Faroese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.756279",
+  "name": "Fijian",
+  "nationality": "Fijian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.760937",
+  "name": "Filipino",
+  "nationality": "Filipino",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.765842",
+  "name": "Finnish",
+  "nationality": "Finnish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.770909",
+  "name": "French",
+  "nationality": "French",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.775702",
+  "name": "Gabonese",
+  "nationality": "Gabonese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.780819",
+  "name": "Gambian",
+  "nationality": "Gambian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.786023",
+  "name": "Georgian",
+  "nationality": "Georgian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.791106",
+  "name": "German",
+  "nationality": "German",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.795654",
+  "name": "Ghanaian",
+  "nationality": "Ghanaian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.800369",
+  "name": "Gibraltarian",
+  "nationality": "Gibraltarian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.805352",
+  "name": "Greek",
+  "nationality": "Greek",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.810341",
+  "name": "Greenlandic",
+  "nationality": "Greenlandic",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.815846",
+  "name": "Grenadian",
+  "nationality": "Grenadian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.823428",
+  "name": "Guamanian",
+  "nationality": "Guamanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.830637",
+  "name": "Guatemalan",
+  "nationality": "Guatemalan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.836658",
+  "name": "Guinean",
+  "nationality": "Guinean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.842045",
+  "name": "Guyanese",
+  "nationality": "Guyanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.847060",
+  "name": "Haitian",
+  "nationality": "Haitian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.851494",
+  "name": "Honduran",
+  "nationality": "Honduran",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.856534",
+  "name": "Hong Konger",
+  "nationality": "Hong Konger",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.861492",
+  "name": "Hungarian",
+  "nationality": "Hungarian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.866497",
+  "name": "Icelandic",
+  "nationality": "Icelandic",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.871575",
+  "name": "Indian",
+  "nationality": "Indian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.876558",
+  "name": "Indonesian",
+  "nationality": "Indonesian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.881632",
+  "name": "Iranian",
+  "nationality": "Iranian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.886740",
+  "name": "Iraqi",
+  "nationality": "Iraqi",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.891740",
+  "name": "Irish",
+  "nationality": "Irish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.896718",
+  "name": "Israeli",
+  "nationality": "Israeli",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.901778",
+  "name": "Italian",
+  "nationality": "Italian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.906842",
+  "name": "Ivorian",
+  "nationality": "Ivorian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.912595",
+  "name": "Jamaican",
+  "nationality": "Jamaican",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.918361",
+  "name": "Japanese",
+  "nationality": "Japanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.923952",
+  "name": "Jordanian",
+  "nationality": "Jordanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.928878",
+  "name": "Kazakh",
+  "nationality": "Kazakh",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.934056",
+  "name": "Kenyan",
+  "nationality": "Kenyan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.939114",
+  "name": "Kittitian",
+  "nationality": "Kittitian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.943622",
+  "name": "Kosovan",
+  "nationality": "Kosovan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.948602",
+  "name": "Kuwaiti",
+  "nationality": "Kuwaiti",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.953321",
+  "name": "Kyrgyz",
+  "nationality": "Kyrgyz",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.958097",
+  "name": "Lao",
+  "nationality": "Lao",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.962815",
+  "name": "Latvian",
+  "nationality": "Latvian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.967821",
+  "name": "Lebanese",
+  "nationality": "Lebanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.973225",
+  "name": "Liberian",
+  "nationality": "Liberian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.978125",
+  "name": "Libyan",
+  "nationality": "Libyan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.982924",
+  "name": "Liechtenstein citizen",
+  "nationality": "Liechtenstein citizen",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.987824",
+  "name": "Lithuanian",
+  "nationality": "Lithuanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.992739",
+  "name": "Luxembourger",
+  "nationality": "Luxembourger",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:43.997891",
+  "name": "Macanese",
+  "nationality": "Macanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.002858",
+  "name": "Macedonian",
+  "nationality": "Macedonian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.008053",
+  "name": "Malagasy",
+  "nationality": "Malagasy",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.013128",
+  "name": "Malawian",
+  "nationality": "Malawian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.018191",
+  "name": "Malaysian",
+  "nationality": "Malaysian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.023088",
+  "name": "Maldivian",
+  "nationality": "Maldivian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.028346",
+  "name": "Malian",
+  "nationality": "Malian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.032979",
+  "name": "Maltese",
+  "nationality": "Maltese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.038054",
+  "name": "Marshallese",
+  "nationality": "Marshallese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.042455",
+  "name": "Martiniquais",
+  "nationality": "Martiniquais",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.047254",
+  "name": "Mauritanian",
+  "nationality": "Mauritanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.052243",
+  "name": "Mauritian",
+  "nationality": "Mauritian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.056589",
+  "name": "Mexican",
+  "nationality": "Mexican",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.061670",
+  "name": "Micronesian",
+  "nationality": "Micronesian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.066744",
+  "name": "Moldovan",
+  "nationality": "Moldovan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.072602",
+  "name": "Monegasque",
+  "nationality": "Monegasque",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.078323",
+  "name": "Mongolian",
+  "nationality": "Mongolian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.083520",
+  "name": "Montenegrin",
+  "nationality": "Montenegrin",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.088694",
+  "name": "Montserratian",
+  "nationality": "Montserratian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.093549",
+  "name": "Moroccan",
+  "nationality": "Moroccan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.098499",
+  "name": "Mosotho",
+  "nationality": "Mosotho",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.103625",
+  "name": "Mozambican",
+  "nationality": "Mozambican",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.108640",
+  "name": "Namibian",
+  "nationality": "Namibian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.113773",
+  "name": "Nauruan",
+  "nationality": "Nauruan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.118910",
+  "name": "Nepalese",
+  "nationality": "Nepalese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.124357",
+  "name": "New Zealander",
+  "nationality": "New Zealander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.129459",
+  "name": "Nicaraguan",
+  "nationality": "Nicaraguan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.134648",
+  "name": "Nigerian",
+  "nationality": "Nigerian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.139714",
+  "name": "Nigerien",
+  "nationality": "Nigerien",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.144682",
+  "name": "Niuean",
+  "nationality": "Niuean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.149244",
+  "name": "North Korean",
+  "nationality": "North Korean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.154162",
+  "name": "Northern Irish",
+  "nationality": "Northern Irish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.159069",
+  "name": "Norwegian",
+  "nationality": "Norwegian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.163721",
+  "name": "Omani",
+  "nationality": "Omani",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.168747",
+  "name": "Pakistani",
+  "nationality": "Pakistani",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.173733",
+  "name": "Palauan",
+  "nationality": "Palauan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.178425",
+  "name": "Palestinian",
+  "nationality": "Palestinian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.183634",
+  "name": "Panamanian",
+  "nationality": "Panamanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.188641",
+  "name": "Papua New Guinean",
+  "nationality": "Papua New Guinean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.193627",
+  "name": "Paraguayan",
+  "nationality": "Paraguayan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.198616",
+  "name": "Peruvian",
+  "nationality": "Peruvian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.203436",
+  "name": "Pitcairn Islander",
+  "nationality": "Pitcairn Islander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.208245",
+  "name": "Polish",
+  "nationality": "Polish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.213539",
+  "name": "Portuguese",
+  "nationality": "Portuguese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.218470",
+  "name": "Prydeinig",
+  "nationality": "Prydeinig",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.222866",
+  "name": "Puerto Rican",
+  "nationality": "Puerto Rican",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.227713",
+  "name": "Qatari",
+  "nationality": "Qatari",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.232818",
+  "name": "Romanian",
+  "nationality": "Romanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.237902",
+  "name": "Russian",
+  "nationality": "Russian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.242252",
+  "name": "Rwandan",
+  "nationality": "Rwandan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.247390",
+  "name": "Salvadorean",
+  "nationality": "Salvadorean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.252592",
+  "name": "Sammarinese",
+  "nationality": "Sammarinese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.257515",
+  "name": "Samoan",
+  "nationality": "Samoan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.270029",
+  "name": "Sao Tomean",
+  "nationality": "Sao Tomean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.275099",
+  "name": "Saudi Arabian",
+  "nationality": "Saudi Arabian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.279632",
+  "name": "Scottish",
+  "nationality": "Scottish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.287166",
+  "name": "Senegalese",
+  "nationality": "Senegalese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.295017",
+  "name": "Serbian",
+  "nationality": "Serbian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.301313",
+  "name": "Sierra Leonean",
+  "nationality": "Sierra Leonean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.307026",
+  "name": "Singaporean",
+  "nationality": "Singaporean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.312573",
+  "name": "Slovak",
+  "nationality": "Slovak",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.318121",
+  "name": "Slovenian",
+  "nationality": "Slovenian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.323495",
+  "name": "Solomon Islander",
+  "nationality": "Solomon Islander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.328844",
+  "name": "Somali",
+  "nationality": "Somali",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.333720",
+  "name": "South African",
+  "nationality": "South African",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.338682",
+  "name": "South Korean",
+  "nationality": "South Korean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.343714",
+  "name": "South Sudanese",
+  "nationality": "South Sudanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.349093",
+  "name": "Spanish",
+  "nationality": "Spanish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.354142",
+  "name": "Sri Lankan",
+  "nationality": "Sri Lankan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.360029",
+  "name": "St Helenian",
+  "nationality": "St Helenian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.366736",
+  "name": "St Lucian",
+  "nationality": "St Lucian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.373196",
+  "name": "Stateless",
+  "nationality": "Stateless",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.378495",
+  "name": "Sudanese",
+  "nationality": "Sudanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.383686",
+  "name": "Surinamese",
+  "nationality": "Surinamese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.388840",
+  "name": "Swazi",
+  "nationality": "Swazi",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.394074",
+  "name": "Swedish",
+  "nationality": "Swedish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.399197",
+  "name": "Swiss",
+  "nationality": "Swiss",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.404607",
+  "name": "Syrian",
+  "nationality": "Syrian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.409772",
+  "name": "Taiwanese",
+  "nationality": "Taiwanese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.417659",
+  "name": "Tajik",
+  "nationality": "Tajik",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.424437",
+  "name": "Tanzanian",
+  "nationality": "Tanzanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.433002",
+  "name": "Thai",
+  "nationality": "Thai",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.438701",
+  "name": "Togolese",
+  "nationality": "Togolese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.443830",
+  "name": "Tongan",
+  "nationality": "Tongan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.448898",
+  "name": "Trinidadian",
+  "nationality": "Trinidadian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.459211",
+  "name": "Tristanian",
+  "nationality": "Tristanian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.464526",
+  "name": "Tunisian",
+  "nationality": "Tunisian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.469754",
+  "name": "Turkish",
+  "nationality": "Turkish",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.474709",
+  "name": "Turkmen",
+  "nationality": "Turkmen",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.479631",
+  "name": "Turks and Caicos Islander",
+  "nationality": "Turks and Caicos Islander",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.484635",
+  "name": "Tuvaluan",
+  "nationality": "Tuvaluan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.489586",
+  "name": "Ugandan",
+  "nationality": "Ugandan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.494581",
+  "name": "Ukrainian",
+  "nationality": "Ukrainian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.499614",
+  "name": "Uruguayan",
+  "nationality": "Uruguayan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.504480",
+  "name": "Uzbek",
+  "nationality": "Uzbek",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.509602",
+  "name": "Vatican citizen",
+  "nationality": "Vatican citizen",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.514628",
+  "name": "Venezuelan",
+  "nationality": "Venezuelan",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.519650",
+  "name": "Vietnamese",
+  "nationality": "Vietnamese",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.524123",
+  "name": "Vincentian",
+  "nationality": "Vincentian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.528563",
+  "name": "Wallisian",
+  "nationality": "Wallisian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.533389",
+  "name": "Welsh",
+  "nationality": "Welsh",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.538515",
+  "name": "Yemeni",
+  "nationality": "Yemeni",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.543208",
+  "name": "Zambian",
+  "nationality": "Zambian",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2023-03-29 11:05:44.548511",
+  "name": "Zimbabwean",
+  "nationality": "Zimbabwean",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ }
+]
