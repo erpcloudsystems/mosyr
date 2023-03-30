@@ -8,6 +8,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import cint
+from frappe.permissions import add_permission, update_permission_property
 
 module = "Mosyr Forms"
 allow_rename = 0
@@ -40,7 +41,8 @@ class InvalidOptionsError(frappe.ValidationError):
 class MosyrForm(Document):
     def validate(self):
         self.check_fields(from_validate=True)
-        self.check_roles(from_validate=True)
+        # self.check_roles(from_validate=True)
+
 
     def autoname(self):
         self.name = make_autoname("MOSYRFRM.YY.MM.DD.#####")
@@ -73,28 +75,58 @@ class MosyrForm(Document):
             else:
                 field.options = ""
 
-    def check_roles(self, from_validate=False):
-        if cint(self.is_submittable) == 1:
-            return
-        for perm in self.permissions:
-            if from_validate:
-                perm.submit = 0
-                perm.cancel = 0
-                perm.amend = 0
-            else:
-                if perm.submit == 1 or perm.amend == 1 or perm.cancel == 1:
-                    frappe.throw(
-                        _("Submit, Cancel, Amend. Allowed for Submittable Form Only.")
-                    )
+    # def check_roles(self, from_validate=False):
+    #     if cint(self.is_submittable) == 1:
+    #         return
+    #     for perm in self.permissions:
+    #         if from_validate:
+    #             perm.submit = 0
+    #             perm.cancel = 0
+    #             perm.amend = 0
+    #         else:
+    #             if perm.submit == 1 or perm.amend == 1 or perm.cancel == 1:
+    #                 frappe.throw(
+    #                     _("Submit, Cancel, Amend. Allowed for Submittable Form Only.")
+    #                 )
 
     def on_submit(self):
+
         self.check_fields()
-        self.check_roles()
+        # self.check_roles()
 
         clean_fields, title_field = self.prepare_fields()
+        # self.saas_manager_to_system_user()
+        saas = frappe.db.exists("User", {"name": frappe.session.user})
+        if saas:
+            saas_manager  = frappe.get_doc("User", saas)
+            usertype = saas_manager.user_type
+            saas_manager.db_set("user_type", "System User")
+            saas_manager.save(ignore_permissions=True)
+            frappe.db.commit()
+            saas_manager.add_roles("System Manager")
+            frappe.db.commit()
         self.build_system_doc(clean_fields, title_field)
+        # self.create_server_script()
         self.create_workflow()
-    
+        add_permission(self.name, "SaaS Manager", permlevel=0)
+        for perm in ["read", "write", "create", "delete", "select"]:
+            update_permission_property(self.name, "SaaS Manager", permlevel=0, ptype=perm, value=1)
+        if self.is_submittable:
+            for perm in ["submit", "cancel", "amend"]:
+                update_permission_property(self.name, "SaaS Manager", permlevel=0, ptype=perm, value=1)
+        frappe.db.commit()
+        if self.give_permissions_to_the_self_service_employee:
+            add_permission(self.name, "Mosyr Forms", permlevel=0)   
+            for perm in ["select","read", "write", "create", "if_owner"]:
+                update_permission_property(self.name, "Mosyr Forms", permlevel=0, ptype=perm, value=1)
+        if saas:
+            saas_manager = frappe.get_doc("User", saas)
+            saas_manager.remove_roles("System Manager")
+            saas_manager.save(ignore_permissions=True)
+            frappe.db.commit()
+            saas_manager.db_set("user_type", usertype)
+            frappe.db.commit()
+
     def prepare_fields(self):
         title_field = ""
         numeric_fields_prop = (
@@ -200,21 +232,21 @@ class MosyrForm(Document):
                 "fieldname": "title",
             },
         )
-        new_opt_doc.append("permissions", {"role": "System Manager", "permlevel": "0"})
-        new_opt_doc.append(
-            "permissions",
-            {
-                "role": "All",
-                "read": 1,
-                "select": 1,
-                "write": 0,
-                "create": 0,
-                "delete": 0,
-                "export": 1,
-                "report": 1,
-                "permlevel": "0",
-            },
-        )
+        # new_opt_doc.append("permissions", {"role": "System Manager", "permlevel": "0"})
+        # new_opt_doc.append(
+        #     "permissions",
+        #     {
+        #         "role": "All",
+        #         "read": 1,
+        #         "select": 1,
+        #         "write": 0,
+        #         "create": 0,
+        #         "delete": 0,
+        #         "export": 1,
+        #         "report": 1,
+        #         "permlevel": "0",
+        #     },
+        # )
         try:
             new_opt_doc.save(ignore_permissions=True)
             options = set(options)
@@ -276,34 +308,48 @@ class MosyrForm(Document):
         }
         new_erp_doc = frappe.new_doc("DocType")
         new_erp_doc.update(erp_doc)
+        # row = new_erp_doc.append("fields")
+        # row.label = "Employee"
+        # row.fieldtype = "Link"
+        # row.read_only = 1
+        # row.options = "Employee"
         for field in clean_fields:
             new_erp_doc.append("fields", field)
-        # new_erp_doc.append("permissions", {"role": "System Manager", "permlevel": "0"})
-        for perm in self.permissions:
+        if self.is_submittable:
             new_erp_doc.append(
                 "permissions",
                 {
-                    "role": perm.role,
-                    "if_owner": perm.if_owner,
+                    "role": "System Manager",
                     "permlevel": 0,
-                    "select": perm.select,
-                    "read": perm.read,
-                    "write": perm.write,
-                    "create": perm.create,
-                    "delete": perm.delete,
-                    "submit": perm.submit,
-                    "cancel": perm.cancel,
-                    "amend": perm.amend,
-                    "report": perm.report,
-                    "export": perm.export,
-                    "import": perm.get("import", 0),
-                    "set_user_permissions": perm.set_user_permissions,
-                    "share": perm.share,
-                    "print": perm.print,
-                    "email": perm.email,
+                    "select": 1,
+                    "read": 1,
+                    "write": 1,
+                    "create": 1,
+                    "delete": 1,
+                    "share": 1,
+                    "print": 1,
+                    "email": 1,
+                    "submit": 1,
+                    "cancel": 1,
+                    "amend": 1,
                 },
             )
-
+        else:
+            new_erp_doc.append(
+                "permissions",
+                {
+                    "role": "System Manager",
+                    "permlevel": 0,
+                    "select": 1,
+                    "read": 1,
+                    "write": 1,
+                    "create": 1,
+                    "delete": 1,
+                    "share": 1,
+                    "print": 1,
+                    "email": 1,
+                },
+            )
         try:
             attatched_req = []
             for idx, field in enumerate(new_erp_doc.fields):
@@ -354,6 +400,26 @@ class MosyrForm(Document):
         # Delete only Created Docs from the form ( Custom DocType)
         # Child Table ==> start with FRMCHLD
         # Base Docs   ==> start with FRMOPT
+
+        saas = frappe.db.exists("User", {"name": frappe.session.user})
+        if saas:
+            saas_manager  = frappe.get_doc("User", saas)
+            usertype = saas_manager.user_type
+            saas_manager.db_set("user_type", "System User")
+            saas_manager.save(ignore_permissions=True)
+            frappe.db.commit()
+            saas_manager.add_roles("System Manager")
+            frappe.db.commit()
+        workflow = frappe.db.exists("Workflow", self.name)
+        if workflow:
+            workflow = frappe.get_doc("Workflow", workflow)
+            workflow.delete()
+            frappe.db.commit()
+        # server_script = frappe.db.exists("Server Script", self.name)
+        # if server_script:
+        #     server_script = frappe.get_doc("Server Script", server_script)
+        #     server_script.delete()
+        #     frappe.db.commit()
         system_doc = frappe.db.exists("DocType", self.name)
         if system_doc:
             system_doc = frappe.get_doc("DocType", system_doc)
@@ -363,8 +429,15 @@ class MosyrForm(Document):
                 self.clear_child_doc(field.options)
             system_doc.delete()
             frappe.db.commit()
-                
-    
+
+        if saas:
+            saas_manager = frappe.get_doc("User", saas)
+            saas_manager.remove_roles("System Manager")
+            saas_manager.save(ignore_permissions=True)
+            frappe.db.commit()
+            saas_manager.db_set("user_type", usertype)
+            frappe.db.commit()
+
     def clear_child_doc(self, options):
         child_doc = frappe.db.exists("DocType", options)
         if child_doc and f"{options}".startswith("FRMCHLD"):
@@ -395,7 +468,7 @@ class MosyrForm(Document):
                 st = [
                     {"state": "Pending","doc_status": 0, "allow_edit": "SaaS Manager",},
                     {"state": "Approved", "doc_status": 1, "allow_edit": "SaaS Manager",},
-                    {"state": "Rejected", "doc_status": 2, "allow_edit": "SaaS Manager",},
+                    {"state": "Rejected", "doc_status": 1, "allow_edit": "SaaS Manager",},
                 ]
                 for row in st:
                     row_tr = workflow.append("states", {})
@@ -413,4 +486,43 @@ class MosyrForm(Document):
                     row_st.allow_edit = row.get("allowed")
 
             workflow.save()
+            frappe.db.commit()
+
+    def create_server_script(self):
+        server_script = frappe.new_doc("Server Script")
+        server_script.name = self.name
+        server_script.script_type = "DocType Event"
+        server_script.reference_doctype = self.name
+        server_script.doctype_event = "Before Insert"
+        server_script.script = '\nuser = frappe.get_doc("User", frappe.session.user)\nif user.user_type == "SaaS Manager" or user.user_type == "System User":\n    doc.employee = ""\nelse:\n    emps = frappe.get_list("Employee", {"user_id": user.name})\n    if len(emps) > 0:\n        emp=emps[0].name\n        doc.employee=emp'
+        server_script.save(ignore_permissions=True)
+        frappe.db.commit()
+
+    def on_update_after_submit(self):
+        # self.saas_manager_to_system_user()
+        saas = frappe.db.exists("User", {"name": frappe.session.user})
+        if saas:
+            saas_manager  = frappe.get_doc("User", saas)
+            usertype = saas_manager.user_type
+            saas_manager.db_set("user_type", "System User")
+            saas_manager.save(ignore_permissions=True)
+            frappe.db.commit()
+            saas_manager.add_roles("System Manager")
+            frappe.db.commit()
+
+            if self.give_permissions_to_the_self_service_employee:
+                add_permission(self.name, "Mosyr Forms", permlevel=0)   
+                for perm in ["select","read", "write", "create", "if_owner"]:
+                    update_permission_property(self.name, "Mosyr Forms", permlevel=0, ptype=perm, value=1)
+            else:
+                # add_permission(self.name, "Mosyr Forms", permlevel=0)   
+                for perm in ["select","read", "write", "create", "if_owner"]:
+                    update_permission_property(self.name, "Mosyr Forms", permlevel=0, ptype=perm, value=0)
+
+        if saas:
+            saas_manager = frappe.get_doc("User", saas)
+            saas_manager.remove_roles("System Manager")
+            saas_manager.save(ignore_permissions=True)
+            frappe.db.commit()
+            saas_manager.db_set("user_type", usertype)
             frappe.db.commit()

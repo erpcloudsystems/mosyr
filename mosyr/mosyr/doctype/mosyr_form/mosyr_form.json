@@ -10,10 +10,9 @@
   "form_title",
   "sb0",
   "is_submittable",
+  "give_permissions_to_the_self_service_employee",
   "fields_section_break",
   "fields",
-  "sb2",
-  "permissions",
   "amended_from",
   "transition_rules_section",
   "workflow_transition"
@@ -49,20 +48,6 @@
    "reqd": 1
   },
   {
-   "depends_on": "eval:!doc.istable",
-   "fieldname": "sb2",
-   "fieldtype": "Section Break",
-   "label": "Permission Rules"
-  },
-  {
-   "fieldname": "permissions",
-   "fieldtype": "Table",
-   "label": "Permissions",
-   "oldfieldname": "permissions",
-   "oldfieldtype": "Table",
-   "options": "MosyrDocPerm"
-  },
-  {
    "fieldname": "form_title",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -81,19 +66,25 @@
   {
    "fieldname": "workflow_transition",
    "fieldtype": "Table",
-   "label": "Transition",
    "options": "Mosyr Workflow"
   },
   {
    "fieldname": "transition_rules_section",
    "fieldtype": "Section Break",
-   "label": "Transition Rules"
+   "label": "WorkFlow"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "1",
+   "fieldname": "give_permissions_to_the_self_service_employee",
+   "fieldtype": "Check",
+   "label": "Give Permissions To The Self Service Employee"
   }
  ],
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-07 10:59:49.639068",
+ "modified": "2023-03-30 12:21:30.081551",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",

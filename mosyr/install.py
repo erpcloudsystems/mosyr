@@ -560,6 +560,10 @@ def create_role_and_set_to_admin():
     update_permission_property("User", "Read User Type", 3, "read", 1)
     update_permission_property("User", "Read User Type", 3, "write", 1)
     frappe.db.commit()
+    
+    # create role Mosyr Forms and added this role for saas manager and employee self service 
+    create_custom_role({"role": "Mosyr Forms"})
+    frappe.db.commit()
 
 
 def add_property_setter(fields_props):
