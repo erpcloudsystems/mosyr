@@ -304,6 +304,11 @@ def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
     return result
 
 def set_user_type(doc,method):
+    role = frappe.db.exists("Role", "Mosyr Forms")
+    if role:
+        doc.add_roles("Mosyr Forms")
+        doc.save(ignore_permissions=True)
+        frappe.db.commit()
     if doc.email != "Administrator":
         doc.db_set("user_type","Employee Self Service")
         frappe.db.commit()
