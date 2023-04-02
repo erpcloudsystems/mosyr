@@ -138,7 +138,8 @@ def convert_date(gregorian_date=None, hijri_date=None):
 def validate_social_insurance(doc, method):
     comapny_data = frappe.db.sql("""SELECT * FROM `tabCompany Controller` WHERE company = %s""", doc.company, as_dict=1)
     #  frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
-    social_type = "Saudi" if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
+    social_type = doc.social_insurance_type
+    # if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
     if len(comapny_data) > 0:
         comapny_data = comapny_data[0]
         doc.social_insurance_type = social_type
@@ -459,3 +460,42 @@ def get_salary_per_day(employee):
                 months_days = 22
         base = base / months_days
     return base
+
+def create_componants(doc, method):
+    components = []
+    for d in doc.deductions:
+        components.append(d.salary_component)
+
+    cc = frappe.db.exists("Company Controller", {"company": doc.company})
+    if cc:
+        company_controller = frappe.get_doc("Company Controller", cc)
+        risk_percentage_on_company  = company_controller.risk_percentage_on_company
+        risk_percentage_on_employee = company_controller.risk_percentage_on_employee
+        pension_percentage_on_company = company_controller.pension_percentage_on_company
+        pension_percentage_on_employee = company_controller.pension_percentage_on_employee
+
+        if "Risk On Company" not in components:
+            row = doc.append("deductions", {})
+            row.salary_component = "Risk On Company"
+            row.amount_based_on_formula = 1
+            row.formula = f"""(base*{risk_percentage_on_company}/100) if(social_insurance_type=="Non Saudi") else 0"""
+            row.statistical_component = 1
+
+        if "Risk On Employee" not in components:
+            row = doc.append("deductions", {})
+            row.salary_component = "Risk On Employee"
+            row.amount_based_on_formula = 1
+            row.formula = f"""(base*{risk_percentage_on_employee}/100) if(social_insurance_type=="Non Saudi") else 0"""
+
+        if "Company Pension Insurance" not in components:
+            row = doc.append("deductions", {})
+            row.salary_component = "Company Pension Insurance"
+            row.amount_based_on_formula = 1
+            row.formula = f"""(base*{pension_percentage_on_company}/100) if(social_insurance_type=="Saudi") else 0"""
+            row.statistical_component = 1
+
+        if "Employee Pension Insurance" not in components:
+            row = doc.append("deductions", {})
+            row.salary_component = "Employee Pension Insurance"
+            row.amount_based_on_formula = 1
+            row.formula = f"""(base*{pension_percentage_on_employee}/100) if(social_insurance_type=="Saudi") else 0"""
