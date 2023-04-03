@@ -461,7 +461,7 @@ def get_salary_per_day(employee):
         base = base / months_days
     return base
 
-def create_componants(doc, method):
+def create_componants_in_salary_straucture(doc, method):
     components = []
     for d in doc.deductions:
         components.append(d.salary_component)
@@ -478,24 +478,23 @@ def create_componants(doc, method):
             row = doc.append("deductions", {})
             row.salary_component = "Risk On Company"
             row.amount_based_on_formula = 1
-            row.formula = f"""(base*{risk_percentage_on_company}/100) if(social_insurance_type=="Non Saudi") else 0"""
-            row.statistical_component = 1
+            row.do_not_include_in_total = 1
+            row.formula = f"""(BS*{risk_percentage_on_company}/100) if(social_insurance_type=="Non Saudi") else 0"""
 
         if "Risk On Employee" not in components:
             row = doc.append("deductions", {})
             row.salary_component = "Risk On Employee"
             row.amount_based_on_formula = 1
-            row.formula = f"""(base*{risk_percentage_on_employee}/100) if(social_insurance_type=="Non Saudi") else 0"""
-
+            row.formula = f"""(BS*{risk_percentage_on_employee}/100) if(social_insurance_type=="Non Saudi") else 0"""
         if "Company Pension Insurance" not in components:
             row = doc.append("deductions", {})
             row.salary_component = "Company Pension Insurance"
             row.amount_based_on_formula = 1
-            row.formula = f"""(base*{pension_percentage_on_company}/100) if(social_insurance_type=="Saudi") else 0"""
-            row.statistical_component = 1
+            row.do_not_include_in_total = 1
+            row.formula = f"""(BS*{pension_percentage_on_company}/100) if(social_insurance_type=="Saudi") else 0"""
 
         if "Employee Pension Insurance" not in components:
             row = doc.append("deductions", {})
             row.salary_component = "Employee Pension Insurance"
             row.amount_based_on_formula = 1
-            row.formula = f"""(base*{pension_percentage_on_employee}/100) if(social_insurance_type=="Saudi") else 0"""
+            row.formula = f"""(BS*{pension_percentage_on_employee}/100) if(social_insurance_type=="Saudi") else 0"""
