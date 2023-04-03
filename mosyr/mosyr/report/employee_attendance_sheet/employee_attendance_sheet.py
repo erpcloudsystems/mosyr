@@ -8,7 +8,7 @@ from frappe import _
 
 from frappe.query_builder.functions import Count, Sum
 
-from frappe.utils import date_diff, add_days, get_date_str, get_datetime, flt, cint, get_weekday, time_diff_in_hours
+from frappe.utils import date_diff, add_days, get_date_str, get_time_str,get_time, get_datetime, flt, cint, get_weekday, time_diff_in_hours
 from frappe.utils.print_format import report_to_pdf
 from weasyprint import HTML, CSS
 
@@ -51,6 +51,14 @@ day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 DateDiff = CustomFunction("DATEDIFF", ["start_date", "end_date"])
 TimeDiff = CustomFunction("TIMEDIFF", ["end_time", "start_time"])
 
+from .attendance_utils import (
+    get_employee_related_details,
+    get_attendance_map,
+    get_holiday_map,
+    get_holiday_status,
+
+    get_attendance_details
+)
 def execute(filters: Optional[Filters] = None) -> Tuple:
     filters = frappe._dict(filters or {})
     user_type = frappe.get_doc("User", frappe.session.user).user_type
@@ -60,16 +68,9 @@ def execute(filters: Optional[Filters] = None) -> Tuple:
     if not (filters.from_date and filters.to_date):
         frappe.throw(_("Please select date range."))
 
-    attendance_map = get_attendance_map(filters)
-    # checkin_map = get_employee_checkin_map(filters)
-    # if not attendance_map:
-    #     frappe.msgprint(
-    #         _("No attendance records found."), alert=True, indicator="orange"
-    #     )
-    #     return [], [], None, None
-
+    
     columns = get_columns(filters)
-    data = get_data(filters, attendance_map)
+    data = get_data(filters)
 
     if not data:
         frappe.msgprint(
@@ -114,18 +115,18 @@ def get_columns(filters: Filters) -> List[Dict]:
     columns = []
     columns.extend(
         [
-            {
-                "label": _("Employee"),
-                "fieldname": "employee",
-                "fieldtype": "Link",
-                "options": "Employee",
-                "width": 135,
-            },
+            # {
+            #     "label": _("Employee"),
+            #     "fieldname": "employee",
+            #     "fieldtype": "Link",
+            #     "options": "Employee",
+            #     "width": 135,
+            # },
             {
                 "label": _("Employee Name"),
                 "fieldname": "employee_name",
                 "fieldtype": "Data",
-                "width": 120,
+                "width": 200,
             },
         ]
     )
@@ -165,557 +166,73 @@ def get_total_days(filters: Filters) -> int:
     return date_diff(filters.to_date, filters.from_date) + 1
 
 
-def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
+def get_data(filters: Filters) -> List[Dict]:
+    records = []
+    default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
+    
+    total_days = get_total_days(filters)
     employees = []
     if filters.employee:
         employees = [filters.employee]
     employee_details = get_employee_related_details(filters.company, employees)
+    employees = list(employee_details.keys())
+    attendance_map = get_attendance_details(filters, employees)
     holiday_map = get_holiday_map(filters)
-
-    data = []
-    data = get_rows(employee_details, filters, holiday_map, attendance_map)
-    return data
-
-
-def get_attendance_map(filters: Filters, employees: list = []) -> Dict:
-    """Returns a dictionary of employee wise attendance map as per shifts for all the days of the month like
-    {
-            'employee1': {
-                    'Morning Shift': {attendance_date: 'Present', attendance_date: 'Absent', ...}
-                    'Evening Shift': {attendance_date: 'Absent', attendance_date: 'Present', ...}
-            },
-            'employee2': {
-                    'Afternoon Shift': {attendance_date: 'Present', attendance_date: 'Absent', ...}
-                    'Night Shift': {attendance_date: 'Absent', attendance_date: 'Absent', ...}
-            }
-    }
-    """
-    Attendance = frappe.qb.DocType("Attendance")
-    ShiftType = frappe.qb.DocType("Shift Type")
-    query = (
-        frappe.qb.from_(Attendance)
-        .select(
-            Attendance.employee,
-            (Attendance.attendance_date).as_("day_of_month"),
-            Attendance.status,
-            Attendance.working_hours,
-            Attendance.in_time,
-            Attendance.out_time,
-            Attendance.late_entry,
-            Attendance.early_exit,
-            Attendance.shift,
-            ShiftType.start_time,
-            ShiftType.end_time,
-            TimeDiff(ShiftType.end_time, ShiftType.start_time).as_("req_hours")
-        ).left_join(ShiftType)
-        .on(ShiftType.name == Attendance.shift)
-        .where(
-            (Attendance.docstatus == 1)
-            & (Attendance.company == filters.company)
-            & (DateDiff(Attendance.attendance_date, filters.from_date) >= 0)
-            & (DateDiff(Attendance.attendance_date, filters.to_date) <= 0)
-        )
-    )
-    if filters.employee:
-        query = query.where(Attendance.employee == filters.employee)
-    if isinstance(employees, list) and len(employees) > 0:
-        query = query.where(Attendance.employee.isin(tuple(set(employees))))
-    query = query.orderby(Attendance.employee, Attendance.attendance_date)
-
-    attendance_list = query.run(as_dict=1)
-    attendance_map = {}
-    for d in attendance_list:
-        attendance_map.setdefault(d.employee, frappe._dict()).setdefault(
-            d.shift, frappe._dict()
-        )
-        attendance_map[d.employee][d.shift][get_date_str(d.day_of_month)] = d
-
-    return attendance_map
-
-
-def get_employee_related_details(company: str, employees: list = []) -> Tuple[Dict, List]:
-    """Returns
-    1. nested dict for employee details
-    """
-    Employee = frappe.qb.DocType("Employee")
-    query = (
-        frappe.qb.from_(Employee)
-        .select(
-            Employee.name,
-            Employee.employee_name,
-            Employee.designation,
-            Employee.grade,
-            Employee.department,
-            Employee.branch,
-            Employee.company,
-            Employee.holiday_list,
-            Employee.default_shift,
-        )
-        .where(Employee.company == company)
-    )
-    if isinstance(employees, list) and len(employees) > 0:
-        query = query.where(Employee.name.isin(tuple(set(employees))))
-    employee_details = query.run(as_dict=True)
-    emp_map = {}
-    for emp in employee_details:
-        emp_map[emp.name] = emp
-
-    return emp_map
-
-
-def get_holiday_map(filters: Filters) -> Dict[str, List[Dict]]:
-    """
-    Returns a dict of holidays falling in the filter month and year
-    with list name as key and list of holidays as values like
-    {
-            'Holiday List 1': [
-                    {'day_of_month': '0' , 'weekly_off': 1},
-                    {'day_of_month': '1', 'weekly_off': 0}
-            ],
-            'Holiday List 2': [
-                    {'day_of_month': '0' , 'weekly_off': 1},
-                    {'day_of_month': '1', 'weekly_off': 0}
-            ]
-    }
-    """
-    # add default holiday list too
-    holiday_lists = frappe.db.get_all("Holiday List", pluck="name")
-    default_holiday_list = frappe.get_cached_value(
-        "Company", filters.company, "default_holiday_list"
-    )
-    holiday_lists.append(default_holiday_list)
-
-    holiday_map = frappe._dict()
-    Holiday = frappe.qb.DocType("Holiday")
-
-    for d in holiday_lists:
-        if not d:
-            continue
-
-        holidays = (
-            frappe.qb.from_(Holiday)
-            .select(
-                (Holiday.holiday_date).as_("day_of_month"),
-                Holiday.weekly_off,
-            )
-            .where(
-                (Holiday.parent == d)
-                & (DateDiff(Holiday.holiday_date, filters.from_date) >= 0)
-                & (DateDiff(Holiday.holiday_date, filters.to_date) <= 0)
-            )
-        ).run(as_dict=True)
-        result = []
-        for hd in holidays:
-            result.append(
-                {
-                    "weekly_off": hd.weekly_off,
-                    "day_of_month": get_date_str(hd.day_of_month),
-                }
-            )
-        holiday_map.setdefault(d, result)
-
-    return holiday_map
-
-
-def get_rows(
-    employee_details: Dict, filters: Filters, holiday_map: Dict, attendance_map: Dict
-) -> List[Dict]:
-    records = []
-    default_holiday_list = frappe.get_cached_value(
-        "Company", filters.company, "default_holiday_list"
-    )
-
+    
     for employee, details in employee_details.items():
         emp_holiday_list = details.holiday_list or default_holiday_list
-        holidays = holiday_map.get(emp_holiday_list, [])
-
+        holidays = holiday_map.get(emp_holiday_list)
         employee_attendance = attendance_map.get(employee)
-        employee_attendance = try_to_get_from_employee_checkin(employee, employee_attendance, filters)
-        # employee_attendance = update_with_holiday_list(employee_attendance, holidays)
+        attendance_values = []
+        from_date = filters.from_date # add_days(from_date, 1)
         if not employee_attendance:
-            attendance_for_employee = []
-            no_logs = shifts_with_no_logs(employee, details, filters, [])
-            attendance_for_employee.extend(no_logs)
+            row = {}
+            for day in range(total_days):
+                status = get_holiday_status(get_date_str(from_date), holidays)
+                abbr = status_map.get(status, "Unmarked")
+                row[get_date_str(from_date)] = abbr
+                from_date = add_days(from_date, 1)
+            attendance_values.append(row)
+            
         else:
-            shifts, attendance_for_employee = get_attendance_status_for_detailed_view(
-                employee, filters, employee_attendance, holidays
-            )
-            no_logs = shifts_with_no_logs(employee, details, filters, shifts)
-            attendance_for_employee.extend(no_logs)
-        # set employee details in the first row
-        if len(attendance_for_employee) == 0:
-            continue
-        attendance_for_employee[0].update(
-            {"employee": employee, "employee_name": details.employee_name}
-        )
+            for shift, status_dict in employee_attendance.items():
+                row = {"shift": shift}
+                for day in range(total_days):
+                    status = status_dict.get(get_date_str(from_date))
+                    if status is None and holidays:
+                        status = get_holiday_status(get_date_str(from_date), holidays)
+                    else:
+                        status = status.get("status", "Unmarked")
+                    abbr = status_map.get(status, "Unmarked")
+                    abbr = get_status_cell(abbr, status_dict.get(get_date_str(from_date)))
 
-        records.extend(attendance_for_employee)
-
-    return records
-
-
-def shifts_with_no_logs(employee: str, details, filters: Filters, shifts: List):
-    return []
-    total_days = get_total_days(filters)
-    other_shifts = [shift.shift_type for shift in frappe.get_list(
-        "Shift Assignment",
-        filters={
-            "employee": employee,
-            "docstatus": 1,
-            "status": "Active",
-            "shift_type": ["not in", shifts],
-        },
-        fields=["DISTINCT(shift_type) as shift_type"],
-    )]
-    if details.get("default_shift", None):
-        other_shifts.append(details.get("default_shift"))
-    other_shifts = list(set(other_shifts))
-
-    records = []
-    for shift in other_shifts:
-        row = {"shift": shift}
-        from_date = filters.from_date
-        for day in range(1, total_days + 1):
-            row[from_date] = _("Unmarked")
-            from_date = add_days(from_date, 1)
-        records.append(row)
-    return records
-
-def try_to_get_from_employee_checkin(employee: str, employee_attendance: Dict, filters: Filters) -> Dict:
-    dates_with_attendance = []
-    if employee_attendance is None:
-        employee_attendance = {}
-    
-    if employee_attendance is not None:    
-        for shift, details in employee_attendance.items():
-            dates_with_attendance.extend(list(details.keys()))
-        dates_with_attendance = list(set(dates_with_attendance))
-    
-    total_days = get_total_days(filters)
-    from_date = filters.from_date
-    
-    attendance_map_from_checkin = {}
-    
-    for day in range(1, total_days + 1):
-        if from_date in dates_with_attendance:
-            from_date = add_days(from_date, 1)
-            continue
-        checkin_list = read_checkin_list(employee, from_date)
-        if checkin_list is None:
-            from_date = add_days(from_date, 1)
-            continue
+                    row[get_date_str(from_date)] = abbr
+                    from_date = add_days(from_date, 1)
+                attendance_values.append(row)
         
-        for k, v in checkin_list.items():
-            logs = v.get("logs", [])
-            if len(logs) == 0:
-                continue
-            status = "Unmarked"
-            check_in_out_type = logs[0].get('determine_check_in_and_check_out', False)
-            working_hours_calc_type = logs[0].get('working_hours_calculation_based_on', False)
-            start_time = logs[0].get('start_time')
-            end_time = logs[0].get('end_time')
-            req_hours = logs[0].get('req_hours')
-            enable_exit_grace_period = logs[0].get('enable_exit_grace_period')
-            early_exit_grace_period = logs[0].get('early_exit_grace_period')
-            enable_entry_grace_period = logs[0].get('enable_entry_grace_period')
-            late_entry_grace_period = logs[0].get('late_entry_grace_period')
-            total_hours = 0
-            in_time = out_time = None
-            late_entry = early_exit = False
-            if check_in_out_type and working_hours_calc_type:
-                total_hours, in_time, out_time, late_entry, early_exit = calculate_working_hours(
-                    logs, check_in_out_type, working_hours_calc_type,
-                    enable_exit_grace_period, early_exit_grace_period, 
-                    enable_entry_grace_period, late_entry_grace_period,
-                    start_time, end_time
-                )
-                if in_time:
-                    status = "Present"
-            attendance_map_from_checkin.setdefault(k, frappe._dict())
-            attendance_map_from_checkin[k][get_date_str(from_date)] = {
-                "employee": employee,
-                "day_of_month": from_date,
-                "status": status,
-                "working_hours": total_hours,
-                "in_time": in_time,
-                "out_time": out_time,
-                "late_entry": late_entry,
-                "early_exit": early_exit,
-                "shift": k,
-                "start_time": start_time,
-                "end_time": end_time,
-                "req_hours": req_hours,
-            }
-        from_date = add_days(from_date, 1)
-    records = {}
-    for k, v in employee_attendance.items():
-        from_checkin = attendance_map_from_checkin.get(k, {})
-        from_checkin.update(v)
-        records.update({
-            k: from_checkin,
-        })
-    for k, v in attendance_map_from_checkin.items():
-        from_att = employee_attendance.get(k, {})
-        from_att.update(v)
-        records.update({
-            k: from_att,
-        })
+        attendance_values[0].update({"employee": employee, "employee_name": details.employee_name})
+        
+        records.extend(attendance_values)
     return records
 
-def find_index_in_dict(dict_list, key, value):
-    return next((index for (index, d) in enumerate(dict_list) if d[key] == value), None)
-
-def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type,
-                            enable_exit_grace_period, early_exit_grace_period, 
-                            enable_entry_grace_period, late_entry_grace_period,
-                            start_time, end_time):
-    """Given a set of logs in chronological order calculates the total working hours based on the parameters.
-    Zero is returned for all invalid cases.
-
-    :param logs: The List of 'Employee Checkin'.
-    :param check_in_out_type: One of: 'Alternating entries as IN and OUT during the same shift', 'Strictly based on Log Type in Employee Checkin'
-    :param working_hours_calc_type: One of: 'First Check-in and Last Check-out', 'Every Valid Check-in and Check-out'
+def get_status_cell(status, status_dict):
+    if status in ["Unmarked", "Absent", "Weekly Off", "On Leave", "Holiday"]:
+        return f"""
+                <div style='display: grid;'>
+                    <div style='text-align: center; border: 1px solid lightgray;padding: 2px 2px 0 2px;'>{ status }</div>
+                </div>"""
+    if status_dict is None:
+        status_dict = {}
+    return f"""
+    <div style='display: grid;'>
+        <div style='text-align: center; border: 1px solid lightgray;padding: 2px 2px 0 2px;'>{ status }</div>
+        <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 0;'>
+            <div style='text-align: center; border: 1px solid lightgray;padding: 2px;'>{_("In")}</div><div style='text-align: center; border: 1px solid lightgray;padding: 5px;'>{ get_time(status_dict.get("in_time")) if status_dict.get("in_time") else "-" }</div>
+            <div style='text-align: center; border: 1px solid lightgray;padding: 2px;'>{_("Out") }</div><div style='text-align: center; border: 1px solid lightgray;padding: 5px;'>{ get_time(status_dict.get("out_time")) if status_dict.get("out_time") else "-" }</div>
+            <div style='text-align: center; border: 1px solid lightgray;padding: 2px;'>{_("Total Hours")}</div><div style='text-align: center; border: 1px solid lightgray;padding: 5px;'>{ flt(status_dict.get("working_hours"), 2) }</div>
+        </div>
+    </div>
     """
-    from datetime import timedelta
-    total_hours = 0
-    in_time = out_time = None
-    late_entry = early_exit = False
-    if check_in_out_type == "Alternating entries as IN and OUT during the same shift":
-        in_time = logs[0].time
-        if len(logs) >= 2:
-            out_time = logs[-1].time
-        if working_hours_calc_type == "First Check-in and Last Check-out":
-            # assumption in this case: First log always taken as IN, Last log always taken as OUT
-            total_hours = time_diff_in_hours(in_time, logs[-1].time)
-        elif working_hours_calc_type == "Every Valid Check-in and Check-out":
-            logs = logs[:]
-            while len(logs) >= 2:
-                total_hours += time_diff_in_hours(logs[0].time, logs[1].time)
-                del logs[:2]
-
-    elif check_in_out_type == "Strictly based on Log Type in Employee Checkin":
-        if working_hours_calc_type == "First Check-in and Last Check-out":
-            first_in_log_index = find_index_in_dict(logs, "log_type", "IN")
-            first_in_log = (
-                logs[first_in_log_index] if first_in_log_index or first_in_log_index == 0 else None
-            )
-            last_out_log_index = find_index_in_dict(reversed(logs), "log_type", "OUT")
-            last_out_log = (
-                logs[len(logs) - 1 - last_out_log_index]
-                if last_out_log_index or last_out_log_index == 0
-                else None
-            )
-            if first_in_log:
-                in_time = first_in_log.time
-            if last_out_log:
-                out_time = last_out_log.time
-            if first_in_log and last_out_log:
-                in_time, out_time = first_in_log.time, last_out_log.time
-                total_hours = time_diff_in_hours(in_time, out_time)
-        elif working_hours_calc_type == "Every Valid Check-in and Check-out":
-            in_log = out_log = None
-            for log in logs:
-                if in_log and out_log:
-                    if not in_time:
-                        in_time = in_log.time
-                    out_time = out_log.time
-                    total_hours += time_diff_in_hours(in_log.time, out_log.time)
-                    in_log = out_log = None
-                if not in_log:
-                    in_log = log if log.log_type == "IN" else None
-                    if in_log and not in_time:
-                        in_time = in_log.time
-                elif not out_log:
-                    out_log = log if log.log_type == "OUT" else None
-
-            if in_log and out_log:
-                out_time = out_log.time
-                total_hours += time_diff_in_hours(in_log.time, out_log.time)
-
-    # if (
-    #     cint(enable_entry_grace_period) 
-    #     and in_time and start_time
-    #     and in_time > start_time + timedelta(minutes=cint(late_entry_grace_period))):
-    #     late_entry = True
-
-    # if (
-    #     cint(enable_exit_grace_period)
-    #     and out_time and end_time
-    #     and out_time < end_time - timedelta(minutes=cint(early_exit_grace_period))
-    # ):
-    #     early_exit = True
-
-    return total_hours, in_time, out_time, late_entry, early_exit
-
-def read_checkin_list(employee: str, from_date) -> List:
-    EmployeeCheckin = frappe.qb.DocType("Employee Checkin")
-    ShiftType = frappe.qb.DocType("Shift Type")
-    
-    query = (
-        frappe.qb.from_(EmployeeCheckin)
-        .select(
-            EmployeeCheckin.employee,
-            (EmployeeCheckin.time).as_("day_of_month"),
-            EmployeeCheckin.time,
-            EmployeeCheckin.log_type,
-            EmployeeCheckin.shift,
-            ShiftType.determine_check_in_and_check_out,
-            ShiftType.working_hours_calculation_based_on,
-            ShiftType.start_time,
-            ShiftType.end_time,
-            ShiftType.enable_exit_grace_period,
-            ShiftType.early_exit_grace_period,
-            ShiftType.enable_entry_grace_period,
-            ShiftType.late_entry_grace_period,
-            TimeDiff(ShiftType.end_time, ShiftType.start_time).as_("req_hours"),
-        )
-        .left_join(ShiftType)
-        .on(ShiftType.name == EmployeeCheckin.shift)
-        .where(
-            (EmployeeCheckin.employee == employee)
-            & (DateDiff(EmployeeCheckin.time, from_date) == 0)
-        ).orderby(EmployeeCheckin.time)
-    )
-    
-    checkin_list = query.run(as_dict=1)
-    if len(checkin_list) == 0:
-        return None
-    
-    # group by shift
-    checkins_map = {}
-    for d in checkin_list:
-        if not d.shift:
-            continue
-        if checkins_map.get(d.shift):
-            lst = checkins_map.get(d.shift).get('logs', [])
-            lst.append(d)
-        else:
-            checkins_map.update({
-                d.shift: {
-                    "logs": [d],
-                    "start_time": d.start_time,
-                    "end_time": d.end_time,
-                    "shift": d.shift,
-                    "day_of_month": d.day_of_month,
-                    "req_hours": d.req_hours,
-                }
-            })
-    return checkins_map
-    # calculate_working_hours(checkin_list, check_in_out_type, working_hours_calc_type)
-
-def get_attendance_status_for_detailed_view(
-    employee: str, filters: Filters, employee_attendance: Dict, holidays: List
-) -> List[Dict]:
-    """Returns list of shift-wise attendance status for employee
-    [
-            {'shift': 'Morning Shift', 1: 'A', 2: 'P', 3: 'A'....},
-            {'shift': 'Evening Shift', 1: 'P', 2: 'A', 3: 'P'....}
-    ]
-    """
-    total_days = get_total_days(filters)
-    attendance_values = []
-    shifts = set()
-    for shift, status_dict in employee_attendance.items():
-        row = {"shift": shift}
-        shifts.add(shift)
-        from_date = filters.from_date
-        for day in range(1, total_days + 1):
-            label = from_date
-            status = status_dict.get(label, {}).get("status")
-
-            update_in_holiday = False
-            if status is None and holidays:
-                status = get_holiday_status(label, holidays)
-                update_in_holiday = True
-
-            abbr = status_map.get(status)
-            if update_in_holiday:
-                abbr = (
-                    abbr
-                    if abbr
-                    else f"<div style='margin:0; text-align:center;font-weight:bold'>{status}</div>"
-                )
-                abbr = f"<div style='margin:0'>{abbr}</div>"
-                row[label] = abbr
-            else:
-                trans_st_label = _("Status")
-                trans_st_wh = _("Working Hours")
-                trans_st_int = _("In Time")
-                trans_st_ott = _("Out Time")
-                trans_is_late = _("Is Late")
-                trans_is_early = _("is Early Exit")
-
-                working_hours = status_dict.get(label, {}).get("working_hours", 0)
-                in_time = status_dict.get(label, {}).get("in_time", "-")
-                out_time = status_dict.get(label, {}).get("out_time", "-")
-                late_entry = status_dict.get(label, {}).get("late_entry", 0)
-                early_exit = status_dict.get(label, {}).get("early_exit", 0)
-                if in_time:
-                    in_time = str(in_time).split(" ")
-                    if len(in_time) > 1:
-                        in_time = in_time[1]
-
-                if out_time:
-                    out_time = str(out_time).split(" ")
-                    if len(out_time) > 1:
-                        out_time = out_time[1]
-
-                abbr = f"<div>{trans_st_label}</div>"
-
-                if status in ["Present", "Work From Home"]:
-                    styles_status = "<span style='color:green'>" + status + "</span>"
-                elif status in ["Absent"]:
-                    styles_status = "<span style='color:red'>" + status + "</span>"
-                elif status in ["Half Day"]:
-                    styles_status = "<span style='color:orange'>" + status + "</span>"
-                elif status in ["On Leave"]:
-                    styles_status = "<span style='color:#318AD8'>" + status + "</span>"
-                else:
-                    styles_status = status
-
-                if styles_status is None:
-                    abbr = _("Unmarked")
-                    abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0; text-align:center;font-weight:bold'>{abbr}</div>"
-                else:
-                    abbr += f"<div>{styles_status}</div>"
-
-                    abbr += f"<div>{trans_st_wh}</div>"
-                    abbr += f"<div style='color:green'>{working_hours}</div>"
-
-                    abbr += f"<div>{trans_st_int}</div>"
-                    abbr += f"<div style='color:orange'>{in_time}</div>"
-
-                    abbr += f"<div>{trans_st_ott}</div>"
-                    abbr += f"<div style='color:orange'>{out_time}</div>"
-
-                    abbr += f"<div>{trans_is_late}</div>"
-                    late_entry = _("Yes") if late_entry == 1 else _("No")
-                    abbr += f"<div>{late_entry}</div>"
-
-                    abbr += f"<div>{trans_is_early}</div>"
-                    early_exit = _("Yes") if early_exit == 1 else _("No")
-                    abbr += f"<div>{early_exit}</div>"
-
-                    abbr = f"<div class='datatable-table-2cols-6rows' style='margin:0'>{abbr}</div>"
-                row[label] = abbr
-            from_date = add_days(from_date, 1)
-
-        attendance_values.append(row)
-
-    return list(shifts), attendance_values
-
-
-def get_holiday_status(day: int, holidays: List) -> str:
-    status = "Unmarked"
-    for holiday in holidays:
-        if day == holiday.get("day_of_month"):
-            if holiday.get("weekly_off"):
-                status = "Weekly Off"
-            else:
-                status = "Holiday"
-            break
-    return status
-
 
 def get_chart_data(attendance_map: Dict, filters: Filters) -> Dict:
     days = get_columns_for_days(filters)
@@ -1019,7 +536,7 @@ def get_rows_for_pdf(
             employee_attendance = attendance_map.get(employee)
             if not employee_attendance:
                 attendance_for_employee = []
-                no_logs = shifts_with_no_logs(employee, filters, [])
+                no_logs = []
                 attendance_for_employee.extend(no_logs)
             else:
                 (
@@ -1028,7 +545,7 @@ def get_rows_for_pdf(
                 ) = get_attendance_status_for_pdf_detailed_view(
                     employee, filters, employee_attendance, holidays
                 )
-                no_logs = shifts_with_no_logs(employee, filters, shifts)
+                no_logs = []
                 attendance_for_employee.extend(no_logs)
             # set employee details in the first row
             if len(attendance_for_employee) == 0:
@@ -1597,7 +1114,7 @@ def get_rows_for_pdf2(
             employee_attendance = attendance_map.get(employee)
             if not employee_attendance:
                 attendance_for_employee = []
-                no_logs = shifts_with_no_logs(employee, filters, [])
+                no_logs = []
                 attendance_for_employee.extend(no_logs)
             else:
                 (
@@ -1606,7 +1123,7 @@ def get_rows_for_pdf2(
                 ) = get_attendance_status_for_pdf_detailed_view(
                     employee, filters, employee_attendance, holidays
                 )
-                no_logs = shifts_with_no_logs(employee, filters, shifts)
+                no_logs = []
                 attendance_for_employee.extend(no_logs)
             # set employee details in the first row
             if len(attendance_for_employee) == 0:

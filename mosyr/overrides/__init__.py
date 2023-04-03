@@ -595,7 +595,7 @@ def mark_attendance_and_link_log(
         frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
 
 
-def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
+def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type, max_req_hours=0):
     """Given a set of logs in chronological order calculates the total working hours based on the parameters.
     Zero is returned for all invalid cases.
     :param logs: The List of 'Employee Checkin'.
@@ -656,6 +656,8 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
             if in_log and out_log:
                 out_time = out_log.time
                 total_hours += time_diff_in_hours(in_log.time, out_log.time)
+    if max_req_hours > 0 and total_hours > max_req_hours:
+        total_hours = max_req_hours
     return total_hours, in_time, out_time
 
 
