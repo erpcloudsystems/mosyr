@@ -10,6 +10,7 @@ from frappe.utils import (
     get_time,
     getdate,
     cint,
+    flt,
 )
 
 from erpnext.hr.utils import validate_active_employee
@@ -342,6 +343,7 @@ class CustomShiftType(ShiftType):
             logs,
             self.determine_check_in_and_check_out,
             self.working_hours_calculation_based_on,
+            flt(self.max_working_hours)
         )
         if (
             cint(self.enable_entry_grace_period)
