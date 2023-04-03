@@ -156,7 +156,7 @@ doc_events = {
 		"on_update" : "mosyr.api.update_user_type_limits"
 	},
     "Salary Structure": {
-		"validate" : "mosyr.api.create_componants"
+		"validate" : "mosyr.api.create_componants_in_salary_straucture"
 	}
 }
 
@@ -529,5 +529,19 @@ fixtures = [
     {
 	"dt": "Nationality",
 	"filters": []
+	},
+    {
+	"dt": "Salary Component",
+	"filters": 
+    	[
+			["name", "in", 
+				[
+					"Company Pension Insurance",
+					"Employee Pension Insurance",
+                    "Risk On Company",
+                    "Risk On Employee"
+				]
+			]
+		]
 	},
 ]
