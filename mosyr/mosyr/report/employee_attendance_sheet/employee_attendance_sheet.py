@@ -181,7 +181,7 @@ def get_data(filters: Filters) -> List[Dict]:
     
     for employee, details in employee_details.items():
         emp_holiday_list = details.holiday_list or default_holiday_list
-        holidays = holiday_map.get(emp_holiday_list)
+        holidays = holiday_map.get(emp_holiday_list, [])
         employee_attendance = attendance_map.get(employee)
         attendance_values = []
         from_date = filters.from_date # add_days(from_date, 1)
