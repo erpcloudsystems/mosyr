@@ -3,23 +3,23 @@ div[data-fieldtype="Attach Image"] .btn {
     background-color: rgb(244, 245, 246) !important;
 }
 
-/* body[data-route="query-report/Employee Attendance Sheet"] .empty-table .dt-scrollable {
+body[data-route="query-report/Employee Attendance Sheet"] .empty-table .dt-scrollable {
     height     : initial !important;
     min-height : initial !important;
 }
 /* end fix tall tables when empty */
 
 /* begin dynamicRowHeight fix */
-/* body[data-route="query-report/Employee Attendance Sheet"] .dt-row {
+body[data-route="query-report/Employee Attendance Sheet"] .dt-row {
     position : relative !important;
     top      : auto !important;
     height   : initial !important;
 }
 body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
     height : initial !important;
-} */
+}
 /* end dynamicRowHeight fix */
-/* .dt-cell__content {
+ .dt-cell__content {
     text-align: left !important;
 }
 .dt-instance-1 .dt-cell,
@@ -55,8 +55,8 @@ body[data-route="query-report/Employee Attendance Sheet"] .dt-cell {
 
 .datatable .dt-scrollable{
     height: calc(100vh - 350px) !important;
-} */
-
+} 
+/* 
 body[data-route="query-report/Employee Attendance Sheet"] .dt-header .dt-row-header,
 body[data-route="query-report/Employee Attendance Sheet"] .dt-cell--header,
 body[data-route="query-report/Employee Attendance Sheet"] .dt-cell--header .dt-cell__content{
@@ -78,7 +78,7 @@ body[data-route="query-report/Employee Attendance Sheet"] .dt-dropdown__toggle{
 .datatable .dt-header .dt-row[data-is-filter]{
     display: none !important;
 }
-/*
+/* */
 Hide Journal Entry in Payroll
 */
 div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{

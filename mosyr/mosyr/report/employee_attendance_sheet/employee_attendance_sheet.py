@@ -199,7 +199,7 @@ def get_data(filters: Filters) -> List[Dict]:
                 row = {"shift": shift}
                 for day in range(total_days):
                     status = status_dict.get(get_date_str(from_date))
-                    if status is None and holidays:
+                    if status is None:
                         status = get_holiday_status(get_date_str(from_date), holidays)
                     else:
                         status = status.get("status", "Unmarked")
