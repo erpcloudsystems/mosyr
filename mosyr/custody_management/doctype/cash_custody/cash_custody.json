@@ -92,6 +92,7 @@
    "allow_on_submit": 1,
    "fieldname": "estimated_value",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Estimated Value",
    "read_only": 1
   },
@@ -127,7 +128,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-22 18:46:29.313172",
+ "modified": "2023-04-09 14:39:06.413092",
  "modified_by": "Administrator",
  "module": "Custody Management",
  "name": "Cash Custody",

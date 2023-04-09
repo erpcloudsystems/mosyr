@@ -8,6 +8,7 @@ from frappe.model.document import Document
 class CashCustodyExpense(Document):
     def validate(self):
         self.check_valid_spent_value()
+        self.remaining_value = self.estimated_value - self.spent_value
 
     def on_submit(self):
         self.add_custody_expense()
