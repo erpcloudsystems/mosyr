@@ -438,7 +438,14 @@ fixtures = [
                     "Loan-is_secured_loan-hidden",
                     "Loan-is_term_loan-default",
                     "Loan-is_term_loan-hidden",
-                    ""
+                    "Employee Incentive-employee_name-in_list_view",
+                    "Employee Incentive-employee-in_list_view",
+                    "Employee Incentive-payroll_date-in_list_view",
+                    "Employee Incentive-incentive_amount-in_list_view",
+                    "Retention Bonus-employee-in_list_view",
+                    "Retention Bonus-employee_name-in_list_view",
+                    "Retention Bonus-bonus_payment_date-in_list_view",
+                    "Retention Bonus-bonus_amount-in_list_view"
 				]]
 			]
 	},
