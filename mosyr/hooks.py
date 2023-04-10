@@ -104,6 +104,7 @@ override_doctype_class = {
 	"Expense Claim": 		"mosyr.overrides.hr.CustomExpenseClaim",
 	"Employee Advance": 	"mosyr.overrides.hr.CustomEmployeeAdvance",
 	"Expense Claim Type": 	"mosyr.overrides.hr.CustomExpenseClaimType",
+	"Attendance Request": 	"mosyr.overrides.hr.CustomAttendanceRequest",
 	
 	"Loan Type": 			"mosyr.overrides.loans.CustomLoanType",
 	"Loan": 				"mosyr.overrides.loans.CustomLoan",
