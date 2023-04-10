@@ -157,6 +157,9 @@ doc_events = {
 	},
     "Salary Structure": {
 		"validate" : "mosyr.api.create_componants_in_salary_straucture"
+	},
+    "Payroll Entry" : {
+		"on_submit": "mosyr.api.sum_net_pay_payroll_entry"
 	}
 }
 
@@ -355,7 +358,9 @@ fixtures = [
                 "Payroll Employee Detail-deduction_days",
                 "Payroll Employee Detail-deduction_per_day",
                 "Salary Detail-is_leave_deduction",
-                "Employee-payment_type_2"
+                "Employee-payment_type_2",
+                "Payroll Entry-total_amount",
+                "Payroll Entry-total_netpay"
          ]]
         ]
     },
@@ -445,7 +450,17 @@ fixtures = [
                     "Retention Bonus-employee-in_list_view",
                     "Retention Bonus-employee_name-in_list_view",
                     "Retention Bonus-bonus_payment_date-in_list_view",
-                    "Retention Bonus-bonus_amount-in_list_view"
+                    "Retention Bonus-bonus_amount-in_list_view",
+                    "Salary Slip-net_pay-in_list_view",
+                    "Salary Slip-employee-in_list_view",
+                    "Salary Slip-salary_structure-in_list_view",
+                    "Salary Slip-payroll_frequency-default",
+                    "Salary Slip-payroll_frequency-hidden",
+                    "Payroll Entry-branch-in_list_view",
+                    "Payroll Entry-posting_date-in_list_view",
+                    "Payroll Entry-currency-in_list_view",
+                    "Payroll Entry-payroll_frequency-hidden",
+                    "Payroll Entry-payroll_frequency-default"
 				]]
 			]
 	},
