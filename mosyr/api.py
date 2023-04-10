@@ -498,3 +498,10 @@ def create_componants_in_salary_straucture(doc, method):
             row.salary_component = "Employee Pension Insurance"
             row.amount_based_on_formula = 1
             row.formula = f"""(BS*{pension_percentage_on_employee}/100) if(social_insurance_type=="Saudi") else 0"""
+
+def sum_net_pay_payroll_entry(doc, method):
+    salary_slips = frappe.get_all("Salary Slip",{"payroll_entry": doc.name}, pluck="net_pay")
+    if len(salary_slips) > 0:
+        total_net_pay = sum(salary_slips)
+        doc.db_set("total_netpay", total_net_pay)
+        frappe.db.commit()
