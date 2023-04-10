@@ -92,7 +92,8 @@ docs_for_manager = [
     "Shift Assignment",
     "User Permission",
     "Nationality",
-    "Religion"
+    "Religion",
+    "Additional Salary"
 ]
 reports_for_manager = [
     "Insurances and Risk",
