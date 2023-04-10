@@ -498,7 +498,10 @@ fixtures = [
 		[
 			["name", "in", 
 				[
-					"HR Notification"
+					"HR Notification",
+					"SaaS User",
+					"Self Service",
+					"SaaS Manager",
 				]
 			]
 		]
