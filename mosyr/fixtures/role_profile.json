@@ -1,0 +1,56 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2023-04-10 15:20:03.313978",
+  "name": "SaaS Manager",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "role_profile": "SaaS Manager",
+  "roles": [
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "SaaS Manager"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2023-04-10 15:24:38.487230",
+  "name": "SaaS User",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "role_profile": "SaaS User",
+  "roles": [
+   {
+    "parent": "SaaS User",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "SaaS User"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2023-04-10 15:25:05.891577",
+  "name": "Self Service",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "role_profile": "Self Service",
+  "roles": [
+   {
+    "parent": "Self Service",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Self Service"
+   }
+  ]
+ }
+]

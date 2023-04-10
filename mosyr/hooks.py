@@ -506,6 +506,19 @@ fixtures = [
 			]
 		]
 	},
+    {
+	"dt": "Role Profile",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"SaaS User",
+					"Self Service",
+					"SaaS Manager",
+				]
+			]
+		]
+	},
 	{
 	"dt": "Print Format",
 	"filters": 
