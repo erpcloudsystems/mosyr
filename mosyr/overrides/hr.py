@@ -10,6 +10,7 @@ from erpnext.hr.doctype.travel_request.travel_request import TravelRequest
 from erpnext.hr.doctype.expense_claim.expense_claim import ExpenseClaim
 from erpnext.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
 from erpnext.hr.doctype.expense_claim_type.expense_claim_type import ExpenseClaimType
+from erpnext.hr.doctype.attendance_request.attendance_request import AttendanceRequest
 
 from mosyr import (
     create_account,
@@ -325,3 +326,41 @@ class CustomExpenseClaimType(ExpenseClaimType):
             self.append(
                 "accounts", {"company": company.name, "default_account": account}
             )
+
+
+class CustomAttendanceRequest(AttendanceRequest):
+    def on_submit(self):
+         self.create_attendance()
+
+    def create_attendance(self):
+        from frappe.utils import add_days, date_diff, getdate
+        request_days = date_diff(self.to_date, self.from_date) + 1
+        for number in range(request_days):
+            attendance_date = add_days(self.from_date, number)
+            skip_attendance = self.validate_if_attendance_not_applicable(attendance_date)
+            if not skip_attendance:
+                att = frappe.db.exists("Attendance", {"employee": self.employee, "attendance_date": attendance_date})
+                if att:
+                    attendance = frappe.get_doc("Attendance", att)
+                    if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
+                        attendance.db_set("status", "Half Day")
+                    elif self.reason == "Work From Home":
+                        attendance.db_set("status", "Work From Home")
+                    else:
+                        attendance.db_set("status", "Present")
+                    frappe.db.commit()
+                else :
+                    attendance = frappe.new_doc("Attendance")
+                    attendance.employee = self.employee
+                    attendance.employee_name = self.employee_name
+                    if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
+                        attendance.status = "Half Day"
+                    elif self.reason == "Work From Home":
+                        attendance.status = "Work From Home"
+                    else:
+                        attendance.status = "Present"
+                    attendance.attendance_date = attendance_date
+                    attendance.company = self.company
+                    attendance.attendance_request = self.name
+                    attendance.save(ignore_permissions=True)
+                    attendance.submit()
