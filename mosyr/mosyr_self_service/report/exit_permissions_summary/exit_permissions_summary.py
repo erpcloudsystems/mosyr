@@ -73,13 +73,6 @@ def get_columns(filters):
 
 	cols = [
 			{
-				"label": _("Employee"),
-				"options":"Employee",
-				"fieldname": "employee",
-				"fieldtype": "Link",
-				"width": 200
-			},
-			{
 				"label": _("Employee Name"),
 				"fieldname": "employee_name",
 				"fieldtype": "Data",
