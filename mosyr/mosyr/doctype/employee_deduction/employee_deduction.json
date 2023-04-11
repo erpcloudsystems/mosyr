@@ -80,7 +80,8 @@
   },
   {
    "fieldname": "notes",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text",
+   "in_list_view": 1,
    "label": "Notes"
   },
   {
@@ -93,7 +94,6 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -162,7 +162,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-09 15:51:22.490798",
+ "modified": "2023-04-11 15:17:27.847440",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Deduction",
