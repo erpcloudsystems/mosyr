@@ -123,7 +123,6 @@ override_doctype_class = {
 	"Employee Checkin": 			"mosyr.overrides.shifts.CustomEmployeeCheckin",
 	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
 
-	"User Type": 					"mosyr.overrides.core.CustomUserType",
 	"User": 					"mosyr.overrides.core.CustomUser",
 }
 
