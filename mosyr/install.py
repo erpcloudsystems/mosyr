@@ -1,8 +1,5 @@
 import frappe
-from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
-from frappe.installer import update_site_config
-from erpnext.setup.install import create_custom_role, create_user_type
 from mosyr import (
     create_account,
     create_cost_center,
@@ -10,7 +7,6 @@ from mosyr import (
     create_bank_account,
     update_fields_props,
 )
-from frappe.permissions import update_permission_property
 
 docs_for_manager = [
     # "System Controller",
@@ -83,7 +79,6 @@ docs_for_manager = [
     "Loan Application",
     "Vehicle",
     "Vehicle Log",
-    "Vehicle Service",
     "Document Manager",
     "Document Type",
     "Custody",
@@ -92,7 +87,7 @@ docs_for_manager = [
     "Shift Assignment",
     "User Permission",
     "Nationality",
-    "Religion"
+    "Religion",
 ]
 reports_for_manager = [
     "Insurances and Risk",
@@ -102,23 +97,20 @@ reports_for_manager = [
     "Employee Leave Balance",
     "Employee Leave Balance Summary",
     "Leave Balance Encashment",
-    "Exit Permissions Summary"
+    "Exit Permissions Summary",
 ]
 
 
 def after_install():
     edit_gender_list()
+
     create_banks()
+    create_dafault_mode_of_payments()
     companies = frappe.get_list("Company")
     create_dafault_bank_accounts(companies)
     create_dafault_accounts(companies)
     create_default_cost_centers(companies)
-    create_dafault_mode_of_payments()
     hide_accounts_and_taxs_from_system()
-    create_non_standard_user_types()
-    allow_read_for_reports()
-    add_select_perm_for_all()
-    create_role_and_set_to_admin()
     set_home_page_login()
 
 
@@ -264,236 +256,6 @@ def hide_accounts_and_taxs_from_system():
         add_property_setter(fields_props)
 
 
-def create_non_standard_user_types():
-    non_stadard_users = {}
-    manager_user_type = get_manager_user_data()
-    self_service_user_type = get_self_service_data()
-
-    non_stadard_users.update(manager_user_type)
-    non_stadard_users.update(self_service_user_type)
-
-    user_type_limit = {}
-    for user_type, data in iteritems(non_stadard_users):
-        user_type_limit.setdefault(frappe.scrub(user_type), 10000)
-    update_site_config("user_type_doctype_limit", user_type_limit)
-
-    for user_type, data in iteritems(non_stadard_users):
-        create_custom_role(data)
-        if user_type == "SaaS Manager":
-            sm = frappe.db.exists("Role", "SaaS Manager")
-            if sm:
-                smr = frappe.get_doc("Role", sm)
-                smr.is_custom = 1
-                smr.desk_access = 1
-                smr.save(ignore_permissions=True)
-            else:
-                smr = frappe.new_doc()
-                smr.update({
-                    "role_name": "SaaS Manager",
-                    "desk_access": 1,
-                    "is_custom": 1
-                })
-                smr.save(ignore_permissions=True)
-            frappe.db.commit()
-        create_user_type(user_type, data)
-    frappe.db.commit()
-
-
-def get_manager_user_data():
-    doctypes = {}
-    for document in docs_for_manager:
-        doctypes.update(
-            {
-                document: [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                    "set_user_permissions"
-                ]
-            }
-        )
-
-    types = {
-        "SaaS Manager": {
-            "role": "SaaS Manager",
-            "apply_user_permission_on": "Employee",
-            "user_id_field": "user_id",
-            "doctypes": doctypes,
-        }
-    }
-    return types
-
-
-def get_self_service_data():
-    return {
-        "Employee Self Service": {
-            "role": "Employee Self Service",
-            "apply_user_permission_on": "Employee",
-            "user_id_field": "user_id",
-            "doctypes": {
-                "Salary Slip": ["read"],
-                "Employee": ["read", "write"],
-                "Expense Claim": ["read", "write", "create", "delete"],
-                "Leave Application": ["read", "write", "create", "delete"],
-                "Attendance Request": ["read", "write", "create", "delete"],
-                "Compensatory Leave Request": ["read", "write", "create", "delete"],
-                "Employee Tax Exemption Declaration": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                ],
-                "Employee Tax Exemption Proof Submission": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                ],
-                "Timesheet": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Work Experience": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Dependants Details": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Passport Details": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Salary Details": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Health Insurance": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Contact Details": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Emergency Contact": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Educational Qualification": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Personal Details": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Employee ID": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Lateness Permission": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-                "Exit Permission": [
-                    "read",
-                    "write",
-                    "create",
-                    "delete",
-                    "submit",
-                    "cancel",
-                    "amend",
-                ],
-            },
-        },
-    }
-
-
-def allow_read_for_reports():
-    args = {
-        "doctype": "Custom Role",
-        "roles": [{"role": "SaaS Manager", "parenttype": "Custom Role"}],
-    }
-    for report in reports_for_manager:
-        ref_doctype = frappe.db.get_value("Report", report, "ref_doctype")
-        args.update(
-            {
-                "report": report,
-                "ref_doctype": ref_doctype,
-            }
-        )
-        update_custom_roles({"report": report}, args)
-        update_permission_property(ref_doctype, "SaaS Manager", 0, "select", 1)
-        update_permission_property(ref_doctype, "SaaS Manager", 0, "read", 1)
-        update_permission_property(ref_doctype, "SaaS Manager", 0, "report", 1)
-    frappe.db.commit()
-
 def update_custom_roles(role_args, args):
     name = frappe.db.get_value("Custom Role", role_args, "name")
     if name:
@@ -506,63 +268,6 @@ def update_custom_roles(role_args, args):
         custom_role.save()
     else:
         frappe.get_doc(args).insert()
-    frappe.db.commit()
-
-def add_select_perm_for_all():
-    docs_for_manager.append("Account")
-    docs_for_manager.append("Email Domain")
-    docs_for_manager.append("Email Template")
-    docs_for_manager.append("Email Account")
-    for doc in docs_for_manager:
-        # Add Select for Doctype and for all links fields
-        doc = frappe.db.exists("DocType", doc)
-        if not doc: continue
-        doc = frappe.get_doc("DocType", doc)
-
-        for field in doc.fields:
-            if field.fieldtype != "Link": continue
-            doc_field = frappe.db.exists("DocType", field.options)
-            if not doc_field: continue
-            update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "write", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "create", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "print", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "delete", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "import", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "export", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "share", 1)
-            update_permission_property(doc_field, "Employee Self Service", 0, "select", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "write", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "create", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "print", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "delete", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "import", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "export", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "share", 1)
-        update_permission_property(doc.name, "Employee Self Service", 0, "select", 1)
-    frappe.db.commit()
-
-def create_role_and_set_to_admin():
-    create_custom_role({"role": "Read User Type"})
-    frappe.get_doc("User", "Administrator").add_roles("Read User Type")
-    frappe.db.commit()
-    update_permission_property("User", "Read User Type", 3, "read", 1)
-    update_permission_property("User", "Read User Type", 3, "write", 1)
-    frappe.db.commit()
-    
-    # create role Mosyr Forms and added this role for saas manager and employee self service 
-    create_custom_role({"role": "Mosyr Forms"})
     frappe.db.commit()
 
 
