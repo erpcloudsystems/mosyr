@@ -104,7 +104,6 @@ reports_for_manager = [
 def after_install():
     edit_gender_list()
 
-    create_banks()
     create_dafault_mode_of_payments()
     companies = frappe.get_list("Company")
     create_dafault_bank_accounts(companies)
@@ -125,24 +124,6 @@ def edit_gender_list():
         except:
             pass
         frappe.db.commit()
-
-
-def create_banks():
-    banks = [
-        {"bank_name": "Al Inma Bank", "swift_number": "INMA"},
-        {"bank_name": "Riyadh Bank", "swift_number": "RIBL"},
-        {"bank_name": "The National Commercial Bank", "swift_number": "NCBK"},
-        {"bank_name": "Samba Financial Group", "swift_number": "SAMB"},
-        {"bank_name": "Al Rajhi Bank", "swift_number": "RJHI"},
-        {"bank_name": "Al Araby Bank", "swift_number": "ARNB"},
-    ]
-    for bank in banks:
-        banks_list = frappe.get_list("Bank", filters={"name": bank["bank_name"]})
-        if len(banks_list) == 0:
-            bank_doc = frappe.new_doc("Bank")
-            bank_doc.update(bank)
-            bank_doc.save()
-    frappe.db.commit()
 
 
 def create_dafault_bank_accounts(companies):

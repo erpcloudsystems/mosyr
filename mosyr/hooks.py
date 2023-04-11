@@ -559,4 +559,20 @@ fixtures = [
 			]
 		]
 	},
+    {
+	"dt": "Bank",
+	"filters": 
+    [
+		["name", "in", 
+   			[
+				"Al Inma Bank",
+				"Riyadh Bank",
+				"The National Commercial Bank",
+				"Samba Financial Group",
+				"Al Rajhi Bank",
+				"Al Araby Bank",
+			]
+		]
+	]
+	},
 ]
