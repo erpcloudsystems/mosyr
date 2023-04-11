@@ -13,7 +13,7 @@ class ExitPermission(Document):
     def validate(self):
         validate_active_employee(self.employee)
         self.validate_exit_times()
-        self.get_employee_shift(self.employee)
+        self.shift = self.get_employee_shift(self.employee)
     def validate_exit_times(self):
         if not self.to_time or not self.from_time:
             return
@@ -52,4 +52,4 @@ class ExitPermission(Document):
         )
         if shift_actual_timings[0] and shift_actual_timings[1]:
             return shift_actual_timings[2].shift_type.name
-        return False
+        return 
