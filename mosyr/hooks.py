@@ -461,7 +461,11 @@ fixtures = [
                     "Payroll Entry-posting_date-in_list_view",
                     "Payroll Entry-currency-in_list_view",
                     "Payroll Entry-payroll_frequency-hidden",
-                    "Payroll Entry-payroll_frequency-default"
+                    "Payroll Entry-payroll_frequency-default",
+                    "Salary Slip Loan-interest_amount-hidden",
+                    "Salary Slip Loan-interest_income_account-hidden",
+                    "Salary Slip Loan-loan_account-hidden",
+                    "Salary Slip-total_interest_amount-hidden"
 				]]
 			]
 	},
