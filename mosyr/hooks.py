@@ -546,20 +546,6 @@ fixtures = [
 	"filters": []
 	},
     {
-	"dt": "Salary Component",
-	"filters": 
-    	[
-			["name", "in", 
-				[
-					"Company Pension Insurance",
-					"Employee Pension Insurance",
-                    "Risk On Company",
-                    "Risk On Employee"
-				]
-			]
-		]
-	},
-    {
 	"dt": "Bank",
 	"filters": 
     [

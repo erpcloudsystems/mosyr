@@ -100,11 +100,113 @@ reports_for_manager = [
     "Exit Permissions Summary",
 ]
 
+risk_insurance_components = {
+    "Risk On Company": {
+        "amount": 0.0,
+        "amount_based_on_formula": 1,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 1,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component_abbr": "RCD",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+    "Employee Pension Insurance": {
+        "amount": 0.0,
+        "amount_based_on_formula": 0,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 0,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "name": "Employee Pension Insurance",
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component_abbr": "EPD",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+    "Company Pension Insurance": {
+        "amount": 0.0,
+        "amount_based_on_formula": 0,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 1,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component_abbr": "CPD",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+    "Risk On Employee": {
+        "amount": 0.0,
+        "amount_based_on_formula": 1,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 0,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component": "Risk On Employee",
+        "salary_component_abbr": "RED",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+}
+
 
 def after_install():
     edit_gender_list()
 
     create_dafault_mode_of_payments()
+    create_risk_insurance_components()
     companies = frappe.get_list("Company")
     create_dafault_bank_accounts(companies)
     create_dafault_accounts(companies)
@@ -209,7 +311,7 @@ def create_dafault_accounts(companies):
         sc = frappe.get_doc("Salary Component", sc.name)
         sc.save()
 
-    # Setup For salayr components
+    # Setup For expense claim
     for ect in frappe.get_list("Expense Claim Type"):
         ect = frappe.get_doc("Expense Claim Type", ect.name)
         ect.save()
@@ -229,6 +331,30 @@ def create_dafault_mode_of_payments():
     create_mode_payment("Advance Payment", "Bank")
     create_mode_payment("Loans Payment", "Bank")
     create_mode_payment("Parroll Payment", "Bank")
+
+
+def create_risk_insurance_components():
+    ld = frappe.db.exists("Salary Component", "Leave Deduction")
+    components = [
+        comp.name
+        for comp in frappe.db.sql(
+            "SELECT LOWER(name) FROM `tabSalary Component`", as_dict=True
+        )
+    ]
+    for component in [
+        "Risk On Company",
+        "Risk On Employee",
+        "Employee Pension Insurance",
+        "Company Pension Insurance",
+    ]:
+        if f"{component}".lower() in components:
+            continue
+        sc_doc = frappe.new_doc("Salary Component")
+        data = risk_insurance_components.get(component)
+        sc_doc.salary_component = component
+        sc_doc.update(data)
+        sc_doc.save()
+    frappe.db.commit()
 
 
 def hide_accounts_and_taxs_from_system():
