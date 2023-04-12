@@ -2,7 +2,7 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-04-10 15:20:03.313978",
+  "modified": "2023-04-12 19:40:49.979485",
   "name": "SaaS Manager",
   "parent": null,
   "parentfield": null,
@@ -14,13 +14,19 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "SaaS Manager"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Mosyr Forms"
    }
   ]
  },
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-04-10 15:24:38.487230",
+  "modified": "2023-04-12 19:40:44.265596",
   "name": "SaaS User",
   "parent": null,
   "parentfield": null,
@@ -32,13 +38,19 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "SaaS User"
+   },
+   {
+    "parent": "SaaS User",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Mosyr Forms"
    }
   ]
  },
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-04-10 15:25:05.891577",
+  "modified": "2023-04-12 19:40:38.084401",
   "name": "Self Service",
   "parent": null,
   "parentfield": null,
@@ -50,6 +62,12 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Self Service"
+   },
+   {
+    "parent": "Self Service",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Mosyr Forms"
    }
   ]
  }
