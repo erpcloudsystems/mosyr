@@ -50,7 +50,6 @@
   {
    "fieldname": "addition_type",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Addition Type",
    "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission"
   },
@@ -99,7 +98,7 @@
   },
   {
    "fieldname": "notes",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text",
    "in_list_view": 1,
    "label": "Notes"
   },
@@ -131,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-09 16:01:55.321904",
+ "modified": "2023-04-12 10:53:29.423067",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Benefit",
