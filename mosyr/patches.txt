@@ -31,3 +31,4 @@ mosyr.patches.create_role_mosyr_forms
 mosyr.patches.set_remaining_value_in_cash_custody_expense
 mosyr.patches.rebuild_non_standard_users_types_v8
 mosyr.patches.sum_net_pay_for_payroll_entry
+mosyr.patches.recreate_property_setter
