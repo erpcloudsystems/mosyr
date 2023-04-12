@@ -13,7 +13,7 @@ class ExitPermission(Document):
     def validate(self):
         validate_active_employee(self.employee)
         self.validate_exit_times()
-        self.shift = self.get_employee_shift(self.employee)
+        self.shift = self.get_shift(self.employee)
     def validate_exit_times(self):
         if not self.to_time or not self.from_time:
             return
@@ -46,10 +46,9 @@ class ExitPermission(Document):
                     if time_diff_in_seconds(exit_permission_datetime_to, shift_datetime_end_time) >= 0:
                         create_checkin(self.employee, "OUT", shift_datetime_end_time)
                         
-    def get_employee_shift(self, employee):
-        shift_actual_timings = get_actual_start_end_datetime_of_shift(
-        employee, get_datetime(self.from_time), True
-        )
-        if shift_actual_timings[0] and shift_actual_timings[1]:
-            return shift_actual_timings[2].shift_type.name
+    def get_shift(self, employee):
+        from erpnext.hr.doctype.shift_assignment.shift_assignment import get_employee_shift
+        shift_actual_timings = get_employee_shift(employee, frappe.utils.getdate(self.date), False, None)
+        if shift_actual_timings:
+            return shift_actual_timings.shift_type.name
         return 
