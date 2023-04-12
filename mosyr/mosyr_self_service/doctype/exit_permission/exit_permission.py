@@ -45,7 +45,7 @@ class ExitPermission(Document):
                 if time_diff_in_seconds(exit_permission_datetime_from, shift_datetime_end_time) <= 0:
                     if time_diff_in_seconds(exit_permission_datetime_to, shift_datetime_end_time) >= 0:
                         create_checkin(self.employee, "OUT", shift_datetime_end_time)
-    @frappe.whitelist()
+                        
     def get_employee_shift(self, employee):
         shift_actual_timings = get_actual_start_end_datetime_of_shift(
         employee, get_datetime(self.from_time), True
