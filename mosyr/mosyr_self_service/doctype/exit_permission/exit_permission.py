@@ -5,9 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 from erpnext.hr.utils import validate_active_employee
-from frappe.utils import time_diff_in_hours
-from frappe.utils import get_datetime ,time_diff_in_seconds, get_datetime_str
-from erpnext.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
+from frappe.utils import time_diff_in_seconds, get_datetime_str, time_diff_in_hours
 
 class ExitPermission(Document):
     def validate(self):
