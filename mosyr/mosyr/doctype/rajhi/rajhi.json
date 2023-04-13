@@ -1,5 +1,7 @@
 {
  "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2022-11-06 04:42:18.164620",
  "doctype": "DocType",
@@ -18,7 +20,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-09 04:30:41.936825",
+ "modified": "2023-04-13 17:36:21.677582",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Rajhi",
@@ -35,6 +37,40 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Self Service",
+   "select": 1
   }
  ],
  "read_only": 1,
