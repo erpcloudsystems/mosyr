@@ -229,7 +229,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-03-16 13:56:17.472646",
+ "modified": "2023-04-13 17:27:45.355519",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Data Import",
@@ -242,6 +242,26 @@
    "print": 1,
    "read": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS User",
    "share": 1,
    "write": 1
   }
