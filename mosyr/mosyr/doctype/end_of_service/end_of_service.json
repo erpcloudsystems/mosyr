@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_copy": 1,
  "autoname": "End-Of-Service-.###",
  "creation": "2019-07-07 01:18:40.908714",
  "doctype": "DocType",
@@ -37,7 +38,8 @@
   "calculate",
   "value_details_section",
   "value",
-  "note"
+  "note",
+  "amended_from"
  ],
  "fields": [
   {
@@ -208,11 +210,20 @@
    "fieldtype": "Data",
    "label": "Note",
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "End Of Service",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-27 15:54:13.548017",
+ "modified": "2023-04-13 18:18:39.271686",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "End Of Service",
@@ -229,6 +240,46 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Self Service",
+   "select": 1
   }
  ],
  "quick_entry": 1,
