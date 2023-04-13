@@ -108,21 +108,27 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-14 09:41:23.346851",
+ "modified": "2023-04-13 18:37:23.060676",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Exit Permission",
  "owner": "Administrator",
  "permissions": [
   {
+   "amend": 1,
+   "cancel": 1,
    "create": 1,
+   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Employee Self Service",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
@@ -135,9 +141,22 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "SaaS Manager",
+   "role": "SaaS User",
+   "select": 1,
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Self Service",
+   "select": 1,
+   "share": 1,
    "write": 1
   }
  ],
