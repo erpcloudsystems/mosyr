@@ -1,8 +1,8 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "Prompt",
- "creation": "2022-09-05 13:34:49.968877",
+ "allow_copy": 1,
+ "autoname": "PAYT.-.YYYY.-.#####",
+ "creation": "2023-04-13 17:50:57.395860",
  "doctype": "DocType",
  "document_type": "Document",
  "engine": "InnoDB",
@@ -36,7 +36,8 @@
   "salary_component",
   "hour_rate",
   "leave_encashment_amount_per_day",
-  "max_benefits"
+  "max_benefits",
+  "amended_from"
  ],
  "fields": [
   {
@@ -47,6 +48,40 @@
    "options": "Company",
    "remember_last_selected_value": 1,
    "reqd": 1
+  },
+  {
+   "depends_on": "company",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "depends_on": "company",
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "depends_on": "company",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "depends_on": "company",
+   "fieldname": "show_employees",
+   "fieldtype": "Button",
+   "label": "Show Employees"
+  },
+  {
+   "depends_on": "company",
+   "fieldname": "employees",
+   "fieldtype": "Table",
+   "label": "Employees",
+   "options": "Payroll Register Tool Employee"
   },
   {
    "fieldname": "column_break1",
@@ -60,6 +95,12 @@
    "fieldtype": "Select",
    "label": "Payroll Frequency",
    "options": "Monthly\nFortnightly\nBimonthly\nWeekly\nDaily"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
   },
   {
    "fetch_from": "company.default_currency",
@@ -82,39 +123,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "time_sheet_earning_detail",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "salary_slip_based_on_timesheet",
-   "fieldtype": "Check",
-   "label": "Salary Slip Based on Timesheet"
-  },
-  {
-   "description": "Salary Component for timesheet based payroll.",
-   "fieldname": "salary_component",
-   "fieldtype": "Link",
-   "label": "Salary Component",
-   "options": "Salary Component"
-  },
-  {
-   "fieldname": "hour_rate",
+   "fieldname": "base",
    "fieldtype": "Currency",
-   "label": "Hour Rate",
-   "options": "currency"
+   "label": "Base"
   },
   {
-   "fieldname": "leave_encashment_amount_per_day",
+   "fieldname": "variable",
    "fieldtype": "Currency",
-   "label": "Leave Encashment Amount Per Day",
-   "options": "currency"
-  },
-  {
-   "fieldname": "max_benefits",
-   "fieldtype": "Currency",
-   "label": "Max Benefits (Amount)",
-   "options": "currency"
+   "label": "Variable"
   },
   {
    "description": "Salary breakup based on Earning and Deduction.",
@@ -131,6 +147,10 @@
    "oldfieldname": "earning_details",
    "oldfieldtype": "Table",
    "options": "Payroll Register Detail"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "deductions",
@@ -180,68 +200,58 @@
    "read_only": 1
   },
   {
+   "fieldname": "time_sheet_earning_detail",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "salary_slip_based_on_timesheet",
+   "fieldtype": "Check",
+   "label": "Salary Slip Based on Timesheet"
+  },
+  {
    "fieldname": "column_break_10",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "company",
-   "fieldname": "department",
+   "description": "Salary Component for timesheet based payroll.",
+   "fieldname": "salary_component",
    "fieldtype": "Link",
-   "label": "Department",
-   "options": "Department"
+   "label": "Salary Component",
+   "options": "Salary Component"
   },
   {
-   "depends_on": "company",
-   "fieldname": "branch",
-   "fieldtype": "Link",
-   "label": "Branch",
-   "options": "Branch"
-  },
-  {
-   "depends_on": "company",
-   "fieldname": "designation",
-   "fieldtype": "Link",
-   "label": "Designation",
-   "options": "Designation"
-  },
-  {
-   "fieldname": "from_date",
-   "fieldtype": "Date",
-   "label": "From Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "base",
+   "fieldname": "hour_rate",
    "fieldtype": "Currency",
-   "label": "Base"
+   "label": "Hour Rate",
+   "options": "currency"
   },
   {
-   "fieldname": "variable",
+   "fieldname": "leave_encashment_amount_per_day",
    "fieldtype": "Currency",
-   "label": "Variable"
+   "label": "Leave Encashment Amount Per Day",
+   "options": "currency"
   },
   {
-   "fieldname": "column_break_16",
-   "fieldtype": "Column Break"
+   "fieldname": "max_benefits",
+   "fieldtype": "Currency",
+   "label": "Max Benefits (Amount)",
+   "options": "currency"
   },
   {
-   "depends_on": "company",
-   "fieldname": "show_employees",
-   "fieldtype": "Button",
-   "label": "Show Employees"
-  },
-  {
-   "depends_on": "company",
-   "fieldname": "employees",
-   "fieldtype": "Table",
-   "label": "Employees",
-   "options": "Payroll Register Tool Employee"
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Payroll Register Tool",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
- "issingle": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 23:12:33.765067",
+ "modified": "2023-04-13 17:51:28.263824",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
@@ -253,29 +263,42 @@
    "email": 1,
    "print": 1,
    "read": 1,
-   "role": "HR User",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "HR Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "SaaS Manager",
+   "role": "System Manager",
    "select": 1,
    "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],
