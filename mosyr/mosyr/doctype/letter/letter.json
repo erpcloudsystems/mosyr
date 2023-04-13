@@ -1,5 +1,7 @@
 {
  "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
  "autoname": "L-.YYYY.MM.DD.###",
  "creation": "2022-01-26 15:06:49.680385",
  "doctype": "DocType",
@@ -124,7 +126,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-15 17:00:08.496054",
+ "modified": "2023-04-13 18:19:53.065991",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Letter",
@@ -141,6 +143,42 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Self Service",
+   "select": 1
   }
  ],
  "sort_field": "modified",
