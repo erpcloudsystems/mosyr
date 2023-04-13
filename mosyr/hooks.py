@@ -388,7 +388,6 @@ fixtures = [
 					"Loan-applicant_type-default",
 					"Loan-applicant_type-read_only",
 					"Loan-rate_of_interest-default",
-					# "Loan-rate_of_interest-hidden",
 					"Loan-main-title_field",
 					"Loan-total_payment-in_list_view",
 					"Loan-loan_type-in_list_view",
@@ -401,11 +400,8 @@ fixtures = [
 					"Loan Application-applicant_type-default",
 					"Loan Application-applicant_type-read_only",
 					"Repayment Schedule-is_accrued-hidden",
-					"Loan Type-is_term_loan-default",
-					"Repayment Schedule-interest_amount-hidden"
-					"Loan Type-is_term_loan-default",
 					"Repayment Schedule-balance_loan_amount-hidden",
-                    
+					"Loan Type-is_term_loan-default",
 					# Hide from Printing!
 					"Salary Detail-tax_on_additional_salary-print_hide",
 					"Salary Detail-tax_on_flexible_benefit-print_hide",
@@ -425,7 +421,6 @@ fixtures = [
 					"Salary Slip-total_deduction-print_hide_if_no_value",
 					"Salary Slip-base_gross_year_to_date-print_hide",
 					"Salary Slip-payroll_cost_center-print_hide",
-                    
 					"Payroll Entry-payroll_payable_account-print_hide",
 					"Payroll Entry-payment_account-print_hide",
 					"Payroll Entry-bank_account-print_hide",
@@ -466,8 +461,9 @@ fixtures = [
                     "Salary Slip Loan-interest_income_account-hidden",
                     "Salary Slip Loan-loan_account-hidden",
                     "Salary Slip-total_interest_amount-hidden"
-				]]
+				]
 			]
+		]
 	},
 	{
 	"dt": "Workflow",
