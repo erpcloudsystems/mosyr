@@ -1,5 +1,7 @@
 {
  "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:establishment_number",
  "creation": "2022-05-24 00:59:42.142296",
@@ -19,7 +21,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-05-24 01:03:02.122925",
+ "modified": "2023-04-13 18:04:16.299609",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Establishment  Number",
@@ -34,6 +36,35 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
    "share": 1,
    "write": 1
   }
