@@ -34,4 +34,4 @@ mosyr.patches.sum_net_pay_for_payroll_entry
 mosyr.patches.recreate_property_setter
 mosyr.patches.add_permessions_in_company
 mosyr.patches.move_data_from_controller_to_company
-mosyr.patches.create_custom_field_in_user_1
+mosyr.patches.create_custom_field_in_user_2

@@ -6,7 +6,7 @@ def execute():
     if custom_field :
         frappe.delete_doc("Custom Field", custom_field)
         frappe.db.commit()
-        
+
     create_custom_field(
         "User",
         dict(
@@ -16,6 +16,7 @@ def execute():
             fieldtype="Table MultiSelect",
             options="Company Table",
             insert_after="username",
+            allow_in_quick_entry=1
         ),
     )
     frappe.db.commit()
