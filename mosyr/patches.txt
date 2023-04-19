@@ -33,6 +33,5 @@ mosyr.patches.rebuild_non_standard_users_types_v8
 mosyr.patches.sum_net_pay_for_payroll_entry
 mosyr.patches.recreate_property_setter
 mosyr.patches.add_permessions_in_company
-mosyr.patches.create_custom_field_in_user
 mosyr.patches.move_data_from_controller_to_company
-mosyr.patches.recreate_custom_field_in_user
+mosyr.patches.create_custom_field_in_user_1
