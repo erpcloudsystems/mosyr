@@ -535,7 +535,9 @@ fixtures = [
                     "Salary Slip Loan-interest_amount-hidden",
                     "Salary Slip Loan-interest_income_account-hidden",
                     "Salary Slip Loan-loan_account-hidden",
-                    "Salary Slip-total_interest_amount-hidden"
+                    "Salary Slip-total_interest_amount-hidden",
+                    "Company-section_break_28-hidden",
+                    "Company-registration_info-hidden"
 				]
 			]
 		]
