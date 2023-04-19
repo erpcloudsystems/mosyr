@@ -303,7 +303,7 @@ class MosyrDataImport(Document):
         }
         if company_id_for_insurances:
             company_id_for_insurances = frappe.get_doc("Company Id", company_id)
-            comapny_data = frappe.get_list("Company Controller", filters={'company': company_id_for_insurances.company}, fields=['*'])
+            comapny_data = frappe.get_list("Company", filters={'name': company_id_for_insurances.company}, fields=['*'])
             if len(comapny_data) > 0:
                 comapny_data = comapny_data[0]
                 company_insurances.update({
@@ -1591,11 +1591,7 @@ class MosyrDataImport(Document):
             return
 
         company_doc = frappe.get_doc('Company', company_id_doc.company)
-        if frappe.db.exists('Company Controller', company_id_doc.company):
-            main_settings = frappe.get_doc('Company Controller', company_doc.name)
-        else:
-            main_settings = frappe.new_doc('Company Controller')
-            main_settings.company = company_doc.name
+        main_settings = frappe.get_doc('Company', company_doc.name)
 
         if isinstance(data, list):
             if len(data) == 1:
@@ -1848,40 +1844,40 @@ class MosyrDataImport(Document):
                 if isinstance(baladiya_license, dict):
                     filename = baladiya_license.get('filename', False)
                     if filename:
-                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
-                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'baladiya_license', source_path, filename)
+                        main_settings = frappe.get_doc('Company', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company', main_settings.name, 'baladiya_license', source_path, filename)
                         if is_downloaded:
-                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings = frappe.get_doc('Company', main_settings.name)
                             main_settings.db_set('baladiya_license', _file['file_url'])
                             # main_settings.save()
                             frappe.db.commit()
                 if isinstance(stamp, dict):
                     filename = stamp.get('filename', False)
                     if filename:
-                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
-                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'stamp', source_path, filename)
+                        main_settings = frappe.get_doc('Company', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company', main_settings.name, 'stamp', source_path, filename)
                         if is_downloaded:
-                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings = frappe.get_doc('Company', main_settings.name)
                             main_settings.db_set('stamp', _file['file_url'])
                             # main_settings.save()
                             frappe.db.commit()
                 if isinstance(cr_document, dict):
                     filename = cr_document.get('filename', False)
                     if filename:
-                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
-                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'cr_document', source_path, filename)
+                        main_settings = frappe.get_doc('Company', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company', main_settings.name, 'cr_document', source_path, filename)
                         if is_downloaded:
-                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings = frappe.get_doc('Company', main_settings.name)
                             main_settings.db_set('cr_document', _file['file_url'])
                             # main_settings.save()
                             frappe.db.commit()
                 if isinstance(logo, dict):
                     filename = logo.get('filename', False)
                     if filename:
-                        main_settings = frappe.get_doc('Company Controller', main_settings.name)
-                        is_downloaded, _file  = self.download_mosyr_file('Company Controller', main_settings.name, 'logo', source_path, filename)
+                        main_settings = frappe.get_doc('Company', main_settings.name)
+                        is_downloaded, _file  = self.download_mosyr_file('Company', main_settings.name, 'logo', source_path, filename)
                         if is_downloaded:
-                            main_settings = frappe.get_doc('Company Controller', main_settings.name)
+                            main_settings = frappe.get_doc('Company', main_settings.name)
                             main_settings.db_set('logo', _file['file_url'])
 
                         is_downloaded, _file  = self.download_mosyr_file('Company', company_doc.name, 'company_logo', source_path, filename)

@@ -5,13 +5,14 @@ import frappe
 from frappe import _
 from random import randint
 import datetime
-from six import iteritems, string_types
+from six import string_types
 import json
 from frappe.desk.query_report import run,get_columns_dict,handle_duration_fieldtype_values,build_xlsx_data
 from frappe.utils import cstr
 from io import StringIO
 from frappe.utils import flt
 from mosyr.api import convert_date
+
 @frappe.whitelist()
 def export_query(date=frappe.utils.today()):
 	"""export from query reports"""
@@ -87,19 +88,19 @@ def export_query(date=frappe.utils.today()):
 			file_name = doc.name[-2:]
 			data["result"][0]['file_seq'] = file_name
 		if get_bank()[0] == 'Al Rajhi Bank'and get_bank()[1] != "Payroll Cards":	
-			company_controller = frappe.get_doc("Company Controller" , get_bank()[2])
-			if company_controller.calendar_accreditation == "Hijri":
-				if company_controller.disbursement_type == "Payroll":
+			company = frappe.get_doc("Company" , get_bank()[2])
+			if company.calendar_accreditation == "Hijri":
+				if company.disbursement_type == "Payroll":
 					data["result"][0]['bank_acc_no'] = convert_date(frappe.utils.today()).replace("-" , "")
 					data["result"][0]['emp_name'] = convert_date(date).replace("-" , "")
-				elif company_controller.disbursement_type == "Interchange":
+				elif company.disbursement_type == "Interchange":
 					data["result"][0]['bank_acc_no'] = convert_date(frappe.utils.today()).replace("-" , "")
 					data["result"][0]['emp_name'] = convert_date(date).replace("-" , "")
 			else :
 				data["result"][0]['bank_acc_no'] = frappe.utils.today().replace("-" , "")
 				data["result"][0]['emp_name'] = date.replace("-" , "")
 		if get_bank()[0] == 'Riyadh Bank' and get_bank()[1] == "WPS":
-			company_controller = frappe.get_doc("Company Controller" , get_bank()[2])
+			company = frappe.get_doc("Company" , get_bank()[2])
 			data["result"][0]['y'] = date.replace("-" , "")
 
 			doc = frappe.get_doc({
@@ -135,17 +136,17 @@ def export_query(date=frappe.utils.today()):
 @frappe.whitelist()
 def get_bank():
 	company = frappe.get_doc("Global Defaults").default_company
-	bank_name = frappe.get_doc("Company Controller" , company).bank_name
-	disbursement_type = frappe.get_doc("Company Controller" , company).disbursement_type
+	bank_name = frappe.get_doc("Company" , company).bank_name
+	disbursement_type = frappe.get_doc("Company" , company).disbursement_type
 	return bank_name ,disbursement_type, company
 
 def execute(filters=None):
 	if not filters.get('company'): return [], []
-	co_controller = frappe.get_list("Company Controller")
-	if len(co_controller)>0:
-		company_controller = frappe.get_doc("Company Controller" , filters.get('company'))
-		disbursement_type = company_controller.disbursement_type
-		bank_name = company_controller.bank_name
+	co = frappe.get_list("Company")
+	if len(co)>0:
+		company = frappe.get_doc("Company" , filters.get('company'))
+		disbursement_type = company.disbursement_type
+		bank_name = company.bank_name
 		if bank_name == "Al Inma Bank" and disbursement_type == 'Payroll':
 			return get_columns_inma_payroll(),get_data_inma_payroll(filters)
 		elif bank_name == "Al Inma Bank" and disbursement_type == 'WPS':
@@ -204,7 +205,7 @@ def get_data_inma_payroll(filters):
 		ORDER BY emp_num
 		""",as_dict=1)
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	company = frappe.get_doc("Company" ,company)
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
 	salary=[]
@@ -222,9 +223,9 @@ def get_data_inma_payroll(filters):
 	if not data: return []
 	data.insert(0,
 		{'one1': 0,
-		'row_num': company_controller.company_id,
-		'emp_num': company_controller.bank_account_number,
-		'name':company_controller.english_name_in_bank,
+		'row_num': company.company_id,
+		'emp_num': company.bank_account_number,
+		'name':company.english_name_in_bank,
 		'bank_ac_no':frappe.utils.getdate(frappe.utils.today()).strftime("%Y%m%d"),
 		# 'yes':salary_slip.posting_date.strftime("%Y%m%d"),
 		'swift_number':'',
@@ -275,16 +276,16 @@ def get_data_inma_wps(filters):
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		LEFT JOIN `tabSalary Detail` sade ON sade.parent=sl.name and sade.salary_component="Allowance Trans"
 		WHERE emp.status ='Active' and {condition}
+		GROUP BY emp.name
 		ORDER BY emp_num
 		""",as_dict=1)
 	# for d in data:
 	# 	other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
 	# 	d.update({"other_earnings":other_earnings})
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	company = frappe.get_doc("Company" ,company)
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
-	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	salary=[]
 	for d in data:
 		id = ''
@@ -309,16 +310,16 @@ def get_data_inma_wps(filters):
 			d.update({"dedactions":"0"})
 	data.insert(0,
 		{'one1': "WPS",
-		'row_num': company_controller.company_id,
-		'emp_num': company_controller.bank_account_number,
-		'name':company_controller.english_name_in_bank,
+		'row_num': company.company_id,
+		'emp_num': company.bank_account_number,
+		'name':company.english_name_in_bank,
 		'bank_ac_no':frappe.utils.getdate(frappe.utils.today()).strftime("%Y%m%d"),
 		# 'yes':salary_slip.posting_date.strftime("%Y%m%d"),
 		'swift_number':'',
 		'sa':len(data),
 		'month_to_date':total_salary,
 		'sar':'SAR',
-		'one2': company_controller.labors_office_file_no
+		'one2': company.labors_office_file_number
 		})
 	return data
 
@@ -334,7 +335,7 @@ def get_data_riad(filters):
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	agreement_symbol = frappe.get_value("Company Controller" , company , 'agreement_symbol') or '0'
+	agreement_symbol = frappe.get_value("Company" , company , 'agreement_symbol') or '0'
 	num = ""
 	for c in agreement_symbol:
 		if c.isdigit():
@@ -371,6 +372,7 @@ def get_data_riad(filters):
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and {condition}
+		Group BY emp.name
 		ORDER BY emp_num
 		""",as_dict=1)
 	for d in data:
@@ -417,13 +419,13 @@ def get_data_riad(filters):
 			sl_dedactions =  d.get('dedactions').replace(',','')
 			d.update({'dedactions':sl_dedactions})
 
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	company = frappe.get_doc("Company" ,company)
 	
 
-	if company_controller.labors_office_file_no:
-		labors_office_file_no = (company_controller.labors_office_file_no).zfill(9)
+	if company.labors_office_file_number:
+		labors_office_file_number = (company.labors_office_file_number).zfill(9)
 	else :
-		labors_office_file_no = 000000000
+		labors_office_file_number = 000000000
 	for d in data:
 		if not d.get("basic"):
 			d.update({"basic":"000000000.00"})
@@ -440,19 +442,19 @@ def get_data_riad(filters):
 			'y':(str(len(data)).zfill(6))
 		}
 	)
-	if company_controller.establishment_number:
-		establishment_number = (str(company_controller.establishment_number).zfill(9))
+	if company.establishment_number:
+		establishment_number = (str(company.establishment_number).zfill(9))
 	else :
 		establishment_number = (str('').zfill(9))
 
-	if company_controller.bank_account_number:
-		bank_account_number = (str(company_controller.bank_account_number).zfill(13))
+	if company.bank_account_number:
+		bank_account_number = (str(company.bank_account_number).zfill(13))
 	else :
 		bank_account_number = (str(' ').zfill(13))
 	data.insert(0,
 		{
 		'riad_num':  111,
-		'emp_num' : company_controller.agreement_symbol,
+		'emp_num' : company.agreement_symbol,
 		'y':frappe.utils.today(),
 		'agreament_s':'PAYROLLREF-PR-0001-'+ str(randint(100, 10000000000000000)),
 		'row_num_riad' :establishment_number,
@@ -460,7 +462,7 @@ def get_data_riad(filters):
 		'spaces13': bank_account_number,
 		'bank_acc_riad' : ' ' * 11 , # 11 spaces
 		'sar_header' : 'SAR',
-		'salary':company_controller.labors_office_file_no,
+		'salary':company.labors_office_file_number,
 		'sar':' ' * 9  # 9 spaces
 		})
 
@@ -516,7 +518,7 @@ def get_data_sumba(filters):
 	if(filters.get('company')):condition += f" AND emp.company='{filters.get('company')}'"
 	if(filters.get('year')):condition += f" AND year(sl.start_date) ='{filters.get('year')}'"
 	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	company = frappe.get_doc("Company" ,company)
 
 	def _samba_wps_checksum(myCompanyCode, mySid, myXname, myXamount) :
 		CmpyCode = myCompanyCode
@@ -599,6 +601,7 @@ def get_data_sumba(filters):
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and  {condition}
+		Group BY emp.name
 		ORDER BY emp_num
 		""",as_dict=1)
 	for d in data:
@@ -618,7 +621,8 @@ def get_data_sumba(filters):
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
 	total_salary = sum(salary_total)
-
+	if not company: return []
+	company = frappe.get_doc("Company", company)
 	for d in data:
 		if not d.get("departement_location"):d.update({"departement_location": ' ' *20})
 		del d['name']
@@ -630,7 +634,7 @@ def get_data_sumba(filters):
 		if d.get('salary', False):
 			salary = d.get('salary').replace(',','').split('.')[0][1:]
 		else :salary = d.get('salary').split('.')[0][1:]
-		checksum =_samba_wps_checksum(company_controller.company_id,d.get('id_number'),d.get('emp_name'),salary)
+		checksum =_samba_wps_checksum(company.company_id,d.get('id_number'),d.get('emp_name'),salary)
 		d.update({'checksum':checksum})
 		if d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
@@ -647,8 +651,8 @@ def get_data_sumba(filters):
 			sl_dedactions =  d.get('dedactions').replace(',','').replace('.','')
 			d.update({'dedactions':sl_dedactions})
 		else :d.update({'dedactions':'00000000000'})
-	if company_controller.organization_english:
-		organization_english = company_controller.organization_english.ljust(40)
+	if company.organization_english:
+		organization_english = company.organization_english.ljust(40)
 	else:
 		organization_english = ' ' * 40
 	if not data: return []
@@ -668,7 +672,7 @@ def get_data_sumba(filters):
 		'emp_name' : str(today.day).zfill(2),
 		'salary':today.strftime("%Y%m%d"),
 		'checksum':organization_english,
-		'emp_bank' : company_controller.company_id.ljust(152)
+		'emp_bank' : company.company_id.ljust(152)
 		})
 	return data
 
@@ -708,15 +712,14 @@ def get_data_alrajhi_payroll(filters):
 		if d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
-	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	default_company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
+	company = frappe.get_doc("Company" ,default_company)
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
-	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	total_salary = sum(salary)
 	cal = ''
-	if company_controller.calendar_accreditation == 'Gregorian': cal = 'G'
-	if company_controller.calendar_accreditation == 'Hijri': cal = 'H'
+	if company.calendar_accreditation == 'Gregorian': cal = 'G'
+	if company.calendar_accreditation == 'Hijri': cal = 'H'
 
 	# get hour now
 	date=datetime.datetime.now()
@@ -730,8 +733,8 @@ def get_data_alrajhi_payroll(filters):
 	else:
 		salary=(str("%.2f" % total_salary).zfill(16))
 	if not data: return []
-	if company_controller.bank_account_number:
-		bank_account_number = (str(company_controller.bank_account_number).zfill(15))
+	if company.bank_account_number:
+		bank_account_number = (str(company.bank_account_number).zfill(15))
 	else :
 		bank_account_number = (str('').zfill(15))
 	for d in data:
@@ -804,16 +807,16 @@ def get_data_alrajhi_interchange(filters):
 		if  d.get('salary', False):
 			sl_total = d.get('salary').replace(',','').replace('.','')
 			d.update({'salary':sl_total})
-	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	default_company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
+	company = frappe.get_doc("Company" ,default_company)
 	salary_slip_list = frappe.get_list("Salary Slip")
 	if not salary_slip_list: return []
 	# get total salary
-	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
+	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':default_company,'docstatus':1}) 
 	total_salary = sum(salary)
 	cal = ''
-	if company_controller.calendar_accreditation == 'Gregorian': cal = 'G' 
-	if company_controller.calendar_accreditation == 'Hijri': cal = 'H' 
+	if company.calendar_accreditation == 'Gregorian': cal = 'G' 
+	if company.calendar_accreditation == 'Hijri': cal = 'H' 
 
 	# get hour now
 	date=datetime.datetime.now()
@@ -830,8 +833,8 @@ def get_data_alrajhi_interchange(filters):
 	else:
 		salary=(str("%.2f" % total_salary).zfill(16))
 	if not data: return []
-	if company_controller.bank_account_number:
-		bank_account_number = (str(company_controller.bank_account_number).zfill(15))
+	if company.bank_account_number:
+		bank_account_number = (str(company.bank_account_number).zfill(15))
 	else :
 		bank_account_number = (' ' *15)
 	data.insert(0,
@@ -887,6 +890,7 @@ def get_data_alrajhi_payroll_card(filters):
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and  {condition}
+		Group BY emp.name
 		ORDER BY emp_num
 		""",as_dict=1)
 	for d in data:
@@ -956,18 +960,18 @@ def get_data_alaraby(filters):
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and {condition}
+		Group BY emp.name
 		""",as_dict=1)
 	for d in data:
 		other_earnings = d.get("gross_pay" or 0) - d.get("basic" or 0) - d.get("housing_allowance" or 0)
 		d.update({"other_earnings":other_earnings})
-	company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
-	company_controller = frappe.get_doc("Company Controller" ,company)
+	default_company = filters.get('company') or frappe.get_doc("Global Defaults").default_company
+	company = frappe.get_doc("Company" ,default_company)
 	salary=[]
 	for d in data:
 		salary.append(flt(d.get("month_to_date")))
 	total_salary=sum(salary)
 	if not data: return []
-	salary_slip = frappe.get_last_doc("Salary Slip",filters={'company':company,'docstatus':1}) 
 	today =  datetime.date.today()
 	
 	for d in data:
@@ -982,15 +986,15 @@ def get_data_alaraby(filters):
 	data.insert(0,
 		{'d': 'H',
 		'month_to_date': "ARNB",
-		'bank_ac_no': company_controller.agreement_number_for_customer,
+		'bank_ac_no': company.agreement_number_for_customer,
 		'first_name':"N",
 		'swift_number':today.strftime("%d%m%Y") + ".EX1",
-		'month':company_controller.bank_account_number,
+		'month':company.bank_account_number,
 		'basic':"SAR",
 		'housing_allowance': '0',
 		'other_earnings' :total_salary,
 		'dedactions':today.strftime("%d%m%Y"),
-		'id_number':company_controller.company_id,
+		'id_number':company.company_id,
 		'co_number':f"salaries for {month} {year}"
 		})
 	return data

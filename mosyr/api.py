@@ -136,8 +136,7 @@ def convert_date(gregorian_date=None, hijri_date=None):
         return str(gregorian)
 
 def validate_social_insurance(doc, method):
-    comapny_data = frappe.db.sql("""SELECT * FROM `tabCompany Controller` WHERE company = %s""", doc.company, as_dict=1)
-    #  frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
+    comapny_data = frappe.db.sql("""SELECT * FROM `tabCompany`""", as_dict=1)
     social_type = doc.social_insurance_type
     # if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
     if len(comapny_data) > 0:
@@ -450,8 +449,8 @@ def get_salary_per_day(employee):
         base = flt(lst[0].base)
         company = lst[0].company
         mdays = frappe.get_list(
-            "Company Controller",
-            filters={"company": company},
+            "Company",
+            filters={"name": company},
             fields=["month_days"]
         )
         if len(mdays) > 0:
@@ -466,13 +465,13 @@ def create_componants_in_salary_straucture(doc, method):
     for d in doc.deductions:
         components.append(d.salary_component)
 
-    cc = frappe.db.exists("Company Controller", {"company": doc.company})
+    cc = frappe.db.exists("Company", {"name": doc.company})
     if cc:
-        company_controller = frappe.get_doc("Company Controller", cc)
-        risk_percentage_on_company  = company_controller.risk_percentage_on_company
-        risk_percentage_on_employee = company_controller.risk_percentage_on_employee
-        pension_percentage_on_company = company_controller.pension_percentage_on_company
-        pension_percentage_on_employee = company_controller.pension_percentage_on_employee
+        company = frappe.get_doc("Company", cc)
+        risk_percentage_on_company  = company.risk_percentage_on_company
+        risk_percentage_on_employee = company.risk_percentage_on_employee
+        pension_percentage_on_company = company.pension_percentage_on_company
+        pension_percentage_on_employee = company.pension_percentage_on_employee
 
         if "Risk On Company" not in components:
             row = doc.append("deductions", {})
@@ -504,4 +503,99 @@ def sum_net_pay_payroll_entry(doc, method):
     if len(salary_slips) > 0:
         total_net_pay = sum(salary_slips)
         doc.db_set("total_netpay", total_net_pay)
+        frappe.db.commit()
+
+def update_employee_data(self, method):
+        frappe.db.sql("""
+              UPDATE `tabEmployee`
+              SET pension_on_employee={}, pension_on_company={},
+                  risk_on_employee=0, risk_on_company=0
+              WHERE social_insurance_type='Saudi'""".format(flt(self.pension_percentage_on_employee), flt(self.pension_percentage_on_company)))
+        
+        frappe.db.sql("""
+              UPDATE `tabEmployee`
+              SET pension_on_employee=0, pension_on_company=0,
+                  risk_on_employee={}, risk_on_company={}
+              WHERE social_insurance_type='Non Saudi'""".format(flt(self.risk_percentage_on_employee), flt(self.risk_percentage_on_company)))
+        
+def create_letter_head(self, method):
+        
+        has_new_letter_head = False
+        company_name = self.organization_english if self.organization_english else frappe.db.get_value("Company Id", self.company_id, "company")
+        html_header_content = ''
+        html_footer_content = ''
+        if self.logo:
+            has_new_letter_head = True
+            html_header_content = '''<div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-sm-4 text-left">
+                                                <h3>{}</h3>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <img src="{}" style="max-width: 100px; max-height: 100px;">
+                                                <h3>{}</h3>
+                                            </div>
+                                            <div class="col-sm-4 text-right" >
+                                                <h3>{}</h3>
+                                            </div>
+                                        </div>
+                                    </div>'''.format(self.left_header,self.logo, company_name,self.right_header)
+        
+        if len(self.signatures) > 0:
+            has_new_letter_head = True
+            for signature in self.signatures:
+                job_title = signature.job_title or ""
+                employee_name = frappe.db.get_value("Employee", signature.name1, "employee_name")
+                html_footer_content += '''<div class="col-sm-4 text-right">
+                                                <p class="text-center" style="font-weight: bold">{}</p>
+                                                <p class="text-center" style="font-weight: bold">{}</p>
+                                              </div>'''.format(job_title, employee_name)
+            
+            
+            html_footer_content = '<div class="container-fluid"><div class="row">' + html_footer_content + '</div></div>'
+        if has_new_letter_head:
+            lh = frappe.db.exists("Letter Head", "Mosyr-Main")
+            
+            if lh:
+                lh = frappe.get_doc("Letter Head", "Mosyr-Main")
+            else: 
+                lh = frappe.new_doc("Letter Head")
+                lh.letter_head_name = "Mosyr-Main"
+            lh.source = "HTML"
+            lh.footer_source = "HTML"
+            lh.is_default = 1
+            # lh.image = image
+            lh.content = html_header_content
+            lh.footer = html_footer_content
+            lh.save()
+            frappe.db.commit()
+            lh.db_set('source', "HTML")
+            lh.db_set('footer', html_footer_content)
+
+def create_user_permission_on_company_in_validate(doc, method):
+    if not doc.is_new():
+        companies_before_save = frappe.db.get_list("Company Table", {"parent":doc.name}, pluck="company")
+        companies_after_save = [d.company for d in doc.companies]
+        diff_lists = list(set(companies_before_save) ^ set(companies_after_save))
+        if len(diff_lists):
+            user_permissions = frappe.get_list("User Permission", {"user": doc.name, "allow": "Company"})
+            if len(user_permissions):
+                for user_permission in user_permissions:
+                    frappe.delete_doc("User Permission", user_permission.name)
+                frappe.db.commit()
+            for row in doc.companies:
+                perm = frappe.new_doc("User Permission")
+                perm.user = doc.name
+                perm.allow = "Company"
+                perm.for_value = row.company
+                perm.save()
+            frappe.db.commit()
+
+def create_user_permission_on_company_in_create_user(doc, method):
+        for row in doc.companies:
+            perm = frappe.new_doc("User Permission")
+            perm.user = doc.name
+            perm.allow = "Company"
+            perm.for_value = row.company
+            perm.save()
         frappe.db.commit()

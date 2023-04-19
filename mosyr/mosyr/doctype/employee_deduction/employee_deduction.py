@@ -49,8 +49,8 @@ class EmployeeDeduction(Document):
 			base = flt(lst[0].base)
 			company = lst[0].company
 			mdays = frappe.get_list(
-				"Company Controller",
-				filters={"company": company},
+				"Company",
+				filters={"name": company},
 				fields=["month_days"]
 			)
 			if len(mdays) > 0:
