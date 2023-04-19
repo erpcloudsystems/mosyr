@@ -130,6 +130,7 @@ def after_install():
             fieldtype="Table MultiSelect",
             options="Company Table",
             insert_after="username",
+            allow_in_quick_entry=1
         ),
     )
     frappe.db.commit()
