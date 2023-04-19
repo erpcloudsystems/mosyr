@@ -1,6 +1,7 @@
 import frappe
 from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from frappe.installer import update_site_config
 from erpnext.setup.install import create_custom_role, create_user_type
 from mosyr import (
@@ -23,7 +24,6 @@ docs_for_manager = [
     "Passport Details",
     "Lateness Permission",
     "Exit Permission",
-    "Company Controller",
     "Company Id",
     "Translation",
     "User",
@@ -121,7 +121,18 @@ def after_install():
     add_select_perm_for_all()
     create_role_and_set_to_admin()
     set_home_page_login()
-
+    create_custom_field(
+        "User",
+        dict(
+            owner="Administrator",
+            fieldname="companies",
+            label="Companies",
+            fieldtype="Table MultiSelect",
+            options="Company Table",
+            insert_after="username",
+        ),
+    )
+    frappe.db.commit()
 
 def edit_gender_list():
     genders_to_del = frappe.get_list(

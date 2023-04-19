@@ -90,4 +90,7 @@ div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{
 #page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(1) > div:nth-child(2),
 #page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(1) > div:nth-child(3),
 #page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(2) > div:nth-child(3),
-#page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(2) > div:nth-child(5){display: none !important;}
+#page-Loan > div.container.page-body > div.page-wrapper div.form-dashboard.visible-section > div.form-dashboard-section.form-links > div.section-body > div > div > div > div:nth-child(2) > div:nth-child(5),
+#page-Company div.form-dashboard.visible-section,
+#page-Company div.custom-actions
+{display: none !important;}

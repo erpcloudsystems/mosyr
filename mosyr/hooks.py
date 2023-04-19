@@ -41,6 +41,7 @@ doctype_js = {
 	"Employee" : "public/js/employee.js",
 	"Loan" : "public/js/loan.js",
     "Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
+	"Company" : "public/js/company.js"
 }
 
 doctype_list_js = {"Loan" : "public/js/loan_list.js"}
@@ -146,7 +147,11 @@ doc_events = {
 		"validate": "mosyr.api.check_other_annual_leaves"
 	},
 	"User" :{
-		"after_insert" : "mosyr.api.set_user_type"
+		"validate" : "mosyr.api.create_user_permission_on_company_in_validate",
+		"after_insert" : [
+			"mosyr.api.set_user_type",
+			"mosyr.api.create_user_permission_on_company_in_create_user"
+		]
 	},
 	"Loan Repayment" : {
 		"validate" :[
@@ -161,6 +166,12 @@ doc_events = {
 	},
     "Payroll Entry" : {
 		"on_submit": "mosyr.api.sum_net_pay_payroll_entry"
+	},
+    "Company" : {
+		"on_update" : [
+                        "mosyr.api.update_employee_data",
+    					"mosyr.api.create_letter_head"
+		]
 	}
 }
 
@@ -361,7 +372,71 @@ fixtures = [
                 "Salary Detail-is_leave_deduction",
                 "Employee-payment_type_2",
                 "Payroll Entry-total_amount",
-                "Payroll Entry-total_netpay"
+                "Payroll Entry-total_netpay",
+                "Company-pension_percentage_on_company",
+                "Company-column_break_0gjgh",
+                "Company-pension_percentage_on_employee",
+                "Company-column_break_h1hb6",
+                "Company-risk_percentage_on_company",
+                "Company-column_break_z45y7",
+                "Company-risk_percentage_on_employee",
+                "Company-social_insurance_settings",
+                "Company-banks_type_salary_card",
+                "Company-bank_account_number",
+                "Company-column_break_endoh",
+                "Company-banks_type_payroll",
+                "Company-calendar_accreditation",
+                "Company-column_break_xxoi2",
+                "Company-bank_code",
+                "Company-month_days",
+                "Company-column_break_homhp",
+                "Company-english_name_in_bank",
+                "Company-bank_name",
+                "Company-disbursement_type",
+                "Company-payroll_and_financial_settings",
+                "Company-right_header",
+                "Company-column_break_baa2t",
+                "Company-left_header",
+                "Company-header",
+                "Company-baladiya_license",
+                "Company-column_break_piicu",
+                "Company-cr_document",
+                "Company-column_break_mdtj1",
+                "Company-stamp",
+                "Company-column_break_8kblg",
+                "Company-logo",
+                "Company-logos_brands",
+                "Company-signatures",
+                "Company-signature",
+                "Company-labors_office_file_number",
+                "Company-mail_sender_address",
+                "Company-column_break_gsref",
+                "Company-mobile",
+                "Company-_mail_sender_name",
+                "Company-column_break_4zb38",
+                "Company-sender_name_sms",
+                "Company-organization_english",
+                "Company-column_break_obynz",
+                "Company-organization_arabic",
+                "Company-company_id",
+                "Company-account_info",
+                "Company-company_name_in_arabic",
+                "Company-establishment_number",
+                "Company-agreement_symbol",
+                "Company-agreement_number_for_customer",
+                "Company-unaccounted_deductions",
+                "Company-employee_day_wedding_leave",
+                "Company-end_of_services",
+                "Company-employee_day_death_leave",
+				"Company-employee_day_benefits_with_out_pay_leave",
+                "Company-column_break_xltde",
+                "Company-employee_day_sick_leave",
+                "Company-employee_day_urgent_leave",
+                "Company-employee_day_hajj_leave",
+                "Company-employee_day_childbirth_vacation",
+                "Company-employee_day_annual_vacation",
+                "Company-employee_day_working",
+                "Company-settings"
          ]]
         ]
     },

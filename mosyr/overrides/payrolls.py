@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate
+from frappe.utils import flt
 
 import erpnext
 from erpnext.payroll.doctype.salary_component.salary_component import SalaryComponent
@@ -23,7 +23,7 @@ from mosyr import (
 
 class CustomSalaryComponent(SalaryComponent):
     def validate(self):
-        self.set_missing_custome_values()
+        # self.set_missing_custome_values()
         super().validate()
 
     def set_missing_custome_values(self):
@@ -34,18 +34,17 @@ class CustomSalaryComponent(SalaryComponent):
             account_name = "Payroll Payable - Earning"
         elif self.type == "Deduction":
             account_name = "Payroll Payable - Deduction"
-
         for company in companies:
-            account = create_account(
-                account_name,
-                company.name,
-                "Accounts Payable",
-                "Liability",
-                "",
-                False,
-                None,
-            )
-            self.append("accounts", {"company": company.name, "account": account})
+        #     account = create_account(
+        #         account_name,
+        #         company.name,
+        #         "Accounts Payable",
+        #         "Liability",
+        #         "",
+        #         False,
+        #         None,
+        #     )
+            self.append("accounts", {"company": company.name, "account": f"{account_name}"})
 
 
 class CustomSalaryStructure(SalaryStructure):

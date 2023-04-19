@@ -1,29 +1,30 @@
 {
  "actions": [],
- "creation": "2022-03-14 01:52:58.080200",
+ "allow_rename": 1,
+ "creation": "2023-04-16 14:05:28.116434",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "bank"
+  "company"
  ],
  "fields": [
   {
-   "fieldname": "bank",
+   "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Bank",
-   "options": "Bank",
+   "label": "Company",
+   "options": "Company",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-04-17 16:23:20.793166",
+ "modified": "2023-04-16 14:05:28.116434",
  "modified_by": "Administrator",
  "module": "Mosyr",
- "name": "Bank Type",
+ "name": "Company Table",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
