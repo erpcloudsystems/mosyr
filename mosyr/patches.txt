@@ -39,4 +39,4 @@ mosyr.patches.create_custom_field_in_company
 mosyr.patches.rebuild_non_standard_users_types_v9
 mosyr.patches.rebuild_non_standard_users_types_v10
 mosyr.patches.add_permession_for_saas_manager
-mosyr.patches.rebuild_non_standard_users_types_v11
+mosyr.patches.rebuild_non_standard_users_typesv11

@@ -96,7 +96,8 @@ docs_for_manager = [
     "Additional Salary",
     "Custom Field",
     "Company",
-    "Address"
+    "Address",
+    "Letter Head"
 ]
 reports_for_manager = [
     "Insurances and Risk",
@@ -136,8 +137,11 @@ def after_install():
             allow_in_quick_entry=1
         ),
     )
-    add_permission("Domain", "Saas Manager", permlevel=0, ptype=None)
+    
     frappe.db.commit()
+
+def add_permission_read():
+    add_permission("Domain", "Saas Manager", permlevel=0, ptype=None)
 
 def edit_gender_list():
     genders_to_del = frappe.get_list(
@@ -313,8 +317,10 @@ def create_non_standard_user_types():
                 smr.save(ignore_permissions=True)
             frappe.db.commit()
         create_user_type(user_type, data)
-    frappe.db.commit()
 
+    add_permission_read()
+    frappe.db.commit()
+    
 
 def get_manager_user_data():
     doctypes = {}
