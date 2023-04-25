@@ -11,7 +11,7 @@ from mosyr import (
     create_bank_account,
     update_fields_props,
 )
-from frappe.permissions import update_permission_property
+from frappe.permissions import update_permission_property, add_permission
 
 docs_for_manager = [
     # "System Controller",
@@ -95,7 +95,8 @@ docs_for_manager = [
     "Religion",
     "Additional Salary",
     "Custom Field",
-    "Company"
+    "Company",
+    "Address"
 ]
 reports_for_manager = [
     "Insurances and Risk",
@@ -135,6 +136,7 @@ def after_install():
             allow_in_quick_entry=1
         ),
     )
+    add_permission("Domain", "Saas Manager", permlevel=0, ptype=None)
     frappe.db.commit()
 
 def edit_gender_list():

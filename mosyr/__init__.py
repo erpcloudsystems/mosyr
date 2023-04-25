@@ -1137,6 +1137,7 @@ def create_account(account_name, company, parent_account, root_type, account_typ
         account.flags.ignore_mandatory = True
     account.flags.ignore_permissions = True
     account.insert(ignore_if_duplicate=True)
+    frappe.db.commit()
     return account.name
 
 def create_mode_payment(title, mode_type):

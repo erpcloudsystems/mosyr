@@ -23,7 +23,7 @@ from mosyr import (
 
 class CustomSalaryComponent(SalaryComponent):
     def validate(self):
-        # self.set_missing_custome_values()
+        self.set_missing_custome_values()
         super().validate()
 
     def set_missing_custome_values(self):
@@ -35,16 +35,16 @@ class CustomSalaryComponent(SalaryComponent):
         elif self.type == "Deduction":
             account_name = "Payroll Payable - Deduction"
         for company in companies:
-        #     account = create_account(
-        #         account_name,
-        #         company.name,
-        #         "Accounts Payable",
-        #         "Liability",
-        #         "",
-        #         False,
-        #         None,
-        #     )
-            self.append("accounts", {"company": company.name, "account": f"{account_name}"})
+            account = create_account(
+                account_name,
+                company.name,
+                "Accounts Payable",
+                "Liability",
+                "",
+                False,
+                None,
+            )
+            self.append("accounts", {"company": company.name, "account": account})
 
 
 class CustomSalaryStructure(SalaryStructure):

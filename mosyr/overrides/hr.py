@@ -73,23 +73,23 @@ class CustomCompany(Company, NestedSet):
         
         super().on_update()
         frappe.clear_cache()
-        # self.update_custom_linked_accounts()
+        self.update_custom_linked_accounts()
 
     def update_custom_linked_accounts(self):
         # Setup For mode of payments
         for mop in frappe.get_list("Mode of Payment"):
             mop = frappe.get_doc("Mode of Payment", mop.name)
-            mop.save()
+            mop.save(ignore_permissions=True)
 
         # Setup For salary components
         for sc in frappe.get_list("Salary Component"):
             sc = frappe.get_doc("Salary Component", sc.name)
-            sc.save()
+            sc.save(ignore_permissions=True)
 
         # Setup For Expense Claim Type
         for ect in frappe.get_list("Expense Claim Type"):
             ect = frappe.get_doc("Expense Claim Type", ect.name)
-            ect.save()
+            ect.save(ignore_permissions=True)
 
     def create_default_departments(self):
         records = [
@@ -309,19 +309,18 @@ class CustomEmployeeAdvance(EmployeeAdvance):
 
 class CustomExpenseClaimType(ExpenseClaimType):
     def validate(self):
-        # self.set_missing_custome_values()
+        self.set_missing_custome_values()
         super().validate()
 
     def set_missing_custome_values(self):
         self.accounts = []
         companies = frappe.get_list("Company")
         for company in companies:
-            # account = create_account(
-            #     "Expense Claims", company.name, "Expenses", "Expense", "", False
-            # )
-            default_account = f"Expense Claims - {company.abbr}"
+            account = create_account(
+                "Expense Claims", company.name, "Expenses", "Expense", "", False
+            )
             self.append(
-                "accounts", {"company": company.name, "default_account": "Expense Claims"}
+                "accounts", {"company": company.name, "default_account": account}
             )
 
 
