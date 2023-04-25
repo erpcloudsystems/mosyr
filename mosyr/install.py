@@ -93,7 +93,8 @@ docs_for_manager = [
     "User Permission",
     "Nationality",
     "Religion",
-    "Additional Salary"
+    "Additional Salary",
+    "Custom Field"
 ]
 reports_for_manager = [
     "Insurances and Risk",
