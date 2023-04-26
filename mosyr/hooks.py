@@ -44,7 +44,13 @@ doctype_js = {
 	"Company" : "public/js/company.js"
 }
 
-doctype_list_js = {"Loan" : "public/js/loan_list.js"}
+doctype_list_js = {
+    "Loan" : "public/js/loan_list.js",
+    "Salary Slip" : "public/js/salary_slip_list.js",
+    "Payroll Entry" : "public/js/payroll_entry_list.js",
+    "Retention Bonus" : "public/js/retention_bonus_list.js",
+    "Employee Incentive" : "public/js/employee_incentive_list.js",
+	}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -539,7 +545,10 @@ fixtures = [
                     "Salary Slip-total_interest_amount-hidden",
                     "Company-section_break_28-hidden",
                     "Company-registration_info-hidden",
-                    "Company-default_letter_head-hidden"
+                    "Company-default_letter_head-hidden",
+                    "Repayment Schedule-interest_amount-hidden",
+                    "Payroll Entry-main-title_field",
+                    "Retention Bonus-main-title_field"
 				]
 			]
 		]
