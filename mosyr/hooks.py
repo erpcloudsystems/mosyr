@@ -90,6 +90,7 @@ after_install = "mosyr.install.after_install"
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
+extend_bootinfo = "mosyr.boot.boot_session"
 
 # DocType Class
 # ---------------
@@ -168,7 +169,7 @@ doc_events = {
 		"on_submit": "mosyr.api.sum_net_pay_payroll_entry"
 	},
     "Company" : {
-		"on_update" : [
+		"validate" : [
                         "mosyr.api.update_employee_data",
     					"mosyr.api.create_letter_head"
 		]
@@ -537,7 +538,8 @@ fixtures = [
                     "Salary Slip Loan-loan_account-hidden",
                     "Salary Slip-total_interest_amount-hidden",
                     "Company-section_break_28-hidden",
-                    "Company-registration_info-hidden"
+                    "Company-registration_info-hidden",
+                    "Company-default_letter_head-hidden"
 				]
 			]
 		]
