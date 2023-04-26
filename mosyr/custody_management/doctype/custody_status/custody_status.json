@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:custody_status",
- "creation": "2022-09-22 09:10:03.503187",
+ "creation": "2023-04-25 18:27:23.055084",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -19,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-22 09:10:03.503187",
+ "modified": "2023-04-25 18:27:32.294479",
  "modified_by": "Administrator",
  "module": "Custody Management",
  "name": "Custody Status",
@@ -33,37 +33,36 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
    "write": 1
   },
   {
    "create": 1,
-   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "HR Manager",
+   "role": "SaaS User",
    "select": 1,
    "share": 1,
    "write": 1
   },
   {
-   "create": 1,
-   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Employee",
+   "role": "Self Service",
    "select": 1,
-   "share": 1,
-   "write": 1
+   "share": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
 }
