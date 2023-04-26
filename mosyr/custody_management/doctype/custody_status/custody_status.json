@@ -19,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-25 18:27:32.294479",
+ "modified": "2023-04-26 16:50:05.541620",
  "modified_by": "Administrator",
  "module": "Custody Management",
  "name": "Custody Status",
@@ -50,16 +50,6 @@
    "select": 1,
    "share": 1,
    "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Self Service",
-   "select": 1,
-   "share": 1
   }
  ],
  "quick_entry": 1,
