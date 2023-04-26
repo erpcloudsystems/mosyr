@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "format:{employee}-{####}",
+ "autoname": "MHR-WE-.YY.-.MM.-.#####",
  "creation": "2022-09-22 08:41:31.835808",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -19,7 +19,8 @@
    "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fetch_from": "employee.employee_name",
@@ -36,8 +37,7 @@
   {
    "fieldname": "reason",
    "fieldtype": "Small Text",
-   "label": "Reason",
-   "permlevel": 1
+   "label": "Reason"
   },
   {
    "fieldname": "amended_from",
@@ -51,7 +51,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-22 08:44:23.011439",
+ "modified": "2023-04-26 16:12:09.818902",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Work Experience",
@@ -66,7 +66,22 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
    "share": 1,
    "submit": 1,
    "write": 1
@@ -79,43 +94,8 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Employee",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "cancel": 1,
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "permlevel": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Employee",
-   "share": 1
-  },
-  {
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "permlevel": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR Manager",
+   "role": "Self Service",
+   "select": 1,
    "share": 1,
    "write": 1
   }
@@ -123,5 +103,6 @@
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "employee_name",
  "track_changes": 1
 }

@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "HR-ELP-.YY.-.MM.-.#####",
+ "autoname": "MHR-LP-.YY.-.MM.-.#####",
  "creation": "2022-09-06 15:13:48.206730",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -83,14 +83,13 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-13 18:38:57.230433",
+ "modified": "2023-04-26 16:11:12.473719",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Lateness Permission",
  "owner": "Administrator",
  "permissions": [
   {
-   "amend": 1,
    "cancel": 1,
    "create": 1,
    "delete": 1,
@@ -107,10 +106,7 @@
    "write": 1
   },
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
-   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -124,12 +120,13 @@
   },
   {
    "create": 1,
+   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Employee",
+   "role": "Self Service",
    "select": 1,
    "share": 1,
    "write": 1
