@@ -90,7 +90,9 @@ class PayrollRegisterTool(Document):
             salary_structure = get_assigned_salary_structure(
                 employee_doc.name, self.from_date
             )
-            if salary_structure:
+            if salary_structure and cint(self.override_existing_structures)==0:
+                has_salary_structure.append(employee_doc.name)
+                continue
                 has_salary_structure.append(employee_doc.name)
                 continue
 
@@ -175,7 +177,7 @@ class PayrollRegisterTool(Document):
         )
         ss_status = True
         msg_str = []
-        if len(has_salary_structure) > 0:
+        if len(has_salary_structure) > 0 and self.override_existing_structures:
             ss_status = False
             for hss in has_salary_structure:
                 msg_str.append("<li>{}</li>".format(hss))
