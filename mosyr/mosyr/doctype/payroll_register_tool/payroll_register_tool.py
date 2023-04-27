@@ -187,7 +187,7 @@ class PayrollRegisterTool(Document):
                 )
             else:
                 msg_str = ""
-        msg += msg_str
+            msg += msg_str
 
         msg_str = []
         if len(different_comp) > 0:
