@@ -12,6 +12,7 @@
   "branch",
   "designation",
   "show_employees",
+  "override_existing_structures",
   "employees",
   "column_break1",
   "payroll_frequency",
@@ -203,12 +204,18 @@
    "options": "Payroll Register Tool",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "override_existing_structures",
+   "fieldtype": "Check",
+   "label": "Override Existing Structures"
   }
  ],
  "icon": "fa fa-file-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-26 17:52:56.582374",
+ "modified": "2023-04-27 16:19:42.674705",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
@@ -246,4 +253,4 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
-}
+   }

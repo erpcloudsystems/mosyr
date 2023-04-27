@@ -175,7 +175,7 @@ class PayrollRegisterTool(Document):
         )
         ss_status = True
         msg_str = []
-        if len(has_salary_structure) > 0:
+        if len(has_salary_structure) > 0 and self.override_existing_structures:
             ss_status = False
             for hss in has_salary_structure:
                 msg_str.append("<li>{}</li>".format(hss))
