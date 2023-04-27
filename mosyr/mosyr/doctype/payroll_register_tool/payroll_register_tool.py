@@ -90,7 +90,9 @@ class PayrollRegisterTool(Document):
             salary_structure = get_assigned_salary_structure(
                 employee_doc.name, self.from_date
             )
-            if salary_structure:
+            if salary_structure and cint(self.override_existing_structures)==0:
+                has_salary_structure.append(employee_doc.name)
+                continue
                 has_salary_structure.append(employee_doc.name)
                 continue
 
