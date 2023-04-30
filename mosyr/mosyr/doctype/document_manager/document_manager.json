@@ -1,8 +1,9 @@
 {
  "actions": [],
  "allow_copy": 1,
+ "allow_import": 1,
  "allow_rename": 1,
- "autoname": "DM-.####",
+ "autoname": "MHR-DM-.YY.-.MM.-.####",
  "creation": "2022-05-11 10:35:41.048515",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -103,7 +104,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-13 18:14:48.812679",
+ "modified": "2023-04-30 13:52:33.908885",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Document Manager",
@@ -114,18 +115,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,
@@ -137,20 +127,12 @@
   },
   {
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "SaaS User",
    "select": 1,
-   "share": 1,
    "write": 1
   },
   {
-   "email": 1,
-   "print": 1,
    "read": 1,
    "role": "Self Service",
    "select": 1
@@ -158,5 +140,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "title",
  "track_changes": 1
 }

@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_copy": 1,
- "autoname": "PAYT.-.YYYY.-.#####",
+ "autoname": "PAYRT.-.YY.-.MM.-.DD.-.#####",
  "creation": "2023-04-13 17:50:57.395860",
  "doctype": "DocType",
  "document_type": "Document",
@@ -12,6 +12,7 @@
   "branch",
   "designation",
   "show_employees",
+  "override_existing_structures",
   "employees",
   "column_break1",
   "payroll_frequency",
@@ -30,13 +31,6 @@
   "total_deduction",
   "column_break2",
   "net_pay",
-  "time_sheet_earning_detail",
-  "salary_slip_based_on_timesheet",
-  "column_break_10",
-  "salary_component",
-  "hour_rate",
-  "leave_encashment_amount_per_day",
-  "max_benefits",
   "amended_from"
  ],
  "fields": [
@@ -81,7 +75,8 @@
    "fieldname": "employees",
    "fieldtype": "Table",
    "label": "Employees",
-   "options": "Payroll Register Tool Employee"
+   "options": "Payroll Register Tool Employee",
+   "reqd": 1
   },
   {
    "fieldname": "column_break1",
@@ -90,11 +85,11 @@
   },
   {
    "default": "Monthly",
-   "depends_on": "eval:(!doc.salary_slip_based_on_timesheet)",
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
-   "options": "Monthly\nFortnightly\nBimonthly\nWeekly\nDaily"
+   "options": "Monthly",
+   "reqd": 1
   },
   {
    "fieldname": "from_date",
@@ -125,7 +120,8 @@
   {
    "fieldname": "base",
    "fieldtype": "Currency",
-   "label": "Base"
+   "label": "Base",
+   "reqd": 1
   },
   {
    "fieldname": "variable",
@@ -146,7 +142,8 @@
    "label": "Earnings",
    "oldfieldname": "earning_details",
    "oldfieldtype": "Table",
-   "options": "Payroll Register Detail"
+   "options": "Payroll Register Detail",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_16",
@@ -200,45 +197,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "time_sheet_earning_detail",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "salary_slip_based_on_timesheet",
-   "fieldtype": "Check",
-   "label": "Salary Slip Based on Timesheet"
-  },
-  {
-   "fieldname": "column_break_10",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "Salary Component for timesheet based payroll.",
-   "fieldname": "salary_component",
-   "fieldtype": "Link",
-   "label": "Salary Component",
-   "options": "Salary Component"
-  },
-  {
-   "fieldname": "hour_rate",
-   "fieldtype": "Currency",
-   "label": "Hour Rate",
-   "options": "currency"
-  },
-  {
-   "fieldname": "leave_encashment_amount_per_day",
-   "fieldtype": "Currency",
-   "label": "Leave Encashment Amount Per Day",
-   "options": "currency"
-  },
-  {
-   "fieldname": "max_benefits",
-   "fieldtype": "Currency",
-   "label": "Max Benefits (Amount)",
-   "options": "currency"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -246,30 +204,24 @@
    "options": "Payroll Register Tool",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "override_existing_structures",
+   "fieldtype": "Check",
+   "label": "Override Existing Structures"
   }
  ],
  "icon": "fa fa-file-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-13 17:51:28.263824",
+ "modified": "2023-04-30 14:06:12.545113",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
  "owner": "Administrator",
  "permissions": [
   {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "System Manager",
-   "select": 1,
-   "share": 1,
-   "write": 1
-  },
-  {
-   "amend": 1,
    "cancel": 1,
    "create": 1,
    "delete": 1,
@@ -286,18 +238,10 @@
    "write": 1
   },
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "SaaS User",
    "select": 1,
-   "share": 1,
    "submit": 1,
    "write": 1
   }

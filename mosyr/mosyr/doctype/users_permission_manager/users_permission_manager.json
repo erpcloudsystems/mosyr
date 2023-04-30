@@ -232,22 +232,12 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-04-13 17:17:14.669028",
+ "modified": "2023-04-30 14:07:30.436986",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Users Permission Manager",
  "owner": "Administrator",
  "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
   {
    "create": 1,
    "delete": 1,

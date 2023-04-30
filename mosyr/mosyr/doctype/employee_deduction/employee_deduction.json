@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_copy": 1,
- "autoname": "ED.YYYY.MM.DD.##",
+ "autoname": "MHR-ED-.YY.-.MM.-.#####",
  "creation": "2022-01-10 22:35:11.647182",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -160,25 +160,14 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-13 18:12:16.698331",
+ "modified": "2023-04-30 13:57:14.708819",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Deduction",
  "owner": "Administrator",
  "permissions": [
   {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -190,24 +179,18 @@
    "select": 1,
    "set_user_permissions": 1,
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "SaaS User",
    "select": 1,
-   "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
-   "email": 1,
-   "print": 1,
    "read": 1,
    "role": "Self Service",
    "select": 1

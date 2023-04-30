@@ -2,7 +2,7 @@
  "actions": [],
  "allow_copy": 1,
  "allow_import": 1,
- "autoname": "L-.YYYY.MM.DD.###",
+ "autoname": "MHR-LTTR-.YY.-.MM.-.#####",
  "creation": "2022-01-26 15:06:49.680385",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -126,24 +126,12 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-13 18:19:53.065991",
+ "modified": "2023-04-30 13:55:53.979913",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Letter",
  "owner": "Administrator",
  "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
   {
    "create": 1,
    "delete": 1,
@@ -161,21 +149,12 @@
   },
   {
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "import": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "SaaS User",
    "select": 1,
-   "share": 1,
    "write": 1
   },
   {
-   "email": 1,
-   "print": 1,
    "read": 1,
    "role": "Self Service",
    "select": 1

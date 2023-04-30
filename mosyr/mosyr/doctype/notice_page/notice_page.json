@@ -60,22 +60,12 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-04-13 18:21:38.318023",
+ "modified": "2023-04-30 14:04:28.333627",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Notice Page",
  "owner": "Administrator",
  "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
   {
    "create": 1,
    "delete": 1,
