@@ -23,7 +23,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-30 13:48:51.410874",
+ "modified": "2023-04-30 14:20:06.390713",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Religion",
@@ -47,12 +47,14 @@
   {
    "create": 1,
    "read": 1,
+   "report": 1,
    "role": "SaaS User",
    "select": 1,
    "write": 1
   },
   {
    "read": 1,
+   "report": 1,
    "role": "Self Service",
    "select": 1
   }

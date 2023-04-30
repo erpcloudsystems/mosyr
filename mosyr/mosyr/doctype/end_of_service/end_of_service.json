@@ -223,7 +223,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 13:55:04.462459",
+ "modified": "2023-04-30 14:21:01.946873",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "End Of Service",
@@ -248,6 +248,7 @@
   {
    "create": 1,
    "read": 1,
+   "report": 1,
    "role": "SaaS User",
    "select": 1,
    "submit": 1,
@@ -255,6 +256,7 @@
   },
   {
    "read": 1,
+   "report": 1,
    "role": "Self Service",
    "select": 1
   }

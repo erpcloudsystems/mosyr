@@ -1043,7 +1043,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 14:06:32.802030",
+ "modified": "2023-04-30 14:24:31.289313",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Shift Builder",
@@ -1069,6 +1069,7 @@
   {
    "create": 1,
    "read": 1,
+   "report": 1,
    "role": "SaaS User",
    "select": 1,
    "submit": 1,

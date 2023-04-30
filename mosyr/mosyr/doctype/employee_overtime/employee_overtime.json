@@ -140,7 +140,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 13:57:22.476361",
+ "modified": "2023-04-30 14:22:30.221412",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Overtime",
@@ -165,6 +165,7 @@
   {
    "create": 1,
    "read": 1,
+   "report": 1,
    "role": "SaaS User",
    "select": 1,
    "submit": 1,
@@ -172,6 +173,7 @@
   },
   {
    "read": 1,
+   "report": 1,
    "role": "Self Service",
    "select": 1
   }
