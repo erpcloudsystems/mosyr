@@ -40,8 +40,9 @@ app_include_js = [
 doctype_js = {
 	"Employee" : "public/js/employee.js",
 	"Loan" : "public/js/loan.js",
-    "Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
-	"Company" : "public/js/company.js"
+	"Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
+	"Company" : "public/js/company.js",
+	"Holiday List": "public/js/holiday_list.js"
 }
 
 doctype_list_js = {
@@ -443,7 +444,14 @@ fixtures = [
                 "Company-employee_day_childbirth_vacation",
                 "Company-employee_day_annual_vacation",
                 "Company-employee_day_working",
-                "Company-settings"
+                "Company-settings",
+                
+                "Holiday List-add_time_period_holidays",
+                "Holiday List-period_description",
+                "Holiday List-start_from",
+                "Holiday List-ends_on",
+                "Holiday List-add_period_holidays",
+                "Holiday List-column_break_c8bxj"
          ]]
         ]
     },
