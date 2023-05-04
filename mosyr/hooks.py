@@ -45,7 +45,13 @@ doctype_js = {
 	"Holiday List": "public/js/holiday_list.js"
 }
 
-doctype_list_js = {"Loan" : "public/js/loan_list.js"}
+doctype_list_js = {
+    "Loan" : "public/js/loan_list.js",
+    "Salary Slip" : "public/js/salary_slip_list.js",
+    "Payroll Entry" : "public/js/payroll_entry_list.js",
+    "Retention Bonus" : "public/js/retention_bonus_list.js",
+    "Employee Incentive" : "public/js/employee_incentive_list.js",
+	}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -91,6 +97,7 @@ after_install = "mosyr.install.after_install"
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
+extend_bootinfo = "mosyr.boot.boot_session"
 
 # DocType Class
 # ---------------
@@ -169,7 +176,7 @@ doc_events = {
 		"on_submit": "mosyr.api.sum_net_pay_payroll_entry"
 	},
     "Company" : {
-		"on_update" : [
+		"validate" : [
                         "mosyr.api.update_employee_data",
     					"mosyr.api.create_letter_head"
 		]
@@ -545,7 +552,11 @@ fixtures = [
                     "Salary Slip Loan-loan_account-hidden",
                     "Salary Slip-total_interest_amount-hidden",
                     "Company-section_break_28-hidden",
-                    "Company-registration_info-hidden"
+                    "Company-registration_info-hidden",
+                    "Company-default_letter_head-hidden",
+                    "Repayment Schedule-interest_amount-hidden",
+                    "Payroll Entry-main-title_field",
+                    "Retention Bonus-main-title_field"
 				]
 			]
 		]
