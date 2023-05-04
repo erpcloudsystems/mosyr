@@ -598,7 +598,8 @@ def create_user_permission_on_company_in_create_user(doc, method):
             perm.allow = "Company"
             perm.for_value = row.company
             perm.save()
-        frappe.db.commit()\
+        frappe.db.commit()
+
             
 @frappe.whitelist()
 def get_emps_based_on_option(option, value):
