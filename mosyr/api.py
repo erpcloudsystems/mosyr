@@ -601,6 +601,13 @@ def create_user_permission_on_company_in_create_user(doc, method):
                 perm.for_value = row.company
                 perm.save()
             frappe.db.commit()
+            
+
+@frappe.whitelist()
+def get_emps_based_on_option(option, value):
+    emps_list = frappe.db.get_list("Employee",fields=['name', 'first_name'], filters={"status":"Active", option:value})
+    return {"emps_list":emps_list}
+
 
 def custom_get_letter_heads():
 	letter_heads = {}
