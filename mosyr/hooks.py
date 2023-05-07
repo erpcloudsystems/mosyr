@@ -289,8 +289,8 @@ fixtures = [
 				"Employee-api_employee_status",
 				"Employee-birth_place",
 				"Employee-direct_manager",
-				"Employee-nationality",
-				"Employee-religion",
+				# "Employee-nationality",
+				# "Employee-religion",
 				"Employee-handicap",
 				"Employee-self_service",
 				"Employee-payroll_card_number",
@@ -557,7 +557,10 @@ fixtures = [
                     "Repayment Schedule-interest_amount-hidden",
                     "Payroll Entry-main-title_field",
                     "Retention Bonus-main-title_field",
-                    "Employee-grade-hidden"
+                    "Employee-grade-hidden",
+                    "Employee-personal_details-hidden",
+                    "Employee-unsubscribed-hidden",
+                    "Employee-prefered_contact_email-hidden"
 				]
 			]
 		]
