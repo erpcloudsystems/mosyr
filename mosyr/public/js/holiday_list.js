@@ -50,7 +50,6 @@ frappe.ui.form.on('Holiday List', {
 				let data = { "holiday_date": day, "description": frm.doc.period_description }
 				holiday_list.push(data)
 			}
-			console.log("22222222222");
 			console.log(holiday_list);
 			day = frappe.datetime.add_days(day, 1);
 		}

@@ -23,6 +23,8 @@ class ShiftBuilder(Document):
             self.validate_different_times_shifts()
         elif self.shift_type == "Flexible Work Schedule":
             self.validate_flexible_shifts_times()
+        elif self.shift_type == "Shift Type":
+            return
         else:
             frappe.throw(_(f"Shift Type {self.shift_type} is not supported"))
 
@@ -487,6 +489,8 @@ class ShiftBuilder(Document):
             self.validate_employees()
             self.validate_flexible_shifts_times()
             self.build_flexible_shifts_times()
+        elif self.shift_type == "Shift Type":
+            self.build_shift_type()
         else:
             frappe.throw(_(f"Shift Type {self.shift_type} is not supported"))
 
@@ -609,6 +613,7 @@ class ShiftBuilder(Document):
         late_grace,
         early_grace,
         flexible_shift=False,
+        shift_type=False
     ):
         # shift_type = frappe.new_doc("Shift Type")
         shift_type = frappe.get_doc({"doctype": "Shift Type", "__newname": newname})
@@ -640,6 +645,8 @@ class ShiftBuilder(Document):
             shift_type.early_exit_grace_period = cint(early_grace)
         if flexible_shift:
             shift_type.max_working_hours = flt(self.required_hours_per_day)
+        if shift_type:
+            shift_type.max_working_hours = flt(self.max_working_hours)
         shift_type.save()
         frappe.db.commit()
         shift_type.reload()
@@ -647,7 +654,23 @@ class ShiftBuilder(Document):
 
     def on_update_after_submit(self):
         self.validate_employees()
-
+        
+    def build_shift_type(self):
+        try:
+            shift = self.create_shift_type(
+                self.shift_name,
+                self.shift_start_time,
+                self.shift_end_time,
+                self.late_entry_grace_period,
+                self.early_exit_grace_period,
+                shift_type=True,
+            )
+        except Exception as e:
+            frappe.throw(_(f"Error while create Shift Type for Shift Type"))
+        else:
+            self.db_set("shift_type_link", shift)
+            frappe.db.commit()
+         
 
 def daily_shift_requests_creation():
     # Create Shift Request based on shift builder type

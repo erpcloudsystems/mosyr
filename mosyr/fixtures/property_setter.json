@@ -1650,6 +1650,23 @@
  },
  {
   "default_value": null,
+  "doc_type": "Employee",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "grade",
+  "modified": "2023-05-07 12:50:56.876461",
+  "name": "Employee-grade-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ },
+ {
+  "default_value": null,
   "doc_type": "Leave Type",
   "docstatus": 0,
   "doctype": "Property Setter",

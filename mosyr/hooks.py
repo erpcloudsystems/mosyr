@@ -558,7 +558,8 @@ fixtures = [
                     "Payroll Entry-main-title_field",
                     "Retention Bonus-main-title_field",
                     "Leave Type-allow_over_allocation-hidden",
-                    "Leave Type-earned_leave-hidden"
+                    "Leave Type-earned_leave-hidden",
+                    "Employee-grade-hidden"
 				]
 			]
 		]
