@@ -585,7 +585,7 @@ def get_data_sumba(filters):
 			LPAD(b.swift_number,4,' ') as emp_bank,
 			LPAD(emp.bank_ac_no,24,0) as bank_acc_no,
 			'00000000000' as zero,
-			IF(emp.nationality="Saudi", '1', "2") as nationality ,
+			IF(iden.nationality="Saudi", '1', "2") as nationality ,
 			' ' as id_number,
 			LPAD(emp.departement_location, 20 ,' ') as departement_location,
 			' ' as spaces19,
@@ -598,6 +598,7 @@ def get_data_sumba(filters):
 		FROM `tabEmployee` emp
 		LEFT JOIN `tabSalary Slip` sl ON sl.employee=emp.name and sl.status='Submitted' 
 		LEFT JOIN `tabBank` b ON b.name=emp.employee_bank
+		LEFT JOIN `tabIdentity` iden ON iden.parent=emp.name
 		LEFT JOIN `tabSalary Detail` sd ON sd.parent=sl.name and sd.salary_component="Basic"
 		LEFT JOIN `tabSalary Detail` sde ON sde.parent=sl.name and sde.salary_component="Allowance Housing"
 		WHERE emp.status ='Active' and  {condition}
