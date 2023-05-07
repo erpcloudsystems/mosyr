@@ -63,3 +63,16 @@ def process_auto_attendance_for_all_shifts():
             doc.db_set("last_sync_of_checkin", frappe.utils.now_datetime(), update_modified=False)
         except Exception as e:
             frappe.log_error(e, "faild to process auto-attendance")
+
+def employee_end_contract():
+    # change employee status based on contract end date to inactive status
+    employees = frappe.db.sql("""
+        SELECT name FROM tabEmployee
+        WHERE contract_end_date <> '' AND DATE(contract_end_date) < NOW()
+        AND status = 'Active'
+    """, as_dict=True)
+
+    if any(employees):
+        for employee in employees:
+            frappe.db.set_value("Employee", employee.name, "status", "Inactive")
+            frappe.db.commit()

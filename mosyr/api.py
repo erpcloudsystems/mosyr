@@ -628,3 +628,15 @@ def custom_get_letter_heads():
 					letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
 				)
 	return letter_heads
+
+def employee_end_contract(doc, method):
+    # change employee status based on contract end date to inactive status
+    if doc.status != "Active":
+        return
+    prev_contract_date = frappe.get_value("Employee", doc.name, "contract_end_date")
+    if not prev_contract_date:
+        return
+
+    if getdate(prev_contract_date) != getdate(doc.contract_end_date):
+        if get_datetime(doc.contract_end_date) < get_datetime():
+            doc.status = "Inactive"

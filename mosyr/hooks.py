@@ -150,6 +150,7 @@ doc_events = {
 			"mosyr.api.translate_employee",
 			"mosyr.api.set_employee_number",
 			"mosyr.api.set_date_of_joining",
+			"mosyr.api.employee_end_contract"
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
@@ -194,6 +195,7 @@ scheduler_events = {
 	"daily": [
 		"mosyr.tasks.update_status_for_contracts",
 		"mosyr.tasks.notify_expired_dates",
+		"mosyr.tasks.employee_end_contract"
 	],
 	"daily_long": [
 		"mosyr.mosyr.doctype.shift_builder.shift_builder.daily_shift_requests_creation"
