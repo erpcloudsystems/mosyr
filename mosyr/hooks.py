@@ -559,6 +559,8 @@ fixtures = [
                     "Repayment Schedule-interest_amount-hidden",
                     "Payroll Entry-main-title_field",
                     "Retention Bonus-main-title_field",
+                    "Leave Type-allow_over_allocation-hidden",
+                    "Leave Type-earned_leave-hidden",
                     "Employee-grade-hidden",
                     "Employee-personal_details-hidden",
                     "Employee-unsubscribed-hidden",
