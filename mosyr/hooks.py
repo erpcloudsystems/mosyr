@@ -564,7 +564,8 @@ fixtures = [
                     "Employee-grade-hidden",
                     "Employee-personal_details-hidden",
                     "Employee-unsubscribed-hidden",
-                    "Employee-prefered_contact_email-hidden"
+                    "Employee-prefered_contact_email-hidden",
+                    "Employee-job_profile-label"
 				]
 			]
 		]
