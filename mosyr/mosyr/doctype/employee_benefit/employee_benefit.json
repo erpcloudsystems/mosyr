@@ -51,7 +51,8 @@
    "fieldname": "addition_type",
    "fieldtype": "Select",
    "label": "Addition Type",
-   "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission"
+   "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_7",
@@ -69,9 +70,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Format: YYYY-MM ( 2022-01 )\n",
    "fieldname": "payroll_month",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "Payroll Month",
    "reqd": 1
   },
@@ -130,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-12 10:53:29.423067",
+ "modified": "2023-05-08 12:28:00.982870",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Benefit",
