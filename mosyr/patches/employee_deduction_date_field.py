@@ -2,6 +2,7 @@ import frappe
 import datetime
 
 def execute():
+    return
     emp_deductions = frappe.get_all("Employee Deduction", filters={"docstatus": 1})
     for row in emp_deductions:
         emp_deduction = frappe.get_doc("Employee Deduction", row.get("name"))
