@@ -640,3 +640,15 @@ def employee_end_contract(doc, method):
     if getdate(prev_contract_date) != getdate(doc.contract_end_date):
         if get_datetime(doc.contract_end_date) < get_datetime():
             doc.status = "Inactive"
+
+@frappe.whitelist()
+def handle_formula(docname, amount, operation, abbr):
+    """set formula from custom formula form to formula text field"""
+    amount = flt(amount)
+    if amount == 0:
+        return False
+
+    sal_component = frappe.get_doc("Salary Component", docname)
+    sal_component.formula = f"{abbr} {operation} {amount}"
+    sal_component.save()
+    return True
