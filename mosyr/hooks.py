@@ -42,7 +42,8 @@ doctype_js = {
 	"Loan" : "public/js/loan.js",
 	"Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
 	"Company" : "public/js/company.js",
-	"Holiday List": "public/js/holiday_list.js"
+	"Holiday List": "public/js/holiday_list.js",
+	"Salary Component": "public/js/salary_component.js"
 }
 
 doctype_list_js = {
@@ -453,7 +454,9 @@ fixtures = [
                 "Holiday List-start_from",
                 "Holiday List-ends_on",
                 "Holiday List-add_period_holidays",
-                "Holiday List-column_break_c8bxj"
+                "Holiday List-column_break_c8bxj",
+
+                "Salary Component-custom_formula"
          ]]
         ]
     },
@@ -565,7 +568,8 @@ fixtures = [
                     "Employee-personal_details-hidden",
                     "Employee-unsubscribed-hidden",
                     "Employee-prefered_contact_email-hidden",
-                    "Employee-job_profile-label"
+                    "Employee-job_profile-label",
+                    "Salary Component-formula-hidden"
 				]
 			]
 		]
