@@ -3055,7 +3055,7 @@
   "name": "Salary Component-custom_formula",
   "no_copy": 0,
   "non_negative": 0,
-  "options": "<h6 class=\"mb-4\">Formula</h6>\n<div class=\"form-group p-4 border d-flex align-items-center gap-4\" style=\"background: #f7f7f7\">\n  <input class=\"p-2 border-0 h3 bg-white\" id=\"formula_amount\" name=\"formula_amount\" type=\"number\" value=\"0\">\n  <select class=\"px-2 border-0 h1\" id=\"formula_operation\" name=\"formula_operation\">\n    <option>+</option>\n    <option>-</option>\n    <option>*</option>\n    <option>/</option>\n  </select>\n  <select class=\"p-2 border-0 h3\" id=\"formula_abbr\" name=\"formula_abbr\">\n    <option value=\"base\">Base</option>\n    <option value=\"variable\">Variable</option>\n  </select>\n</div>",
+  "options": "<h6 class=\"mb-4\">Formula</h6>\n<div class=\"row p-4 form-group border d-flex align-items-center gap-3\" style=\"background: #f7f7f7\">\n  <div class=\"col-x-12 col-lg-5\">\n    <input class=\"p-2 border-0 h3 bg-white w-100 h-100\" id=\"formula_amount\" name=\"formula_amount\" type=\"number\" value=\"0\">\n  </div>\n  <div class=\"col-x-12 col-lg-3\">\n    <select class=\"px-2 py-1 border-0 h1 w-100 text-center\" id=\"formula_operation\" name=\"formula_operation\">\n      <option>+</option>\n      <option>-</option>\n      <option>*</option>\n      <option>/</option>\n    </select>\n  </div>\n  <div class=\"col-x-12 col-lg-3\">\n    <select class=\"border-0 h3 w-100 text-center\" id=\"formula_abbr\" name=\"formula_abbr\" style=\"min-height: 48px;\">\n      <option value=\"base\">Base</option>\n      <option value=\"variable\">Variable</option>\n    </select>\n  </div>\n</div>",
   "parent": null,
   "parentfield": null,
   "parenttype": null,
