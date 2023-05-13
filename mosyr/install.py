@@ -334,11 +334,10 @@ def create_dafault_mode_of_payments():
 
 
 def create_risk_insurance_components():
-    ld = frappe.db.exists("Salary Component", "Leave Deduction")
     components = [
         comp.name
         for comp in frappe.db.sql(
-            "SELECT LOWER(name) FROM `tabSalary Component`", as_dict=True
+            "SELECT LOWER(name) as name FROM `tabSalary Component`", as_dict=True
         )
     ]
     for component in [
