@@ -456,7 +456,18 @@ fixtures = [
                 "Holiday List-add_period_holidays",
                 "Holiday List-column_break_c8bxj",
 
-                "Salary Component-custom_formula"
+                "Salary Component-custom_formula",
+
+                "Department-contact_details_approver",
+                "Department-educational_qualification_approver",
+                "Department-emergency_contact_approver",
+                "Department-health_insurance_approver",
+                "Department-personal_details_approver",
+                "Department-salary_details_approver",
+                "Department-exit_permission_approver",
+                "Department-attendance_request_approver",
+                "Department-compensatory_leave_request_approver",
+                "Department-travel_request_approver"
          ]]
         ]
     },
