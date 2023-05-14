@@ -97,7 +97,10 @@ docs_for_manager = [
     "Custom Field",
     "Company",
     "Address",
-    "Letter Head"
+    "Letter Head",
+    "Process Loan Interest Accrual",
+    "Journal Entry",
+    "Account"
 ]
 reports_for_manager = [
     "Insurances and Risk",

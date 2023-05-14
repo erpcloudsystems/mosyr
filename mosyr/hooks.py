@@ -580,7 +580,8 @@ fixtures = [
                     "Employee-unsubscribed-hidden",
                     "Employee-prefered_contact_email-hidden",
                     "Employee-job_profile-label",
-                    "Salary Component-formula-hidden"
+                    "Salary Component-formula-hidden",
+                    "Salary Component-help-hidden"
 				]
 			]
 		]
