@@ -42,10 +42,17 @@ doctype_js = {
 	"Loan" : "public/js/loan.js",
 	"Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
 	"Company" : "public/js/company.js",
-	"Holiday List": "public/js/holiday_list.js"
+	"Holiday List": "public/js/holiday_list.js",
+	"Salary Component": "public/js/salary_component.js"
 }
 
-doctype_list_js = {"Loan" : "public/js/loan_list.js"}
+doctype_list_js = {
+    "Loan" : "public/js/loan_list.js",
+    "Salary Slip" : "public/js/salary_slip_list.js",
+    "Payroll Entry" : "public/js/payroll_entry_list.js",
+    "Retention Bonus" : "public/js/retention_bonus_list.js",
+    "Employee Incentive" : "public/js/employee_incentive_list.js",
+	}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -91,6 +98,7 @@ after_install = "mosyr.install.after_install"
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
+extend_bootinfo = "mosyr.boot.boot_session"
 
 # DocType Class
 # ---------------
@@ -143,6 +151,7 @@ doc_events = {
 			"mosyr.api.translate_employee",
 			"mosyr.api.set_employee_number",
 			"mosyr.api.set_date_of_joining",
+			"mosyr.api.employee_end_contract"
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
@@ -169,7 +178,7 @@ doc_events = {
 		"on_submit": "mosyr.api.sum_net_pay_payroll_entry"
 	},
     "Company" : {
-		"on_update" : [
+		"validate" : [
                         "mosyr.api.update_employee_data",
     					"mosyr.api.create_letter_head"
 		]
@@ -187,6 +196,7 @@ scheduler_events = {
 	"daily": [
 		"mosyr.tasks.update_status_for_contracts",
 		"mosyr.tasks.notify_expired_dates",
+		"mosyr.tasks.employee_end_contract"
 	],
 	"daily_long": [
 		"mosyr.mosyr.doctype.shift_builder.shift_builder.daily_shift_requests_creation"
@@ -282,8 +292,8 @@ fixtures = [
 				"Employee-api_employee_status",
 				"Employee-birth_place",
 				"Employee-direct_manager",
-				"Employee-nationality",
-				"Employee-religion",
+				# "Employee-nationality",
+				# "Employee-religion",
 				"Employee-handicap",
 				"Employee-self_service",
 				"Employee-payroll_card_number",
@@ -444,7 +454,20 @@ fixtures = [
                 "Holiday List-start_from",
                 "Holiday List-ends_on",
                 "Holiday List-add_period_holidays",
-                "Holiday List-column_break_c8bxj"
+                "Holiday List-column_break_c8bxj",
+
+                "Salary Component-custom_formula",
+
+                "Department-contact_details_approver",
+                "Department-educational_qualification_approver",
+                "Department-emergency_contact_approver",
+                "Department-health_insurance_approver",
+                "Department-personal_details_approver",
+                "Department-salary_details_approver",
+                "Department-exit_permission_approver",
+                "Department-attendance_request_approver",
+                "Department-compensatory_leave_request_approver",
+                "Department-travel_request_approver"
          ]]
         ]
     },
@@ -545,7 +568,20 @@ fixtures = [
                     "Salary Slip Loan-loan_account-hidden",
                     "Salary Slip-total_interest_amount-hidden",
                     "Company-section_break_28-hidden",
-                    "Company-registration_info-hidden"
+                    "Company-registration_info-hidden",
+                    "Company-default_letter_head-hidden",
+                    "Repayment Schedule-interest_amount-hidden",
+                    "Payroll Entry-main-title_field",
+                    "Retention Bonus-main-title_field",
+                    "Leave Type-allow_over_allocation-hidden",
+                    "Leave Type-earned_leave-hidden",
+                    "Employee-grade-hidden",
+                    "Employee-personal_details-hidden",
+                    "Employee-unsubscribed-hidden",
+                    "Employee-prefered_contact_email-hidden",
+                    "Employee-job_profile-label",
+                    "Salary Component-formula-hidden",
+                    "Salary Component-help-hidden"
 				]
 			]
 		]

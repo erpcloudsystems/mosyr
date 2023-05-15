@@ -7,6 +7,15 @@ frappe.ui.form.on("Employee Deduction", {
       frm.doc.date = frappe.datetime.get_today();
     }
   },
+  refresh: function(frm) {
+    frm.set_query('employee', function(doc){
+        return{
+            filters:{
+                'status': 'Active'
+            }
+        }
+    })
+  },
   employee: function (frm) {
     if (frm.doc.employee != "") {
       frappe.call({

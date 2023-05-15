@@ -554,16 +554,16 @@ def create_letter_head(self, method):
             
             html_footer_content = '<div class="container-fluid"><div class="row">' + html_footer_content + '</div></div>'
         if has_new_letter_head:
-            lh = frappe.db.exists("Letter Head", "Mosyr-Main")
+            lh = frappe.db.exists("Letter Head", self.name)
             
             if lh:
-                lh = frappe.get_doc("Letter Head", "Mosyr-Main")
+                lh = frappe.get_doc("Letter Head", self.name)
             else: 
                 lh = frappe.new_doc("Letter Head")
-                lh.letter_head_name = "Mosyr-Main"
+                lh.letter_head_name = self.name
             lh.source = "HTML"
             lh.footer_source = "HTML"
-            lh.is_default = 1
+            lh.is_default = 0
             # lh.image = image
             lh.content = html_header_content
             lh.footer = html_footer_content
@@ -583,6 +583,17 @@ def create_user_permission_on_company_in_validate(doc, method):
                 for user_permission in user_permissions:
                     frappe.delete_doc("User Permission", user_permission.name)
                 frappe.db.commit()
+            if len(doc.companies):
+                for row in doc.companies:
+                    perm = frappe.new_doc("User Permission")
+                    perm.user = doc.name
+                    perm.allow = "Company"
+                    perm.for_value = row.company
+                    perm.save()
+                frappe.db.commit()
+
+def create_user_permission_on_company_in_create_user(doc, method):
+        if len(doc.companies):
             for row in doc.companies:
                 perm = frappe.new_doc("User Permission")
                 perm.user = doc.name
@@ -590,18 +601,54 @@ def create_user_permission_on_company_in_validate(doc, method):
                 perm.for_value = row.company
                 perm.save()
             frappe.db.commit()
-
-def create_user_permission_on_company_in_create_user(doc, method):
-        for row in doc.companies:
-            perm = frappe.new_doc("User Permission")
-            perm.user = doc.name
-            perm.allow = "Company"
-            perm.for_value = row.company
-            perm.save()
-        frappe.db.commit()
-
             
+
 @frappe.whitelist()
 def get_emps_based_on_option(option, value):
     emps_list = frappe.db.get_list("Employee",fields=['name', 'first_name'], filters={"status":"Active", option:value})
     return {"emps_list":emps_list}
+
+
+def custom_get_letter_heads():
+	letter_heads = {}
+	user = frappe.get_doc("User", frappe.session.user)
+	if user.name == "Administrator" or user.user_type == "SaaS Manager":
+		for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"]):
+			letter_heads.setdefault(
+				letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
+			)
+	else:
+		if user.companies:
+			lh = []
+			for c in user.companies:
+				lh.append(c.company)
+
+			for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"], filters={'name': ["IN", lh]}):
+				letter_heads.setdefault(
+					letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
+				)
+	return letter_heads
+
+def employee_end_contract(doc, method):
+    # change employee status based on contract end date to inactive status
+    if doc.status != "Active":
+        return
+    prev_contract_date = frappe.get_value("Employee", doc.name, "contract_end_date")
+    if not prev_contract_date:
+        return
+
+    if getdate(prev_contract_date) != getdate(doc.contract_end_date):
+        if get_datetime(doc.contract_end_date) < get_datetime():
+            doc.status = "Inactive"
+
+@frappe.whitelist()
+def handle_formula(docname, amount, operation, abbr):
+    """set formula from custom formula form to formula text field"""
+    amount = flt(amount)
+    if amount == 0:
+        return False
+
+    sal_component = frappe.get_doc("Salary Component", docname)
+    sal_component.formula = f"{abbr} {operation} {amount}"
+    sal_component.save()
+    return True

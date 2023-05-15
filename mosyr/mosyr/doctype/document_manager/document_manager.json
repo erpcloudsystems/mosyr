@@ -106,7 +106,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-10 10:57:54.518894",
+ "modified": "2023-04-26 14:56:42.003902",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Document Manager",
@@ -127,5 +127,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "title",
  "track_changes": 1
 }

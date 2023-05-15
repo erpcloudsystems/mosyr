@@ -75,6 +75,10 @@ class CustomCompany(Company, NestedSet):
         frappe.clear_cache()
         self.update_custom_linked_accounts()
 
+        letter_head = frappe.db.exists("Letter Head", {'name': self.name})
+        if letter_head:
+            self.default_letter_head = letter_head
+
     def update_custom_linked_accounts(self):
         # Setup For mode of payments
         for mop in frappe.get_list("Mode of Payment"):
