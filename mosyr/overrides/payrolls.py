@@ -149,6 +149,10 @@ class CustomPayrollEntry(PayrollEntry):
     def validate(self):
         self.set_missing_custome_values()
         super().validate()
+        
+    def on_cancel(self):
+        self.ignore_linked_doctypes = ("GL Entry")
+        super().on_cancel()
 
     def set_missing_custome_values(self):
         if not self.payroll_payable_account:
