@@ -154,6 +154,18 @@ class CustomPayrollEntry(PayrollEntry):
         self.ignore_linked_doctypes = ("GL Entry")
         super().on_cancel()
 
+    def on_trash(self):
+        from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
+
+        linkinfo = get_linked_doctypes("Payroll Entry")
+        docs = get_linked_docs("Payroll Entry", self.name, linkinfo)
+        linked_je_docs = docs.get("Journal Entry")
+        if linked_je_docs:
+            for row in linked_je_docs:
+                doc_name = row.get("name")
+                doc = frappe.get_doc("Journal Entry", doc_name)
+                doc.delete()
+
     def set_missing_custome_values(self):
         if not self.payroll_payable_account:
             account = create_account(
