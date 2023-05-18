@@ -1800,5 +1800,22 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Vehicle Log",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "service_detail",
+  "modified": "2023-05-18 16:23:18.253393",
+  "name": "Vehicle Log-service_detail-allow_on_submit",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "allow_on_submit",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
