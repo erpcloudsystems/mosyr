@@ -108,6 +108,7 @@ class PayrollRegisterTool(Document):
                     "company": company_doc.name,
                     "currency": currency,
                     "salary_slip_based_on_timesheet": 0,
+                    "leave_encashment_amount_per_day": self.leave_encashment_amount_per_day
                 }
             )
             ss_doc.__newname = ss_name
