@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "autoname": "HR-VSERVE-.YYYY.-.####",
+ "creation": "2023-05-18 15:46:00.550030",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle_log",
+  "column_break_41nkz",
+  "employee",
+  "employee_name",
+  "service_details_section",
+  "service_item",
+  "type",
+  "column_break_lv67e",
+  "frequency",
+  "expense",
+  "attachment",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fetch_from": "vehicle_log.employee",
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "no_copy": 1,
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_41nkz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "employee",
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_details_section",
+   "fieldtype": "Section Break",
+   "label": "Service Details"
+  },
+  {
+   "fieldname": "service_item",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Service Item",
+   "options": "\nBrake Oil\nBrake Pad\nClutch Plate\nEngine Oil\nOil Change\nWheels",
+   "reqd": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "\nInspection\nService\nChange",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_lv67e",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "label": "Frequency",
+   "options": "\nMileage\nMonthly\nQuarterly\nHalf Yearly\nYearly",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expense",
+   "fieldtype": "Currency",
+   "label": "Expense",
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Services",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_log",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vehicle Log",
+   "no_copy": 1,
+   "options": "Vehicle Log",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "make_attachments_public": 1,
+ "modified": "2023-05-18 16:09:53.375277",
+ "modified_by": "Administrator",
+ "module": "Mosyr Self Service",
+ "name": "Vehicle Services",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee Self Service",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
