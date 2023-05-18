@@ -21,6 +21,7 @@
   "is_default",
   "base",
   "variable",
+  "leave_encashment_amount_per_day",
   "earning_deduction",
   "earnings",
   "column_break_16",
@@ -210,12 +211,18 @@
    "fieldname": "override_existing_structures",
    "fieldtype": "Check",
    "label": "Override Existing Structures"
+  },
+  {
+   "fieldname": "leave_encashment_amount_per_day",
+   "fieldtype": "Currency",
+   "label": "Leave Encashment Amount Per Day",
+   "precision": "2"
   }
  ],
  "icon": "fa fa-file-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-27 16:19:42.674705",
+ "modified": "2023-05-18 12:43:07.452502",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
@@ -253,4 +260,4 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
-   }
+}
