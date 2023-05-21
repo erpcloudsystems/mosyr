@@ -236,10 +236,10 @@ class PayrollRegisterTool(Document):
                 as_dict=True,
             )
         ]
-
         zeros_earnings = [True for i in range(len(earnings))]
         zeros_deductions = [True for i in range(len(deductions))]
-
+        total_e = 0
+        total_d = 0
         data = []
 
         payroll = frappe.get_doc("Payroll Entry", payroll)
