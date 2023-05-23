@@ -17,14 +17,14 @@ class UsersPermissionManager(Document):
         {"user_management": ["User", "Users Permission Manager"]},
         {"hr_management": [ "Department", "Branch", "Employee Group", "Designation", "Employee Grade", "Employment Type", "Shift Type", "Shift Builder", "Staffing Plan", "Holiday List", "Leave Type", "Leave Period", "Leave Policy", "Leave Policy Assignment", "Leave Allocation", "Leave Encashment", "Employee Health Insurance", "Leave Block List"]},
         {"employees_list": ["Employee", "End Of Service"]},
-        {"self_service": [ "Leave Application","Shift Request","Contact Details","Educational Qualification","Emergency Contact","Health Insurance","Lateness Permission","Personal Details","Salary Details", "Exit Permission"]},
+        {"self_service": [ "Leave Application","Shift Request","Contact Details","Educational Qualification","Emergency Contact","Health Insurance","Lateness Permission","Personal Details","Salary Details", "Exit Permission", "Vehicle Services", "Vehicle Log"]},
         {"e_form": ["Mosyr Form"]},
         {"timesheet_attendees_management": ["Attendance","Employee Attendance Tool","Attendance Request","Upload Attendance","Employee Checkin"]},
         {"payroll": ["Payroll Settings","Salary Component","Salary Structure","Salary Structure Assignment","Employee Benefit","Employee Deduction","Payroll Entry","Salary Slip","Retention Bonus","Employee Incentive"]},
         {"employees_performance": ["Appraisal", "Appraisal Template"]},
         {"leave": ["Leave Application", "Compensatory Leave Request", "Travel Request", "Leave Encashment"]},
         {"loans" : ["Loan Type", "Loan", "Loan Application"]},
-        {"vehicle_management": ["Vehicle", "Vehicle Log", "Vehicle Service"]},
+        {"vehicle_management": ["Vehicle", "Vehicle Log"]},
         {"documents_management" : ["Document Manager", "Document Type"]},
         {"custody_management" : ["Custody", "Cash Custody", "Cash Custody Expense"]}
     ]

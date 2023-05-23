@@ -5,4 +5,10 @@ frappe.ui.form.on('Vehicle Services', {
 	// refresh: function(frm) {
 
 	// }
+	service_item: function(frm) {
+		if (frm.doc.service_item == 'Accident'){
+			frm.doc.expense = 0
+			frm.refresh_field('expense')
+		}
+	}
 });

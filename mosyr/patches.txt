@@ -43,3 +43,4 @@ mosyr.patches.rebuild_non_standard_users_typesv11
 mosyr.patches.delete_employee_grade
 mosyr.patches.delete_employee_custom_field
 mosyr.patches.update_saas_manager_doctypes
+mosyr.patches.update_emp_selfservice_perm
