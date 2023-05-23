@@ -108,6 +108,7 @@ class PayrollRegisterTool(Document):
                     "company": company_doc.name,
                     "currency": currency,
                     "salary_slip_based_on_timesheet": 0,
+                    "leave_encashment_amount_per_day": self.leave_encashment_amount_per_day
                 }
             )
             ss_doc.__newname = ss_name
@@ -235,10 +236,10 @@ class PayrollRegisterTool(Document):
                 as_dict=True,
             )
         ]
-
         zeros_earnings = [True for i in range(len(earnings))]
         zeros_deductions = [True for i in range(len(deductions))]
-
+        total_e = 0
+        total_d = 0
         data = []
 
         payroll = frappe.get_doc("Payroll Entry", payroll)

@@ -477,7 +477,10 @@ fixtures = [
                 
                 "Workflow Document State-related_to",
                 "Workflow Transition-related_to",
-                "Workflow Document State-approver"
+                "Workflow Document State-approver",
+                "Vehicle Service-attachment",
+                "Vehicle Service-details",
+                "Department-vehicle_service_approver"
          ]]
         ]
     },
@@ -591,7 +594,11 @@ fixtures = [
                     "Employee-prefered_contact_email-hidden",
                     "Employee-job_profile-label",
                     "Salary Component-formula-hidden",
-                    "Salary Component-help-hidden"
+                    "Salary Component-help-hidden",
+                    "Vehicle Log-service_detail-allow_on_submit",
+                    "Vehicle Service-type-reqd",
+                    "Vehicle Service-frequency-reqd",
+                    "Vehicle Service-expense_amount-reqd"
 				]
 			]
 		]
