@@ -182,6 +182,9 @@ doc_events = {
                         "mosyr.api.update_employee_data",
     					"mosyr.api.create_letter_head"
 		]
+	},
+    "Department": {
+		"validate": "mosyr.api.create_department_workflows"
 	}
 }
 
@@ -467,7 +470,10 @@ fixtures = [
                 "Department-exit_permission_approver",
                 "Department-attendance_request_approver",
                 "Department-compensatory_leave_request_approver",
-                "Department-travel_request_approver"
+                "Department-travel_request_approver",
+                
+                "Workflow Document State-related_to",
+                "Workflow Transition-related_to"
          ]]
         ]
     },

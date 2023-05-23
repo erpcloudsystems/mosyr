@@ -610,24 +610,24 @@ def get_emps_based_on_option(option, value):
 
 
 def custom_get_letter_heads():
-	letter_heads = {}
-	user = frappe.get_doc("User", frappe.session.user)
-	if user.name == "Administrator" or user.user_type == "SaaS Manager":
-		for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"]):
-			letter_heads.setdefault(
-				letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
-			)
-	else:
-		if user.companies:
-			lh = []
-			for c in user.companies:
-				lh.append(c.company)
+    letter_heads = {}
+    user = frappe.get_doc("User", frappe.session.user)
+    if user.name == "Administrator" or user.user_type == "SaaS Manager":
+        for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"]):
+            letter_heads.setdefault(
+                letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
+            )
+    else:
+        if user.companies:
+            lh = []
+            for c in user.companies:
+                lh.append(c.company)
 
-			for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"], filters={'name': ["IN", lh]}):
-				letter_heads.setdefault(
-					letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
-				)
-	return letter_heads
+            for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"], filters={'name': ["IN", lh]}):
+                letter_heads.setdefault(
+                    letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
+                )
+    return letter_heads
 
 def employee_end_contract(doc, method):
     # change employee status based on contract end date to inactive status
@@ -652,3 +652,244 @@ def handle_formula(docname, amount, operation, abbr):
     sal_component.formula = f"{abbr} {operation} {amount}"
     sal_component.save()
     return True
+
+
+def create_department_workflows(doc, method):
+    workflow_docs = [
+        {
+            "name": "Leave Application",
+            "state_name": "Leave",
+            "table_name": "leave_approvers",   
+        },{
+            "name": "Shift Request",
+            "state_name": "Shift Request",
+            "table_name": "shift_request_approver"
+        },{
+            "name": "Contact Details",
+            "state_name": "Contact Details",
+            "table_name": "contact_details_approver"
+        },{
+            "name": "Educational Qualification",
+            "state_name": "Qualification",
+            "table_name": "educational_qualification_approver"
+        },{
+            "name": "Emergency Contac",
+            "state_name": "Emergency",
+            "table_name": "emergency_contact_approver"
+        },{
+            "name": "Health Insurance",
+            "state_name": "Insurance",
+            "table_name": "health_insurance_approver"
+        },{
+            "name": "Personal Details",
+            "state_name": "Personal Details",
+            "table_name": "personal_details_approver"
+        },{
+            "name": "Salary Details",
+            "state_name": "Salary Details",
+            "table_name": "salary_details_approver"
+        },{
+            "name": "Exit Permission",
+            "state_name": "Exit Permission",
+            "table_name": "exit_permission_approver"
+        },{
+            "name": "Attendance Request",
+            "state_name": "Attendance Request",
+            "table_name": "attendance_request_approver"
+        },{
+            "name": "Compensatory Leave Request",
+            "state_name": "Compensatory Leave Request",
+            "table_name": "compensatory_leave_request_approver"
+        },{
+            "name": "Travel Request",
+            "state_name": "Travel Request",
+            "table_name": "travel_request_approver"
+        }
+    ]
+    for row in workflow_docs:
+        create_workflow(doc, row)
+    
+def create_workflow(doc, row):
+    approver_table = row.get("table_name")
+    approver_list = doc.get(approver_table)
+    
+    if approver_list:
+        state_list = create_doc_workflow_status(doc.name, approver_list, row.get("state_name"))
+        actions_list = create_doc_workflow_actions(doc.name, state_list)
+        
+        is_workflow_exist = frappe.db.exists("Workflow", {"document_type":row.get("name"), "is_active": 1})
+        if not is_workflow_exist:
+            # Update States List With Standerd States
+            state_list = add_standerd_states(state_list)
+            
+            # Create New Workflow For Doc 
+            new_workflow = frappe.get_doc({
+                "doctype": "Workflow",
+                "workflow_name": row.get("name"),
+                "document_type": row.get("name"),
+                "is_active": 1,
+                "is_standard": 0,
+                "states": state_list,
+                "transitions": actions_list
+            })
+            new_workflow.insert()
+        else:
+            # Update Workflow Status & Actions
+            workflow_doc = frappe.get_doc("Workflow", {"document_type":row.get("name"), "is_active": 1})
+            clear_states_actions_related_to_department(doc.name, workflow_doc.name)
+            workflow_doc = frappe.get_doc("Workflow",workflow_doc.name)
+            
+            # Check Stnaderd Statue ["Pending", "Cancelled"]
+            exist_states = []
+            for d in workflow_doc.states:
+                exist_states.append(d.state)
+            
+            is_pending_exist = 1 if "Pending" in exist_states else 0
+            is_cancelled_exist = 1 if "Cancelled" in exist_states else 0
+            
+            # Add Not Exists Standerd Status
+            if not is_pending_exist:
+                state_list.insert(0, {
+                    "state": "Pending",
+                    "doc_status": "0",
+                    "update_field": "workflow_state",
+                    "update_value": "Pending",
+                    "allow_edit": "All"
+                })
+            
+            if not is_cancelled_exist:
+                state_list.append({
+                    "state": "Cancelled",
+                    "doc_status": "2",
+                    "update_field": "workflow_state",
+                    "update_value": "Cancelled",
+                    "allow_edit": "HR Manager"
+                })
+            
+            if state_list:
+                for state in state_list:
+                    workflow_doc.append("states", state)
+            
+            if actions_list:
+                for action in actions_list:
+                    workflow_doc.append("transitions", action)
+            
+            workflow_doc.save()
+
+
+def create_doc_workflow_status(department, approvers, state_name):
+    state_list = []
+    if approvers:
+        prev_state = "Pending"
+        for idx, row in enumerate(approvers):
+            approve_state_name = "Approved " + state_name + " By "+ row.approver
+            is_exists = frappe.db.exists("Workflow State", approve_state_name)
+            if not is_exists:
+                # Create Status for every Approver
+                doc = frappe.new_doc("Workflow State")
+                doc.workflow_state_name = approve_state_name
+                doc.style = "Success"
+                doc.save()
+
+            state_list.append({
+                "state":approve_state_name,
+                "doc_status": "1" if idx == len(approvers)-1 else "0",
+                "update_field": "workflow_state",
+                "update_value": approve_state_name,
+                "allow_edit": "HR Manager",
+                "state_type": "Approve",
+                "prev_state": prev_state,
+                "related_to": department
+            })
+
+            reject_state_name = "Rejected " + state_name + " By "+ row.approver
+            is_exists = frappe.db.exists("Workflow State", reject_state_name)
+            if not is_exists:
+                # Create Status for every Approver
+                doc = frappe.new_doc("Workflow State")
+                doc.workflow_state_name = reject_state_name
+                doc.style = "Warning"
+                doc.save()
+
+            state_list.append({
+                "state":reject_state_name,
+                "doc_status": "1",
+                "update_field": "workflow_state",
+                "update_value": reject_state_name,
+                "allow_edit": "HR Manager",
+                "state_type": "Reject",
+                "prev_state": prev_state,
+                "related_to": department
+            })
+            
+            prev_state = approve_state_name
+
+    return state_list
+
+def create_doc_workflow_actions(department, state_list):
+    print(state_list)
+    actions_list = []
+    if state_list:
+        for row in state_list:
+            actions_list.append({
+                "state": row.get("prev_state"),
+                "action": row.get("state_type"),
+                "next_state": row.get("state"),
+                "allowed": row.get("allow_edit"),
+                "condition": f'doc.department == "{department}"',
+                "related_to": department
+            })
+    # Create Cancelled action
+    if state_list:
+        for x in state_list:
+            if x.get("state_type") == "Reject":
+                actions_list.append({
+                    "state": x.get("state"),
+                    "action": "Cancel",
+                    "next_state": "Cancelled",
+                    "allowed": x.get("allow_edit"),
+                    "condition": f'doc.department == "{department}"',
+                    "related_to": department
+                })
+    return actions_list
+
+def clear_states_actions_related_to_department(department, doc_name):
+    doc = frappe.get_doc("Workflow",doc_name)
+
+    for row in doc.states:
+        if row.related_to == department:
+            frappe.delete_doc("Workflow Document State", row.name)
+            
+    for row in doc.transitions:
+        if row.related_to == department:
+            frappe.delete_doc("Workflow Transition", row.name)
+
+    doc.save()
+    frappe.db.commit()
+    
+def add_standerd_states(state_list):
+    states = ["Pending", "Cancelled"]
+    for row in states:
+        is_exists = frappe.db.exists("Workflow State", row)
+        if not is_exists:
+            # Create Status for every Approver
+            doc = frappe.new_doc("Workflow State")
+            doc.workflow_state_name = row
+            doc.save()
+        
+    state_list.insert(0, {
+        "state": "Pending",
+        "doc_status": "0",
+        "update_field": "workflow_state",
+        "update_value": "Pending",
+        "allow_edit": "All"
+    })
+    state_list.append({
+        "state": "Cancelled",
+        "doc_status": "2",
+        "update_field": "workflow_state",
+        "update_value": "Cancelled",
+        "allow_edit": "HR Manager"
+    })
+    
+    return state_list
