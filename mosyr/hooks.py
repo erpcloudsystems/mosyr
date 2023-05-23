@@ -468,8 +468,8 @@ fixtures = [
                 "Department-attendance_request_approver",
                 "Department-compensatory_leave_request_approver",
                 "Department-travel_request_approver",
-                "Vehicle Service-attachmnet",
-                "Vehicle Service-attachment"
+                "Vehicle Service-attachment",
+                "Vehicle Service-details"
          ]]
         ]
     },
@@ -584,7 +584,10 @@ fixtures = [
                     "Employee-job_profile-label",
                     "Salary Component-formula-hidden",
                     "Salary Component-help-hidden",
-                    "Vehicle Log-service_detail-allow_on_submit"
+                    "Vehicle Log-service_detail-allow_on_submit",
+                    "Vehicle Service-type-reqd",
+                    "Vehicle Service-frequency-reqd",
+                    "Vehicle Service-expense_amount-reqd"
 				]
 			]
 		]

@@ -13,10 +13,12 @@ class VehicleServices(Document):
 		vlog = frappe.get_doc("Vehicle Log", self.vehicle_log)
 		vlog.append("service_detail", {
 			"service_item": self.service_item,
-			"type": self.type,
-			"frequency": self.frequency,
-			"expense_amount": self.expense,
-			"attachment": self.attachment
+			"type": self.type or "",
+			"frequency": self.frequency or "",
+			"expense_amount": self.expense or 0,
+			"attachment": self.attachment,
+			"details": self.details or ""
 		})
+		vlog.flags.ignore_mandatory = True
 		vlog.save()
 		frappe.db.commit()

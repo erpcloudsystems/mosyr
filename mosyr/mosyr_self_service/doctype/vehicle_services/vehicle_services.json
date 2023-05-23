@@ -13,6 +13,7 @@
   "service_details_section",
   "service_item",
   "type",
+  "details",
   "column_break_lv67e",
   "frequency",
   "expense",
@@ -55,34 +56,41 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Service Item",
-   "options": "\nBrake Oil\nBrake Pad\nClutch Plate\nEngine Oil\nOil Change\nWheels",
+   "no_copy": 1,
+   "options": "\nBrake Oil\nBrake Pad\nClutch Plate\nEngine Oil\nOil Change\nWheels\nAccident\nFuel Filling",
    "reqd": 1
   },
   {
+   "depends_on": "eval:doc.service_item != 'Fuel Filling' && doc.service_item != 'Accident'",
    "fieldname": "type",
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Type",
-   "options": "\nInspection\nService\nChange",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.service_item != 'Fuel Filling' && doc.service_item != 'Accident'",
+   "no_copy": 1,
+   "options": "\nInspection\nService\nChange"
   },
   {
    "fieldname": "column_break_lv67e",
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.service_item != 'Fuel Filling' && doc.service_item != 'Accident'",
    "fieldname": "frequency",
    "fieldtype": "Select",
    "label": "Frequency",
-   "options": "\nMileage\nMonthly\nQuarterly\nHalf Yearly\nYearly",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.service_item != 'Fuel Filling' && doc.service_item != 'Accident'",
+   "no_copy": 1,
+   "options": "\nMileage\nMonthly\nQuarterly\nHalf Yearly\nYearly"
   },
   {
+   "depends_on": "eval:doc.service_item != 'Accident'",
    "fieldname": "expense",
    "fieldtype": "Currency",
    "label": "Expense",
-   "precision": "2",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.service_item != 'Accident'",
+   "no_copy": 1,
+   "precision": "2"
   },
   {
    "fieldname": "attachment",
@@ -107,13 +115,20 @@
    "no_copy": 1,
    "options": "Vehicle Log",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.service_item=='Accident' || doc.service_item=='Fuel Filling'",
+   "fieldname": "details",
+   "fieldtype": "Small Text",
+   "label": "Details",
+   "mandatory_depends_on": "eval:doc.service_item=='Accident' || doc.service_item=='Fuel Filling'",
+   "no_copy": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "make_attachments_public": 1,
- "modified": "2023-05-18 16:09:53.375277",
+ "modified": "2023-05-23 10:15:06.731035",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Vehicle Services",
@@ -127,6 +142,7 @@
    "read": 1,
    "report": 1,
    "role": "Employee Self Service",
+   "select": 1,
    "share": 1,
    "write": 1
   },
