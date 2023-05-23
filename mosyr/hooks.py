@@ -469,7 +469,8 @@ fixtures = [
                 "Department-compensatory_leave_request_approver",
                 "Department-travel_request_approver",
                 "Vehicle Service-attachment",
-                "Vehicle Service-details"
+                "Vehicle Service-details",
+                "Department-vehicle_service_approver"
          ]]
         ]
     },
