@@ -668,42 +668,52 @@ def create_department_workflows(doc, method):
             "name": "Contact Details",
             "state_name": "Contact Details",
             "table_name": "contact_details_approver"
+
         },{
             "name": "Educational Qualification",
             "state_name": "Qualification",
             "table_name": "educational_qualification_approver"
+
         },{
             "name": "Emergency Contac",
             "state_name": "Emergency",
             "table_name": "emergency_contact_approver"
+
         },{
             "name": "Health Insurance",
             "state_name": "Insurance",
             "table_name": "health_insurance_approver"
+
         },{
             "name": "Personal Details",
             "state_name": "Personal Details",
             "table_name": "personal_details_approver"
+
         },{
             "name": "Salary Details",
             "state_name": "Salary Details",
             "table_name": "salary_details_approver"
+
         },{
             "name": "Exit Permission",
             "state_name": "Exit Permission",
             "table_name": "exit_permission_approver"
+
         },{
             "name": "Attendance Request",
             "state_name": "Attendance Request",
             "table_name": "attendance_request_approver"
+
         },{
             "name": "Compensatory Leave Request",
             "state_name": "Compensatory Leave Request",
             "table_name": "compensatory_leave_request_approver"
+
         },{
             "name": "Travel Request",
             "state_name": "Travel Request",
             "table_name": "travel_request_approver"
+
         }
     ]
     for row in workflow_docs:
@@ -799,7 +809,8 @@ def create_doc_workflow_status(department, approvers, state_name):
                 "allow_edit": "HR Manager",
                 "state_type": "Approve",
                 "prev_state": prev_state,
-                "related_to": department
+                "related_to": department,
+                "approver": row.approver
             })
 
             reject_state_name = "Rejected " + state_name + " By "+ row.approver
@@ -819,7 +830,8 @@ def create_doc_workflow_status(department, approvers, state_name):
                 "allow_edit": "HR Manager",
                 "state_type": "Reject",
                 "prev_state": prev_state,
-                "related_to": department
+                "related_to": department,
+                "approver": row.approver
             })
             
             prev_state = approve_state_name
@@ -893,3 +905,13 @@ def add_standerd_states(state_list):
     })
     
     return state_list
+
+
+def validate_approver(doc, method):
+    is_workflow_exist = frappe.db.exists("Workflow", {"document_type":doc.doctype, "is_active": 1})
+    workflow_doc = frappe.get_doc("Workflow", {"document_type":doc.doctype, "is_active": 1})
+    for row in workflow_doc.states:
+        if row.state == doc.workflow_state:
+            if row.approver != frappe.session.user and doc.workflow_state != "Pending" :
+                approver_name = frappe.get_value("User", row.approver, "full_name")
+                frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
