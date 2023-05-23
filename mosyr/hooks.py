@@ -182,7 +182,13 @@ doc_events = {
                         "mosyr.api.update_employee_data",
     					"mosyr.api.create_letter_head"
 		]
-	}
+	},
+    "Department": {
+		"validate": "mosyr.api.create_department_workflows"
+	},
+    "Leave Application": {
+		"on_update": "mosyr.api.validate_approver"
+	},
 }
 
 # Scheduled Tasks
@@ -468,6 +474,10 @@ fixtures = [
                 "Department-attendance_request_approver",
                 "Department-compensatory_leave_request_approver",
                 "Department-travel_request_approver",
+                
+                "Workflow Document State-related_to",
+                "Workflow Transition-related_to",
+                "Workflow Document State-approver",
                 "Vehicle Service-attachment",
                 "Vehicle Service-details",
                 "Department-vehicle_service_approver"
