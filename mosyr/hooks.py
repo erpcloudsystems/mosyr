@@ -136,6 +136,8 @@ override_doctype_class = {
 
 	"User Type": 					"mosyr.overrides.core.CustomUserType",
 	"User": 					"mosyr.overrides.core.CustomUser",
+	
+	"Leave Application": 					"mosyr.overrides.hr.CustomLeaveApplication",
 }
 
 # Document Events

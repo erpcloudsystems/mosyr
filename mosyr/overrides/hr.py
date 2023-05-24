@@ -11,6 +11,7 @@ from erpnext.hr.doctype.expense_claim.expense_claim import ExpenseClaim
 from erpnext.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
 from erpnext.hr.doctype.expense_claim_type.expense_claim_type import ExpenseClaimType
 from erpnext.hr.doctype.attendance_request.attendance_request import AttendanceRequest
+from erpnext.hr.doctype.leave_application.leave_application import LeaveApplication
 
 from mosyr import (
     create_account,
@@ -364,3 +365,17 @@ class CustomAttendanceRequest(AttendanceRequest):
                     attendance.attendance_request = self.name
                     attendance.save(ignore_permissions=True)
                     attendance.submit()
+
+
+
+class CustomLeaveApplication(LeaveApplication):
+    def on_submit(self):
+        self.validate_back_dated_application()
+        self.update_attendance()
+
+        # notify leave applier about approval
+        if frappe.db.get_single_value("HR Settings", "send_leave_notification"):
+            self.notify_employee()
+
+        self.create_leave_ledger_entry()
+        self.reload()

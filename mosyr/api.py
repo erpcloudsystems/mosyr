@@ -722,7 +722,6 @@ def create_department_workflows(doc, method):
 def create_workflow(doc, row):
     approver_table = row.get("table_name")
     approver_list = doc.get(approver_table)
-    
     if approver_list:
         state_list = create_doc_workflow_status(doc.name, approver_list, row.get("state_name"))
         actions_list = create_doc_workflow_actions(doc.name, state_list)
@@ -773,7 +772,7 @@ def create_workflow(doc, row):
                     "doc_status": "2",
                     "update_field": "workflow_state",
                     "update_value": "Cancelled",
-                    "allow_edit": "HR Manager"
+                    "allow_edit": "All"
                 })
             
             if state_list:
@@ -806,7 +805,7 @@ def create_doc_workflow_status(department, approvers, state_name):
                 "doc_status": "1" if idx == len(approvers)-1 else "0",
                 "update_field": "workflow_state",
                 "update_value": approve_state_name,
-                "allow_edit": "HR Manager",
+                "allow_edit": "All",
                 "state_type": "Approve",
                 "prev_state": prev_state,
                 "related_to": department,
@@ -827,7 +826,7 @@ def create_doc_workflow_status(department, approvers, state_name):
                 "doc_status": "1",
                 "update_field": "workflow_state",
                 "update_value": reject_state_name,
-                "allow_edit": "HR Manager",
+                "allow_edit": "All",
                 "state_type": "Reject",
                 "prev_state": prev_state,
                 "related_to": department,
@@ -901,7 +900,7 @@ def add_standerd_states(state_list):
         "doc_status": "2",
         "update_field": "workflow_state",
         "update_value": "Cancelled",
-        "allow_edit": "HR Manager"
+        "allow_edit": "All"
     })
     
     return state_list
@@ -909,9 +908,12 @@ def add_standerd_states(state_list):
 
 def validate_approver(doc, method):
     is_workflow_exist = frappe.db.exists("Workflow", {"document_type":doc.doctype, "is_active": 1})
-    workflow_doc = frappe.get_doc("Workflow", {"document_type":doc.doctype, "is_active": 1})
-    for row in workflow_doc.states:
-        if row.state == doc.workflow_state:
-            if row.approver != frappe.session.user and doc.workflow_state != "Pending" :
-                approver_name = frappe.get_value("User", row.approver, "full_name")
-                frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
+    if is_workflow_exist:
+        workflow_doc = frappe.get_doc("Workflow", {"document_type":doc.doctype, "is_active": 1})
+        for row in workflow_doc.states:
+            if row.state == doc.workflow_state:
+                if row.approver != frappe.session.user and doc.workflow_state != "Pending" :
+                    approver_name = frappe.get_value("User", row.approver, "full_name")
+                    frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
+    else:
+        return
