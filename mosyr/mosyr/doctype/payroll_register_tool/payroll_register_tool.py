@@ -240,6 +240,7 @@ class PayrollRegisterTool(Document):
         zeros_deductions = [True for i in range(len(deductions))]
         total_e = 0
         total_d = 0
+        total_loans = 0
         data = []
 
         payroll = frappe.get_doc("Payroll Entry", payroll)
@@ -274,6 +275,7 @@ class PayrollRegisterTool(Document):
             if slip:
                 total_e = 0
                 total_d = 0
+                total_loans = slip.total_loan_repayment
                 for e in slip.earnings:
                     try:
                         idx = earnings.index(e.salary_component)
@@ -294,7 +296,9 @@ class PayrollRegisterTool(Document):
                         total_d += amount
                     except:
                         pass
-                result_dict.update({"net_pay": flt(slip.net_pay)})
+
+                net_pay = flt(slip.net_pay) - total_loans
+                result_dict.update({"net_pay": net_pay})
             result_dict.update(
                 {
                     "earnings": emp_earnings,
@@ -310,9 +314,10 @@ class PayrollRegisterTool(Document):
             deductions,
             total_d,
             data,
+            total_loans
         )
 
-    def get_clean_data(self, ezeros, dzeros, erns, total_e, dedcs, total_d, data):
+    def get_clean_data(self, ezeros, dzeros, erns, total_e, dedcs, total_d, data, total_loans):
         earnings = []
         deductions = []
         for idx, e in enumerate(ezeros):
@@ -341,14 +346,21 @@ class PayrollRegisterTool(Document):
             for idx, de in enumerate(dzeros):
                 if not de:
                     row.append(dedcs[idx])
+            row.append(total_loans)
+
             if total_d > 0:
+                total_d += total_loans
                 row.append(total_d)
             row.append(d.get("net_pay", 0))
             final_data.append(row)
         len_earnings = len(earnings)
         if total_d > 0:
             len_earnings = len(earnings) + 1
+
         len_deductions = len(deductions)
+        deductions.append("Loan")
+        len_deductions += 1
+
         if total_d > 0:
             len_deductions = len(deductions) + 1
         return {
