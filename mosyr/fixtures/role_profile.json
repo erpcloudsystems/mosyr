@@ -20,6 +20,12 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Mosyr Forms"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "HR Notification"
    }
   ]
  },
@@ -44,6 +50,12 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Mosyr Forms"
+   },
+   {
+    "parent": "SaaS User",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "HR Notification"
    }
   ]
  },
@@ -68,6 +80,12 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Mosyr Forms"
+   },
+   {
+    "parent": "Self Service",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "HR Notification"
    }
   ]
  }
