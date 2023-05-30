@@ -6,6 +6,7 @@ from frappe.model.document import Document
 from frappe import _
 from erpnext.hr.utils import validate_active_employee
 from frappe.utils import time_diff_in_seconds, get_datetime_str, time_diff_in_hours
+from mosyr.api import send_notification_and_email
 
 class ExitPermission(Document):
     def validate(self):
@@ -21,6 +22,9 @@ class ExitPermission(Document):
             frappe.throw(_("To Time must be after From Time"))
         self.exit_hours = exit_hours
 
+    def on_update(self):
+        send_notification_and_email(self)
+    
     def on_submit(self):
         def create_checkin(employee, log_type, time ):
             doc = frappe.new_doc("Employee Checkin")
