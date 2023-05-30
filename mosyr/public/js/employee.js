@@ -1,37 +1,66 @@
 frappe.ui.form.on('Employee', {
-    refresh: function(frm) {
-        frm.add_custom_button(__('Identity'), function() {
-            frm.scroll_to_field('identity');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Passport'), function() {
-            frm.scroll_to_field('passport');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Status'), function() {
-            frm.scroll_to_field('mosyr_employee_status');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Qualification'), function() {
-            frm.scroll_to_field('education');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Experince'), function() {
-            frm.scroll_to_field('external_work_history');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Contact'), function() {
-            frm.scroll_to_field('cell_number');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Dependent'), function() {
-            frm.scroll_to_field('dependent');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Insurance'), function() {
-            frm.scroll_to_field('health_insurance_provider');
-        }, __('Jump to'));
-        frm.add_custom_button(__('Salary'), function() {
-            frm.scroll_to_field('salary_mode');
-        }, __('Jump to'));
-        // frm.add_custom_button(__('Leave'), function() {
-        //     frm.scroll_to_field('mosyr_employee_status');
-        // }, __('Jump to'));
-    },
-    date_of_birth: function (frm) { 
+	refresh: function(frm) {
+		frm.add_custom_button(__('Identity'), function() {
+			frm.scroll_to_field('identity');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Passport'), function() {
+			frm.scroll_to_field('passport');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Status'), function() {
+			frm.scroll_to_field('mosyr_employee_status');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Qualification'), function() {
+			frm.scroll_to_field('education');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Experince'), function() {
+			frm.scroll_to_field('external_work_history');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Contact'), function() {
+			frm.scroll_to_field('cell_number');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Dependent'), function() {
+			frm.scroll_to_field('dependent');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Insurance'), function() {
+			frm.scroll_to_field('health_insurance_provider');
+		}, __('Jump to'));
+		frm.add_custom_button(__('Salary'), function() {
+			frm.scroll_to_field('salary_mode');
+		}, __('Jump to'));
+		let current_date = frappe.datetime.get_today()
+		let passport_expired_list = []
+		let msg = ""
+		// Check Contract Expired Date
+		if(frm.doc.contract_end_date){
+			let contract_diff = frappe.datetime.get_diff(frm.doc.contract_end_date, current_date)
+			if (contract_diff <= 30 && contract_diff >= 0) {
+				msg += __(`Contract Will Be Expired in ${contract_diff} days <br>`)
+			}
+		}
+		// Check Identity Expired Date 
+		frm.doc.identity.forEach(row => {
+			let diff = frappe.datetime.get_diff(row.expire_date, current_date)
+			if (diff <= 30 && diff >= 0 ) {
+				msg += __(`Identity ${ row.id_number } Will Be Expired in ${diff} days <br>`)
+			}
+		});
+		// Check Passport Expired Date 
+		frm.doc.passport.forEach(row => {
+			let diff = frappe.datetime.get_diff(row.passport_expire, current_date)
+			if (diff <= 30 && diff >= 0 ) {
+				msg += __(`Passport ${ row.passport_number } Will Be Expired in ${diff} days <br>`)
+			}
+		});
+		// Check Insurance Expired Date 
+		if(frm.doc.insurance_card_expire){
+			let ins_diff = frappe.datetime.get_diff(frm.doc.insurance_card_expire, current_date)
+			if (ins_diff <= 30 && ins_diff >= 0) {
+				msg += __(`Insurance Card Will Be Expired in ${ins_diff} days <br>`)
+			}
+		}
+		cur_frm.dashboard.add_comment(__(msg), 'yellow', true);
+	},
+	date_of_birth: function (frm) { 
 		if (frm.doc.date_of_birth){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -63,28 +92,28 @@ frappe.ui.form.on('Employee', {
 			})
 		}
 	 },
-    department: function(frm){
-        if (frm.doc.department){
-            frappe.call({
-                method: "mosyr.api.set_employee_approvers",
-                args:{
-                    department: frm.doc.department
-                },
-                callback: r =>{
-                    if (r.message){
-                        frm.doc.leave_approver = r.message[0]
-                        frm.doc.expense_approver = r.message[1]
-                        frm.doc.shift_request_approver = r.message[2]
-                        frm.refresh_fields()
-                    }
-                }
-            })
-        }
-    }
+	department: function(frm){
+		if (frm.doc.department){
+			frappe.call({
+				method: "mosyr.api.set_employee_approvers",
+				args:{
+					department: frm.doc.department
+				},
+				callback: r =>{
+					if (r.message){
+						frm.doc.leave_approver = r.message[0]
+						frm.doc.expense_approver = r.message[1]
+						frm.doc.shift_request_approver = r.message[2]
+						frm.refresh_fields()
+					}
+				}
+			})
+		}
+	}
 });
 frappe.ui.form.on('Employee Status', {
 	status_date: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.status_date){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -101,7 +130,7 @@ frappe.ui.form.on('Employee Status', {
 		}
 	 },
 	 status_date_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.status_date_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -121,7 +150,7 @@ frappe.ui.form.on('Employee Status', {
 
 frappe.ui.form.on('Dependent', {
 	birth_date_g: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.birth_date_g){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -138,7 +167,7 @@ frappe.ui.form.on('Dependent', {
 		}
 	 },
 	 birth_date_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.birth_date_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -158,7 +187,7 @@ frappe.ui.form.on('Dependent', {
 
 frappe.ui.form.on('Identity', {
 	expire_date: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.expire_date){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -175,7 +204,7 @@ frappe.ui.form.on('Identity', {
 		}
 	 },
 	 expire_date_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.expire_date_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -191,8 +220,8 @@ frappe.ui.form.on('Identity', {
 			})
 		}
 	 },
-     issue_date: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+	 issue_date: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn] 
 		if (row.issue_date){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -209,7 +238,7 @@ frappe.ui.form.on('Identity', {
 		}
 	 },
 	 issue_date_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.issue_date_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -225,8 +254,8 @@ frappe.ui.form.on('Identity', {
 			})
 		}
 	 },
-     border_entry_date: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+	 border_entry_date: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn] 
 		if (row.border_entry_date){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -243,7 +272,7 @@ frappe.ui.form.on('Identity', {
 		}
 	 },
 	 border_entry_date_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.border_entry_date_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -262,7 +291,7 @@ frappe.ui.form.on('Identity', {
 })
 frappe.ui.form.on('Passport', {
 	passport_expire: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.passport_expire){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -279,7 +308,7 @@ frappe.ui.form.on('Passport', {
 		}
 	 },
 	passport_expire_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.passport_expire_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -295,8 +324,8 @@ frappe.ui.form.on('Passport', {
 			})
 		}
 	 },
-     passport_issue_date: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+	 passport_issue_date: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn] 
 		if (row.passport_issue_date){
 			frappe.call({
 				method: "mosyr.api.convert_date",
@@ -313,7 +342,7 @@ frappe.ui.form.on('Passport', {
 		}
 	 },
 	passport_issue_date_h: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn] 
+		let row = locals[cdt][cdn] 
 		if (row.passport_issue_date_h){
 			frappe.call({
 				method: "mosyr.api.convert_date",

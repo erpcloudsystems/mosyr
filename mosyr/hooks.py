@@ -199,6 +199,9 @@ scheduler_events = {
 	"cron":{	
 		"0/5 * * * *" :[
 			"mosyr.tasks.process_auto_attendance_for_all_shifts"
+		],
+		"0 7 * * *": [
+			"mosyr.tasks.check_expired_dates"
 		]
 	},
 	"daily": [
