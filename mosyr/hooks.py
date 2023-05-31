@@ -78,7 +78,7 @@ doctype_list_js = {
 
 # before_install = "mosyr.install.before_install"
 after_install = "mosyr.install.after_install"
-
+after_migrate = "mosyr.migrate.after_migrate"
 # boot_session = "mosyr.boot.boot_session"
 
 # Desk Notifications
@@ -191,7 +191,30 @@ doc_events = {
 		"validate": "mosyr.api.create_department_workflows"
 	},
     "Leave Application": {
-		"on_update": "mosyr.api.validate_approver"
+		"on_update": [
+			"mosyr.api.validate_approver",
+			"mosyr.api.send_notification_and_email",
+		]
+	},
+    "Shift Request": {
+		"on_update": [
+			"mosyr.api.send_notification_and_email",
+		]
+	},
+    "Attendance Request": {
+		"on_update": [
+			"mosyr.api.send_notification_and_email",
+		]
+	},
+    "Compensatory Leave Request": {
+		"on_update": [
+			"mosyr.api.send_notification_and_email",
+		]
+	},
+    "Travel Request": {
+		"on_update": [
+			"mosyr.api.send_notification_and_email",
+		]
 	},
 	"Leave Allocation": {
 		"before_submit": "mosyr.api.reset_unused_leaves",
@@ -205,6 +228,9 @@ scheduler_events = {
 	"cron":{	
 		"0/5 * * * *" :[
 			"mosyr.tasks.process_auto_attendance_for_all_shifts"
+		],
+		"0 7 * * *": [
+			"mosyr.tasks.check_expired_dates"
 		]
 	},
 	"daily": [
@@ -714,4 +740,15 @@ fixtures = [
 			]
 		]
 	},
+    {
+	"dt": "Email Template",
+	"filters":
+		[
+			["name", "in",
+				[
+					"Create Subscription"
+				]
+			]
+		]
+	}
 ]

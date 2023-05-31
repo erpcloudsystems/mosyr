@@ -94,3 +94,19 @@ div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{
 #page-Company div.form-dashboard.visible-section,
 #page-Company div.custom-actions
 {display: none !important;}
+
+
+.text-green  {
+	color: #399c5e;
+	font-weight: bold;
+}
+
+.text-red  {
+	color: #c53030;
+	font-weight: bold;
+}
+
+.text-yellow  {
+	color: #975a16;
+	font-weight: bold;
+}

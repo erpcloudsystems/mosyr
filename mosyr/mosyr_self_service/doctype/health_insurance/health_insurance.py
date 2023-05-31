@@ -3,13 +3,16 @@
 
 import frappe
 from frappe.model.document import Document
-from mosyr.api import _get_employee_from_user
+from mosyr.api import _get_employee_from_user, send_notification_and_email
 
 
 class HealthInsurance(Document):
 	def before_insert(self):
 		self.employee = _get_employee_from_user(frappe.session.user)
-
+	
+	def on_update(self):
+		send_notification_and_email(self)
+  
 	def on_submit(self):
 		doc = frappe.get_doc("Employee", self.employee)
 		doc.health_insurance_provider = self.health_insurance_provider

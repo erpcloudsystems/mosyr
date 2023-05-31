@@ -6,7 +6,7 @@ from frappe.utils import nowdate, getdate, today, flt, cint, date_diff
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from json import loads
-from frappe.utils import get_datetime
+from frappe.utils import get_datetime, get_url
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -738,6 +738,7 @@ def create_workflow(doc, row):
                 "document_type": row.get("name"),
                 "is_active": 1,
                 "is_standard": 0,
+                "send_email_alert": 0,
                 "states": state_list,
                 "transitions": actions_list
             })
@@ -917,6 +918,61 @@ def validate_approver(doc, method):
                     frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
     else:
         return
+    
+
+def send_notification_and_email(doc, method=None):
+    if doc.get("workflow_state"):
+        if doc.workflow_state != "Pending":
+            doc_before_save = doc.get_doc_before_save()
+            old_status = doc_before_save.workflow_state
+
+            args = {
+                "new_status": doc.workflow_state,
+                "old_status": old_status,
+                "for_user": frappe.get_value("Employee", doc.employee, "user_id"),
+                "service_name":"Leave Application",
+                "service_url": "leave-application",
+                "name": doc.name,
+                "by": frappe.session.user,
+                "new_st_color": "yellow",
+                "old_st_color": "yellow"
+            }
+            if "Approved" in doc.workflow_state:
+                args.update({"new_st_color":"green"})
+            elif "Rejected" in doc.workflow_state:
+                args.update({"new_st_color":"red"})
+
+
+            if "Approved" in old_status:
+                args.update({"old_st_color":"green"})
+            elif "Rejected" in old_status:
+                args.update({"old_st_color":"red"})
+
+            send_notification(args)
+            send_email(args)
+
+
+def send_notification(args):
+    doc_url = get_url() + "/app/" + args.get("service_url") + "/"
+    new_doc = frappe.new_doc("Notification Log")
+    new_doc.subject = f"""{args.get("service_name")} Updated"""
+    new_doc.for_user = args.get("for_user")
+    new_doc.type = "Alert"
+    new_doc.email_content = f"""Your {args.get("service_name")}: <a href="{doc_url}{args.get("name")}" style="cursor: pointer;"><b> {args.get("name")} </b></a>Status Changed </br> From <span class="text-{args.get("old_st_color")}"> {args.get("old_status")} </span> to <span class="text-{args.get("new_st_color")}"> {args.get("new_status")} </span> by <b>{args.get("by")}</b>"""
+    new_doc.insert(ignore_permissions=True)
+
+
+def send_email(args):
+    doc_url = get_url() + "/app/" + args.get("service_url") + "/"
+    msg = f"""Your {args.get("service_name")}: <a href="{doc_url}{args.get("name")}" style="cursor: pointer;"><b> {args.get("name")} </b></a>Status Changed </br> From <span class="text-{args.get("old_st_color")}"> {args.get("old_status")} </span> to <span class="text-{args.get("new_st_color")}"> {args.get("new_status")} </span> by <b>{args.get("by")}</b>"""
+    
+    frappe.sendmail(
+        recipients=['mismail@anvilerp.com'],
+        sender=args.get("by"),
+        subject=f"""{args.get("service_name")} Updated""",
+        message=msg,
+        retry=3,
+    )
 
 def calculate_leave_allocation(doc, method):
     '''

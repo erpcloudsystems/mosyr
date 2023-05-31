@@ -10,7 +10,8 @@
   "for_contracts_notice_me_before",
   "for_ids__notice_me_before",
   "for_passports_notice_me_before",
-  "for_insurance_notice_me_before"
+  "for_insurance_notice_me_before",
+  "notification_default_email"
  ],
  "fields": [
   {
@@ -38,12 +39,18 @@
    "fieldname": "for_insurance_notice_me_before",
    "fieldtype": "Int",
    "label": "For Insurance, Notice Me Before"
+  },
+  {
+   "fieldname": "notification_default_email",
+   "fieldtype": "Link",
+   "label": "Notification Default Email",
+   "options": "Email Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-04-13 15:47:38.254437",
+ "modified": "2023-05-29 11:03:51.366982",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "HR Notification Settings",
