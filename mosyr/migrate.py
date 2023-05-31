@@ -5,5 +5,5 @@ def after_migrate():
     if not system_settings.disable_standard_email_footer:
         system_settings.disable_standard_email_footer = 1
         
-    system_settings.save()
-    frappe.db.commit()
+        system_settings.save()
+        frappe.db.commit()
