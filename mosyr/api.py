@@ -839,7 +839,6 @@ def create_doc_workflow_status(department, approvers, state_name):
     return state_list
 
 def create_doc_workflow_actions(department, state_list):
-    print(state_list)
     actions_list = []
     if state_list:
         for row in state_list:
@@ -967,7 +966,7 @@ def send_email(args):
     msg = f"""Your {args.get("service_name")}: <a href="{doc_url}{args.get("name")}" style="cursor: pointer;"><b> {args.get("name")} </b></a>Status Changed </br> From <span class="text-{args.get("old_st_color")}"> {args.get("old_status")} </span> to <span class="text-{args.get("new_st_color")}"> {args.get("new_status")} </span> by <b>{args.get("by")}</b>"""
     
     frappe.sendmail(
-        recipients=['mismail@anvilerp.com'],
+        recipients=[args.get("for_user")],
         sender=args.get("by"),
         subject=f"""{args.get("service_name")} Updated""",
         message=msg,
