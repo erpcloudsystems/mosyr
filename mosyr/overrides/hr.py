@@ -1,3 +1,4 @@
+from erpnext.hr.utils import get_leave_period
 import frappe
 from frappe import _
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
@@ -12,13 +13,17 @@ from erpnext.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
 from erpnext.hr.doctype.expense_claim_type.expense_claim_type import ExpenseClaimType
 from erpnext.hr.doctype.attendance_request.attendance_request import AttendanceRequest
 from erpnext.hr.doctype.leave_application.leave_application import LeaveApplication
+from erpnext.hr.doctype.leave_allocation.leave_allocation import (
+    LeaveAllocation,
+    get_leave_allocation_for_period
+)
 
 from mosyr import (
     create_account,
     create_cost_center,
     create_mode_payment,
 )
-
+from frappe.utils import flt
 
 class CustomCompany(Company, NestedSet):
     def validate(self):
@@ -367,7 +372,6 @@ class CustomAttendanceRequest(AttendanceRequest):
                     attendance.submit()
 
 
-
 class CustomLeaveApplication(LeaveApplication):
     def on_submit(self):
         self.validate_back_dated_application()
@@ -379,3 +383,28 @@ class CustomLeaveApplication(LeaveApplication):
 
         self.create_leave_ledger_entry()
         self.reload()
+
+
+class CustomLeaveAllocation(LeaveAllocation):
+    def validate_leave_allocation_days(self):
+        company = frappe.db.get_value("Employee", self.employee, "company")
+        leave_period = get_leave_period(self.from_date, self.to_date, company)
+        max_leaves_allowed = flt(
+            frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
+        )
+        if max_leaves_allowed > 0:
+            leave_allocated = 0
+            if leave_period:
+                leave_allocated = get_leave_allocation_for_period(
+                    self.employee,
+                    self.leave_type,
+                    leave_period[0].from_date,
+                    leave_period[0].to_date,
+                    exclude_allocation=self.name,
+                )
+            leave_allocated += flt(self.new_leaves_allocated)
+            if leave_allocated > max_leaves_allowed:
+                # frappe.msgprint(
+                #     _("Total allocated leaves are more than maximum allocation allowed for {0} leave type for employee {1} in the period"
+                #     ).format(self.leave_type, self.employee))
+                return
