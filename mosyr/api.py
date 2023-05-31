@@ -917,3 +917,76 @@ def validate_approver(doc, method):
                     frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
     else:
         return
+
+def calculate_leave_allocation(doc, method):
+    '''
+    calculate the allocated leave for employee annual leave
+    if leave policy assignment based on Joining Date
+    -> diff years between from date and to date * leave amount form leave policy table
+    -> set unused leave 0
+    '''
+    if not doc.leave_policy_assignment:
+        return
+    assignment_based_on = frappe.db.get_value("Leave Policy Assignment", doc.leave_policy_assignment, "assignment_based_on")
+    if assignment_based_on != "Joining Date":
+        return
+    if not frappe.db.get_value("Leave Type", doc.leave_type, "is_annual_leave"):
+        return
+
+    leave_policy = frappe.db.get_value("Leave Policy Assignment", doc.leave_policy_assignment, "leave_policy")
+    annual_allocation = frappe.get_list("Leave Policy Detail", filters={"parent": leave_policy, "leave_type": doc.leave_type}, pluck="annual_allocation")
+    if len(annual_allocation) == 0:
+        return
+
+    year_diff = frappe.utils.date_diff(doc.to_date, doc.from_date) / 365
+    new_allocation = cint(annual_allocation[0]) * cint(year_diff)
+
+    if doc.unused_leaves != 0:
+        doc.db_set("unused_leaves", 0)
+        frappe.db.commit()
+
+    doc.new_leaves_allocated = new_allocation
+    doc.flags.ignore_permission = True
+    doc.save()
+    frappe.db.commit()
+
+def reset_unused_leaves(doc, method):
+    if doc.unused_leaves < 0:
+        is_annual = frappe.db.get_value("Leave Type", doc.leave_type, "is_annual_leave")
+        if is_annual:
+            doc.db_set("unused_leaves", 0)
+            frappe.db.commit()
+
+def set_employee_allocated_leaves(doc, method):
+    employee = doc.name
+    value = cint(doc.spent_vacations)
+
+    if value < 0:
+        frappe.throw(_("Spent Leaves value must be > 0"))
+        return
+
+    old_value = frappe.db.get_value("Employee", employee, "spent_vacations")
+    if old_value != value:
+        sql = f""" 
+            SELECT la.name, la.leave_policy_assignment, la.from_date, la.to_date FROM `tabLeave Allocation` la LEFT JOIN `tabLeave Type` lt
+            ON lt.name = la.leave_type
+            WHERE la.docstatus=1 AND la.leave_policy_assignment!=''
+                AND la.from_date <= '{today()}' AND la.to_date >= '{today()}'
+                AND lt.is_annual_leave=1 AND la.employee='{employee}'
+        """
+        leave_allocations = frappe.db.sql(sql, as_dict=True)
+
+        if any(leave_allocations) > 0:
+            for row in leave_allocations:
+                assign_based_on = frappe.db.get_value("Leave Policy Assignment", row.leave_policy_assignment, "assignment_based_on")
+                if assign_based_on == "Joining Date":
+                    leave_allocation = frappe.get_doc("Leave Allocation", row.name)
+                    leave_allocated = leave_allocation.new_leaves_allocated
+
+                    if (leave_allocated + old_value) < value:
+                        frappe.throw(_(f"Spent Leave Number must be <b> > </b> Allocated {leave_allocated}"))
+
+                    leave_allocated = cint((leave_allocated + old_value) - value)
+                    leave_allocation.new_leaves_allocated = leave_allocated
+                    leave_allocation.save()
+                    frappe.db.commit()
