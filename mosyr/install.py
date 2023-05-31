@@ -100,7 +100,9 @@ docs_for_manager = [
     "Letter Head",
     "Process Loan Interest Accrual",
     "Journal Entry",
-    "Account"
+    "Account",
+    "Loan Interest Accrual",
+    "Loan Repayment"
 ]
 reports_for_manager = [
     "Insurances and Risk",

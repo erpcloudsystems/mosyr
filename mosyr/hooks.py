@@ -138,6 +138,7 @@ override_doctype_class = {
 	"User": 					"mosyr.overrides.core.CustomUser",
 	
 	"Leave Application": 					"mosyr.overrides.hr.CustomLeaveApplication",
+	"Leave Allocation": 					"mosyr.overrides.hr.CustomLeaveAllocation",
 }
 
 # Document Events
@@ -153,7 +154,8 @@ doc_events = {
 			"mosyr.api.translate_employee",
 			"mosyr.api.set_employee_number",
 			"mosyr.api.set_date_of_joining",
-			"mosyr.api.employee_end_contract"
+			"mosyr.api.employee_end_contract",
+            "mosyr.api.set_employee_allocated_leaves"
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
@@ -213,7 +215,11 @@ doc_events = {
 		"on_update": [
 			"mosyr.api.send_notification_and_email",
 		]
-	}
+	},
+	"Leave Allocation": {
+		"before_submit": "mosyr.api.reset_unused_leaves",
+		"on_submit": "mosyr.api.calculate_leave_allocation"
+	},
 }
 
 # Scheduled Tasks
@@ -508,7 +514,8 @@ fixtures = [
                 "Workflow Document State-approver",
                 "Vehicle Service-attachment",
                 "Vehicle Service-details",
-                "Department-vehicle_service_approver"
+                "Department-vehicle_service_approver",
+                "Employee-spent_vacations"
          ]]
         ]
     },
