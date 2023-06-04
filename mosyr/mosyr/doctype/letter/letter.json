@@ -1,98 +1,119 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "autoname": "L-.YYYY.MM.DD.###",
- "creation": "2022-01-26 15:06:49.680385",
+ "creation": "2023-06-01 10:33:30.302193",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "purpose",
-  "number",
-  "include_salary",
-  "column_break_4",
-  "letter_to",
-  "letter_date",
-  "include_details_salary",
-  "column_break_8",
   "employee",
+  "number",
+  "show_salary",
+  "show_salary_details",
+  "show_letterhead",
+  "letter_head",
+  "column_break_fa1mi",
+  "letter_to",
   "employee_name",
-  "letterhead",
-  "column_break_12",
-  "letter_type",
-  "language_type",
+  "date_g",
+  "footer",
+  "column_break_zocjd",
+  "type",
+  "language",
+  "date_h",
   "attachment",
-  "key"
+  "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "number",
+   "fieldname": "purpose",
    "fieldtype": "Data",
-   "label": "Number"
-  },
-  {
-   "fieldname": "include_salary",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Include Salary",
-   "options": "\nYes\nNo",
+   "label": "Purpose",
    "reqd": 1
   },
   {
-   "fieldname": "column_break_4",
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "\nDefinition\nLetter of Disclaimer\nClearance Admission\nExperience Certificate\nAlert 1\nAlert 2\nAlert 3",
+   "reqd": 1
+  },
+  {
+   "fieldname": "number",
+   "fieldtype": "Int",
+   "label": "Number"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_salary",
+   "fieldtype": "Check",
+   "label": "Show Salary"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_salary_details",
+   "fieldtype": "Check",
+   "label": "Show Salary Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_letterhead",
+   "fieldtype": "Check",
+   "label": "Show Letterhead"
+  },
+  {
+   "depends_on": "show_letterhead",
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head"
+  },
+  {
+   "fieldname": "column_break_fa1mi",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "letter_to",
-   "fieldtype": "Data",
-   "label": "Letter To"
-  },
-  {
-   "fieldname": "letter_date",
+   "fieldname": "date_g",
    "fieldtype": "Date",
-   "label": "Letter Date"
+   "in_list_view": 1,
+   "label": "Date (G)"
   },
   {
-   "fieldname": "column_break_8",
+   "fieldname": "language",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Language",
+   "options": "\nArabic\nEnglish\nBoth",
+   "reqd": 1
+  },
+  {
+   "fieldname": "footer",
+   "fieldtype": "Small Text",
+   "label": "Footer"
+  },
+  {
+   "fieldname": "column_break_zocjd",
    "fieldtype": "Column Break"
   },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
   },
   {
-   "fetch_from": "employee.first_name",
-   "fieldname": "employee_name",
-   "fieldtype": "Read Only",
-   "label": "Employee Name"
-  },
-  {
-   "fieldname": "letterhead",
-   "fieldtype": "Select",
-   "label": "Letterhead",
-   "options": "\nYes\nNo",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_12",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "letter_type",
-   "fieldtype": "Select",
-   "label": " Letter Type",
-   "options": "\nDefinition\nLetter of Disclaimer\nLetter final Clearance\nExperience Certificate\nAlert 1\nAlert 2\nAlert 3",
-   "reqd": 1
-  },
-  {
-   "fieldname": "language_type",
-   "fieldtype": "Select",
-   "label": "Language Type",
-   "options": "\nArabic\nEnglish\nBoth",
-   "reqd": 1
+   "fieldname": "date_h",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Date (H)",
+   "options": "Hijri Date"
   },
   {
    "fieldname": "attachment",
@@ -100,31 +121,34 @@
    "label": "Attachment"
   },
   {
-   "fieldname": "key",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Key",
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Letter",
+   "print_hide": 1,
    "read_only": 1
   },
   {
-   "fieldname": "purpose",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Letter Purpose",
-   "reqd": 1
+   "depends_on": "employee",
+   "fetch_from": "employee.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
-   "fieldname": "include_details_salary",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Include Details Salary",
-   "options": "\nYes\nNo",
-   "reqd": 1
+   "fieldname": "letter_to",
+   "fieldtype": "Data",
+   "label": "Letter To"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-02-15 17:00:08.496054",
+ "modified": "2023-06-04 15:37:59.614832",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Letter",
@@ -139,11 +163,36 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee Self Service",
+   "select": 1,
    "share": 1,
    "write": 1
   }
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "purpose"
+ "title_field": "employee"
 }
