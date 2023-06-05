@@ -498,6 +498,17 @@ def get_self_service_data():
                     "cancel",
                     "amend",
                 ],
+                "Vehicle Services": [
+                    "read",
+                    "write",
+                    "create"
+                ],
+                "Vehicle Log": [
+                    "read"
+                ],
+                "Letter": [
+                    "read"
+                ]
             },
         },
     }
