@@ -2248,5 +2248,15 @@
   "parent": null,
   "parentfield": null,
   "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
+  "modified": "2022-12-22 12:58:22.340494",
+  "name": "Saudi",
+  "nationality": "Saudi",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
  }
 ]

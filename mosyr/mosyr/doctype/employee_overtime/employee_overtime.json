@@ -1,7 +1,8 @@
 {
  "actions": [],
+ "allow_copy": 1,
  "allow_rename": 1,
- "autoname": "OT-.YY.MM.DD.####",
+ "autoname": "MHR-EOT-.YY.-.MM.-.#####",
  "creation": "2022-02-21 17:32:24.973295",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -139,13 +140,14 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-27 16:16:49.125199",
+ "modified": "2023-04-30 14:22:30.221412",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Overtime",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -153,9 +155,27 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
+   "submit": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Self Service",
+   "select": 1
   }
  ],
  "sort_field": "modified",

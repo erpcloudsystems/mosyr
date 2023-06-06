@@ -134,7 +134,6 @@ override_doctype_class = {
 	"Employee Checkin": 			"mosyr.overrides.shifts.CustomEmployeeCheckin",
 	"Shift Type": 					"mosyr.overrides.shifts.CustomShiftType",
 
-	"User Type": 					"mosyr.overrides.core.CustomUserType",
 	"User": 					"mosyr.overrides.core.CustomUser",
 	
 	"Leave Application": 					"mosyr.overrides.hr.CustomLeaveApplication",
@@ -694,7 +693,24 @@ fixtures = [
 		[
 			["name", "in", 
 				[
-					"HR Notification"
+					"HR Notification",
+					"SaaS User",
+					"Self Service",
+					"SaaS Manager",
+                    "Mosyr Forms",
+				]
+			]
+		]
+	},
+    {
+	"dt": "Role Profile",
+	"filters": 
+		[
+			["name", "in", 
+				[
+					"SaaS User",
+					"Self Service",
+					"SaaS Manager",
 				]
 			]
 		]
@@ -727,18 +743,20 @@ fixtures = [
 	"filters": []
 	},
     {
-	"dt": "Salary Component",
+	"dt": "Bank",
 	"filters": 
-    	[
-			["name", "in", 
-				[
-					"Company Pension Insurance",
-					"Employee Pension Insurance",
-                    "Risk On Company",
-                    "Risk On Employee"
-				]
+    [
+		["name", "in", 
+   			[
+				"Al Inma Bank",
+				"Riyadh Bank",
+				"The National Commercial Bank",
+				"Samba Financial Group",
+				"Al Rajhi Bank",
+				"Al Araby Bank",
 			]
 		]
+	]
 	},
     {
 	"dt": "Email Template",

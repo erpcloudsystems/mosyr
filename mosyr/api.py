@@ -303,16 +303,6 @@ def get_doctypes(doctype, txt, searchfield, start, page_len, filters):
         where doc_name LIKE %(txt)s or parent_name LIKE %(txt)s""" ,{"txt": "%" + txt + "%"})
     return result
 
-def set_user_type(doc,method):
-    role = frappe.db.exists("Role", "Mosyr Forms")
-    if role:
-        doc.add_roles("Mosyr Forms")
-        doc.save(ignore_permissions=True)
-        frappe.db.commit()
-    if doc.email != "Administrator":
-        doc.db_set("user_type","Employee Self Service")
-        frappe.db.commit()
-
 def set_employee_number(doc,method):
     doc.employee_number = doc.number
 
@@ -393,7 +383,7 @@ def reorder_payments_by_dates(row_parent):
 def get_users(doctype, txt, searchfield, start, page_len, filters):
     result = frappe.db.sql("""
         select name, full_name from `tabUser`
-        where name LIKE %(txt)s and user_type <> 'SaaS Manager' and user_type <> 'System User' and name not in ('Guest', 'Administrator', 'support@mosyr.io') """ ,{"txt": "%" + txt + "%"})
+        where name LIKE %(txt)s and name not in ('Guest', 'Administrator', 'support@mosyr.io') """ ,{"txt": "%" + txt + "%"})
     return result
 
 def update_user_type_limits(doc,method):

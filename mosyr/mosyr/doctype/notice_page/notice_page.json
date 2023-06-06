@@ -60,7 +60,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-04-17 17:03:38.285439",
+ "modified": "2023-04-30 14:04:28.333627",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Notice Page",
@@ -72,7 +72,19 @@
    "email": 1,
    "print": 1,
    "read": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS User",
+   "select": 1,
    "share": 1,
    "write": 1
   }

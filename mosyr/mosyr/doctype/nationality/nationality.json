@@ -1,5 +1,7 @@
 {
  "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:nationality",
  "creation": "2022-01-16 12:21:40.810322",
@@ -11,15 +13,18 @@
  ],
  "fields": [
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "nationality",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Nationality",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-16 12:22:36.990121",
+ "modified": "2023-04-30 14:22:40.855915",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Nationality",
@@ -30,12 +35,29 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Self Service",
+   "select": 1
   }
  ],
  "quick_entry": 1,
