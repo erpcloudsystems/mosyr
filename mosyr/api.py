@@ -6,7 +6,7 @@ from frappe.utils import nowdate, getdate, today, flt, cint, date_diff
 from frappe import _
 from hijri_converter import Hijri, Gregorian
 from json import loads
-from frappe.utils import get_datetime
+from frappe.utils import get_datetime, get_url
 
 def _get_employee_from_user(user):
     employee_docname = frappe.db.exists(
@@ -136,8 +136,7 @@ def convert_date(gregorian_date=None, hijri_date=None):
         return str(gregorian)
 
 def validate_social_insurance(doc, method):
-    comapny_data = frappe.db.sql("""SELECT * FROM `tabCompany Controller` WHERE company = %s""", doc.company, as_dict=1)
-    #  frappe.get_list("Company Controller", filters={'company': doc.company}, fields=['*'])
+    comapny_data = frappe.db.sql("""SELECT * FROM `tabCompany`""", as_dict=1)
     social_type = doc.social_insurance_type
     # if f"{doc.nationality}".lower() in ["saudi", "سعودي", "سعودى"] else "Non Saudi"
     if len(comapny_data) > 0:
@@ -440,8 +439,8 @@ def get_salary_per_day(employee):
         base = flt(lst[0].base)
         company = lst[0].company
         mdays = frappe.get_list(
-            "Company Controller",
-            filters={"company": company},
+            "Company",
+            filters={"name": company},
             fields=["month_days"]
         )
         if len(mdays) > 0:
@@ -456,13 +455,13 @@ def create_componants_in_salary_straucture(doc, method):
     for d in doc.deductions:
         components.append(d.salary_component)
 
-    cc = frappe.db.exists("Company Controller", {"company": doc.company})
+    cc = frappe.db.exists("Company", {"name": doc.company})
     if cc:
-        company_controller = frappe.get_doc("Company Controller", cc)
-        risk_percentage_on_company  = company_controller.risk_percentage_on_company
-        risk_percentage_on_employee = company_controller.risk_percentage_on_employee
-        pension_percentage_on_company = company_controller.pension_percentage_on_company
-        pension_percentage_on_employee = company_controller.pension_percentage_on_employee
+        company = frappe.get_doc("Company", cc)
+        risk_percentage_on_company  = company.risk_percentage_on_company
+        risk_percentage_on_employee = company.risk_percentage_on_employee
+        pension_percentage_on_company = company.pension_percentage_on_company
+        pension_percentage_on_employee = company.pension_percentage_on_employee
 
         if "Risk On Company" not in components:
             row = doc.append("deductions", {})
@@ -488,3 +487,552 @@ def create_componants_in_salary_straucture(doc, method):
             row.salary_component = "Employee Pension Insurance"
             row.amount_based_on_formula = 1
             row.formula = f"""(BS*{pension_percentage_on_employee}/100) if(social_insurance_type=="Saudi") else 0"""
+
+def sum_net_pay_payroll_entry(doc, method):
+    salary_slips = frappe.get_all("Salary Slip",{"payroll_entry": doc.name}, pluck="net_pay")
+    if len(salary_slips) > 0:
+        total_net_pay = sum(salary_slips)
+        doc.db_set("total_netpay", total_net_pay)
+        frappe.db.commit()
+
+def update_employee_data(self, method):
+        frappe.db.sql("""
+              UPDATE `tabEmployee`
+              SET pension_on_employee={}, pension_on_company={},
+                  risk_on_employee=0, risk_on_company=0
+              WHERE social_insurance_type='Saudi'""".format(flt(self.pension_percentage_on_employee), flt(self.pension_percentage_on_company)))
+        
+        frappe.db.sql("""
+              UPDATE `tabEmployee`
+              SET pension_on_employee=0, pension_on_company=0,
+                  risk_on_employee={}, risk_on_company={}
+              WHERE social_insurance_type='Non Saudi'""".format(flt(self.risk_percentage_on_employee), flt(self.risk_percentage_on_company)))
+        
+def create_letter_head(self, method):
+        
+        has_new_letter_head = False
+        company_name = self.organization_english if self.organization_english else frappe.db.get_value("Company Id", self.company_id, "company")
+        html_header_content = ''
+        html_footer_content = ''
+        if self.logo:
+            has_new_letter_head = True
+            html_header_content = '''<div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-sm-4 text-left">
+                                                <h3>{}</h3>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <img src="{}" style="max-width: 100px; max-height: 100px;">
+                                                <h3>{}</h3>
+                                            </div>
+                                            <div class="col-sm-4 text-right" >
+                                                <h3>{}</h3>
+                                            </div>
+                                        </div>
+                                    </div>'''.format(self.left_header,self.logo, company_name,self.right_header)
+        
+        if len(self.signatures) > 0:
+            has_new_letter_head = True
+            for signature in self.signatures:
+                job_title = signature.job_title or ""
+                employee_name = frappe.db.get_value("Employee", signature.name1, "employee_name")
+                html_footer_content += '''<div class="col-sm-4 text-right">
+                                                <p class="text-center" style="font-weight: bold">{}</p>
+                                                <p class="text-center" style="font-weight: bold">{}</p>
+                                              </div>'''.format(job_title, employee_name)
+            
+            
+            html_footer_content = '<div class="container-fluid"><div class="row">' + html_footer_content + '</div></div>'
+        if has_new_letter_head:
+            lh = frappe.db.exists("Letter Head", self.name)
+            
+            if lh:
+                lh = frappe.get_doc("Letter Head", self.name)
+            else: 
+                lh = frappe.new_doc("Letter Head")
+                lh.letter_head_name = self.name
+            lh.source = "HTML"
+            lh.footer_source = "HTML"
+            lh.is_default = 0
+            # lh.image = image
+            lh.content = html_header_content
+            lh.footer = html_footer_content
+            lh.save()
+            frappe.db.commit()
+            lh.db_set('source', "HTML")
+            lh.db_set('footer', html_footer_content)
+
+def create_user_permission_on_company_in_validate(doc, method):
+    if not doc.is_new():
+        companies_before_save = frappe.db.get_list("Company Table", {"parent":doc.name}, pluck="company")
+        companies_after_save = [d.company for d in doc.companies]
+        diff_lists = list(set(companies_before_save) ^ set(companies_after_save))
+        if len(diff_lists):
+            user_permissions = frappe.get_list("User Permission", {"user": doc.name, "allow": "Company"})
+            if len(user_permissions):
+                for user_permission in user_permissions:
+                    frappe.delete_doc("User Permission", user_permission.name)
+                frappe.db.commit()
+            if len(doc.companies):
+                for row in doc.companies:
+                    perm = frappe.new_doc("User Permission")
+                    perm.user = doc.name
+                    perm.allow = "Company"
+                    perm.for_value = row.company
+                    perm.save()
+                frappe.db.commit()
+
+def create_user_permission_on_company_in_create_user(doc, method):
+        if len(doc.companies):
+            for row in doc.companies:
+                perm = frappe.new_doc("User Permission")
+                perm.user = doc.name
+                perm.allow = "Company"
+                perm.for_value = row.company
+                perm.save()
+            frappe.db.commit()
+            
+
+@frappe.whitelist()
+def get_emps_based_on_option(option, value):
+    emps_list = frappe.db.get_list("Employee",fields=['name', 'first_name'], filters={"status":"Active", option:value})
+    return {"emps_list":emps_list}
+
+
+def custom_get_letter_heads():
+    letter_heads = {}
+    user = frappe.get_doc("User", frappe.session.user)
+    if user.name == "Administrator" or user.user_type == "SaaS Manager":
+        for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"]):
+            letter_heads.setdefault(
+                letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
+            )
+    else:
+        if user.companies:
+            lh = []
+            for c in user.companies:
+                lh.append(c.company)
+
+            for letter_head in frappe.get_all("Letter Head", fields=["name", "content", "footer"], filters={'name': ["IN", lh]}):
+                letter_heads.setdefault(
+                    letter_head.name, {"header": letter_head.content, "footer": letter_head.footer}
+                )
+    return letter_heads
+
+def employee_end_contract(doc, method):
+    # change employee status based on contract end date to inactive status
+    if doc.status != "Active":
+        return
+    prev_contract_date = frappe.get_value("Employee", doc.name, "contract_end_date")
+    if not prev_contract_date:
+        return
+
+    if getdate(prev_contract_date) != getdate(doc.contract_end_date):
+        if get_datetime(doc.contract_end_date) < get_datetime():
+            doc.status = "Inactive"
+
+@frappe.whitelist()
+def handle_formula(docname, amount, operation, abbr):
+    """set formula from custom formula form to formula text field"""
+    amount = flt(amount)
+    if amount == 0:
+        return False
+
+    sal_component = frappe.get_doc("Salary Component", docname)
+    sal_component.formula = f"{abbr} {operation} {amount}"
+    sal_component.save()
+    return True
+
+
+def create_department_workflows(doc, method):
+    workflow_docs = [
+        {
+            "name": "Leave Application",
+            "state_name": "Leave",
+            "table_name": "leave_approvers",   
+        },{
+            "name": "Shift Request",
+            "state_name": "Shift Request",
+            "table_name": "shift_request_approver"
+        },{
+            "name": "Contact Details",
+            "state_name": "Contact Details",
+            "table_name": "contact_details_approver"
+
+        },{
+            "name": "Educational Qualification",
+            "state_name": "Qualification",
+            "table_name": "educational_qualification_approver"
+
+        },{
+            "name": "Emergency Contac",
+            "state_name": "Emergency",
+            "table_name": "emergency_contact_approver"
+
+        },{
+            "name": "Health Insurance",
+            "state_name": "Insurance",
+            "table_name": "health_insurance_approver"
+
+        },{
+            "name": "Personal Details",
+            "state_name": "Personal Details",
+            "table_name": "personal_details_approver"
+
+        },{
+            "name": "Salary Details",
+            "state_name": "Salary Details",
+            "table_name": "salary_details_approver"
+
+        },{
+            "name": "Exit Permission",
+            "state_name": "Exit Permission",
+            "table_name": "exit_permission_approver"
+
+        },{
+            "name": "Attendance Request",
+            "state_name": "Attendance Request",
+            "table_name": "attendance_request_approver"
+
+        },{
+            "name": "Compensatory Leave Request",
+            "state_name": "Compensatory Leave Request",
+            "table_name": "compensatory_leave_request_approver"
+
+        },{
+            "name": "Travel Request",
+            "state_name": "Travel Request",
+            "table_name": "travel_request_approver"
+
+        }
+    ]
+    for row in workflow_docs:
+        create_workflow(doc, row)
+    
+def create_workflow(doc, row):
+    approver_table = row.get("table_name")
+    approver_list = doc.get(approver_table)
+    if approver_list:
+        state_list = create_doc_workflow_status(doc.name, approver_list, row.get("state_name"))
+        actions_list = create_doc_workflow_actions(doc.name, state_list)
+        
+        is_workflow_exist = frappe.db.exists("Workflow", {"document_type":row.get("name"), "is_active": 1})
+        if not is_workflow_exist:
+            # Update States List With Standerd States
+            state_list = add_standerd_states(state_list)
+            
+            # Create New Workflow For Doc 
+            new_workflow = frappe.get_doc({
+                "doctype": "Workflow",
+                "workflow_name": row.get("name"),
+                "document_type": row.get("name"),
+                "is_active": 1,
+                "is_standard": 0,
+                "send_email_alert": 0,
+                "states": state_list,
+                "transitions": actions_list
+            })
+            new_workflow.insert()
+        else:
+            # Update Workflow Status & Actions
+            workflow_doc = frappe.get_doc("Workflow", {"document_type":row.get("name"), "is_active": 1})
+            clear_states_actions_related_to_department(doc.name, workflow_doc.name)
+            workflow_doc = frappe.get_doc("Workflow",workflow_doc.name)
+            
+            # Check Stnaderd Statue ["Pending", "Cancelled"]
+            exist_states = []
+            for d in workflow_doc.states:
+                exist_states.append(d.state)
+            
+            is_pending_exist = 1 if "Pending" in exist_states else 0
+            is_cancelled_exist = 1 if "Cancelled" in exist_states else 0
+            
+            # Add Not Exists Standerd Status
+            if not is_pending_exist:
+                state_list.insert(0, {
+                    "state": "Pending",
+                    "doc_status": "0",
+                    "update_field": "workflow_state",
+                    "update_value": "Pending",
+                    "allow_edit": "All"
+                })
+            
+            if not is_cancelled_exist:
+                state_list.append({
+                    "state": "Cancelled",
+                    "doc_status": "2",
+                    "update_field": "workflow_state",
+                    "update_value": "Cancelled",
+                    "allow_edit": "All"
+                })
+            
+            if state_list:
+                for state in state_list:
+                    workflow_doc.append("states", state)
+            
+            if actions_list:
+                for action in actions_list:
+                    workflow_doc.append("transitions", action)
+            
+            workflow_doc.save()
+
+
+def create_doc_workflow_status(department, approvers, state_name):
+    state_list = []
+    if approvers:
+        prev_state = "Pending"
+        for idx, row in enumerate(approvers):
+            approve_state_name = "Approved " + state_name + " By "+ row.approver
+            is_exists = frappe.db.exists("Workflow State", approve_state_name)
+            if not is_exists:
+                # Create Status for every Approver
+                doc = frappe.new_doc("Workflow State")
+                doc.workflow_state_name = approve_state_name
+                doc.style = "Success"
+                doc.save()
+
+            state_list.append({
+                "state":approve_state_name,
+                "doc_status": "1" if idx == len(approvers)-1 else "0",
+                "update_field": "workflow_state",
+                "update_value": approve_state_name,
+                "allow_edit": "All",
+                "state_type": "Approve",
+                "prev_state": prev_state,
+                "related_to": department,
+                "approver": row.approver
+            })
+
+            reject_state_name = "Rejected " + state_name + " By "+ row.approver
+            is_exists = frappe.db.exists("Workflow State", reject_state_name)
+            if not is_exists:
+                # Create Status for every Approver
+                doc = frappe.new_doc("Workflow State")
+                doc.workflow_state_name = reject_state_name
+                doc.style = "Warning"
+                doc.save()
+
+            state_list.append({
+                "state":reject_state_name,
+                "doc_status": "1",
+                "update_field": "workflow_state",
+                "update_value": reject_state_name,
+                "allow_edit": "All",
+                "state_type": "Reject",
+                "prev_state": prev_state,
+                "related_to": department,
+                "approver": row.approver
+            })
+            
+            prev_state = approve_state_name
+
+    return state_list
+
+def create_doc_workflow_actions(department, state_list):
+    print(state_list)
+    actions_list = []
+    if state_list:
+        for row in state_list:
+            actions_list.append({
+                "state": row.get("prev_state"),
+                "action": row.get("state_type"),
+                "next_state": row.get("state"),
+                "allowed": row.get("allow_edit"),
+                "condition": f'doc.department == "{department}"',
+                "related_to": department
+            })
+    # Create Cancelled action
+    if state_list:
+        for x in state_list:
+            if x.get("state_type") == "Reject":
+                actions_list.append({
+                    "state": x.get("state"),
+                    "action": "Cancel",
+                    "next_state": "Cancelled",
+                    "allowed": x.get("allow_edit"),
+                    "condition": f'doc.department == "{department}"',
+                    "related_to": department
+                })
+    return actions_list
+
+def clear_states_actions_related_to_department(department, doc_name):
+    doc = frappe.get_doc("Workflow",doc_name)
+
+    for row in doc.states:
+        if row.related_to == department:
+            frappe.delete_doc("Workflow Document State", row.name)
+            
+    for row in doc.transitions:
+        if row.related_to == department:
+            frappe.delete_doc("Workflow Transition", row.name)
+
+    doc.save()
+    frappe.db.commit()
+    
+def add_standerd_states(state_list):
+    states = ["Pending", "Cancelled"]
+    for row in states:
+        is_exists = frappe.db.exists("Workflow State", row)
+        if not is_exists:
+            # Create Status for every Approver
+            doc = frappe.new_doc("Workflow State")
+            doc.workflow_state_name = row
+            doc.save()
+        
+    state_list.insert(0, {
+        "state": "Pending",
+        "doc_status": "0",
+        "update_field": "workflow_state",
+        "update_value": "Pending",
+        "allow_edit": "All"
+    })
+    state_list.append({
+        "state": "Cancelled",
+        "doc_status": "2",
+        "update_field": "workflow_state",
+        "update_value": "Cancelled",
+        "allow_edit": "All"
+    })
+    
+    return state_list
+
+
+def validate_approver(doc, method):
+    is_workflow_exist = frappe.db.exists("Workflow", {"document_type":doc.doctype, "is_active": 1})
+    if is_workflow_exist:
+        workflow_doc = frappe.get_doc("Workflow", {"document_type":doc.doctype, "is_active": 1})
+        for row in workflow_doc.states:
+            if row.state == doc.workflow_state:
+                if row.approver != frappe.session.user and doc.workflow_state != "Pending" :
+                    approver_name = frappe.get_value("User", row.approver, "full_name")
+                    frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
+    else:
+        return
+    
+
+def send_notification_and_email(doc, method=None):
+    if doc.get("workflow_state"):
+        if doc.workflow_state != "Pending":
+            doc_before_save = doc.get_doc_before_save()
+            old_status = doc_before_save.workflow_state
+
+            args = {
+                "new_status": doc.workflow_state,
+                "old_status": old_status,
+                "for_user": frappe.get_value("Employee", doc.employee, "user_id"),
+                "service_name":"Leave Application",
+                "service_url": "leave-application",
+                "name": doc.name,
+                "by": frappe.session.user,
+                "new_st_color": "yellow",
+                "old_st_color": "yellow"
+            }
+            if "Approved" in doc.workflow_state:
+                args.update({"new_st_color":"green"})
+            elif "Rejected" in doc.workflow_state:
+                args.update({"new_st_color":"red"})
+
+
+            if "Approved" in old_status:
+                args.update({"old_st_color":"green"})
+            elif "Rejected" in old_status:
+                args.update({"old_st_color":"red"})
+
+            send_notification(args)
+            send_email(args)
+
+
+def send_notification(args):
+    doc_url = get_url() + "/app/" + args.get("service_url") + "/"
+    new_doc = frappe.new_doc("Notification Log")
+    new_doc.subject = f"""{args.get("service_name")} Updated"""
+    new_doc.for_user = args.get("for_user")
+    new_doc.type = "Alert"
+    new_doc.email_content = f"""Your {args.get("service_name")}: <a href="{doc_url}{args.get("name")}" style="cursor: pointer;"><b> {args.get("name")} </b></a>Status Changed </br> From <span class="text-{args.get("old_st_color")}"> {args.get("old_status")} </span> to <span class="text-{args.get("new_st_color")}"> {args.get("new_status")} </span> by <b>{args.get("by")}</b>"""
+    new_doc.insert(ignore_permissions=True)
+
+
+def send_email(args):
+    doc_url = get_url() + "/app/" + args.get("service_url") + "/"
+    msg = f"""Your {args.get("service_name")}: <a href="{doc_url}{args.get("name")}" style="cursor: pointer;"><b> {args.get("name")} </b></a>Status Changed </br> From <span class="text-{args.get("old_st_color")}"> {args.get("old_status")} </span> to <span class="text-{args.get("new_st_color")}"> {args.get("new_status")} </span> by <b>{args.get("by")}</b>"""
+    
+    frappe.sendmail(
+        recipients=['mismail@anvilerp.com'],
+        sender=args.get("by"),
+        subject=f"""{args.get("service_name")} Updated""",
+        message=msg,
+        retry=3,
+    )
+
+def calculate_leave_allocation(doc, method):
+    '''
+    calculate the allocated leave for employee annual leave
+    if leave policy assignment based on Joining Date
+    -> diff years between from date and to date * leave amount form leave policy table
+    -> set unused leave 0
+    '''
+    if not doc.leave_policy_assignment:
+        return
+    assignment_based_on = frappe.db.get_value("Leave Policy Assignment", doc.leave_policy_assignment, "assignment_based_on")
+    if assignment_based_on != "Joining Date":
+        return
+    if not frappe.db.get_value("Leave Type", doc.leave_type, "is_annual_leave"):
+        return
+
+    leave_policy = frappe.db.get_value("Leave Policy Assignment", doc.leave_policy_assignment, "leave_policy")
+    annual_allocation = frappe.get_list("Leave Policy Detail", filters={"parent": leave_policy, "leave_type": doc.leave_type}, pluck="annual_allocation")
+    if len(annual_allocation) == 0:
+        return
+
+    year_diff = frappe.utils.date_diff(doc.to_date, doc.from_date) / 365
+    new_allocation = cint(annual_allocation[0]) * cint(year_diff)
+
+    if doc.unused_leaves != 0:
+        doc.db_set("unused_leaves", 0)
+        frappe.db.commit()
+
+    doc.new_leaves_allocated = new_allocation
+    doc.flags.ignore_permission = True
+    doc.save()
+    frappe.db.commit()
+
+def reset_unused_leaves(doc, method):
+    if doc.unused_leaves < 0:
+        is_annual = frappe.db.get_value("Leave Type", doc.leave_type, "is_annual_leave")
+        if is_annual:
+            doc.db_set("unused_leaves", 0)
+            frappe.db.commit()
+
+def set_employee_allocated_leaves(doc, method):
+    employee = doc.name
+    value = cint(doc.spent_vacations)
+
+    if value < 0:
+        frappe.throw(_("Spent Leaves value must be > 0"))
+        return
+
+    old_value = frappe.db.get_value("Employee", employee, "spent_vacations")
+    if old_value != value:
+        sql = f""" 
+            SELECT la.name, la.leave_policy_assignment, la.from_date, la.to_date FROM `tabLeave Allocation` la LEFT JOIN `tabLeave Type` lt
+            ON lt.name = la.leave_type
+            WHERE la.docstatus=1 AND la.leave_policy_assignment!=''
+                AND la.from_date <= '{today()}' AND la.to_date >= '{today()}'
+                AND lt.is_annual_leave=1 AND la.employee='{employee}'
+        """
+        leave_allocations = frappe.db.sql(sql, as_dict=True)
+
+        if any(leave_allocations) > 0:
+            for row in leave_allocations:
+                assign_based_on = frappe.db.get_value("Leave Policy Assignment", row.leave_policy_assignment, "assignment_based_on")
+                if assign_based_on == "Joining Date":
+                    leave_allocation = frappe.get_doc("Leave Allocation", row.name)
+                    leave_allocated = leave_allocation.new_leaves_allocated
+
+                    if (leave_allocated + old_value) < value:
+                        frappe.throw(_(f"Spent Leave Number must be <b> > </b> Allocated {leave_allocated}"))
+
+                    leave_allocated = cint((leave_allocated + old_value) - value)
+                    leave_allocation.new_leaves_allocated = leave_allocated
+                    leave_allocation.save()
+                    frappe.db.commit()

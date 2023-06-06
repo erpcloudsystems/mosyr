@@ -21,6 +21,7 @@
   "is_default",
   "base",
   "variable",
+  "leave_encashment_amount_per_day",
   "earning_deduction",
   "earnings",
   "column_break_16",
@@ -210,6 +211,12 @@
    "fieldname": "override_existing_structures",
    "fieldtype": "Check",
    "label": "Override Existing Structures"
+  },
+  {
+   "fieldname": "leave_encashment_amount_per_day",
+   "fieldtype": "Currency",
+   "label": "Leave Encashment Amount Per Day",
+   "precision": "2"
   }
  ],
  "icon": "fa fa-file-text",
@@ -233,6 +240,22 @@
    "role": "SaaS Manager",
    "select": 1,
    "set_user_permissions": 1,
+<<<<<<< HEAD
+=======
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
+>>>>>>> master
    "share": 1,
    "submit": 1,
    "write": 1

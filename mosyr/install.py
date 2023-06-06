@@ -1,5 +1,8 @@
 import frappe
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+from frappe.installer import update_site_config
+from erpnext.setup.install import create_custom_role, create_user_type
 from mosyr import (
     create_account,
     create_cost_center,
@@ -121,7 +124,23 @@ def after_install():
     create_default_cost_centers(companies)
     hide_accounts_and_taxs_from_system()
     set_home_page_login()
+    create_custom_field(
+        "User",
+        dict(
+            owner="Administrator",
+            fieldname="companies",
+            label="Companies",
+            fieldtype="Table MultiSelect",
+            options="Company Table",
+            insert_after="username",
+            allow_in_quick_entry=1
+        ),
+    )
+    
+    frappe.db.commit()
 
+def add_permission_read():
+    add_permission("Domain", "Saas Manager", permlevel=0, ptype=None)
 
 def edit_gender_list():
     genders_to_del = frappe.get_list(

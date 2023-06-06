@@ -50,9 +50,9 @@
   {
    "fieldname": "addition_type",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Addition Type",
-   "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission"
+   "options": "\nBack Pay\nBonus\nOvertime\nBusiness Trip\nCommission",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_7",
@@ -61,6 +61,7 @@
   {
    "fieldname": "amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Amount",
    "reqd": 1
   },
@@ -69,9 +70,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Format: YYYY-MM ( 2022-01 )\n",
    "fieldname": "payroll_month",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "Payroll Month",
    "reqd": 1
   },
@@ -83,6 +83,7 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Date",
    "reqd": 1
   },
@@ -97,7 +98,8 @@
   },
   {
    "fieldname": "notes",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text",
+   "in_list_view": 1,
    "label": "Notes"
   },
   {

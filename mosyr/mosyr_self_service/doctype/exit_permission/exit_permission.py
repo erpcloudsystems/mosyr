@@ -5,14 +5,14 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 from erpnext.hr.utils import validate_active_employee
-from frappe.utils import time_diff_in_hours
-from frappe.utils import get_datetime ,time_diff_in_seconds, get_datetime_str
-from erpnext.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
+from frappe.utils import time_diff_in_seconds, get_datetime_str, time_diff_in_hours
+from mosyr.api import send_notification_and_email
 
 class ExitPermission(Document):
     def validate(self):
         validate_active_employee(self.employee)
         self.validate_exit_times()
+        self.shift = self.get_shift(self.employee)
     def validate_exit_times(self):
         if not self.to_time or not self.from_time:
             return
@@ -22,6 +22,9 @@ class ExitPermission(Document):
             frappe.throw(_("To Time must be after From Time"))
         self.exit_hours = exit_hours
 
+    def on_update(self):
+        send_notification_and_email(self)
+    
     def on_submit(self):
         def create_checkin(employee, log_type, time ):
             doc = frappe.new_doc("Employee Checkin")
@@ -44,11 +47,10 @@ class ExitPermission(Document):
                 if time_diff_in_seconds(exit_permission_datetime_from, shift_datetime_end_time) <= 0:
                     if time_diff_in_seconds(exit_permission_datetime_to, shift_datetime_end_time) >= 0:
                         create_checkin(self.employee, "OUT", shift_datetime_end_time)
-    @frappe.whitelist()
-    def get_employee_shift(self, employee):
-        shift_actual_timings = get_actual_start_end_datetime_of_shift(
-        employee, get_datetime(self.from_time), True
-        )
-        if shift_actual_timings[0] and shift_actual_timings[1]:
-            return shift_actual_timings[2].shift_type.name
-        return False
+                        
+    def get_shift(self, employee):
+        from erpnext.hr.doctype.shift_assignment.shift_assignment import get_employee_shift
+        shift_actual_timings = get_employee_shift(employee, frappe.utils.getdate(self.date), False, None)
+        if shift_actual_timings:
+            return shift_actual_timings.shift_type.name
+        return 

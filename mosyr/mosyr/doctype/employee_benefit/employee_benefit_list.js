@@ -12,5 +12,7 @@ frappe.listview_settings['Employee Benefit'] = {
             // on hold
             return [__("Applied In System"), "green", "status,=,Applied In System"];
         }
-    }
+    },
+    hide_name_column: true
+
 };

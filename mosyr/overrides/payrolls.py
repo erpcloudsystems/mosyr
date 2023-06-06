@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate
+from frappe.utils import flt
 
 import erpnext
 from erpnext.payroll.doctype.salary_component.salary_component import SalaryComponent
@@ -34,7 +34,6 @@ class CustomSalaryComponent(SalaryComponent):
             account_name = "Payroll Payable - Earning"
         elif self.type == "Deduction":
             account_name = "Payroll Payable - Deduction"
-
         for company in companies:
             account = create_account(
                 account_name,
@@ -150,6 +149,22 @@ class CustomPayrollEntry(PayrollEntry):
     def validate(self):
         self.set_missing_custome_values()
         super().validate()
+        
+    def on_cancel(self):
+        self.ignore_linked_doctypes = ("GL Entry")
+        super().on_cancel()
+
+    def on_trash(self):
+        from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
+
+        linkinfo = get_linked_doctypes("Payroll Entry")
+        docs = get_linked_docs("Payroll Entry", self.name, linkinfo)
+        linked_je_docs = docs.get("Journal Entry")
+        if linked_je_docs:
+            for row in linked_je_docs:
+                doc_name = row.get("name")
+                doc = frappe.get_doc("Journal Entry", doc_name)
+                doc.delete()
 
     def set_missing_custome_values(self):
         if not self.payroll_payable_account:

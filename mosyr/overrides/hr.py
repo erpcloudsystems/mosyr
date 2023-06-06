@@ -1,3 +1,4 @@
+from erpnext.hr.utils import get_leave_period
 import frappe
 from frappe import _
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
@@ -10,13 +11,19 @@ from erpnext.hr.doctype.travel_request.travel_request import TravelRequest
 from erpnext.hr.doctype.expense_claim.expense_claim import ExpenseClaim
 from erpnext.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
 from erpnext.hr.doctype.expense_claim_type.expense_claim_type import ExpenseClaimType
+from erpnext.hr.doctype.attendance_request.attendance_request import AttendanceRequest
+from erpnext.hr.doctype.leave_application.leave_application import LeaveApplication
+from erpnext.hr.doctype.leave_allocation.leave_allocation import (
+    LeaveAllocation,
+    get_leave_allocation_for_period
+)
 
 from mosyr import (
     create_account,
     create_cost_center,
     create_mode_payment,
 )
-
+from frappe.utils import flt
 
 class CustomCompany(Company, NestedSet):
     def validate(self):
@@ -72,27 +79,27 @@ class CustomCompany(Company, NestedSet):
         
         super().on_update()
         frappe.clear_cache()
-
-
-    def after_insert(self):
-        super().after_insert()
         self.update_custom_linked_accounts()
+
+        letter_head = frappe.db.exists("Letter Head", {'name': self.name})
+        if letter_head:
+            self.default_letter_head = letter_head
 
     def update_custom_linked_accounts(self):
         # Setup For mode of payments
         for mop in frappe.get_list("Mode of Payment"):
             mop = frappe.get_doc("Mode of Payment", mop.name)
-            mop.save()
+            mop.save(ignore_permissions=True)
 
-        # Setup For salayr components
+        # Setup For salary components
         for sc in frappe.get_list("Salary Component"):
             sc = frappe.get_doc("Salary Component", sc.name)
-            sc.save()
+            sc.save(ignore_permissions=True)
 
-        # Setup For salayr components
+        # Setup For Expense Claim Type
         for ect in frappe.get_list("Expense Claim Type"):
             ect = frappe.get_doc("Expense Claim Type", ect.name)
-            ect.save()
+            ect.save(ignore_permissions=True)
 
     def create_default_departments(self):
         records = [
@@ -325,3 +332,79 @@ class CustomExpenseClaimType(ExpenseClaimType):
             self.append(
                 "accounts", {"company": company.name, "default_account": account}
             )
+
+
+class CustomAttendanceRequest(AttendanceRequest):
+    def on_submit(self):
+         self.create_attendance()
+
+    def create_attendance(self):
+        from frappe.utils import add_days, date_diff, getdate
+        request_days = date_diff(self.to_date, self.from_date) + 1
+        for number in range(request_days):
+            attendance_date = add_days(self.from_date, number)
+            skip_attendance = self.validate_if_attendance_not_applicable(attendance_date)
+            if not skip_attendance:
+                att = frappe.db.exists("Attendance", {"employee": self.employee, "attendance_date": attendance_date})
+                if att:
+                    attendance = frappe.get_doc("Attendance", att)
+                    if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
+                        attendance.db_set("status", "Half Day")
+                    elif self.reason == "Work From Home":
+                        attendance.db_set("status", "Work From Home")
+                    else:
+                        attendance.db_set("status", "Present")
+                    frappe.db.commit()
+                else :
+                    attendance = frappe.new_doc("Attendance")
+                    attendance.employee = self.employee
+                    attendance.employee_name = self.employee_name
+                    if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
+                        attendance.status = "Half Day"
+                    elif self.reason == "Work From Home":
+                        attendance.status = "Work From Home"
+                    else:
+                        attendance.status = "Present"
+                    attendance.attendance_date = attendance_date
+                    attendance.company = self.company
+                    attendance.attendance_request = self.name
+                    attendance.save(ignore_permissions=True)
+                    attendance.submit()
+
+
+class CustomLeaveApplication(LeaveApplication):
+    def on_submit(self):
+        self.validate_back_dated_application()
+        self.update_attendance()
+
+        # notify leave applier about approval
+        if frappe.db.get_single_value("HR Settings", "send_leave_notification"):
+            self.notify_employee()
+
+        self.create_leave_ledger_entry()
+        self.reload()
+
+
+class CustomLeaveAllocation(LeaveAllocation):
+    def validate_leave_allocation_days(self):
+        company = frappe.db.get_value("Employee", self.employee, "company")
+        leave_period = get_leave_period(self.from_date, self.to_date, company)
+        max_leaves_allowed = flt(
+            frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
+        )
+        if max_leaves_allowed > 0:
+            leave_allocated = 0
+            if leave_period:
+                leave_allocated = get_leave_allocation_for_period(
+                    self.employee,
+                    self.leave_type,
+                    leave_period[0].from_date,
+                    leave_period[0].to_date,
+                    exclude_allocation=self.name,
+                )
+            leave_allocated += flt(self.new_leaves_allocated)
+            if leave_allocated > max_leaves_allowed:
+                # frappe.msgprint(
+                #     _("Total allocated leaves are more than maximum allocation allowed for {0} leave type for employee {1} in the period"
+                #     ).format(self.leave_type, self.employee))
+                return

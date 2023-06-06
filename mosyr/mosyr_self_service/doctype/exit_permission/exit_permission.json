@@ -25,7 +25,6 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -82,7 +81,9 @@
   },
   {
    "fieldname": "reason",
-   "fieldtype": "Text"
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Reason"
   },
   {
    "fieldname": "amended_from",
@@ -101,9 +102,9 @@
   {
    "fieldname": "shift",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Shift",
-   "options": "Shift Type",
-   "reqd": 1
+   "options": "Shift Type"
   }
  ],
  "is_submittable": 1,

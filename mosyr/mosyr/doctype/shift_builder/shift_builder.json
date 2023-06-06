@@ -134,7 +134,21 @@
   "thursday_flexible",
   "friday_flexible",
   "saturday_flexible",
+  "shift_type_section",
+  "shift_name",
+  "shift_start_time",
+  "shift_end_time",
+  "late_entry_grace_period",
+  "early_exit_grace_period",
+  "column_break_sj36y",
+  "holiday_list",
+  "max_working_hours",
+  "enable_auto_attendance",
+  "in_lateness_permission",
   "section_break_131",
+  "fetch_employees_based_on",
+  "based_on",
+  "fetch_employees",
   "shift_builder_employees",
   "sunday_different_times_shift1",
   "sunday_different_times_shift2",
@@ -153,6 +167,7 @@
   "double_shift_1",
   "double_shift_2",
   "flexible_shift_type",
+  "shift_type_link",
   "column_break_135",
   "determine_check_in_and_check_out",
   "working_hours_calculation_based_on",
@@ -160,6 +175,8 @@
   "allow_exit_time",
   "working_hours_threshold_for_half_day",
   "working_hours_threshold_for_absent",
+  "grace_period_settings_for_auto_attendance",
+  "last_sync_of_checkin",
   "amended_from"
  ],
  "fields": [
@@ -169,7 +186,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Shift Type",
-   "options": "\nDouble Shift Work Schedule\nWork Schedule with Different Times\nFlexible Work Schedule",
+   "options": "\nDouble Shift Work Schedule\nWork Schedule with Different Times\nFlexible Work Schedule\nShift Type",
    "reqd": 1
   },
   {
@@ -1038,6 +1055,109 @@
    "no_copy": 1,
    "options": "Shift Type",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Shift Type\"",
+   "fieldname": "shift_type_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Type"
+  },
+  {
+   "fieldname": "shift_name",
+   "fieldtype": "Data",
+   "label": "Shift Name",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Shift Type\""
+  },
+  {
+   "fieldname": "shift_start_time",
+   "fieldtype": "Time",
+   "label": "Shift Start Time",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Shift Type\""
+  },
+  {
+   "fieldname": "shift_end_time",
+   "fieldtype": "Time",
+   "label": "Shift End Time",
+   "mandatory_depends_on": "eval:doc.shift_type == \"Shift Type\""
+  },
+  {
+   "fieldname": "column_break_sj36y",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "holiday_list",
+   "fieldtype": "Link",
+   "label": "Holiday List",
+   "options": "Holiday List"
+  },
+  {
+   "description": "Maximum Working hours for Shift (any extra hours will be ignored in attendance or Zero to disable)",
+   "fieldname": "max_working_hours",
+   "fieldtype": "Float",
+   "label": "Max Working Hours",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "description": "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift.",
+   "fieldname": "enable_auto_attendance",
+   "fieldtype": "Check",
+   "label": "Enable Auto Attendance"
+  },
+  {
+   "default": "0",
+   "fieldname": "in_lateness_permission",
+   "fieldtype": "Check",
+   "label": "In Lateness Permission"
+  },
+  {
+   "fieldname": "fetch_employees_based_on",
+   "fieldtype": "Select",
+   "label": "Fetch Employees based on",
+   "options": "\nBranch\nDepartment\nCompany"
+  },
+  {
+   "depends_on": "fetch_employees_based_on",
+   "fieldname": "based_on",
+   "fieldtype": "Dynamic Link",
+   "label": "Based on",
+   "options": "fetch_employees_based_on"
+  },
+  {
+   "depends_on": "fetch_employees_based_on",
+   "fieldname": "fetch_employees",
+   "fieldtype": "Button",
+   "label": "Fetch Employees"
+  },
+  {
+   "description": "The time after the shift start time when check-in is considered as late (in minutes).",
+   "fieldname": "late_entry_grace_period",
+   "fieldtype": "Int",
+   "label": "Late Entry Grace Period"
+  },
+  {
+   "description": "The time after the shift start time when check-in is considered as late (in minutes).",
+   "fieldname": "early_exit_grace_period",
+   "fieldtype": "Int",
+   "label": "Early Exit Grace Period"
+  },
+  {
+   "description": "Attendance will be marked automatically only after this date.",
+   "fieldname": "grace_period_settings_for_auto_attendance",
+   "fieldtype": "Date",
+   "label": "Grace Period Settings For Auto Attendance"
+  },
+  {
+   "description": "Last Known Successful Sync of Employee Checkin. Reset this only if you are sure that all Logs are synced from all the locations. Please don't modify this if you are unsure.",
+   "fieldname": "last_sync_of_checkin",
+   "fieldtype": "Datetime",
+   "label": "Last Sync of Checkin"
+  },
+  {
+   "fieldname": "shift_type_link",
+   "fieldtype": "Link",
+   "label": "Shift Type link",
+   "options": "Shift Type"
   }
  ],
  "index_web_pages_for_search": 1,
