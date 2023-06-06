@@ -1,5 +1,4 @@
 import frappe
-from six import iteritems
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from frappe.installer import update_site_config
@@ -11,124 +10,119 @@ from mosyr import (
     create_bank_account,
     update_fields_props,
 )
-from frappe.permissions import update_permission_property, add_permission
 
-docs_for_manager = [
-    # "System Controller",
-    "Expense Claim",
-    "Employee Tax Exemption Declaration",
-    "Employee Tax Exemption Proof Submission",
-    "Work Experience",
-    "Dependants Details",
-    "Employee ID",
-    "Passport Details",
-    "Lateness Permission",
-    "Exit Permission",
-    "Company Id",
-    "Translation",
-    "User",
-    "Users Permission Manager",
-    "Department",
-    "Branch",
-    "Employee Group",
-    "Designation",
-    "Employee Grade",
-    "Employment Type",
-    "Shift Type",
-    "Staffing Plan",
-    "Holiday List",
-    "Leave Type",
-    "Leave Period",
-    "Leave Policy",
-    "Leave Policy Assignment",
-    "Leave Allocation",
-    "Leave Encashment",
-    "Employee Health Insurance",
-    "Leave Block List",
-    "Employee",
-    "End Of Service",
-    "Leave Application",
-    "Shift Request",
-    "Shift Builder",
-    "Contact Details",
-    "Educational Qualification",
-    "Emergency Contact",
-    "Health Insurance",
-    "Personal Details",
-    "Salary Details",
-    "Mosyr Form",
-    "Attendance",
-    "Employee Attendance Tool",
-    "Attendance Request",
-    "Upload Attendance",
-    "Employee Checkin",
-    "Payroll Settings",
-    "Salary Component",
-    "Salary Structure",
-    "Salary Structure Assignment",
-    "Employee Benefit",
-    "Employee Deduction",
-    "Payroll Entry",
-    "Salary Slip",
-    "Retention Bonus",
-    "Employee Incentive",
-    "Appraisal",
-    "Appraisal Template",
-    "Leave Application",
-    "Compensatory Leave Request",
-    "Travel Request",
-    "Leave Encashment",
-    "Loan Type",
-    "Loan",
-    "Loan Application",
-    "Vehicle",
-    "Vehicle Log",
-    "Vehicle Service",
-    "Document Manager",
-    "Document Type",
-    "Custody",
-    "Cash Custody",
-    "Cash Custody Expense",
-    "Shift Assignment",
-    "User Permission",
-    "Nationality",
-    "Religion",
-    "Additional Salary",
-    "Custom Field",
-    "Company",
-    "Address",
-    "Letter Head",
-    "Process Loan Interest Accrual",
-    "Journal Entry",
-    "Account",
-    "Loan Interest Accrual",
-    "Loan Repayment"
-]
-reports_for_manager = [
-    "Insurances and Risk",
-    "Employee Attendance Sheet",
-    "Biomitric Devices",
-    "Files in Saudi banks format",
-    "Employee Leave Balance",
-    "Employee Leave Balance Summary",
-    "Leave Balance Encashment",
-    "Exit Permissions Summary"
-]
+risk_insurance_components = {
+    "Risk On Company": {
+        "amount": 0.0,
+        "amount_based_on_formula": 1,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 1,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component_abbr": "RCD",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+    "Employee Pension Insurance": {
+        "amount": 0.0,
+        "amount_based_on_formula": 0,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 0,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "name": "Employee Pension Insurance",
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component_abbr": "EPD",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+    "Company Pension Insurance": {
+        "amount": 0.0,
+        "amount_based_on_formula": 0,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 1,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component_abbr": "CPD",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+    "Risk On Employee": {
+        "amount": 0.0,
+        "amount_based_on_formula": 1,
+        "condition": "",
+        "create_separate_payment_entry_against_benefit_claim": 0,
+        "deduct_full_tax_on_selected_payroll_date": 0,
+        "depends_on_payment_days": 0,
+        "description": "",
+        "disabled": 0,
+        "do_not_include_in_total": 0,
+        "exempted_from_income_tax": 0,
+        "formula": "",
+        "is_flexible_benefit": 0,
+        "is_income_tax_component": 0,
+        "is_tax_applicable": 1,
+        "max_benefit_amount": 0.0,
+        "only_tax_impact": 0,
+        "pay_against_benefit_claim": 0,
+        "round_to_the_nearest_integer": 0,
+        "salary_component": "Risk On Employee",
+        "salary_component_abbr": "RED",
+        "statistical_component": 0,
+        "type": "Deduction",
+        "variable_based_on_taxable_salary": 0,
+    },
+}
 
 
 def after_install():
     edit_gender_list()
-    create_banks()
+
+    create_dafault_mode_of_payments()
+    create_risk_insurance_components()
     companies = frappe.get_list("Company")
     create_dafault_bank_accounts(companies)
     create_dafault_accounts(companies)
     create_default_cost_centers(companies)
-    create_dafault_mode_of_payments()
     hide_accounts_and_taxs_from_system()
-    create_non_standard_user_types()
-    allow_read_for_reports()
-    add_select_perm_for_all()
-    create_role_and_set_to_admin()
     set_home_page_login()
     create_custom_field(
         "User",
@@ -159,24 +153,6 @@ def edit_gender_list():
         except:
             pass
         frappe.db.commit()
-
-
-def create_banks():
-    banks = [
-        {"bank_name": "Al Inma Bank", "swift_number": "INMA"},
-        {"bank_name": "Riyadh Bank", "swift_number": "RIBL"},
-        {"bank_name": "The National Commercial Bank", "swift_number": "NCBK"},
-        {"bank_name": "Samba Financial Group", "swift_number": "SAMB"},
-        {"bank_name": "Al Rajhi Bank", "swift_number": "RJHI"},
-        {"bank_name": "Al Araby Bank", "swift_number": "ARNB"},
-    ]
-    for bank in banks:
-        banks_list = frappe.get_list("Bank", filters={"name": bank["bank_name"]})
-        if len(banks_list) == 0:
-            bank_doc = frappe.new_doc("Bank")
-            bank_doc.update(bank)
-            bank_doc.save()
-    frappe.db.commit()
 
 
 def create_dafault_bank_accounts(companies):
@@ -262,7 +238,7 @@ def create_dafault_accounts(companies):
         sc = frappe.get_doc("Salary Component", sc.name)
         sc.save()
 
-    # Setup For salayr components
+    # Setup For expense claim
     for ect in frappe.get_list("Expense Claim Type"):
         ect = frappe.get_doc("Expense Claim Type", ect.name)
         ect.save()
@@ -282,6 +258,29 @@ def create_dafault_mode_of_payments():
     create_mode_payment("Advance Payment", "Bank")
     create_mode_payment("Loans Payment", "Bank")
     create_mode_payment("Parroll Payment", "Bank")
+
+
+def create_risk_insurance_components():
+    components = [
+        comp.name
+        for comp in frappe.db.sql(
+            "SELECT LOWER(name) as name FROM `tabSalary Component`", as_dict=True
+        )
+    ]
+    for component in [
+        "Risk On Company",
+        "Risk On Employee",
+        "Employee Pension Insurance",
+        "Company Pension Insurance",
+    ]:
+        if f"{component}".lower() in components:
+            continue
+        sc_doc = frappe.new_doc("Salary Component")
+        data = risk_insurance_components.get(component)
+        sc_doc.salary_component = component
+        sc_doc.update(data)
+        sc_doc.save()
+    frappe.db.commit()
 
 
 def hide_accounts_and_taxs_from_system():
@@ -545,63 +544,6 @@ def update_custom_roles(role_args, args):
         custom_role.save()
     else:
         frappe.get_doc(args).insert()
-    frappe.db.commit()
-
-def add_select_perm_for_all():
-    docs_for_manager.append("Account")
-    docs_for_manager.append("Email Domain")
-    docs_for_manager.append("Email Template")
-    docs_for_manager.append("Email Account")
-    for doc in docs_for_manager:
-        # Add Select for Doctype and for all links fields
-        doc = frappe.db.exists("DocType", doc)
-        if not doc: continue
-        doc = frappe.get_doc("DocType", doc)
-
-        for field in doc.fields:
-            if field.fieldtype != "Link": continue
-            doc_field = frappe.db.exists("DocType", field.options)
-            if not doc_field: continue
-            update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "write", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "create", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "print", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "delete", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "import", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "export", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
-            update_permission_property(doc_field, "SaaS Manager", 0, "share", 1)
-            update_permission_property(doc_field, "Employee Self Service", 0, "select", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "select", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "read", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "report", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "write", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "create", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "print", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "delete", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "import", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "export", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "email", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "set_user_permissions", 1)
-        update_permission_property(doc_field, "SaaS Manager", 0, "share", 1)
-        update_permission_property(doc.name, "Employee Self Service", 0, "select", 1)
-    frappe.db.commit()
-
-def create_role_and_set_to_admin():
-    create_custom_role({"role": "Read User Type"})
-    frappe.get_doc("User", "Administrator").add_roles("Read User Type")
-    frappe.db.commit()
-    update_permission_property("User", "Read User Type", 3, "read", 1)
-    update_permission_property("User", "Read User Type", 3, "write", 1)
-    frappe.db.commit()
-    
-    # create role Mosyr Forms and added this role for saas manager and employee self service 
-    create_custom_role({"role": "Mosyr Forms"})
     frappe.db.commit()
 
 

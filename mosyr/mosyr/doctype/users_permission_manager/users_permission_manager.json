@@ -1,258 +1,259 @@
 {
-    "actions": [],
-    "allow_copy": 1,
-    "creation": "2022-10-23 18:01:01.207337",
-    "doctype": "DocType",
-    "editable_grid": 1,
-    "engine": "InnoDB",
-    "field_order": [
-     "user",
-     "system_management_section",
-     "system_management",
-     "user_management_section",
-     "user_management",
-     "hr_management_section",
-     "hr_management",
-     "employees_list_section",
-     "employees_list",
-     "self_service_section",
-     "self_service",
-     "e_form_section",
-     "e_form",
-     "timesheet_attendees_management_section",
-     "timesheet_attendees_management",
-     "payroll_section",
-     "payroll",
-     "employees_performance_section",
-     "employees_performance",
-     "leave_section",
-     "leave",
-     "loans_section",
-     "loans",
-     "vehicle_management_section",
-     "vehicle_management",
-     "documents_management_section",
-     "documents_management",
-     "custody_management_section",
-     "custody_management",
-     "page_or_report_section",
-     "page_or_report"
-    ],
-    "fields": [
-     {
-      "fieldname": "user",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "User",
-      "options": "User",
-      "reqd": 1
-     },
-     {
-      "depends_on": "user",
-      "fieldname": "page_or_report",
-      "fieldtype": "Table",
-      "options": "User Permission Report And Page"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "system_management_section",
-      "fieldtype": "Section Break",
-      "label": "System management"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "user_management_section",
-      "fieldtype": "Section Break",
-      "label": "User management"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "hr_management_section",
-      "fieldtype": "Section Break",
-      "label": "HR management"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "employees_list_section",
-      "fieldtype": "Section Break",
-      "label": "Employees list"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "self_service_section",
-      "fieldtype": "Section Break",
-      "label": "Self service"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "e_form_section",
-      "fieldtype": "Section Break",
-      "label": "E-form"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "timesheet_attendees_management_section",
-      "fieldtype": "Section Break",
-      "label": "Timesheet Attendees management"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "payroll_section",
-      "fieldtype": "Section Break",
-      "label": "payroll"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "employees_performance_section",
-      "fieldtype": "Section Break",
-      "label": "Employees performance"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "leave_section",
-      "fieldtype": "Section Break",
-      "label": "Leave"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "loans_section",
-      "fieldtype": "Section Break",
-      "label": "Loans"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "vehicle_management_section",
-      "fieldtype": "Section Break",
-      "label": "Vehicle management"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "documents_management_section",
-      "fieldtype": "Section Break",
-      "label": "Documents management"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "custody_management_section",
-      "fieldtype": "Section Break",
-      "label": "Custody management"
-     },
-     {
-      "fieldname": "system_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "user_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "hr_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "employees_list",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "self_service",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "e_form",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "timesheet_attendees_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "payroll",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "employees_performance",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "leave",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "loans",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "vehicle_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "documents_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "fieldname": "custody_management",
-      "fieldtype": "Table",
-      "options": "User Permission Document Type"
-     },
-     {
-      "collapsible": 1,
-      "depends_on": "user",
-      "fieldname": "page_or_report_section",
-      "fieldtype": "Section Break",
-      "label": "Page Or Report"
-     }
-    ],
-    "hide_toolbar": 1,
-    "issingle": 1,
-    "links": [],
-    "modified": "2023-03-07 16:28:11.929931",
-    "modified_by": "Administrator",
-    "module": "Mosyr",
-    "name": "Users Permission Manager",
-    "owner": "Administrator",
-    "permissions": [
-     {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "print": 1,
-      "read": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-     }
-    ],
-    "show_name_in_global_search": 1,
-    "sort_field": "modified",
-    "sort_order": "DESC",
-    "track_changes": 1,
-    "track_seen": 1,
-    "track_views": 1
-   }
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2022-10-23 18:01:01.207337",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "user",
+  "system_management_section",
+  "system_management",
+  "user_management_section",
+  "user_management",
+  "hr_management_section",
+  "hr_management",
+  "employees_list_section",
+  "employees_list",
+  "self_service_section",
+  "self_service",
+  "e_form_section",
+  "e_form",
+  "timesheet_attendees_management_section",
+  "timesheet_attendees_management",
+  "payroll_section",
+  "payroll",
+  "employees_performance_section",
+  "employees_performance",
+  "leave_section",
+  "leave",
+  "loans_section",
+  "loans",
+  "vehicle_management_section",
+  "vehicle_management",
+  "documents_management_section",
+  "documents_management",
+  "custody_management_section",
+  "custody_management",
+  "page_or_report_section",
+  "page_or_report"
+ ],
+ "fields": [
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "User",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "page_or_report",
+   "fieldtype": "Table",
+   "options": "User Permission Report And Page"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "system_management_section",
+   "fieldtype": "Section Break",
+   "label": "System management"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "user_management_section",
+   "fieldtype": "Section Break",
+   "label": "User management"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "hr_management_section",
+   "fieldtype": "Section Break",
+   "label": "HR management"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "employees_list_section",
+   "fieldtype": "Section Break",
+   "label": "Employees list"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "self_service_section",
+   "fieldtype": "Section Break",
+   "label": "Self service"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "e_form_section",
+   "fieldtype": "Section Break",
+   "label": "E-form"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "timesheet_attendees_management_section",
+   "fieldtype": "Section Break",
+   "label": "Timesheet Attendees management"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "payroll_section",
+   "fieldtype": "Section Break",
+   "label": "payroll"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "employees_performance_section",
+   "fieldtype": "Section Break",
+   "label": "Employees performance"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "leave_section",
+   "fieldtype": "Section Break",
+   "label": "Leave"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "loans_section",
+   "fieldtype": "Section Break",
+   "label": "Loans"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "vehicle_management_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle management"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "documents_management_section",
+   "fieldtype": "Section Break",
+   "label": "Documents management"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "custody_management_section",
+   "fieldtype": "Section Break",
+   "label": "Custody management"
+  },
+  {
+   "fieldname": "system_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "user_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "hr_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "employees_list",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "self_service",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "e_form",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "timesheet_attendees_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "payroll",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "employees_performance",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "leave",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "loans",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "vehicle_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "documents_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "fieldname": "custody_management",
+   "fieldtype": "Table",
+   "options": "User Permission Document Type"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "user",
+   "fieldname": "page_or_report_section",
+   "fieldtype": "Section Break",
+   "label": "Page Or Report"
+  }
+ ],
+ "hide_toolbar": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-04-30 14:07:30.436986",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Users Permission Manager",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_name_in_global_search": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

@@ -1,6 +1,7 @@
 {
  "actions": [],
- "autoname": "EC-.YYYY.-.MM.-.##",
+ "allow_copy": 1,
+ "autoname": "MHR-ECT-.YY.-.MM.-.#####",
  "creation": "2022-01-07 22:13:59.215448",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -661,13 +662,14 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-28 15:22:11.732001",
+ "modified": "2023-04-30 14:21:55.281585",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Contract",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -675,21 +677,27 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Administrator",
-   "share": 1,
+   "role": "SaaS User",
+   "select": 1,
+   "submit": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Self Service",
+   "select": 1
   }
  ],
  "sort_field": "modified",

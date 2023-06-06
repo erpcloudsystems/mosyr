@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "format:{employee}-{####}",
+ "autoname": "MHR-PD-.YY.-.MM.-.#####",
  "creation": "2021-01-21 00:04:59.611945",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -117,7 +117,8 @@
    "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fetch_from": "employee.employee_name",
@@ -192,7 +193,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 5,
- "modified": "2022-09-22 08:04:50.500162",
+ "modified": "2023-04-30 14:31:33.343436",
  "modified_by": "Administrator",
  "module": "Mosyr Self Service",
  "name": "Personal Details",
@@ -207,62 +208,37 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
    "submit": 1,
    "write": 1
   },
   {
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Employee",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "cancel": 1,
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR Manager",
-   "share": 1,
+   "role": "SaaS User",
+   "select": 1,
    "submit": 1,
    "write": 1
   },
   {
-   "email": 1,
-   "export": 1,
-   "permlevel": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Employee",
-   "share": 1
-  },
-  {
+   "create": 1,
    "delete": 1,
-   "email": 1,
-   "export": 1,
-   "permlevel": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "HR Manager",
-   "share": 1,
+   "role": "Self Service",
+   "select": 1,
    "write": 1
   }
  ],
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "employee_name",
  "track_changes": 1
 }
