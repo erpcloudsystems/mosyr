@@ -514,7 +514,9 @@ fixtures = [
                 "Vehicle Service-attachment",
                 "Vehicle Service-details",
                 "Department-vehicle_service_approver",
-                "Employee-spent_vacations"
+                "Employee-spent_vacations",
+                
+                "User-companies"
          ]]
         ]
     },
