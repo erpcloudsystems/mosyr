@@ -28,52 +28,54 @@ frappe.ui.form.on('Users Permission Manager', {
 				freeze: true,
 				args:{user: frm.doc.user},
 				callback: function(r){
+					frm.refresh_fields()
 					if (r.message) {
-						for (const [key, value] of Object.entries(r.message.doctypes)) {
-							for (const [key2, value2] of Object.entries(value)) {
-								frm.clear_table(key2)
-								value2.forEach(e => {
-									const new_row = frm.add_child(key2)
-									new_row.document_type = e
-									frm.refresh_field(key2)
-
-								})
-							}
-						}
 						
-						for (const [key, value] of Object.entries(r.message.permission[0])) {
-							if(value.length > 0) {
-								value.forEach(row => {
-									getchildren("User Permission Document Type", "Users Permission Manager", key).forEach(e => {
-										if(e.document_type==row.document_type){
-											e.is_custom =  row.is_custom,
-											e.read =  row.read,
-											e.write =  row.write,
-											e.create =  row.create,
-											e.submit =  row.submit,
-											e.cancel =  row.cancel,
-											e.amend =  row.amend,
-											e.delete =  row.delete
-										}
-									}
-									)
-								})
-							}
-						}
-						(r.message.repage || []).forEach(row => {
-							if(row.page){
-							let new_row = frm.add_child("page_or_report", {
-									'set_role_for': 'Page',
-									'page_or_report': row.page
-								})
-							}else if(row.report){
-								let new_row = frm.add_child("page_or_report", {
-									'set_role_for':'Report',
-									'page_or_report': row.report
-								})
-							}
+						// for (const [key, value] of Object.entries(r.message.doctypes)) {
+						// 	for (const [key2, value2] of Object.entries(value)) {
+						// 		frm.clear_table(key2)
+						// 		value2.forEach(e => {
+						// 			const new_row = frm.add_child(key2)
+						// 			new_row.document_type = e
+						// 			frm.refresh_field(key2)
+
+						// 		})
+						// 	}
+						// }
+						
+						// for (const [key, value] of Object.entries(r.message.permission[0])) {
+						// 	if(value.length > 0) {
+						// 		value.forEach(row => {
+						// 			getchildren("User Permission Document Type", "Users Permission Manager", key).forEach(e => {
+						// 				if(e.document_type==row.document_type){
+						// 					e.is_custom =  row.is_custom,
+						// 					e.read =  row.read,
+						// 					e.write =  row.write,
+						// 					e.create =  row.create,
+						// 					e.submit =  row.submit,
+						// 					e.cancel =  row.cancel,
+						// 					e.amend =  row.amend,
+						// 					e.delete =  row.delete
+						// 				}
+						// 			}
+						// 			)
+						// 		})
+						// 	}
+						// }
+						// (r.message.repage || []).forEach(row => {
+						// 	if(row.page){
+						// 	let new_row = frm.add_child("page_or_report", {
+						// 			'set_role_for': 'Page',
+						// 			'page_or_report': row.page
+						// 		})
+						// 	}else if(row.report){
+						// 		let new_row = frm.add_child("page_or_report", {
+						// 			'set_role_for':'Report',
+						// 			'page_or_report': row.report
+						// 		})
+						// 	}
 							
-						});
+						// });
 						frm.refresh_field('page_or_report');
 					}
 					frm.refresh_fields()

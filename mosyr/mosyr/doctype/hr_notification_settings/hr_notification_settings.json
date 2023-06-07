@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_rename": 1,
  "creation": "2022-04-13 15:47:38.254437",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -50,7 +49,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-05-29 11:03:51.366982",
+ "modified": "2023-04-30 14:22:51.897121",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "HR Notification Settings",
@@ -62,7 +61,19 @@
    "email": 1,
    "print": 1,
    "read": 1,
-   "role": "System Manager",
+   "role": "SaaS Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS User",
+   "select": 1,
    "share": 1,
    "write": 1
   }

@@ -90,7 +90,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-09 14:12:02.359957",
+ "modified": "2023-04-30 14:05:31.903445",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Data Import Log",
@@ -103,8 +103,11 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
-   "share": 1
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
+   "share": 1,
+   "write": 1
   }
  ],
  "sort_field": "modified",

@@ -1,5 +1,7 @@
 {
  "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
  "autoname": "field:company",
  "creation": "2022-03-16 13:41:48.219173",
  "doctype": "DocType",
@@ -426,7 +428,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-12-22 18:45:13.183002",
+ "modified": "2023-04-30 14:19:34.497251",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Company Controller",
@@ -436,10 +438,23 @@
    "create": 1,
    "delete": 1,
    "email": 1,
+   "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
-   "role": "System Manager",
+   "report": 1,
+   "role": "SaaS Manager",
+   "select": 1,
+   "set_user_permissions": 1,
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SaaS User",
+   "select": 1,
    "write": 1
   }
  ],
