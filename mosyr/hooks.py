@@ -618,7 +618,7 @@ fixtures = [
                     "Company-registration_info-hidden",
                     "Company-default_letter_head-hidden",
                     "Repayment Schedule-interest_amount-hidden",
-                    "Payroll Entry-main-title_field",
+                    # "Payroll Entry-main-title_field",
                     "Retention Bonus-main-title_field",
                     "Leave Type-allow_over_allocation-hidden",
                     "Leave Type-earned_leave-hidden",
