@@ -2,7 +2,7 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-04-12 19:40:49.979485",
+  "modified": "2023-06-06 12:06:52.482315",
   "name": "SaaS Manager",
   "parent": null,
   "parentfield": null,
@@ -26,6 +26,12 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "HR Notification"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Employee"
    }
   ]
  },
@@ -62,19 +68,13 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-04-12 19:40:38.084401",
+  "modified": "2023-06-07 10:44:56.596835",
   "name": "Self Service",
   "parent": null,
   "parentfield": null,
   "parenttype": null,
   "role_profile": "Self Service",
   "roles": [
-   {
-    "parent": "Self Service",
-    "parentfield": "roles",
-    "parenttype": "Role Profile",
-    "role": "Self Service"
-   },
    {
     "parent": "Self Service",
     "parentfield": "roles",
@@ -86,6 +86,12 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "HR Notification"
+   },
+   {
+    "parent": "Self Service",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Self Service"
    }
   ]
  }
