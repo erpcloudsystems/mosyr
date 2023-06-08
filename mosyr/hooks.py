@@ -162,7 +162,6 @@ doc_events = {
 	"User" :{
 		"validate" : "mosyr.api.create_user_permission_on_company_in_validate",
 		"after_insert" : [
-			"mosyr.api.set_user_type",
 			"mosyr.api.create_user_permission_on_company_in_create_user"
 		]
 	},
@@ -514,7 +513,9 @@ fixtures = [
                 "Vehicle Service-attachment",
                 "Vehicle Service-details",
                 "Department-vehicle_service_approver",
-                "Employee-spent_vacations"
+                "Employee-spent_vacations",
+                
+                "User-companies"
          ]]
         ]
     },
@@ -632,7 +633,16 @@ fixtures = [
                     "Vehicle Log-service_detail-allow_on_submit",
                     "Vehicle Service-type-reqd",
                     "Vehicle Service-frequency-reqd",
-                    "Vehicle Service-expense_amount-reqd"
+                    "Vehicle Service-expense_amount-reqd",
+
+                    "User-user_type-in_list_view",
+                    "User-user_type-in_standard_filter",
+                    "User-role_profile_name-in_standard_filter",
+                    "User-role_profile_name-in_list_view",
+                    "User-role_profile_name-default",
+                    "User-user_type-default",
+                    "User-user_type-hidden",
+                    "User-role_profile_name-allow_in_quick_entry"
 				]
 			]
 		]

@@ -14,6 +14,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -21,12 +22,14 @@
     "parent": "Contact Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -34,12 +37,14 @@
     "parent": "Contact Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -47,6 +52,7 @@
     "parent": "Contact Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -62,6 +68,7 @@
     "parent": "Contact Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -73,6 +80,7 @@
     "parent": "Contact Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -94,6 +102,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -101,12 +110,14 @@
     "parent": "Emergency Contact",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -114,12 +125,14 @@
     "parent": "Emergency Contact",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -127,6 +140,7 @@
     "parent": "Emergency Contact",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -142,6 +156,7 @@
     "parent": "Emergency Contact",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -153,6 +168,7 @@
     "parent": "Emergency Contact",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -174,6 +190,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -181,12 +198,14 @@
     "parent": "Educational Qualification",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -194,12 +213,14 @@
     "parent": "Educational Qualification",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -207,6 +228,7 @@
     "parent": "Educational Qualification",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -222,6 +244,7 @@
     "parent": "Educational Qualification",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -233,6 +256,7 @@
     "parent": "Educational Qualification",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -254,6 +278,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -261,12 +286,14 @@
     "parent": "Salary Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -274,12 +301,14 @@
     "parent": "Salary Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -287,6 +316,7 @@
     "parent": "Salary Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -302,6 +332,7 @@
     "parent": "Salary Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -313,6 +344,7 @@
     "parent": "Salary Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -334,6 +366,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -341,12 +374,14 @@
     "parent": "Health Insurance",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -354,12 +389,14 @@
     "parent": "Health Insurance",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -367,6 +404,7 @@
     "parent": "Health Insurance",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -382,6 +420,7 @@
     "parent": "Health Insurance",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -393,6 +432,7 @@
     "parent": "Health Insurance",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -414,6 +454,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -421,12 +462,14 @@
     "parent": "Personal Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -434,12 +477,14 @@
     "parent": "Personal Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -447,6 +492,7 @@
     "parent": "Personal Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -462,6 +508,7 @@
     "parent": "Personal Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -473,6 +520,7 @@
     "parent": "Personal Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -494,6 +542,7 @@
   "states": [
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -501,12 +550,14 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": "",
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -514,12 +565,14 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved",
     "update_field": "",
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -527,12 +580,14 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Ended",
     "update_field": "",
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "2",
     "is_optional_state": 0,
     "message": null,
@@ -540,6 +595,7 @@
     "parent": "Employee Contract",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Cancelled",
     "update_field": "",
     "update_value": null
@@ -555,6 +611,7 @@
     "parent": "Employee Contract",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -566,6 +623,7 @@
     "parent": "Employee Contract",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved"
    },
    {
@@ -577,6 +635,7 @@
     "parent": "Employee Contract",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Ended"
    }
   ],
@@ -598,6 +657,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -605,12 +665,14 @@
     "parent": "Dependants Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -618,12 +680,14 @@
     "parent": "Dependants Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -631,6 +695,7 @@
     "parent": "Dependants Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -646,6 +711,7 @@
     "parent": "Dependants Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -657,6 +723,7 @@
     "parent": "Dependants Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -678,6 +745,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -685,12 +753,14 @@
     "parent": "Passport Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -698,12 +768,14 @@
     "parent": "Passport Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -711,6 +783,7 @@
     "parent": "Passport Details",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -726,6 +799,7 @@
     "parent": "Passport Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -737,6 +811,7 @@
     "parent": "Passport Details",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -758,6 +833,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -765,12 +841,14 @@
     "parent": "Work Experience",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -778,12 +856,14 @@
     "parent": "Work Experience",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -791,6 +871,7 @@
     "parent": "Work Experience",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -806,6 +887,7 @@
     "parent": "Work Experience",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -817,6 +899,7 @@
     "parent": "Work Experience",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -838,6 +921,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -845,12 +929,14 @@
     "parent": "Lateness Permission",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -858,12 +944,14 @@
     "parent": "Lateness Permission",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -871,6 +959,7 @@
     "parent": "Lateness Permission",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -886,6 +975,7 @@
     "parent": "Lateness Permission",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -897,6 +987,7 @@
     "parent": "Lateness Permission",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -918,6 +1009,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -925,12 +1017,14 @@
     "parent": "Employee ID",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -938,12 +1032,14 @@
     "parent": "Employee ID",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -951,6 +1047,7 @@
     "parent": "Employee ID",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -966,6 +1063,7 @@
     "parent": "Employee ID",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -977,6 +1075,7 @@
     "parent": "Employee ID",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
@@ -998,6 +1097,7 @@
   "states": [
    {
     "allow_edit": "All",
+    "approver": null,
     "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
@@ -1005,12 +1105,14 @@
     "parent": "Exit Permission",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -1018,12 +1120,14 @@
     "parent": "Exit Permission",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Approved by HR",
     "update_field": null,
     "update_value": null
    },
    {
     "allow_edit": "HR Manager",
+    "approver": null,
     "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
@@ -1031,6 +1135,7 @@
     "parent": "Exit Permission",
     "parentfield": "states",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Rejected",
     "update_field": null,
     "update_value": null
@@ -1046,6 +1151,7 @@
     "parent": "Exit Permission",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    },
    {
@@ -1057,6 +1163,7 @@
     "parent": "Exit Permission",
     "parentfield": "transitions",
     "parenttype": "Workflow",
+    "related_to": null,
     "state": "Pending"
    }
   ],
