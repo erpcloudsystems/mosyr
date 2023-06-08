@@ -38,23 +38,19 @@ frappe.ui.form.on('Employee', {
 			}
 		}
 		// Check Identity Expired Date 
-		if (frm.doc.identity) {
-			frm.doc.identity.forEach(row => {
-				let diff = frappe.datetime.get_diff(row.expire_date, current_date)
-				if (diff <= 30 && diff >= 0 ) {
-					msg += __(`Identity ${ row.id_number } Will Be Expired in ${diff} days <br>`)
-				}
-			});
-		}
+		frm.doc.identity.forEach(row => {
+			let diff = frappe.datetime.get_diff(row.expire_date, current_date)
+			if (diff <= 30 && diff >= 0 ) {
+				msg += __(`Identity ${ row.id_number } Will Be Expired in ${diff} days <br>`)
+			}
+		});
 		// Check Passport Expired Date 
-		if (frm.doc.passport) {
-			frm.doc.passport.forEach(row => {
-				let diff = frappe.datetime.get_diff(row.passport_expire, current_date)
-				if (diff <= 30 && diff >= 0 ) {
-					msg += __(`Passport ${ row.passport_number } Will Be Expired in ${diff} days <br>`)
-				}
-			});
-		}
+		frm.doc.passport.forEach(row => {
+			let diff = frappe.datetime.get_diff(row.passport_expire, current_date)
+			if (diff <= 30 && diff >= 0 ) {
+				msg += __(`Passport ${ row.passport_number } Will Be Expired in ${diff} days <br>`)
+			}
+		});
 		// Check Insurance Expired Date 
 		if(frm.doc.insurance_card_expire){
 			let ins_diff = frappe.datetime.get_diff(frm.doc.insurance_card_expire, current_date)
