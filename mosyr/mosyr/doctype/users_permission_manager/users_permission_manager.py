@@ -163,11 +163,11 @@ class UsersPermissionManager(Document):
             for k, v in self.doctypes.items():
                 for idx, d in enumerate(v):
                     if doctype == d.get("document_type"):
-                        if doctype != "Company":
+                        if doctype == "Company":
                             continue
                         c = {
                             "document_type": doctype,
-                            "is_custom": r.is_custom,
+                            "is_custom": r.is_custom or 0,
                             "read": r.read,
                             "write": r.write,
                             "create": r.create,
@@ -177,9 +177,11 @@ class UsersPermissionManager(Document):
                             "delete": r.delete,
                         }
                         v[idx] = c
+        
         for key, docs in self.doctypes.items():
             for doc in docs:
                 self.append(f"{key}", doc)
+                
         return "done"
 
     @frappe.whitelist()

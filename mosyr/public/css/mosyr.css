@@ -110,3 +110,6 @@ div[id="page-Payroll Entry"] div[data-doctype="Journal Entry"]{
 	color: #975a16;
 	font-weight: bold;
 }
+.page-actions .btn:not(.icon-btn), .page-actions div#driver-popover-item .driver-popover-footer button:not(.icon-btn), div#driver-popover-item .driver-popover-footer .page-actions button:not(.icon-btn) {
+    padding: 0px 10px !important;
+}
