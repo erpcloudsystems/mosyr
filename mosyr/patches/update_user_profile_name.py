@@ -12,7 +12,7 @@ def execute():
             if user.user_type == "SaaS Manager":
                 user.db_set("role_profile_name", "SaaS Manager")
 
-            if user.user_type == "System User":
+            if user.name == "support@mosyr.io":
                 user.db_set("role_profile_name", "SaaS Manager")
 
             frappe.db.commit()

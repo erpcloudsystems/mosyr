@@ -30,52 +30,7 @@ frappe.ui.form.on('Users Permission Manager', {
 				callback: function(r){
 					frm.refresh_fields()
 					if (r.message) {
-						
-						// for (const [key, value] of Object.entries(r.message.doctypes)) {
-						// 	for (const [key2, value2] of Object.entries(value)) {
-						// 		frm.clear_table(key2)
-						// 		value2.forEach(e => {
-						// 			const new_row = frm.add_child(key2)
-						// 			new_row.document_type = e
-						// 			frm.refresh_field(key2)
-
-						// 		})
-						// 	}
-						// }
-						
-						// for (const [key, value] of Object.entries(r.message.permission[0])) {
-						// 	if(value.length > 0) {
-						// 		value.forEach(row => {
-						// 			getchildren("User Permission Document Type", "Users Permission Manager", key).forEach(e => {
-						// 				if(e.document_type==row.document_type){
-						// 					e.is_custom =  row.is_custom,
-						// 					e.read =  row.read,
-						// 					e.write =  row.write,
-						// 					e.create =  row.create,
-						// 					e.submit =  row.submit,
-						// 					e.cancel =  row.cancel,
-						// 					e.amend =  row.amend,
-						// 					e.delete =  row.delete
-						// 				}
-						// 			}
-						// 			)
-						// 		})
-						// 	}
-						// }
-						// (r.message.repage || []).forEach(row => {
-						// 	if(row.page){
-						// 	let new_row = frm.add_child("page_or_report", {
-						// 			'set_role_for': 'Page',
-						// 			'page_or_report': row.page
-						// 		})
-						// 	}else if(row.report){
-						// 		let new_row = frm.add_child("page_or_report", {
-						// 			'set_role_for':'Report',
-						// 			'page_or_report': row.report
-						// 		})
-						// 	}
-							
-						// });
+						console.log("Success");
 						frm.refresh_field('page_or_report');
 					}
 					frm.refresh_fields()
@@ -88,8 +43,9 @@ frappe.ui.form.on('Users Permission Manager', {
 					method: "apply_permissions",
 					freeze: true,
 					freeze_message: __("Please Wait..."), 
-					args:{user: frm.doc.user,
-						 perms:frm.doc.system_management.concat(
+					args:{
+						user: frm.doc.user,
+						perms:frm.doc.system_management.concat(
 							frm.doc.user_management,
 							frm.doc.hr_management,
 							frm.doc.employees_list,
@@ -103,8 +59,9 @@ frappe.ui.form.on('Users Permission Manager', {
 							frm.doc.vehicle_management,
 							frm.doc.documents_management,
 							frm.doc.custody_management,
-							),
-						 rps: frm.doc.page_or_report},
+						),
+						rps: frm.doc.page_or_report
+					},
 					callback: function(r){
 						if(r.message) {
 							var msg = (__("Permission has been successfully released for user {0}", [frm.doc.user]));
