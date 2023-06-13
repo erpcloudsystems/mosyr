@@ -642,7 +642,9 @@ fixtures = [
                     "User-role_profile_name-default",
                     "User-user_type-default",
                     "User-user_type-hidden",
-                    "User-role_profile_name-allow_in_quick_entry"
+                    "User-role_profile_name-allow_in_quick_entry",
+                    "User-role_profile_name-permlevel",
+                    "User-sb1-permlevel"
 				]
 			]
 		]
