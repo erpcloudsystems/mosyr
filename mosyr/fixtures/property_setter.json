@@ -6,7 +6,7 @@
   "doctype": "Property Setter",
   "doctype_or_field": "DocField",
   "field_name": "employee_number",
-  "modified": "2023-06-04 13:59:46.731867",
+  "modified": "2023-06-12 11:49:25.801485",
   "name": "Employee-employee_number-hidden",
   "parent": null,
   "parentfield": null,
@@ -1970,5 +1970,39 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "User",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "role_profile_name",
+  "modified": "2023-06-13 16:40:09.725804",
+  "name": "User-role_profile_name-permlevel",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "permlevel",
+  "property_type": "Int",
+  "row_name": null,
+  "value": "0"
+ },
+ {
+  "default_value": null,
+  "doc_type": "User",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "sb1",
+  "modified": "2023-06-13 16:40:14.235704",
+  "name": "User-sb1-permlevel",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "permlevel",
+  "property_type": "Int",
+  "row_name": null,
+  "value": "0"
  }
 ]
