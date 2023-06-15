@@ -191,69 +191,68 @@ class UsersPermissionManager(Document):
         # if not frappe.db.exists("User", self.user):
         #     return
         
-        user = frappe.get_doc("User", self.user)
-        
+        # profile_doc = frappe.get_doc("Role Profile", profile)
+        # roles = [ d.role for d in profile_doc.roles ]
         # if user.name in ["Administrator", "Guest", "support@mosyr.io"] or user.role_profile_name == "SaaS Manager":
         #     return
         # Check user profile
-        if frappe.db.exists("Role Profile", self.user):
-            profile = frappe.get_doc("Role Profile", self.user)
-        else:
-            profile = frappe.new_doc("Role Profile")
-            profile.role_profile = self.user
+        # if frappe.db.exists("Role Profile", self.user):
+        #     profile = frappe.get_doc("Role Profile", self.user)
+        # else:
+        #     profile = frappe.new_doc("Role Profile")
+        #     profile.role_profile = self.user
             
         
-        if frappe.db.exists("Role", self.user):
-            role = frappe.get_doc("Role", self.user)
-        else:
-            role = frappe.new_doc("Role")
-            role.role_name = self.user
-            role.save()
-            frappe.db.commit()
-        frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role.name}'")
-        frappe.db.commit()
-        profile.roles = []
-        profile.append("roles", {
-            "role": role.name
-        })
-        profile.append("roles", {
-            "role": "HR Notification"
-        })
-        profile.append("roles", {
-            "role": "Mosyr Forms"
-        })
-        profile.save()
-        frappe.db.commit()
-    
+        # if frappe.db.exists("Role", self.user):
+        #     role = frappe.get_doc("Role", self.user)
+        # else:
+        #     role = frappe.new_doc("Role")
+        #     role.role_name = self.user
+        #     role.save()
+        #     frappe.db.commit()
+        
+        user = frappe.get_doc("User", self.user)
+        role = user.role_profile_name
+
         for key in self.doctypes.keys():
             for doc in self.get(key, []):
                 if (cint(doc.read) > 0 or cint(doc.write) > 0 or cint(doc.create) > 0 
                     or cint(doc.submit) > 0 or cint(doc.cancel) > 0 or cint(doc.amend) > 0 
                     or cint(doc.delete) > 0):
-                    if not frappe.db.get_value("Custom DocPerm", {"parent": doc.document_type, "role": role.name}):
-                        frappe.get_doc(
-                            {
-                                "doctype": "Custom DocPerm",
-                                "role": role.name,
-                                "read": doc.read,
-                                "write": doc.write,
-                                "create": doc.create,
-                                "delete": doc.delete,
-                                "submit": doc.submit,
-                                "cancel": doc.cancel,
-                                "amend": doc.amend,
-                                "parent": doc.document_type,
-                            }
-                        ).insert(ignore_permissions=True)
-        user.role_profile_name = profile.name
-        user.reload()
-        user.save()
-        frappe.db.commit()
+                    frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role}' and parent='{doc.document_type}'")
+                    frappe.db.commit()
+                    frappe.get_doc(
+                        {
+                            "doctype": "Custom DocPerm",
+                            "role": role,
+                            "read": doc.read,
+                            "write": doc.write,
+                            "create": doc.create,
+                            "delete": doc.delete,
+                            "submit": doc.submit,
+                            "cancel": doc.cancel,
+                            "amend": doc.amend,
+                            "parent": doc.document_type,
+                        }
+                    ).insert(ignore_permissions=True)
 
-        
 
-                
-            
+        # profile.roles = []
+        # profile.append("roles", {
+        #     "role": role.name
+        # })
+        # profile.append("roles", {
+        #     "role": "HR Notification"
+        # })
+        # profile.append("roles", {
+        #     "role": "Mosyr Forms"
+        # })
+        # profile.save()
+        # frappe.db.commit()
+    
+        # user.role_profile_name = profile.name
+        # user.reload()
+        # user.save()
         # frappe.flags.ignore_permissions = 1
         # user_types = self.get_user_types_data(user, perms)
         # user_type_limit = {}
