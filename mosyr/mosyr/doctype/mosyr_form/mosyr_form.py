@@ -9,6 +9,7 @@ from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import cint
 from frappe.permissions import add_permission, update_permission_property
+from mosyr.api import create_workflow
 
 module = "Mosyr Forms"
 allow_rename = 0
@@ -107,7 +108,7 @@ class MosyrForm(Document):
             frappe.db.commit()
         self.build_system_doc(clean_fields, title_field)
         # self.create_server_script()
-        self.create_workflow()
+        self.create_doc_workflow()
         add_permission(self.name, "SaaS Manager", permlevel=0)
         for perm in ["read", "write", "create", "delete", "select"]:
             update_permission_property(self.name, "SaaS Manager", permlevel=0, ptype=perm, value=1)
@@ -437,6 +438,9 @@ class MosyrForm(Document):
             frappe.db.commit()
             saas_manager.db_set("user_type", usertype)
             frappe.db.commit()
+            
+        # DELETE Workflow
+        
 
     def clear_child_doc(self, options):
         child_doc = frappe.db.exists("DocType", options)
@@ -452,41 +456,15 @@ class MosyrForm(Document):
                     linked_doc.delete()
             child_doc.delete()
 
-    def create_workflow(self):
+    def create_doc_workflow(self):
         if len(self.workflow_transition):
-            workflow = frappe.new_doc("Workflow")
-            workflow.workflow_name = self.name
-            workflow.document_type = self.name
-            workflow.is_active = 1
-            for row in self.workflow_transition:
-                row_tr = workflow.append("transitions", {})
-                row_tr.state = row.get("state")
-                row_tr.action = row.get("action")
-                row_tr.next_state = row.get("next_state")
-                row_tr.allowed = row.get("allowed")
-            if self.is_submittable:
-                st = [
-                    {"state": "Pending","doc_status": 0, "allow_edit": "SaaS Manager",},
-                    {"state": "Approved", "doc_status": 1, "allow_edit": "SaaS Manager",},
-                    {"state": "Rejected", "doc_status": 1, "allow_edit": "SaaS Manager",},
-                ]
-                for row in st:
-                    row_tr = workflow.append("states", {})
-                    row_tr.state = row.get("state")
-                    row_tr.doc_status = row.get("doc_status")
-                    row_tr.allow_edit = row.get("allow_edit")
+            data = {
+                "name": self.name,
+                "state_name": self.form_title,
+                "table_name": "workflow_transition"
 
-            else:
-                row_st = workflow.append("states", {})
-                row_st.state = self.workflow_transition[0].get("state")
-                row_st.allow_edit = self.workflow_transition[0].get("allowed")
-                for row in self.workflow_transition:
-                    row_st = workflow.append("states", {})
-                    row_st.state = row.get("next_state")
-                    row_st.allow_edit = row.get("allowed")
-
-            workflow.save()
-            frappe.db.commit()
+            }
+            create_workflow(self, data, with_dep=False)
 
     def create_server_script(self):
         server_script = frappe.new_doc("Server Script")
