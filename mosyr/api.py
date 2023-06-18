@@ -707,14 +707,14 @@ def create_department_workflows(doc, method):
         }
     ]
     for row in workflow_docs:
-        create_workflow(doc, row)
+        create_workflow(doc, row, with_dep=True)
     
-def create_workflow(doc, row):
+def create_workflow(doc, row, with_dep):
     approver_table = row.get("table_name")
     approver_list = doc.get(approver_table)
     if approver_list:
-        state_list = create_doc_workflow_status(doc.name, approver_list, row.get("state_name"))
-        actions_list = create_doc_workflow_actions(doc.name, state_list)
+        state_list = create_doc_workflow_status(doc.name, approver_list, row.get("state_name"), with_dep)
+        actions_list = create_doc_workflow_actions(doc.name, state_list, with_dep)
         
         is_workflow_exist = frappe.db.exists("Workflow", {"document_type":row.get("name"), "is_active": 1})
         if not is_workflow_exist:
@@ -777,7 +777,7 @@ def create_workflow(doc, row):
             workflow_doc.save()
 
 
-def create_doc_workflow_status(department, approvers, state_name):
+def create_doc_workflow_status(department, approvers, state_name, with_dep):
     state_list = []
     if approvers:
         prev_state = "Pending"
@@ -799,7 +799,7 @@ def create_doc_workflow_status(department, approvers, state_name):
                 "allow_edit": "All",
                 "state_type": "Approve",
                 "prev_state": prev_state,
-                "related_to": department,
+                "related_to": department if with_dep else "",
                 "approver": row.approver
             })
 
@@ -820,7 +820,7 @@ def create_doc_workflow_status(department, approvers, state_name):
                 "allow_edit": "All",
                 "state_type": "Reject",
                 "prev_state": prev_state,
-                "related_to": department,
+                "related_to": department if with_dep else "",
                 "approver": row.approver
             })
             
@@ -828,29 +828,31 @@ def create_doc_workflow_status(department, approvers, state_name):
 
     return state_list
 
-def create_doc_workflow_actions(department, state_list):
+def create_doc_workflow_actions(department, state_list, with_dep):
     actions_list = []
     if state_list:
         for row in state_list:
+            approver = row.get('approver')
             actions_list.append({
                 "state": row.get("prev_state"),
                 "action": row.get("state_type"),
                 "next_state": row.get("state"),
                 "allowed": row.get("allow_edit"),
-                "condition": f'doc.department == "{department}"',
-                "related_to": department
+                "condition": f'doc.department == "{department}"' if with_dep else f'frappe.session.user == "{approver}"',
+                "related_to": department if with_dep else ""
             })
     # Create Cancelled action
     if state_list:
         for x in state_list:
+            approver = x.get('approver')
             if x.get("state_type") == "Reject":
                 actions_list.append({
                     "state": x.get("state"),
                     "action": "Cancel",
                     "next_state": "Cancelled",
                     "allowed": x.get("allow_edit"),
-                    "condition": f'doc.department == "{department}"',
-                    "related_to": department
+                    "condition": f'doc.department == "{department}"' if with_dep else f'frappe.session.user == "{approver}"',
+                    "related_to": department if with_dep else ""
                 })
     return actions_list
 

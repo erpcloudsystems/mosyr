@@ -67,7 +67,7 @@
   {
    "fieldname": "workflow_transition",
    "fieldtype": "Table",
-   "options": "Mosyr Workflow"
+   "options": "Department Approver"
   },
   {
    "fieldname": "transition_rules_section",
@@ -85,7 +85,7 @@
  "icon": "fa fa-bolt",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 14:24:51.493223",
+ "modified": "2023-06-18 14:13:25.696844",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Mosyr Form",
