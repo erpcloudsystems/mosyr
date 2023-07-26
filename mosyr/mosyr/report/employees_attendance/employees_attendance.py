@@ -44,15 +44,15 @@ def get_columns():
             "width": 80,
         },
         {
-            "label": _("Extra In"),
-            "fieldname": "extra_time_in",
+            "label": _("Overtime In"),
+            "fieldname": "overtime_in",
             "fieldtype": "Data",
             "default": "0",
             "width": 80,
         },
         {
-            "label": _("Extra Out"),
-            "fieldname": "extra_time_out",
+            "label": _("Overtime Out"),
+            "fieldname": "overtime_out",
             "fieldtype": "Data",
             "default": "0",
             "width": 80,
@@ -67,13 +67,6 @@ def get_columns():
         {
             "label": _("Early Exit"),
             "fieldname": "early_exit",
-            "fieldtype": "Data",
-            "default": "0",
-            "width": 80,
-        },
-        {
-            "label": _("Extra Early"),
-            "fieldname": "extra_early",
             "fieldtype": "Data",
             "default": "0",
             "width": 80,
@@ -189,36 +182,71 @@ def get_checkin_details(shift, employee, date):
 
     checkin = checkin_list[0] if checkin_list else ""
     checkout = checkout_list[-1] if checkout_list else ""
+    checkin_time = 0
+    checkout_time = 0
+    actual_hrs = ""
     
     if checkin:
         checkin_doc = frappe.get_doc("Employee Checkin", checkin.get("name"))
         time_in = checkin_doc.time.time()
-        # Calculate Late Entry
+        overtime_in = ""
+        late_entry = ""
+
+        # Calculate Checkin time's
         shift_start = datetime.datetime.strptime(str(shift_doc.start_time), "%H:%M:%S")
         start_dt1 = checkin_doc.time.time()
+        checkin_time = checkin_doc.time.time()
         start_dt2 = shift_start.time()
-        start_time_difference = datetime.timedelta(hours=start_dt1.hour - start_dt2.hour, minutes=start_dt1.minute - start_dt2.minute, seconds=start_dt1.second - start_dt2.second)
-        late_entry = start_time_difference
-    
+
+        if start_dt2 > start_dt1:
+            # this mean's Overtime IN
+            # Calculate Overtime IN
+            start_time_diff = datetime.timedelta(hours=start_dt2.hour - start_dt1.hour, minutes=start_dt2.minute - start_dt1.minute, seconds=start_dt2.second - start_dt1.second)
+            overtime_in = start_time_diff
+
+        if start_dt2 < start_dt1:
+            # this mean's Late Entry
+               # Calculate Late Entry
+            start_time_difference = datetime.timedelta(hours=start_dt1.hour - start_dt2.hour, minutes=start_dt1.minute - start_dt2.minute, seconds=start_dt1.second - start_dt2.second)
+            late_entry = start_time_difference
+        
+
     if checkout:
         checkout_doc = frappe.get_doc("Employee Checkin", checkout.get("name"))
         time_out = checkout_doc.time.time()
-        # Calculate Early Exit
+        early_exit = ""
+        overtime_out = ""
+        
+        # Calculate Checkout time's
         shift_end = datetime.datetime.strptime(str(shift_doc.end_time), "%H:%M:%S")
         time2 = shift_end.time()
         time1 = checkout_doc.time.time()
-        time_difference = datetime.timedelta(hours=time2.hour - time1.hour, minutes=time2.minute - time1.minute, seconds=time2.second - time1.second)
-        early_exit = time_difference
+        checkout_time = checkout_doc.time.time()
         
+        if time2 > time1:
+            # this mean's Early Exit
+            # Calculate Early Exit
+            time_difference = datetime.timedelta(hours=time2.hour - time1.hour, minutes=time2.minute - time1.minute, seconds=time2.second - time1.second)
+            early_exit = time_difference
+        
+        if time2 < time1:
+            # this mean's Overtime OUT
+            # Calculate Overtime OUT
+            time_difference = datetime.timedelta(hours=time1.hour - time2.hour, minutes=time1.minute - time2.minute, seconds=time1.second - time2.second)
+            overtime_out = time_difference
+            
+    # Calculate Actual Working hours
+    if checkin_time and checkout_time:
+        actual_hrs = datetime.timedelta(hours=checkout_time.hour - checkin_time.hour, minutes=checkout_time.minute - checkin_time.minute, seconds=checkout_time.second - checkin_time.second)
+
     result = {
-        "time_in": checkin_doc.time.time() if checkin else "",
-        "time_out": checkout_doc.time.time() if checkout else "",
+        "time_in": time_in if checkin else "",
         "late_entry": late_entry if checkin else "",
+        "overtime_in": overtime_in if checkin else "",
+        "time_out": time_out if checkout else "",
         "early_exit": early_exit if checkout else "",
+        "overtime_out": overtime_out if checkout else "",
+        "actual_hours": actual_hrs
     }
     
     return result
-    print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-    print(shift, employee, date)
-    print(checkin_list)
-    print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
