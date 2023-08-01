@@ -122,11 +122,8 @@ def get_data(filters):
         conds
     )
     data = frappe.db.sql(sql, as_dict=1)
-    print("****************************************************************************")
-    print(data)
-    print("****************************************************************************")
+
     # Get Attendance Details
-    # data = [{'employee_name': 'محمد احمد الكاف', 'status': 'Absent'}]
     for row in data:
         if row.get("shift") and frappe.db.exists("Shift Type", row.get("shift")):
             shift_doc = frappe.get_doc("Shift Type", row.get("shift"))
@@ -140,11 +137,6 @@ def get_data(filters):
                     "name"), row.get("attendance_date"))
                 
                 row.update(res)
-
-    print("*99999999999")
-    print(data)
-    print("*99999999999")
-    return data
 
 
 def get_conditions(filters):
