@@ -1037,3 +1037,22 @@ def set_employee_allocated_leaves(doc, method):
                     leave_allocation.new_leaves_allocated = leave_allocated
                     leave_allocation.save()
                     frappe.db.commit()
+
+
+
+@frappe.whitelist()
+def update_employee_checkin(docname,new_time, new_log_type):
+    related_attendance = frappe.db.get_value("Employee Checkin", docname, "attendance")
+    frappe.db.set_value("Employee Checkin", docname, "attendance", "")
+    # Cancel & Delete Related Attendance
+    attendance_doc = frappe.get_doc("Attendance", related_attendance)
+    attendance_doc.cancel()
+    attendance_doc.delete()
+    
+    # Update Time and Log Type in Employee Checkin
+    doc = frappe.get_doc("Employee Checkin", docname)
+    doc.time = new_time
+    doc.log_type = new_log_type
+    doc.save()
+    shift_doc = frappe.get_cached_doc("Shift Type", doc.shift)
+    shift_doc.process_auto_attendance()

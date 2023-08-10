@@ -137,6 +137,8 @@ def get_data(filters):
                     "name"), row.get("attendance_date"))
                 
                 row.update(res)
+            
+    return data
 
 
 def get_conditions(filters):
