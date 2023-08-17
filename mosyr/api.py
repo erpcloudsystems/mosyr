@@ -650,60 +650,76 @@ def create_department_workflows(doc, method):
             "name": "Leave Application",
             "state_name": "Leave",
             "table_name": "leave_approvers",   
-        },{
+        },
+        {
             "name": "Shift Request",
             "state_name": "Shift Request",
             "table_name": "shift_request_approver"
-        },{
+        },
+        {
             "name": "Contact Details",
             "state_name": "Contact Details",
             "table_name": "contact_details_approver"
-
-        },{
+        },
+        {
             "name": "Educational Qualification",
             "state_name": "Qualification",
             "table_name": "educational_qualification_approver"
-
-        },{
+        },
+        {
             "name": "Emergency Contac",
             "state_name": "Emergency",
             "table_name": "emergency_contact_approver"
-
-        },{
+        },
+        {
             "name": "Health Insurance",
             "state_name": "Insurance",
             "table_name": "health_insurance_approver"
-
-        },{
+        },
+        {
             "name": "Personal Details",
             "state_name": "Personal Details",
             "table_name": "personal_details_approver"
-
-        },{
+        },
+        {
             "name": "Salary Details",
             "state_name": "Salary Details",
             "table_name": "salary_details_approver"
-
-        },{
+        },
+        {
             "name": "Exit Permission",
             "state_name": "Exit Permission",
             "table_name": "exit_permission_approver"
-
-        },{
+        },
+        {
             "name": "Attendance Request",
             "state_name": "Attendance Request",
             "table_name": "attendance_request_approver"
-
-        },{
+        },
+        {
             "name": "Compensatory Leave Request",
             "state_name": "Compensatory Leave Request",
             "table_name": "compensatory_leave_request_approver"
-
-        },{
+        },
+        {
             "name": "Travel Request",
             "state_name": "Travel Request",
             "table_name": "travel_request_approver"
-
+        },
+        {
+            "name": "Vehicle Services",
+            "state_name": "Vehicle Services",
+            "table_name": "vehicle_service_approver"
+        },
+        {
+            "name": "Letter",
+            "state_name": "Letter",
+            "table_name": "letter_approver"
+        },
+        {
+            "name": "Loan Application",
+            "state_name": "Loan Application",
+            "table_name": "loan_approver"
         }
     ]
     for row in workflow_docs:
