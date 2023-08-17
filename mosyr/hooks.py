@@ -516,7 +516,8 @@ fixtures = [
                 "Employee-spent_vacations",
                 
                 "User-companies",
-                "Department-letter_approver"
+                "Department-letter_approver",
+                "Department-loan_approver"
          ]]
         ]
     },
