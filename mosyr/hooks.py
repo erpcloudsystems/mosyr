@@ -497,29 +497,31 @@ fixtures = [
 
 				"Salary Component-custom_formula",
 
-				"Department-contact_details_approver",
-				"Department-educational_qualification_approver",
-				"Department-emergency_contact_approver",
-				"Department-health_insurance_approver",
-				"Department-personal_details_approver",
-				"Department-salary_details_approver",
-				"Department-exit_permission_approver",
-				"Department-attendance_request_approver",
-				"Department-compensatory_leave_request_approver",
-				"Department-travel_request_approver",
-				
-				"Workflow Document State-related_to",
-				"Workflow Transition-related_to",
-				"Workflow Document State-approver",
-				"Vehicle Service-attachment",
-				"Vehicle Service-details",
-				"Department-vehicle_service_approver",
-				"Employee-spent_vacations",
-				
-				"User-companies"
-		 ]]
-		]
-	},
+                "Department-contact_details_approver",
+                "Department-educational_qualification_approver",
+                "Department-emergency_contact_approver",
+                "Department-health_insurance_approver",
+                "Department-personal_details_approver",
+                "Department-salary_details_approver",
+                "Department-exit_permission_approver",
+                "Department-attendance_request_approver",
+                "Department-compensatory_leave_request_approver",
+                "Department-travel_request_approver",
+                
+                "Workflow Document State-related_to",
+                "Workflow Transition-related_to",
+                "Workflow Document State-approver",
+                "Vehicle Service-attachment",
+                "Vehicle Service-details",
+                "Department-vehicle_service_approver",
+                "Employee-spent_vacations",
+                
+                "User-companies",
+                "Department-letter_approver",
+                "Department-loan_approver"
+         ]]
+        ]
+    },
 	{
 	"dt": "Property Setter",
 			"filters": [
