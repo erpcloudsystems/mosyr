@@ -93,29 +93,21 @@ def get_shift_for_time(shifts: List[Dict], for_timestamp: datetime) -> Dict:
 
 def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str, str]]:
     """Returns list of shifts with details for given date"""
-    assignment = frappe.qb.DocType("Shift Assignment")
+    date = getdate(for_timestamp.date())
 
-    return (
-        frappe.qb.from_(assignment)
-        .select(assignment.name, assignment.shift_type)
-        .where(
-            (assignment.employee == employee)
-            & (assignment.docstatus == 1)
-            & (assignment.status == "Active")
-            & (assignment.start_date <= getdate(for_timestamp.date()))
-            & (
-                Criterion.any(
-                    [
-                        assignment.end_date.isnull(),
-                        (
-                            assignment.end_date.isnotnull()
-                            & (getdate(for_timestamp.date()) >= assignment.end_date)
-                        ),
-                    ]
-                )
-            )
-        )
-    ).run(as_dict=True)
+    sql = """
+        SELECT 
+            name, shift_type
+        FROM
+            `tabShift Assignment`
+        WHERE
+            employee='{0}' AND docstatus=1 AND status='Active' AND
+            start_date <= '{1}' AND (end_date IS NULL OR (end_date IS NOT NULL AND end_date >='{1}'))
+       """.format(employee, date)
+
+    result = frappe.db.sql(sql, as_dict=True)
+
+    return result
 
 
 def get_shift_for_timestamp(employee: str, for_timestamp: datetime) -> Dict:

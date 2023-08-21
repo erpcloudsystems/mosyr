@@ -109,7 +109,7 @@ class MosyrForm(Document):
         self.build_system_doc(clean_fields, title_field)
         # self.create_server_script()
         self.create_doc_workflow()
-        add_permission(self.name, "SaaS Manager", permlevel=0)
+        self.add_eform_permission(self.name, "SaaS Manager", permlevel=0)
         for perm in ["read", "write", "create", "delete", "select"]:
             update_permission_property(self.name, "SaaS Manager", permlevel=0, ptype=perm, value=1)
         if self.is_submittable:
@@ -117,7 +117,7 @@ class MosyrForm(Document):
                 update_permission_property(self.name, "SaaS Manager", permlevel=0, ptype=perm, value=1)
         frappe.db.commit()
         if self.give_permissions_to_the_self_service_employee:
-            add_permission(self.name, "Mosyr Forms", permlevel=0)   
+            self.add_eform_permission(self.name, "Mosyr Forms", permlevel=0)   
             for perm in ["select","read", "write", "create", "if_owner"]:
                 update_permission_property(self.name, "Mosyr Forms", permlevel=0, ptype=perm, value=1)
         if saas:
@@ -489,7 +489,7 @@ class MosyrForm(Document):
             frappe.db.commit()
 
             if self.give_permissions_to_the_self_service_employee:
-                add_permission(self.name, "Mosyr Forms", permlevel=0)   
+                self.add_eform_permission(self.name, "Mosyr Forms", permlevel=0)   
                 for perm in ["select","read", "write", "create", "if_owner"]:
                     update_permission_property(self.name, "Mosyr Forms", permlevel=0, ptype=perm, value=1)
             else:
@@ -504,3 +504,19 @@ class MosyrForm(Document):
             frappe.db.commit()
             saas_manager.db_set("user_type", usertype)
             frappe.db.commit()
+    
+    def add_eform_permission(self, doctype, role, permlevel=0):
+        custom_docperm = frappe.get_doc(
+			{
+				"doctype": "Custom DocPerm",
+				"__islocal": 1,
+				"parent": doctype,
+				"parenttype": "DocType",
+				"parentfield": "permissions",
+				"role": role,
+				"permlevel": permlevel,
+				"read": 1,
+			}
+		)
+        
+        custom_docperm.save(ignore_permissions=True)

@@ -1,5 +1,7 @@
 import frappe
 from frappe.core.doctype.user.user import User
+from frappe.utils import cint
+from frappe import STANDARD_USERS, _
 
 
 class CustomUser(User):
@@ -69,3 +71,29 @@ class CustomUser(User):
             now=1,
             retry=3,
         )
+    
+    def add_system_manager_role(self):
+        # if adding system manager, do nothing
+        if not cint(self.enabled) or (
+            "System Manager" in [user_role.role for user_role in self.get("roles")]
+        ):
+            return
+
+        if (
+            self.name not in STANDARD_USERS
+            and self.user_type == "System User"
+            and not self.get_other_system_managers()
+            and cint(frappe.db.get_single_value("System Settings", "setup_complete"))
+        ):
+
+            self.append("roles", {"doctype": "Has Role", "role": "System Manager"})
+
+        if self.name == "Administrator":
+            # Administrator should always have System Manager Role
+            self.extend(
+                "roles",
+                [
+                    {"doctype": "Has Role", "role": "System Manager"},
+                    {"doctype": "Has Role", "role": "Administrator"},
+                ],
+            )

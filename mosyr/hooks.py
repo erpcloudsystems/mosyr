@@ -43,15 +43,16 @@ doctype_js = {
 	"Payroll Entry" : "public/js/erpnext_custom/payroll_entry.js",
 	"Company" : "public/js/company.js",
 	"Holiday List": "public/js/holiday_list.js",
-	"Salary Component": "public/js/salary_component.js"
+	"Salary Component": "public/js/salary_component.js",
+	"Employee Checkin": "public/js/employee_checkin.js"
 }
 
 doctype_list_js = {
-    "Loan" : "public/js/loan_list.js",
-    "Salary Slip" : "public/js/salary_slip_list.js",
-    "Payroll Entry" : "public/js/payroll_entry_list.js",
-    "Retention Bonus" : "public/js/retention_bonus_list.js",
-    "Employee Incentive" : "public/js/employee_incentive_list.js",
+	"Loan" : "public/js/loan_list.js",
+	"Salary Slip" : "public/js/salary_slip_list.js",
+	"Payroll Entry" : "public/js/payroll_entry_list.js",
+	"Retention Bonus" : "public/js/retention_bonus_list.js",
+	"Employee Incentive" : "public/js/employee_incentive_list.js",
 	}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -154,7 +155,7 @@ doc_events = {
 			"mosyr.api.set_employee_number",
 			"mosyr.api.set_date_of_joining",
 			"mosyr.api.employee_end_contract",
-            "mosyr.api.set_employee_allocated_leaves"
+			"mosyr.api.set_employee_allocated_leaves"
 	]},
 	"Leave Type": {
 		"validate": "mosyr.api.check_other_annual_leaves"
@@ -173,43 +174,43 @@ doc_events = {
 	"User Type" :{
 		"on_update" : "mosyr.api.update_user_type_limits"
 	},
-    "Salary Structure": {
+	"Salary Structure": {
 		"validate" : "mosyr.api.create_componants_in_salary_straucture"
 	},
-    "Payroll Entry" : {
+	"Payroll Entry" : {
 		"on_submit": "mosyr.api.sum_net_pay_payroll_entry"
 	},
-    "Company" : {
+	"Company" : {
 		"validate" : [
-                        "mosyr.api.update_employee_data",
-    					"mosyr.api.create_letter_head"
+						"mosyr.api.update_employee_data",
+						"mosyr.api.create_letter_head"
 		]
 	},
-    "Department": {
+	"Department": {
 		"validate": "mosyr.api.create_department_workflows"
 	},
-    "Leave Application": {
+	"Leave Application": {
 		"on_update": [
 			"mosyr.api.validate_approver",
 			"mosyr.api.send_notification_and_email",
 		]
 	},
-    "Shift Request": {
+	"Shift Request": {
 		"on_update": [
 			"mosyr.api.send_notification_and_email",
 		]
 	},
-    "Attendance Request": {
+	"Attendance Request": {
 		"on_update": [
 			"mosyr.api.send_notification_and_email",
 		]
 	},
-    "Compensatory Leave Request": {
+	"Compensatory Leave Request": {
 		"on_update": [
 			"mosyr.api.send_notification_and_email",
 		]
 	},
-    "Travel Request": {
+	"Travel Request": {
 		"on_update": [
 			"mosyr.api.send_notification_and_email",
 		]
@@ -317,10 +318,10 @@ user_data_fields = [
 # ]
 
 fixtures = [
-    {
-        "dt": "Custom Field",
-        "filters": [
-            ["name", "in", [
+	{
+		"dt": "Custom Field",
+		"filters": [
+			["name", "in", [
 				"Employee-full_name_en",
 				"Employee-from_api",
 				"Employee-key",
@@ -411,90 +412,90 @@ fixtures = [
 				"Payroll Entry-branches",
 				"Payroll Entry-departments",
 				"Payroll Entry-designations",
-                
+				
 				"Payroll Employee Detail-leaves",
-                "Payroll Employee Detail-total_leaves_taken",
-                "Payroll Employee Detail-deduct_from_salary",
-                "Payroll Employee Detail-column_break_8",
-                "Payroll Employee Detail-deduction_days",
-                "Payroll Employee Detail-deduction_per_day",
-                "Salary Detail-is_leave_deduction",
-                "Employee-payment_type_2",
-                "Payroll Entry-total_amount",
-                "Payroll Entry-total_netpay",
-                "Company-pension_percentage_on_company",
-                "Company-column_break_0gjgh",
-                "Company-pension_percentage_on_employee",
-                "Company-column_break_h1hb6",
-                "Company-risk_percentage_on_company",
-                "Company-column_break_z45y7",
-                "Company-risk_percentage_on_employee",
-                "Company-social_insurance_settings",
-                "Company-banks_type_salary_card",
-                "Company-bank_account_number",
-                "Company-column_break_endoh",
-                "Company-banks_type_payroll",
-                "Company-calendar_accreditation",
-                "Company-column_break_xxoi2",
-                "Company-bank_code",
-                "Company-month_days",
-                "Company-column_break_homhp",
-                "Company-english_name_in_bank",
-                "Company-bank_name",
-                "Company-disbursement_type",
-                "Company-payroll_and_financial_settings",
-                "Company-right_header",
-                "Company-column_break_baa2t",
-                "Company-left_header",
-                "Company-header",
-                "Company-baladiya_license",
-                "Company-column_break_piicu",
-                "Company-cr_document",
-                "Company-column_break_mdtj1",
-                "Company-stamp",
-                "Company-column_break_8kblg",
-                "Company-logo",
-                "Company-logos_brands",
-                "Company-signatures",
-                "Company-signature",
-                "Company-labors_office_file_number",
-                "Company-mail_sender_address",
-                "Company-column_break_gsref",
-                "Company-mobile",
-                "Company-_mail_sender_name",
-                "Company-column_break_4zb38",
-                "Company-sender_name_sms",
-                "Company-organization_english",
-                "Company-column_break_obynz",
-                "Company-organization_arabic",
-                "Company-company_id",
-                "Company-account_info",
-                "Company-company_name_in_arabic",
-                "Company-establishment_number",
-                "Company-agreement_symbol",
-                "Company-agreement_number_for_customer",
-                "Company-unaccounted_deductions",
-                "Company-employee_day_wedding_leave",
-                "Company-end_of_services",
-                "Company-employee_day_death_leave",
+				"Payroll Employee Detail-total_leaves_taken",
+				"Payroll Employee Detail-deduct_from_salary",
+				"Payroll Employee Detail-column_break_8",
+				"Payroll Employee Detail-deduction_days",
+				"Payroll Employee Detail-deduction_per_day",
+				"Salary Detail-is_leave_deduction",
+				"Employee-payment_type_2",
+				"Payroll Entry-total_amount",
+				"Payroll Entry-total_netpay",
+				"Company-pension_percentage_on_company",
+				"Company-column_break_0gjgh",
+				"Company-pension_percentage_on_employee",
+				"Company-column_break_h1hb6",
+				"Company-risk_percentage_on_company",
+				"Company-column_break_z45y7",
+				"Company-risk_percentage_on_employee",
+				"Company-social_insurance_settings",
+				"Company-banks_type_salary_card",
+				"Company-bank_account_number",
+				"Company-column_break_endoh",
+				"Company-banks_type_payroll",
+				"Company-calendar_accreditation",
+				"Company-column_break_xxoi2",
+				"Company-bank_code",
+				"Company-month_days",
+				"Company-column_break_homhp",
+				"Company-english_name_in_bank",
+				"Company-bank_name",
+				"Company-disbursement_type",
+				"Company-payroll_and_financial_settings",
+				"Company-right_header",
+				"Company-column_break_baa2t",
+				"Company-left_header",
+				"Company-header",
+				"Company-baladiya_license",
+				"Company-column_break_piicu",
+				"Company-cr_document",
+				"Company-column_break_mdtj1",
+				"Company-stamp",
+				"Company-column_break_8kblg",
+				"Company-logo",
+				"Company-logos_brands",
+				"Company-signatures",
+				"Company-signature",
+				"Company-labors_office_file_number",
+				"Company-mail_sender_address",
+				"Company-column_break_gsref",
+				"Company-mobile",
+				"Company-_mail_sender_name",
+				"Company-column_break_4zb38",
+				"Company-sender_name_sms",
+				"Company-organization_english",
+				"Company-column_break_obynz",
+				"Company-organization_arabic",
+				"Company-company_id",
+				"Company-account_info",
+				"Company-company_name_in_arabic",
+				"Company-establishment_number",
+				"Company-agreement_symbol",
+				"Company-agreement_number_for_customer",
+				"Company-unaccounted_deductions",
+				"Company-employee_day_wedding_leave",
+				"Company-end_of_services",
+				"Company-employee_day_death_leave",
 				"Company-employee_day_benefits_with_out_pay_leave",
-                "Company-column_break_xltde",
-                "Company-employee_day_sick_leave",
-                "Company-employee_day_urgent_leave",
-                "Company-employee_day_hajj_leave",
-                "Company-employee_day_childbirth_vacation",
-                "Company-employee_day_annual_vacation",
-                "Company-employee_day_working",
-                "Company-settings",
-                
-                "Holiday List-add_time_period_holidays",
-                "Holiday List-period_description",
-                "Holiday List-start_from",
-                "Holiday List-ends_on",
-                "Holiday List-add_period_holidays",
-                "Holiday List-column_break_c8bxj",
+				"Company-column_break_xltde",
+				"Company-employee_day_sick_leave",
+				"Company-employee_day_urgent_leave",
+				"Company-employee_day_hajj_leave",
+				"Company-employee_day_childbirth_vacation",
+				"Company-employee_day_annual_vacation",
+				"Company-employee_day_working",
+				"Company-settings",
+				
+				"Holiday List-add_time_period_holidays",
+				"Holiday List-period_description",
+				"Holiday List-start_from",
+				"Holiday List-ends_on",
+				"Holiday List-add_period_holidays",
+				"Holiday List-column_break_c8bxj",
 
-                "Salary Component-custom_formula",
+				"Salary Component-custom_formula",
 
                 "Department-contact_details_approver",
                 "Department-educational_qualification_approver",
@@ -582,71 +583,71 @@ fixtures = [
 					"Payroll Entry-bank_account-print_hide",
 					"Payroll Entry-salary_slips_created-print_hide",
 					"Payroll Entry-salary_slips_submitted-print_hide",
-                    "Payroll Entry-cost_center-print_hide",
+					"Payroll Entry-cost_center-print_hide",
 					"Payroll Entry-main-default_print_format",
-                    "Payroll Entry-designation-hidden",
-                    "Payroll Entry-department-hidden",
-                    "Payroll Entry-branch-hidden",
-                    "User Permission Document Type-document_type-read_only",
-                    "User Permission Document Type-read-default",
-                    "Loan Application-is_term_loan-default",
-                    "Loan Application-is_secured_loan-hidden",
-                    "Loan Application-is_term_loan-hidden",
-                    "Loan-is_secured_loan-hidden",
-                    "Loan-is_term_loan-default",
-                    "Loan-is_term_loan-hidden",
-                    "Employee Incentive-employee_name-in_list_view",
-                    "Employee Incentive-employee-in_list_view",
-                    "Employee Incentive-payroll_date-in_list_view",
-                    "Employee Incentive-incentive_amount-in_list_view",
-                    "Retention Bonus-employee-in_list_view",
-                    "Retention Bonus-employee_name-in_list_view",
-                    "Retention Bonus-bonus_payment_date-in_list_view",
-                    "Retention Bonus-bonus_amount-in_list_view",
-                    "Salary Slip-net_pay-in_list_view",
-                    "Salary Slip-employee-in_list_view",
-                    "Salary Slip-salary_structure-in_list_view",
-                    "Salary Slip-payroll_frequency-default",
-                    "Salary Slip-payroll_frequency-hidden",
-                    "Payroll Entry-branch-in_list_view",
-                    "Payroll Entry-posting_date-in_list_view",
-                    "Payroll Entry-currency-in_list_view",
-                    "Payroll Entry-payroll_frequency-hidden",
-                    "Payroll Entry-payroll_frequency-default",
-                    "Salary Slip Loan-interest_amount-hidden",
-                    "Salary Slip Loan-interest_income_account-hidden",
-                    "Salary Slip Loan-loan_account-hidden",
-                    "Salary Slip-total_interest_amount-hidden",
-                    "Company-section_break_28-hidden",
-                    "Company-registration_info-hidden",
-                    "Company-default_letter_head-hidden",
-                    "Repayment Schedule-interest_amount-hidden",
-                    # "Payroll Entry-main-title_field",
-                    "Retention Bonus-main-title_field",
-                    "Leave Type-allow_over_allocation-hidden",
-                    "Leave Type-earned_leave-hidden",
-                    "Employee-grade-hidden",
-                    "Employee-personal_details-hidden",
-                    "Employee-unsubscribed-hidden",
-                    "Employee-prefered_contact_email-hidden",
-                    "Employee-job_profile-label",
-                    "Salary Component-formula-hidden",
-                    "Salary Component-help-hidden",
-                    "Vehicle Log-service_detail-allow_on_submit",
-                    "Vehicle Service-type-reqd",
-                    "Vehicle Service-frequency-reqd",
-                    "Vehicle Service-expense_amount-reqd",
+					"Payroll Entry-designation-hidden",
+					"Payroll Entry-department-hidden",
+					"Payroll Entry-branch-hidden",
+					"User Permission Document Type-document_type-read_only",
+					"User Permission Document Type-read-default",
+					"Loan Application-is_term_loan-default",
+					"Loan Application-is_secured_loan-hidden",
+					"Loan Application-is_term_loan-hidden",
+					"Loan-is_secured_loan-hidden",
+					"Loan-is_term_loan-default",
+					"Loan-is_term_loan-hidden",
+					"Employee Incentive-employee_name-in_list_view",
+					"Employee Incentive-employee-in_list_view",
+					"Employee Incentive-payroll_date-in_list_view",
+					"Employee Incentive-incentive_amount-in_list_view",
+					"Retention Bonus-employee-in_list_view",
+					"Retention Bonus-employee_name-in_list_view",
+					"Retention Bonus-bonus_payment_date-in_list_view",
+					"Retention Bonus-bonus_amount-in_list_view",
+					"Salary Slip-net_pay-in_list_view",
+					"Salary Slip-employee-in_list_view",
+					"Salary Slip-salary_structure-in_list_view",
+					"Salary Slip-payroll_frequency-default",
+					"Salary Slip-payroll_frequency-hidden",
+					"Payroll Entry-branch-in_list_view",
+					"Payroll Entry-posting_date-in_list_view",
+					"Payroll Entry-currency-in_list_view",
+					"Payroll Entry-payroll_frequency-hidden",
+					"Payroll Entry-payroll_frequency-default",
+					"Salary Slip Loan-interest_amount-hidden",
+					"Salary Slip Loan-interest_income_account-hidden",
+					"Salary Slip Loan-loan_account-hidden",
+					"Salary Slip-total_interest_amount-hidden",
+					"Company-section_break_28-hidden",
+					"Company-registration_info-hidden",
+					"Company-default_letter_head-hidden",
+					"Repayment Schedule-interest_amount-hidden",
+					# "Payroll Entry-main-title_field",
+					"Retention Bonus-main-title_field",
+					"Leave Type-allow_over_allocation-hidden",
+					"Leave Type-earned_leave-hidden",
+					"Employee-grade-hidden",
+					"Employee-personal_details-hidden",
+					"Employee-unsubscribed-hidden",
+					"Employee-prefered_contact_email-hidden",
+					"Employee-job_profile-label",
+					"Salary Component-formula-hidden",
+					"Salary Component-help-hidden",
+					"Vehicle Log-service_detail-allow_on_submit",
+					"Vehicle Service-type-reqd",
+					"Vehicle Service-frequency-reqd",
+					"Vehicle Service-expense_amount-reqd",
 
-                    "User-user_type-in_list_view",
-                    "User-user_type-in_standard_filter",
-                    "User-role_profile_name-in_standard_filter",
-                    "User-role_profile_name-in_list_view",
-                    "User-role_profile_name-default",
-                    "User-user_type-default",
-                    "User-user_type-hidden",
-                    "User-role_profile_name-allow_in_quick_entry",
-                    "User-role_profile_name-permlevel",
-                    "User-sb1-permlevel"
+					"User-user_type-in_list_view",
+					"User-user_type-in_standard_filter",
+					"User-role_profile_name-in_standard_filter",
+					"User-role_profile_name-in_list_view",
+					"User-role_profile_name-default",
+					"User-user_type-default",
+					"User-user_type-hidden",
+					"User-role_profile_name-allow_in_quick_entry",
+					"User-role_profile_name-permlevel",
+					"User-sb1-permlevel"
 				]
 			]
 		]
@@ -669,7 +670,7 @@ fixtures = [
 					"Work Experience",
 					"Lateness Permission",
 					"Employee ID",
-                    "Exit Permission"
+					"Exit Permission"
 				]
 			]
 		]
@@ -711,12 +712,12 @@ fixtures = [
 					"SaaS User",
 					"Self Service",
 					"SaaS Manager",
-                    "Mosyr Forms",
+					"Mosyr Forms",
 				]
 			]
 		]
 	},
-    {
+	{
 	"dt": "Role Profile",
 	"filters": 
 		[
@@ -736,7 +737,7 @@ fixtures = [
 			["name", "in", 
 				[
 					"Data Import Log",
-                    			"Standard Printing for Payroll",
+								"Standard Printing for Payroll",
 				]
 			]
 		]
@@ -752,14 +753,14 @@ fixtures = [
 			]
 		]
 	},
-    {
+	{
 	"dt": "Nationality",
 	"filters": []
 	},
-    {
+	{
 	"dt": "Bank",
 	"filters": 
-    [
+	[
 		["name", "in", 
    			[
 				"Al Inma Bank",
@@ -772,7 +773,7 @@ fixtures = [
 		]
 	]
 	},
-    {
+	{
 	"dt": "Email Template",
 	"filters":
 		[
