@@ -30,7 +30,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-13 17:00:04.432021",
+ "modified": "2023-08-21 17:01:22.214328",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Employee Shift Change Tool",
@@ -43,6 +43,16 @@
    "print": 1,
    "read": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "SaaS Manager",
    "share": 1,
    "write": 1
   }
