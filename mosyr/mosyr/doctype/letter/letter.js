@@ -3,10 +3,10 @@
 
 frappe.ui.form.on('Letter', {
 	setup: function(frm){
-		frm.trigger("set_default_print_format");
+		// frm.trigger("set_default_print_format");
 	},
 	refresh: function(frm){
-		frm.trigger("set_default_print_format");
+		// frm.trigger("set_default_print_format");
 	},
 	date_g: function (frm) {
 		if (frm.doc.date_g) {
@@ -41,6 +41,7 @@ frappe.ui.form.on('Letter', {
 		}
 	},
 	set_default_print_format: function() {
+		// this will be removed with all dependencies after test new method ...
 		const print_formats = (cur_frm.meta.__print_formats || []).map(el => el.name)
 		const printButton = $("button[data-original-title='Print']");
 		const printicon = $("span[data-label='Print']");

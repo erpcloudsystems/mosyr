@@ -5,14 +5,20 @@ import frappe
 from frappe.model.document import Document
 
 class Letter(Document):
-	pass
+	def before_print(self, settings=None):
+		if frappe.db.exists("Print Format", self.type):
+			doctype = frappe.get_doc("DocType", "Letter")
+			doctype.db_set("default_print_format", self.type)
+			frappe.reload_doctype("Letter")
+			frappe.db.commit()
 
-@frappe.whitelist()
-def set_DF_print_format(pr_name):
-	"""Set print format as default"""
-	if not frappe.get_list("Print Format", {"doc_type": "Letter", "name": pr_name}):
-		pr_name = ""
-	doctype = frappe.get_doc("DocType", "Letter")
-	doctype.db_set("default_print_format", pr_name)
-	frappe.reload_doctype("Letter")
-	frappe.db.commit()
+
+# @frappe.whitelist()
+# def set_DF_print_format(pr_name):
+# 	"""Set print format as default"""
+# 	if not frappe.get_list("Print Format", {"doc_type": "Letter", "name": pr_name}):
+# 		pr_name = ""
+# 	doctype = frappe.get_doc("DocType", "Letter")
+# 	doctype.db_set("default_print_format", pr_name)
+# 	frappe.reload_doctype("Letter")
+# 	frappe.db.commit()
