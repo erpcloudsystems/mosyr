@@ -564,25 +564,27 @@ def create_letter_head(self, method):
 
 def create_user_permission_on_company_in_validate(doc, method):
     if not doc.is_new():
-        companies_before_save = frappe.db.get_list("Company Table", {"parent":doc.name}, pluck="company")
-        companies_after_save = [d.company for d in doc.companies]
-        diff_lists = list(set(companies_before_save) ^ set(companies_after_save))
-        if len(diff_lists):
-            user_permissions = frappe.get_list("User Permission", {"user": doc.name, "allow": "Company"})
-            if len(user_permissions):
-                for user_permission in user_permissions:
-                    frappe.delete_doc("User Permission", user_permission.name)
-                frappe.db.commit()
-            if len(doc.companies):
-                for row in doc.companies:
-                    perm = frappe.new_doc("User Permission")
-                    perm.user = doc.name
-                    perm.allow = "Company"
-                    perm.for_value = row.company
-                    perm.save()
-                frappe.db.commit()
+        if doc.role_profile_name != "SaaS Manager":
+            companies_before_save = frappe.db.get_list("Company Table", {"parent":doc.name}, pluck="company")
+            companies_after_save = [d.company for d in doc.companies]
+            diff_lists = list(set(companies_before_save) ^ set(companies_after_save))
+            if len(diff_lists):
+                user_permissions = frappe.get_list("User Permission", {"user": doc.name, "allow": "Company"})
+                if len(user_permissions):
+                    for user_permission in user_permissions:
+                        frappe.delete_doc("User Permission", user_permission.name)
+                    frappe.db.commit()
+                if len(doc.companies):
+                    for row in doc.companies:
+                        perm = frappe.new_doc("User Permission")
+                        perm.user = doc.name
+                        perm.allow = "Company"
+                        perm.for_value = row.company
+                        perm.save()
+                    frappe.db.commit()
 
 def create_user_permission_on_company_in_create_user(doc, method):
+    if doc.role_profile_name != "SaaS Manager":
         if len(doc.companies):
             for row in doc.companies:
                 perm = frappe.new_doc("User Permission")
