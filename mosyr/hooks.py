@@ -647,7 +647,8 @@ fixtures = [
 					"User-user_type-hidden",
 					"User-role_profile_name-allow_in_quick_entry",
 					"User-role_profile_name-permlevel",
-					"User-sb1-permlevel"
+					"User-sb1-permlevel",
+					"Company-date_of_incorporation-hidden"
 				]
 			]
 		]
@@ -783,5 +784,9 @@ fixtures = [
 				]
 			]
 		]
+	},
+	{
+	"dt": "Translation",
+	"filters": []
 	}
 ]
