@@ -790,3 +790,7 @@ fixtures = [
 	"filters": []
 	}
 ]
+
+jenv = {
+    "methods": ["get_translation:mosyr.jinja.get_translation"]
+}
