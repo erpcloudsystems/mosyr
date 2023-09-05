@@ -3,22 +3,24 @@
 
 frappe.ui.form.on('Letter', {
 	refresh: function(frm){
-		frm.add_custom_button(__("Print"), function () {
-			frappe.call({
-				doc: frm.doc,
-				method: "make_default",
-				args: {
-					pr_name: frm.doc.type
-				},
-				callback: function() {
-					frm.refresh();
-					setTimeout(()=> {
-						frm.print_doc()
-						$("select[data-fieldname='print_format']").val(__(frm.doc.type)).change();
-					}, 500)
-				}
-			});
-		}).addClass("btn-danger");
+		if (frm.doc.docstatus == 1){
+			frm.add_custom_button(__("Print"), function () {
+				frappe.call({
+					doc: frm.doc,
+					method: "make_default",
+					args: {
+						pr_name: frm.doc.type
+					},
+					callback: function() {
+						frm.refresh();
+						setTimeout(()=> {
+							frm.print_doc()
+							$("select[data-fieldname='print_format']").val(__(frm.doc.type)).change();
+						}, 500)
+					}
+				});
+			}).addClass("btn-danger");
+		}
 	},
 	date_g: function (frm) {
 		if (frm.doc.date_g) {
