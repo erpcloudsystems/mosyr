@@ -161,7 +161,7 @@ doc_events = {
 		"validate": "mosyr.api.check_other_annual_leaves"
 	},
 	"User" :{
-		"validate" : "mosyr.api.create_user_permission_on_company_in_validate",
+		"on_update" : "mosyr.api.create_user_permission_on_company_in_validate",
 		"after_insert" : [
 			"mosyr.api.create_user_permission_on_company_in_create_user"
 		]
@@ -648,7 +648,11 @@ fixtures = [
 					"User-role_profile_name-allow_in_quick_entry",
 					"User-role_profile_name-permlevel",
 					"User-sb1-permlevel",
-					"Company-date_of_incorporation-hidden"
+					"Company-date_of_incorporation-hidden",
+					"Employee-reports_to-hidden",
+					"Employee-approvers_section-hidden",
+					"Leave Application-leave_approver-hidden",
+					"Leave Application-leave_approver_name-hidden"
 				]
 			]
 		]

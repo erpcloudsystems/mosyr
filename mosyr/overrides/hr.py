@@ -17,6 +17,11 @@ from erpnext.hr.doctype.leave_allocation.leave_allocation import (
     LeaveAllocation,
     get_leave_allocation_for_period
 )
+from frappe.permissions import (
+	add_user_permission,
+	has_permission,
+	set_user_permission_if_allowed,
+)
 
 from mosyr import (
     create_account,
@@ -223,6 +228,26 @@ class CustomEmployee(Employee):
         user.flags.ignore_permissions = True
         user.user_type = "Employee Self Service"
         user.save()
+        
+    def update_user_permissions(self):
+        if not self.create_user_permission:
+            return
+        if not has_permission("User Permission", ptype="write", raise_exception=False):
+            return
+
+        user_role_profile = frappe.db.get_value("User", self.user_id, "role_profile_name")
+        if user_role_profile != "SaaS Manager":
+            set_user_permission_if_allowed("Company", self.company, self.user_id)
+        
+        employee_user_permission_exists = frappe.db.exists(
+            "User Permission", {"allow": "Employee", "for_value": self.name, "user": self.user_id}
+        )
+
+        if employee_user_permission_exists:
+            return
+
+        add_user_permission("Employee", self.name, self.user_id)
+        
 
 class CustomDepartment(Department):
     def validate(self):
