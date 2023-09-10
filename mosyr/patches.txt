@@ -10,3 +10,4 @@ mosyr.patches.delete_payment_type_field
 mosyr.patches.set_remaining_value_in_cash_custody_expense
 mosyr.patches.delete_property_setter_title_field
 mosyr.patches.update_user_profile_name
+mosyr.patches.sprint_2.set_defulat_value_in_hr_settings_1

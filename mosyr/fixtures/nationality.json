@@ -2252,6 +2252,16 @@
  {
   "docstatus": 0,
   "doctype": "Nationality",
+  "modified": "2023-05-08 15:04:51.522554",
+  "name": "\u0633\u0639\u0648\u062f\u064a",
+  "nationality": "\u0633\u0639\u0648\u062f\u064a",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Nationality",
   "modified": "2022-12-22 12:58:22.340494",
   "name": "Saudi",
   "nationality": "Saudi",

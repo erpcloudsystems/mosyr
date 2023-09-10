@@ -583,6 +583,7 @@ def create_user_permission_on_company_in_validate(doc, method):
                         perm.save()
                     frappe.db.commit()
 
+
 def create_user_permission_on_company_in_create_user(doc, method):
     if doc.role_profile_name != "SaaS Manager":
         if len(doc.companies):
@@ -1074,3 +1075,10 @@ def update_employee_checkin(docname,new_time, new_log_type):
     doc.save()
     shift_doc = frappe.get_cached_doc("Shift Type", doc.shift)
     shift_doc.process_auto_attendance()
+    
+    
+def validate_employee_company(doc, method):
+    frappe.throw("vvvvvvvvvvvvvvVVVVVVVVvvvvvvvv")
+    if not doc.company:
+        company = frappe.db.get_value("Employee", doc.employee, "company")
+        doc.company = company
