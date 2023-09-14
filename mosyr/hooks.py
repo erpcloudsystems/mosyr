@@ -157,9 +157,6 @@ doc_events = {
 			"mosyr.api.employee_end_contract",
 			"mosyr.api.set_employee_allocated_leaves"
 	]},
-	"Leave Type": {
-		"validate": "mosyr.api.check_other_annual_leaves"
-	},
 	"User" :{
 		"on_update" : "mosyr.api.create_user_permission_on_company_in_validate",
 		"after_insert" : [

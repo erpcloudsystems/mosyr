@@ -187,16 +187,16 @@ def notify_expired_dates(doc, method):
             need_update = True
     if need_update: emp.db_set("notify_insurance_d", 1, update_modified=False)
 
-def check_other_annual_leaves(doc, method):
-    if cint(doc.is_annual_leave) == 1 and cint(doc.allow_encashment) == 1:
-        leaves = frappe.get_list("Leave Type", filters={"is_annual_leave": 1, "allow_encashment": 1})
-        #frappe.db.sql("""SELECT name FROM `tabLeave Type` WHERE is_annual_leave=1 AND allow_encashment=1""")
-        if len(leaves) >= 1:
-            msg_str = ""
-            for l in leaves:
-                msg_str += "<li>{}</li>".format(_(l['name']))
-            msg_str = "<ul>" + msg_str + "</ul>"
-            frappe.throw(_("Only One Annual Leave allowed to be encashment check.")+msg_str)
+# def check_other_annual_leaves(doc, method):
+#     if cint(doc.is_annual_leave) == 1 and cint(doc.allow_encashment) == 1:
+#         leaves = frappe.get_list("Leave Type", filters={"is_annual_leave": 1, "allow_encashment": 1})
+#         #frappe.db.sql("""SELECT name FROM `tabLeave Type` WHERE is_annual_leave=1 AND allow_encashment=1""")
+#         if len(leaves) >= 1:
+#             msg_str = ""
+#             for l in leaves:
+#                 msg_str += "<li>{}</li>".format(_(l['name']))
+#             msg_str = "<ul>" + msg_str + "</ul>"
+#             frappe.throw(_("Only One Annual Leave allowed to be encashment check.")+msg_str)
 
 def set_employee_gender(doc, method):
     gender_doc = frappe.db.exists("Gender", doc.e_gender)
