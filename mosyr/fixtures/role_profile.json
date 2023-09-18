@@ -2,43 +2,49 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-06-06 12:06:52.482315",
-  "name": "SaaS Manager",
+  "modified": "2023-09-18 17:59:38.789129",
+  "name": "Self Service",
   "parent": null,
   "parentfield": null,
   "parenttype": null,
-  "role_profile": "SaaS Manager",
+  "role_profile": "Self Service",
   "roles": [
    {
-    "parent": "SaaS Manager",
-    "parentfield": "roles",
-    "parenttype": "Role Profile",
-    "role": "SaaS Manager"
-   },
-   {
-    "parent": "SaaS Manager",
+    "parent": "Self Service",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Mosyr Forms"
    },
    {
-    "parent": "SaaS Manager",
+    "parent": "Self Service",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "HR Notification"
    },
    {
-    "parent": "SaaS Manager",
+    "parent": "Self Service",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Self Service"
+   },
+   {
+    "parent": "Self Service",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Employee"
+   },
+   {
+    "parent": "Self Service",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "All"
    }
   ]
  },
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-08-20 12:44:19.358642",
+  "modified": "2023-09-18 17:59:38.789129",
   "name": "SaaS User",
   "parent": null,
   "parentfield": null,
@@ -74,36 +80,54 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Employee Self Service"
+   },
+   {
+    "parent": "SaaS User",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "All"
    }
   ]
  },
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2023-06-07 10:44:56.596835",
-  "name": "Self Service",
+  "modified": "2023-09-18 17:59:38.789129",
+  "name": "SaaS Manager",
   "parent": null,
   "parentfield": null,
   "parenttype": null,
-  "role_profile": "Self Service",
+  "role_profile": "SaaS Manager",
   "roles": [
    {
-    "parent": "Self Service",
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "SaaS Manager"
+   },
+   {
+    "parent": "SaaS Manager",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "Mosyr Forms"
    },
    {
-    "parent": "Self Service",
+    "parent": "SaaS Manager",
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "HR Notification"
    },
    {
-    "parent": "Self Service",
+    "parent": "SaaS Manager",
     "parentfield": "roles",
     "parenttype": "Role Profile",
-    "role": "Self Service"
+    "role": "Employee"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "All"
    }
   ]
  }
