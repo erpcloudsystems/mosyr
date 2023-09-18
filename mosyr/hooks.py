@@ -400,6 +400,8 @@ fixtures = [
 				"Employee-number",
 				"Employee-custom_date_of_joining",
 				"Loan-total_amount_remaining",
+				"Loan Application-department",
+
 				"Repayment Schedule-paid_amount",
 
 				"Attendance-mosyr_employee_multiselect",
