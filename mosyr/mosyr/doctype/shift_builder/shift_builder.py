@@ -477,24 +477,45 @@ class ShiftBuilder(Document):
         return interval_status
 
     def on_submit(self):
+        created_shifts = []
         if self.shift_type == "Double Shift Work Schedule":
             self.validate_employees()
             self.validate_double_shifts()
-            self.build_double_shifts()
+            result = self.build_double_shifts()
+            created_shifts.extend(result.get("shifts"))
+
         elif self.shift_type == "Work Schedule with Different Times":
             self.validate_employees()
             self.validate_different_times_shifts()
-            self.build_different_times_shifts()
+            result = self.build_different_times_shifts()
+            created_shifts.extend(result.get("shifts"))
+
         elif self.shift_type == "Flexible Work Schedule":
             self.validate_employees()
             self.validate_flexible_shifts_times()
-            self.build_flexible_shifts_times()
+            result = self.build_flexible_shifts_times()
+            created_shifts.extend(result.get("shift"))
+
         elif self.shift_type == "Shift Type":
             self.build_shift_type()
+            created_shifts.extend(result.get("shift"))
+
         else:
             frappe.throw(_(f"Shift Type {self.shift_type} is not supported"))
+        
+        # Assign Shift to employee if there is an employees in Employees Table
+        if self.shift_builder_employees:
+            for emp in self.shift_builder_employees:
+                if not emp.is_assigned:
+                    try:
+                        self.make_shift_assignment_for_employee(emp.employee, created_shifts)
+                        emp.is_assigned = 1
+                    except Exception as e:
+                        frappe.log_error(title=_("Error while Create Shift Assignment for Employee{0}").format(
+                            emp.employee), message=e)
 
     def build_double_shifts(self):
+        shifts = []
         try:
             shift1_name = make_autoname("MDST-.YYYY.-.MM.-.DD.-1.####")
             shift1 = self.create_shift_type(
@@ -504,6 +525,7 @@ class ShiftBuilder(Document):
                 self.minutes_of_late_entry,
                 self.minutes_of_early_exit,
             )
+            shifts.append(shift1)
             shift2_name = make_autoname("MDST-.YYYY.-.MM.-.DD.-2.####")
             shift2 = self.create_shift_type(
                 shift2_name,
@@ -512,12 +534,15 @@ class ShiftBuilder(Document):
                 self.minutes_of_late_entry,
                 self.minutes_of_early_exit,
             )
+            shifts.append(shift2)
         except Exception as e:
             frappe.throw(_(f"Error while create Shift Type for Doucle Shifts"))
         else:
             self.db_set("double_shift_1", shift1)
             self.db_set("double_shift_2", shift2)
             frappe.db.commit()
+            
+        return {"shifts": shifts}
 
     def build_different_times_shifts(self):
         def get_data_for_selected_day(day_name, order):
@@ -545,6 +570,7 @@ class ShiftBuilder(Document):
 
             return shift_name, start_time, end_time, entry_grace, exit_grace
 
+        shifts = []
         work_days = [
             "sunday",
             "monday",
@@ -576,9 +602,11 @@ class ShiftBuilder(Document):
                     shift1_for_day = self.create_shift_type(
                         _name1, _start_time1, _end_time1, _late_grace1, _early_grace1
                     )
+                    shifts.append(shift1_for_day)
                     shift2_for_day = self.create_shift_type(
                         _name2, _start_time2, _end_time2, _late_grace2, _early_grace2
                     )
+                    shifts.append(shift2_for_day)
                     self.db_set(f"{day}_different_times_shift1", shift1_for_day)
                     self.db_set(f"{day}_different_times_shift2", shift2_for_day)
                 except Exception as e:
@@ -587,8 +615,11 @@ class ShiftBuilder(Document):
                     self.db_set(f"{day}_different_times_shift1", shift1_for_day)
                     self.db_set(f"{day}_different_times_shift2", shift2_for_day)
                     frappe.db.commit()
-
+            
+        return {"shifts":shifts}
+    
     def build_flexible_shifts_times(self):
+        new_shift = ""
         try:
             shift_name = make_autoname("MFST-.YYYY.-.MM.-.DD.-.####")
             shift = self.create_shift_type(
@@ -599,11 +630,14 @@ class ShiftBuilder(Document):
                 self.flexible_grace_period,
                 True,
             )
+            new_shift = shift
         except Exception as e:
             frappe.throw(_(f"Error while create Shift Type for Doucle Shifts"))
         else:
             self.db_set("flexible_shift_type", shift)
             frappe.db.commit()
+            
+        return {"shift":new_shift}
 
     def create_shift_type(
         self,
@@ -653,9 +687,44 @@ class ShiftBuilder(Document):
         return shift_type.name
 
     def on_update_after_submit(self):
+        shift_list = [
+            "double_shift_1",
+            "double_shift_2",
+            "flexible_shift_type",
+            "shift_type_link",
+            "saturday_different_times_shift2",
+            "saturday_different_times_shift1",
+            "friday_different_times_shift2",
+            "friday_different_times_shift1",
+            "thursday_different_times_shift2",
+            "thursday_different_times_shift1",
+            "wednesday_different_times_shift2",
+            "wednesday_different_times_shift1",
+            "tuesday_different_times_shift2",
+            "tuesday_different_times_shift1",
+            "monday_different_times_shift2",
+            "monday_different_times_shift1",
+            "sunday_different_times_shift2",
+            "sunday_different_times_shift1"
+        ]
+        created_shifts = []
+        for d in shift_list:
+            if self.get(d):
+                created_shifts.append(self.get(d))
+                
         self.validate_employees()
+        if self.shift_builder_employees:
+            for emp in self.shift_builder_employees:
+                if not emp.is_assigned:
+                    try:
+                        self.make_shift_assignment_for_employee(emp.employee, created_shifts)
+                        emp.is_assigned = 1
+                    except Exception as e:
+                        frappe.log_error(title=_("Error while Create Shift Assignment for Employee{0}").format(
+                        emp.employee), message=e)
         
     def build_shift_type(self):
+        new_shift = ""
         try:
             shift = self.create_shift_type(
                 self.shift_name,
@@ -665,12 +734,32 @@ class ShiftBuilder(Document):
                 self.early_exit_grace_period,
                 shift_type=True,
             )
+            new_shift = shift
         except Exception as e:
             frappe.throw(_(f"Error while create Shift Type for Shift Type"))
         else:
             self.db_set("shift_type_link", shift)
             frappe.db.commit()
-         
+        
+        return {"shift":new_shift}
+    
+    def make_shift_assignment_for_employee(self, emp, shifts):
+        nowdate = frappe.utils.nowdate()
+        for row in shifts:
+            shift_assignment = frappe.new_doc("Shift Assignment")
+            shift_assignment.shift_type = row
+            shift_assignment.employee = emp
+            shift_assignment.start_date = nowdate
+            shift_assignment.shift_builder_link = self.name
+            shift_assignment.save()
+            shift_assignment.submit()
+            
+    def on_cancel(self):
+        shift_assigment_list = frappe.db.get_list("Shift Assignment", filters={"shift_builder_link": self.name, "docstatus":1})
+        if shift_assigment_list:
+            for row in shift_assigment_list:
+                doc = frappe.get_doc("Shift Assignment",row.name)
+                doc.cancel()
 
 def daily_shift_requests_creation():
     # Create Shift Request based on shift builder type
