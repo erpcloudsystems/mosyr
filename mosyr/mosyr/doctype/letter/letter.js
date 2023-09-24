@@ -2,11 +2,25 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Letter', {
-	setup: function(frm){
-		frm.trigger("set_default_print_format");
-	},
 	refresh: function(frm){
-		frm.trigger("set_default_print_format");
+		if (frm.doc.docstatus == 1){
+			frm.add_custom_button(__("Print"), function () {
+				frappe.call({
+					doc: frm.doc,
+					method: "make_default",
+					args: {
+						pr_name: frm.doc.type
+					},
+					callback: function() {
+						frm.refresh();
+						setTimeout(()=> {
+							frm.print_doc()
+							$("select[data-fieldname='print_format']").val(__(frm.doc.type)).change();
+						}, 500)
+					}
+				});
+			}).addClass("btn-danger");
+		}
 	},
 	date_g: function (frm) {
 		if (frm.doc.date_g) {
@@ -39,26 +53,5 @@ frappe.ui.form.on('Letter', {
 				}
 			})
 		}
-	},
-	set_default_print_format: function() {
-		const print_formats = (cur_frm.meta.__print_formats || []).map(el => el.name)
-		const printButton = $("button[data-original-title='Print']");
-		const printicon = $("span[data-label='Print']");
-		let pr = cur_frm.doc.type
-		printButton.on("click", {print_formats, pr}, setDFPrintFormat)
-		printicon.on("click", {print_formats, pr}, setDFPrintFormat)
 	}
 });
-
-const setDFPrintFormat = (params)=> {
-	if (params.data.print_formats.includes(params.data.pr)) {
-		setTimeout(() => {
-			$("select[data-fieldname='print_format']").val(params.data.pr).change();
-		}, 500);
-	}
-	else{
-		setTimeout(() => {
-			$("select[data-fieldname='print_format']").val("").change();
-		}, 500);
-	}
-}

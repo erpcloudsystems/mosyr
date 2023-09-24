@@ -11,6 +11,7 @@
   "emp_name",
   "custody_status_on_return",
   "return_date_g",
+  "notify_by_email",
   "column_break_6",
   "custody_type",
   "recipt_employee",
@@ -138,12 +139,18 @@
    "options": "Return Custody",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "notify_by_email",
+   "fieldtype": "Check",
+   "label": "Notify by Email"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-22 09:17:41.504151",
+ "modified": "2023-09-16 00:09:31.807976",
  "modified_by": "Administrator",
  "module": "Custody Management",
  "name": "Return Custody",

@@ -25,7 +25,10 @@
   "language",
   "date_h",
   "attachment",
-  "amended_from"
+  "amended_from",
+  "note_sb",
+  "alert_content",
+  "disclaimer_note"
  ],
  "fields": [
   {
@@ -144,12 +147,29 @@
    "fieldname": "letter_to",
    "fieldtype": "Data",
    "label": "Letter To"
+  },
+  {
+   "depends_on": "eval:([\"Alert 1\", \"Alert 2\", \"Alert 3\"].includes(doc.type))",
+   "fieldname": "alert_content",
+   "fieldtype": "Text Editor",
+   "label": "Alert Content"
+  },
+  {
+   "fieldname": "note_sb",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "depends_on": "eval: doc.type == \"Letter of Disclaimer\"",
+   "fieldname": "disclaimer_note",
+   "fieldtype": "Text Editor",
+   "label": "Letter of Disclaimer Notes"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-13 11:52:57.488234",
+ "modified": "2023-09-05 10:52:39.560062",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Letter",
@@ -194,5 +214,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "employee"
+ "title_field": "employee",
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
 }

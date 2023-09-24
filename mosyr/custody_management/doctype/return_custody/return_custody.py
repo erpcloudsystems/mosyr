@@ -15,8 +15,9 @@ class ReturnCustody(Document):
         custody.status = "Returned"
         custody.returned_custody = self.name
         custody.save()
-        # send email for recipent employee
-        self.send_email()
+        if self.notify_by_email:
+            # send email for recipent employee
+            self.send_email()
     
     def send_email(self):
         recipent = frappe.get_value('Employee', self.recipt_employee, 'user_id')
