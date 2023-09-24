@@ -1157,13 +1157,14 @@
    "fieldname": "shift_type_link",
    "fieldtype": "Link",
    "label": "Shift Type link",
-   "options": "Shift Type"
+   "options": "Shift Type",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 14:24:31.289313",
+ "modified": "2023-09-24 10:03:50.515038",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Shift Builder",

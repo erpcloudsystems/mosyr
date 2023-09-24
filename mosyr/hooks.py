@@ -515,7 +515,8 @@ fixtures = [
                 
                 "User-companies",
                 "Department-letter_approver",
-                "Department-loan_approver"
+                "Department-loan_approver",
+                "Shift Assignment-shift_builder_link"
          ]]
         ]
     },
