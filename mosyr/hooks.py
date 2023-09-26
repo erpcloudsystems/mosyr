@@ -427,7 +427,6 @@ fixtures = [
 				"Company-pension_percentage_on_employee",
 				"Company-column_break_h1hb6",
 				"Company-risk_percentage_on_company",
-				"Company-column_break_z45y7",
 				"Company-risk_percentage_on_employee",
 				"Company-social_insurance_settings",
 				"Company-banks_type_salary_card",
