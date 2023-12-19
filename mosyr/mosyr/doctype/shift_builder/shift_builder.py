@@ -15,9 +15,12 @@ from frappe.model.naming import make_autoname
 
 
 class ShiftBuilder(Document):
+    def is_ramadan_shift(self):
+        return self.ramadan_shift
+
     def validate(self):
         self.validate_employees()
-        if self.shift_type == "Double Shift Work Schedule":
+        if self.shift_type == "Double Shift Work Schedule" :
             self.validate_double_shifts()
         elif self.shift_type == "Work Schedule with Different Times":
             self.validate_different_times_shifts()
@@ -64,7 +67,7 @@ class ShiftBuilder(Document):
                 self.first_period_end_time, self.first_period_start_time
             )
             < 0
-        ):
+        ) and not self.is_ramadan_shift():
             frappe.throw(
                 _(
                     f"First Period Start Time cannot be greater than First Period End Time"
@@ -75,7 +78,7 @@ class ShiftBuilder(Document):
                 self.second_period_end_time, self.second_period_start_time
             )
             < 0
-        ):
+        )and not self.is_ramadan_shift():
             frappe.throw(
                 _(
                     f"Second Period Start Time cannot be greater than Second Period End Time"
@@ -87,7 +90,7 @@ class ShiftBuilder(Document):
             self.second_period_start_time,
             self.second_period_end_time,
         )
-        if not is_valid_interval:
+        if not is_valid_interval and  not self.is_ramadan_shift():
             frappe.throw(_("Shift 1 and Shift 2 are overlapping."))
 
     def validate_different_times_shifts(self):
@@ -125,7 +128,7 @@ class ShiftBuilder(Document):
                     self.sunday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Sunday Shift, Entering Time cannot be greater than Exiting Time"
@@ -137,7 +140,7 @@ class ShiftBuilder(Document):
                     self.sunday_entering_the_second_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Sunday Shift, Entering Time cannot be greater than Exiting Time"
@@ -149,7 +152,7 @@ class ShiftBuilder(Document):
                 self.sunday_entering_the_second_period,
                 self.sunday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(_("Shift 1 and Shift 2 are overlapping in Sunday Shift"))
         if self.monday_different_times:
             if (
@@ -167,7 +170,7 @@ class ShiftBuilder(Document):
                     self.monday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Monday Shift, Entering Time cannot be greater than Exiting Time"
@@ -179,7 +182,7 @@ class ShiftBuilder(Document):
                     self.monday_entering_the_second_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Monday Shift, Entering Time cannot be greater than Exiting Time"
@@ -191,7 +194,7 @@ class ShiftBuilder(Document):
                 self.monday_entering_the_second_period,
                 self.monday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(_("Shift 1 and Shift 2 are overlapping in Monday Shift"))
         if self.tuesday_different_times:
             if (
@@ -209,7 +212,7 @@ class ShiftBuilder(Document):
                     self.tuesday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Tuesday Shift, Entering Time cannot be greater than Exiting Time"
@@ -221,7 +224,7 @@ class ShiftBuilder(Document):
                     self.tuesday_entering_the_second_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Tuesday Shift, Entering Time cannot be greater than Exiting Time"
@@ -233,7 +236,7 @@ class ShiftBuilder(Document):
                 self.tuesday_entering_the_second_period,
                 self.tuesday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(_("Shift 1 and Shift 2 are overlapping in Tuesday Shift"))
         if self.wednesday_different_times:
             if (
@@ -251,7 +254,7 @@ class ShiftBuilder(Document):
                     self.wednesday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Wednesday Shift, Entering Time cannot be greater than Exiting Time"
@@ -263,7 +266,7 @@ class ShiftBuilder(Document):
                     self.wednesday_entering_the_second_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Wednesday Shift, Entering Time cannot be greater than Exiting Time"
@@ -275,7 +278,7 @@ class ShiftBuilder(Document):
                 self.wednesday_entering_the_second_period,
                 self.wednesday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(
                     _("Shift 1 and Shift 2 are overlapping in Wednesday Shift")
                 )
@@ -285,7 +288,7 @@ class ShiftBuilder(Document):
                 or not self.thursday_entering_the_first_period
                 or not self.thursday_exit_the_second_period
                 or not self.thursday_entering_the_second_period
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(f"In Thursday Shift, Set Entering and Exiting Time for Shifts")
                 )
@@ -295,7 +298,7 @@ class ShiftBuilder(Document):
                     self.thursday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Thursday Shift, Entering Time cannot be greater than Exiting Time"
@@ -307,7 +310,7 @@ class ShiftBuilder(Document):
                     self.thursday_entering_the_second_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Thursday Shift, Entering Time cannot be greater than Exiting Time"
@@ -319,7 +322,7 @@ class ShiftBuilder(Document):
                 self.thursday_entering_the_second_period,
                 self.thursday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(_("Shift 1 and Shift 2 are overlapping in Thursday Shift"))
         if self.friday_different_times:
             if (
@@ -337,7 +340,7 @@ class ShiftBuilder(Document):
                     self.friday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Friday Shift, Entering Time cannot be greater than Exiting Time"
@@ -349,7 +352,7 @@ class ShiftBuilder(Document):
                     self.friday_entering_the_second_period,
                 )
                 < 0
-            ):
+            )and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Friday Shift, Entering Time cannot be greater than Exiting Time"
@@ -361,7 +364,7 @@ class ShiftBuilder(Document):
                 self.friday_entering_the_second_period,
                 self.friday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(_("Shift 1 and Shift 2 are overlapping in Friday Shift"))
         if self.saturday_different_times:
             if (
@@ -379,7 +382,7 @@ class ShiftBuilder(Document):
                     self.saturday_entering_the_first_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Saturday Shift, Entering Time cannot be greater than Exiting Time"
@@ -391,7 +394,7 @@ class ShiftBuilder(Document):
                     self.saturday_entering_the_second_period,
                 )
                 < 0
-            ):
+            ) and not self.is_ramadan_shift():
                 frappe.throw(
                     _(
                         f"In Saturday Shift, Entering Time cannot be greater than Exiting Time"
@@ -403,7 +406,7 @@ class ShiftBuilder(Document):
                 self.saturday_entering_the_second_period,
                 self.saturday_exit_the_second_period,
             )
-            if not is_valid_interval:
+            if not is_valid_interval and not self.is_ramadan_shift():
                 frappe.throw(_("Shift 1 and Shift 2 are overlapping in Saturday Shift"))
 
     def validate_flexible_shifts_times(self):
@@ -423,12 +426,16 @@ class ShiftBuilder(Document):
                 has_any_day = True
         if not has_any_day:
             frappe.throw(_("At Least One Working Day is Required"))
-        if flt(self.required_hours_per_day) == 0:
+        if flt(self.required_hours_per_day) == 0 and not self.is_ramadan_shift():
             frappe.throw(_("Required Hours must be greater than zero"))
-        if time_diff_in_seconds(self.attendance_to, self.attendance_from) < 0:
+        if time_diff_in_seconds(self.attendance_to, self.attendance_from) < 0 and not self.is_ramadan_shift():
             frappe.throw(_(f"Start Time cannot be greater than End Time"))
 
     def validate_employees(self):
+        if self.overwrite_employee:
+            for emp in self.shift_builder_employees:
+                frappe.db.sql(f"""Update `tabShift Assignment` SET status = 'Inactive' where employee ='{emp.employee}' """)
+            return
         employees_lst = [employee.employee for employee in self.shift_builder_employees]
         if len(employees_lst) > 0:
             employees = ",".join([ f"'{d}'" for d in employees_lst])
@@ -452,6 +459,7 @@ class ShiftBuilder(Document):
                 if emp.employee in employee_in_other_shifts:
                     msg += f"<li>{emp.employee}</li>"
             msg = "<ul>" + msg + "</ul>"
+                
             frappe.throw(_("There is Employees already in other Shift {}".format(msg)))
 
     def valid_interval_times(self, time1_start, time1_end, time2_start, time2_end):
@@ -482,7 +490,7 @@ class ShiftBuilder(Document):
             self.validate_employees()
             self.validate_double_shifts()
             result = self.build_double_shifts()
-            created_shifts.extend(result.get("shifts"))
+            created_shifts.extend(result)
 
         elif self.shift_type == "Work Schedule with Different Times":
             self.validate_employees()
@@ -494,15 +502,15 @@ class ShiftBuilder(Document):
             self.validate_employees()
             self.validate_flexible_shifts_times()
             result = self.build_flexible_shifts_times()
-            created_shifts.extend(result.get("shift"))
+            created_shifts.append(result.get("shift"))
 
         elif self.shift_type == "Shift Type":
-            self.build_shift_type()
-            created_shifts.extend(result.get("shift"))
+            result = self.build_shift_type()
+            created_shifts.append(result)
 
         else:
             frappe.throw(_(f"Shift Type {self.shift_type} is not supported"))
-        
+        frappe.msgprint(f"{created_shifts}")
         # Assign Shift to employee if there is an employees in Employees Table
         if self.shift_builder_employees:
             for emp in self.shift_builder_employees:
@@ -512,7 +520,7 @@ class ShiftBuilder(Document):
                         emp.is_assigned = 1
                     except Exception as e:
                         frappe.log_error(title=_("Error while Create Shift Assignment for Employee{0}").format(
-                            emp.employee), message=e)
+                        emp.employee), message=e)
 
     def build_double_shifts(self):
         shifts = []
@@ -524,6 +532,13 @@ class ShiftBuilder(Document):
                 self.first_period_end_time,
                 self.minutes_of_late_entry,
                 self.minutes_of_early_exit,
+                self.enable_break_frist_period,
+                self.break_type_first_period,
+                self.break_late_grace_period_first_period,
+                self.break_duration_frist_period,
+                self.in_break_frist_period,
+                self.out_break_frist_period,
+                self.overtime_break_frist_period
             )
             shifts.append(shift1)
             shift2_name = make_autoname("MDST-.YYYY.-.MM.-.DD.-2.####")
@@ -533,23 +548,41 @@ class ShiftBuilder(Document):
                 self.second_period_end_time,
                 self.minutes_of_late_entry,
                 self.minutes_of_early_exit,
-            )
+                self.enable_break_second_period,
+                self.break_type__second_period,
+                self.break_late_grace_period__second_period,
+                self.break_duration_second_period,
+                self.in_break_second_period,
+                self.out_break_second_period,
+                self.overtime_break_second_period
+                )
             shifts.append(shift2)
         except Exception as e:
-            frappe.throw(_(f"Error while create Shift Type for Doucle Shifts"))
+            frappe.throw(_(f"{e }"))
         else:
             self.db_set("double_shift_1", shift1)
             self.db_set("double_shift_2", shift2)
             frappe.db.commit()
             
-        return {"shifts": shifts}
+        return shifts
 
     def build_different_times_shifts(self):
         def get_data_for_selected_day(day_name, order):
             start_time = self.get(f"{day_name}_entering_the_{order}_period")
             end_time = self.get(f"{day_name}_exit_the_{order}_period")
             entry_grace = self.get(f"{day_name}_entry_grace_period")
-            exit_grace = self.get(f"{day_name}_exit_grace_period")
+            exit_grace = self.get(f"{day_name}_exit_grace_period")   
+            break_sec="" 
+            if order == "second":
+                break_sec = "2"
+            enable_break = self.get(f"{day_name}_enable_break{break_sec}")
+            break_type = self.get(f"{day_name}_break_type{break_sec}")
+            break_late_grace_period = self.get(f"{day_name}_break_late_grace_period{break_sec}")
+            break_duration = self.get(f"{day_name}_break_duration{break_sec}")
+            in_break = self.get(f"{day_name}_in_break{break_sec}")
+            out_break = self.get(f"{day_name}_out_break{break_sec}")
+            overtime_break = self.get(f"{day_name}_overtime_break{break_sec}")
+
             order = ""
             if order == "first":
                 order = "1"
@@ -568,7 +601,7 @@ class ShiftBuilder(Document):
             abbr = days.get(day_name, "")
             shift_name = make_autoname(f"MDST-.YYYY.-.MM.-.DD.-{abbr}{order}.####")
 
-            return shift_name, start_time, end_time, entry_grace, exit_grace
+            return shift_name, start_time, end_time, entry_grace, exit_grace, enable_break,break_type,break_late_grace_period,break_duration,in_break,out_break,overtime_break
 
         shifts = []
         work_days = [
@@ -589,6 +622,7 @@ class ShiftBuilder(Document):
                         _end_time1,
                         _late_grace1,
                         _early_grace1,
+                        _enable_break1,_break_type1,_break_late_grace_period1,_break_duration1,_in_break1,_out_break1,_overtime_break1
                     ) = get_data_for_selected_day(day, "first")
 
                     (
@@ -597,16 +631,21 @@ class ShiftBuilder(Document):
                         _end_time2,
                         _late_grace2,
                         _early_grace2,
+                        _enable_break2,_break_type2,_break_late_grace_period2,_break_duration2,_in_break2,_out_break2,_overtime_break2
                     ) = get_data_for_selected_day(day, "second")
+                    if _start_time1 and _end_time1:
+                        shift1_for_day = self.create_shift_type(
+                            _name1, _start_time1, _end_time1, _late_grace1, _early_grace1,
+                            _enable_break1,_break_type1,_break_late_grace_period1,_break_duration1,_in_break1,_out_break1,_overtime_break1
 
-                    shift1_for_day = self.create_shift_type(
-                        _name1, _start_time1, _end_time1, _late_grace1, _early_grace1
-                    )
-                    shifts.append(shift1_for_day)
-                    shift2_for_day = self.create_shift_type(
-                        _name2, _start_time2, _end_time2, _late_grace2, _early_grace2
-                    )
-                    shifts.append(shift2_for_day)
+                        )
+                        shifts.append(shift1_for_day)
+                    if _start_time2 and _end_time2:
+                        shift2_for_day = self.create_shift_type(
+                            _name2, _start_time2, _end_time2, _late_grace2, _early_grace2,
+                            _enable_break2,_break_type2,_break_late_grace_period2,_break_duration2,_in_break2,_out_break2,_overtime_break2
+                        )
+                        shifts.append(shift2_for_day)
                     self.db_set(f"{day}_different_times_shift1", shift1_for_day)
                     self.db_set(f"{day}_different_times_shift2", shift2_for_day)
                 except Exception as e:
@@ -628,7 +667,14 @@ class ShiftBuilder(Document):
                 self.attendance_to,
                 self.flexible_grace_period,
                 self.flexible_grace_period,
-                True,
+                self.enable_break,
+                self.break_type,
+                self.break_late_grace_period,
+                self.break_duration,
+                self.in_break,
+                self.out_break,
+                self.overtime_break,
+                flexible_shift = True,
             )
             new_shift = shift
         except Exception as e:
@@ -646,8 +692,9 @@ class ShiftBuilder(Document):
         end_time,
         late_grace,
         early_grace,
+        enable_break,break_type,break_late_grace_period,break_duration,in_break,out_break,overtime_break,
         flexible_shift=False,
-        shift_type=False
+        shift_type_normal=False
     ):
         # shift_type = frappe.new_doc("Shift Type")
         shift_type = frappe.get_doc({"doctype": "Shift Type", "__newname": newname})
@@ -679,8 +726,100 @@ class ShiftBuilder(Document):
             shift_type.early_exit_grace_period = cint(early_grace)
         if flexible_shift:
             shift_type.max_working_hours = flt(self.required_hours_per_day)
-        if shift_type:
+        if shift_type_normal:
             shift_type.max_working_hours = flt(self.max_working_hours)
+        shift_type.enable_break = enable_break
+        shift_type.break_type = break_type
+        shift_type.break_late_grace_period = break_late_grace_period
+        shift_type.break_duration = break_duration
+        shift_type.in_break = in_break
+        shift_type.out_break = out_break
+        shift_type.overtime_break = overtime_break
+
+
+        shift_type.break_overtime_component = self.break_overtime_component
+        shift_type.amount_overtime = self.amount_overtime
+        shift_type.holiday_list = self.holiday_list
+        shift_type.enable_overtime_policy = self.enable_overtime_policy
+        shift_type.overtime = self.overtime
+        shift_type.overtime_starts_after = self.overtime_starts_after
+        shift_type.enable_holidays_overtime = self.enable_holidays_overtime
+        shift_type.holidays_overtime_component = self.holidays_overtime_component
+        shift_type.month_start_in = self.month_start_in
+        shift_type.month_end_in = self.month_end_in
+        shift_type.is_flexible_hours = self.is_flexible_hours
+        for x in self.flexible_hours_policy:
+            shift_type.append("flexible_hours_policy",{
+                    "hours":x.hours,
+                    "deduction":x.deduction,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_late_arrival_policy = self.enable_late_arrival_policy
+        for x in self.late_table:
+            shift_type.append("late_table",{
+                    "from_after_grace_period":x.from_after_grace_period,
+                    "to_after_grace_period":x.to_after_grace_period,
+                    "no_of_late_arrival_0":x.no_of_late_arrival_0,
+                    "no_of_late_arrival_1":x.no_of_late_arrival_1,
+                    "no_of_late_arrival_2":x.no_of_late_arrival_2,
+                    "no_of_late_arrival_3":x.no_of_late_arrival_3,
+                    "no_of_late_arrival_4":x.no_of_late_arrival_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_early_leave_policy = self.enable_early_leave_policy
+        for x in self.early_leave_table:
+            shift_type.append("early_leave_table",{
+                    "no_of_early_leave_0":x.no_of_early_leave_0,
+                    "no_of_early_leave_1":x.no_of_early_leave_1,
+                    "no_of_early_leave_2":x.no_of_early_leave_2,
+                    "no_of_early_leave_3":x.no_of_early_leave_3,
+                    "no_of_early_leave_4":x.no_of_early_leave_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_missing_fingerprint_policy = self.enable_missing_fingerprint_policy
+        for x in self.missing_fingerprint_policy:
+            shift_type.append("missing_fingerprint_policy",{
+                    "no_of_missing_fingerprint_0":x.no_of_missing_fingerprint_0,
+                    "no_of_missing_fingerprint_1":x.no_of_missing_fingerprint_1,
+                    "no_of_missing_fingerprint_2":x.no_of_missing_fingerprint_2,
+                    "no_of_missing_fingerprint_3":x.no_of_missing_fingerprint_3,
+                    "no_of_missing_fingerprint_4":x.no_of_missing_fingerprint_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_absent_policy = self.enable_absent_policy
+        for x in self.absent_table:
+            shift_type.append("absent_table",{
+                    "no_of_absent_0":x.no_of_absent_0,
+                    "no_of_absent_1":x.no_of_absent_1,
+                    "no_of_absent_2":x.no_of_absent_2,
+                    "no_of_absent_3":x.no_of_absent_3,
+                    "no_of_absent_4":x.no_of_absent_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_weekend_policy = self.enable_weekend_policy
+        shift_type.weekend_absent = self.weekend_absent
+        shift_type.weekend_absent_component = self.weekend_absent_component
+
+        shift_type.enable_break_policy = self.enable_break_policy
+        for x in self.late_break_policy:
+            shift_type.append("late_break_policy",{
+                    "minutes":x.minutes,
+                    "deduction":x.deduction,
+                    "salary_component":x.salary_component
+                }
+
+            )
+
         shift_type.save()
         frappe.db.commit()
         shift_type.reload()
@@ -732,20 +871,27 @@ class ShiftBuilder(Document):
                 self.shift_end_time,
                 self.late_entry_grace_period,
                 self.early_exit_grace_period,
-                shift_type=True,
+                self.enable_break,
+                self.break_type,
+                self.break_late_grace_period,
+                self.break_duration,
+                self.in_break,
+                self.out_break,
+                self.overtime_break,
+                shift_type_normal=True,
             )
             new_shift = shift
         except Exception as e:
-            frappe.throw(_(f"Error while create Shift Type for Shift Type"))
+            frappe.throw(_(f"{e}"))
         else:
             self.db_set("shift_type_link", shift)
             frappe.db.commit()
         
-        return {"shift":new_shift}
+        return new_shift
     
     def make_shift_assignment_for_employee(self, emp, shifts):
-        nowdate = frappe.utils.nowdate()
-        for row in shifts:
+        nowdate = self.posting_date
+        for row in list(shifts):
             shift_assignment = frappe.new_doc("Shift Assignment")
             shift_assignment.shift_type = row
             shift_assignment.employee = emp

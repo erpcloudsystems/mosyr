@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-12-03 18:07:22.373953",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "minutes",
+  "deduction",
+  "salary_component"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "minutes",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "minutes"
+  },
+  {
+   "columns": 3,
+   "fieldname": "deduction",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Deduction"
+  },
+  {
+   "columns": 4,
+   "fieldname": "salary_component",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Salary Component",
+   "options": "Salary Component"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-05 09:08:57.385666",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Late Break Policy",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

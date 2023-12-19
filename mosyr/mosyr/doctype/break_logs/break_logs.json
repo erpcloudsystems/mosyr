@@ -1,0 +1,52 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-02 13:43:29.770889",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "in_break",
+  "out_break",
+  "break_type",
+  "on_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "in_break",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "In Break"
+  },
+  {
+   "fieldname": "out_break",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Out Break"
+  },
+  {
+   "fieldname": "break_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Break Type"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.break_type == \"Fixed\"",
+   "fieldname": "on_time",
+   "fieldtype": "Check",
+   "label": "On Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-02 15:02:30.715997",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Break Logs",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

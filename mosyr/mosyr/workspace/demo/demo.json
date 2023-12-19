@@ -1,0 +1,32 @@
+{
+ "cards_label": "Demo",
+ "category": "Administration",
+ "charts": [],
+ "creation": "2023-12-07 11:11:18.924670",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Demo",
+ "links": [],
+ "modified": "2023-12-07 11:36:12.869665",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Demo",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Extra Salary",
+   "link_to": "Extra Salary",
+   "type": "DocType"
+  }
+ ]
+}

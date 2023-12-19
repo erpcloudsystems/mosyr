@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_copy": 1,
  "allow_import": 1,
  "autoname": "MHR-SB.YY.MM.DD.####",
  "creation": "2023-01-18 10:16:10.858203",
@@ -9,16 +8,32 @@
  "engine": "InnoDB",
  "field_order": [
   "shift_type",
+  "ramadan_shift",
   "column_break_2",
   "status",
+  "posting_date",
   "double_shift_work_schedule_section",
   "first_period_start_time",
   "second_period_start_time",
   "minutes_of_late_entry",
+  "enable_break_frist_period",
+  "break_type_first_period",
+  "break_late_grace_period_first_period",
+  "break_duration_frist_period",
+  "in_break_frist_period",
+  "out_break_frist_period",
+  "overtime_break_frist_period",
   "column_break_5",
   "first_period_end_time",
   "second_period_end_time",
   "minutes_of_early_exit",
+  "enable_break_second_period",
+  "break_type__second_period",
+  "break_late_grace_period__second_period",
+  "break_duration_second_period",
+  "in_break_second_period",
+  "out_break_second_period",
+  "overtime_break_second_period",
   "column_break_14",
   "heading_14",
   "sunday_two_shift",
@@ -145,10 +160,123 @@
   "max_working_hours",
   "enable_auto_attendance",
   "in_lateness_permission",
+  "section_break_foja7",
+  "enable_break",
+  "break_type",
+  "break_late_grace_period",
+  "break_duration",
+  "in_break",
+  "out_break",
+  "overtime_break",
+  "break_differents_time_section",
+  "sunday_enable_break",
+  "sunday_break_type",
+  "sunday_break_late_grace_period",
+  "sunday_break_duration",
+  "sunday_in_break",
+  "sunday_out_break",
+  "sunday_overtime_break",
+  "wednesday_enable_break",
+  "wednesday_break_type",
+  "wednesday_break_late_grace_period",
+  "wednesday_break_duration",
+  "wednesday_in_break",
+  "wednesday_out_break",
+  "wednesday_overtime_break",
+  "saturday_enable_break",
+  "saturday_break_type",
+  "saturday_break_late_grace_period",
+  "saturday_break_duration",
+  "saturday_in_break",
+  "saturday_out_break",
+  "saturday_overtime_break",
+  "column_break_xuncc",
+  "monday_enable_break",
+  "monday_break_type",
+  "monday_break_late_grace_period",
+  "monday_break_duration",
+  "monday_in_break",
+  "monday_out_break",
+  "monday_overtime_break",
+  "thursday_enable_break",
+  "thursday_break_type",
+  "thursday_break_late_grace_period",
+  "thursday_break_duration",
+  "thursday_in_break",
+  "thursday_out_break",
+  "thursday_overtime_break",
+  "column_break_ulvy5",
+  "tuesday_enable_break",
+  "tuesday_break_type",
+  "tuesday_break_late_grace_period",
+  "tuesday_break_duration",
+  "tuesday_in_break",
+  "tuesday_out_break",
+  "tuesday_overtime_break",
+  "friday_enable_break",
+  "friday_break_type",
+  "friday_break_late_grace_period",
+  "friday_break_duration",
+  "friday_in_break",
+  "friday_out_break",
+  "friday_overtime_break",
+  "break_second_period_difference_times_section",
+  "sunday_enable_break2",
+  "sunday_break_type2",
+  "sunday_break_late_grace_period2",
+  "sunday_break_duration2",
+  "sunday_in_break2",
+  "sunday_out_break2",
+  "sunday_overtime_break2",
+  "wednesday_enable_break2",
+  "wednesday_break_type2",
+  "wednesday_break_late_grace_period2",
+  "wednesday_break_duration2",
+  "wednesday_in_break2",
+  "wednesday_out_break2",
+  "wednesday_overtime_break2",
+  "saturday_enable_break2",
+  "saturday_break_type2",
+  "saturday_break_late_grace_period2",
+  "saturday_break_duration2",
+  "saturday_in_break2",
+  "saturday_out_break2",
+  "saturday_overtime_break2",
+  "column_break_xg03v",
+  "monday_enable_break2",
+  "monday_break_type2",
+  "monday_break_late_grace_period2",
+  "monday_break_duration2",
+  "monday_in_break2",
+  "monday_out_break2",
+  "monday_overtime_break2",
+  "thursday_enable_break2",
+  "thursday_break_type2",
+  "thursday_break_late_grace_period2",
+  "thursday_break_duration2",
+  "thursday_in_break2",
+  "thursday_out_break2",
+  "thursday_overtime_break2",
+  "column_break_iwr6j",
+  "tuesday_enable_break2",
+  "tuesday_break_type2",
+  "tuesday_break_late_grace_period2",
+  "tuesday_break_duration2",
+  "tuesday_in_break2",
+  "tuesday_out_break2",
+  "tuesday_overtime_break2",
+  "friday_enable_break2",
+  "friday_break_type2",
+  "friday_break_late_grace_period2",
+  "friday_break_duration2",
+  "friday_in_break2",
+  "friday_out_break2",
+  "friday_overtime_break2",
   "section_break_131",
   "fetch_employees_based_on",
   "based_on",
   "fetch_employees",
+  "overwrite_employee",
   "shift_builder_employees",
   "sunday_different_times_shift1",
   "sunday_different_times_shift2",
@@ -177,7 +305,43 @@
   "working_hours_threshold_for_absent",
   "grace_period_settings_for_auto_attendance",
   "last_sync_of_checkin",
-  "amended_from"
+  "amended_from",
+  "break_overtime_policy_section",
+  "amount_overtime",
+  "break_overtime_component",
+  "overtime_policy_section",
+  "enable_overtime_policy",
+  "overtime",
+  "overtime_starts_after",
+  "column_break_jaccq",
+  "enable_holidays_overtime",
+  "holidays_overtime_component",
+  "payroll_period_section",
+  "month_start_in",
+  "column_break_jpkoz",
+  "month_end_in",
+  "flexible_policy_section",
+  "is_flexible_hours",
+  "flexible_hours_policy",
+  "lateness_policy_section",
+  "enable_late_arrival_policy",
+  "late_table",
+  "early_leave_policy_section",
+  "enable_early_leave_policy",
+  "early_leave_table",
+  "missing_fingerprint_policy_section",
+  "enable_missing_fingerprint_policy",
+  "missing_fingerprint_policy",
+  "absence_policy_section",
+  "enable_absent_policy",
+  "absent_table",
+  "weekend_absent_penalty_section",
+  "enable_weekend_policy",
+  "weekend_absent",
+  "weekend_absent_component",
+  "break_policy_section",
+  "enable_break_policy",
+  "late_break_policy"
  ],
  "fields": [
   {
@@ -374,12 +538,7 @@
   },
   {
    "fieldname": "sunday_entering_the_first_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "sunday_different_times"
-  },
-  {
-   "fieldname": "sunday_entry_grace_period",
-   "fieldtype": "Int"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "sunday_exit_grace_period",
@@ -387,8 +546,7 @@
   },
   {
    "fieldname": "monday_entering_the_first_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "monday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "monday_entry_grace_period",
@@ -400,8 +558,7 @@
   },
   {
    "fieldname": "tuesday_entering_the_first_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "tuesday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "tuesday_entry_grace_period",
@@ -414,8 +571,7 @@
   {
    "fieldname": "wednesday_entering_the_first_period",
    "fieldtype": "Time",
-   "label": "Entering The First Period",
-   "mandatory_depends_on": "wednesday_different_times"
+   "label": "Entering The First Period"
   },
   {
    "fieldname": "wednesday_entry_grace_period",
@@ -430,8 +586,7 @@
   {
    "fieldname": "thursday_entering_the_first_period",
    "fieldtype": "Time",
-   "label": "Entering The First Period",
-   "mandatory_depends_on": "thursday_different_times"
+   "label": "Entering The First Period"
   },
   {
    "fieldname": "thursday_entry_grace_period",
@@ -446,8 +601,7 @@
   {
    "fieldname": "friday_entering_the_first_period",
    "fieldtype": "Time",
-   "label": "Entering The First Period",
-   "mandatory_depends_on": "friday_different_times"
+   "label": "Entering The First Period"
   },
   {
    "fieldname": "friday_entry_grace_period",
@@ -462,8 +616,7 @@
   {
    "fieldname": "saturday_entering_the_first_period",
    "fieldtype": "Time",
-   "label": "Entering The First Period",
-   "mandatory_depends_on": "saturday_different_times"
+   "label": "Entering The First Period"
   },
   {
    "fieldname": "saturday_entry_grace_period",
@@ -576,18 +729,15 @@
   },
   {
    "fieldname": "sunday_entering_the_second_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "sunday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "sunday_exit_the_first_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "sunday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "sunday_exit_the_second_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "sunday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "g1_h",
@@ -635,18 +785,15 @@
   },
   {
    "fieldname": "monday_exit_the_first_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "monday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "monday_exit_the_second_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "monday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "monday_entering_the_second_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "monday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "column_break_55",
@@ -674,8 +821,7 @@
   },
   {
    "fieldname": "tuesday_entering_the_second_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "tuesday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "column_break_65",
@@ -683,13 +829,11 @@
   },
   {
    "fieldname": "tuesday_exit_the_first_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "tuesday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "tuesday_exit_the_second_period",
-   "fieldtype": "Time",
-   "mandatory_depends_on": "tuesday_different_times"
+   "fieldtype": "Time"
   },
   {
    "fieldname": "f4_h",
@@ -714,20 +858,17 @@
   {
    "fieldname": "wednesday_entering_the_second_period",
    "fieldtype": "Time",
-   "label": "Entering The Second  Period",
-   "mandatory_depends_on": "wednesday_different_times"
+   "label": "Entering The Second  Period"
   },
   {
    "fieldname": "wednesday_exit_the_first_period",
    "fieldtype": "Time",
-   "label": "Exit The First  Period",
-   "mandatory_depends_on": "wednesday_different_times"
+   "label": "Exit The First  Period"
   },
   {
    "fieldname": "wednesday_exit_the_second_period",
    "fieldtype": "Time",
-   "label": "Exit The Second  Period",
-   "mandatory_depends_on": "wednesday_different_times"
+   "label": "Exit The Second  Period"
   },
   {
    "fieldname": "out4",
@@ -757,8 +898,7 @@
   {
    "fieldname": "thursday_entering_the_second_period",
    "fieldtype": "Time",
-   "label": "Entering The Second  Period",
-   "mandatory_depends_on": "thursday_different_times"
+   "label": "Entering The Second  Period"
   },
   {
    "fieldname": "out5",
@@ -768,14 +908,12 @@
   {
    "fieldname": "thursday_exit_the_first_period",
    "fieldtype": "Time",
-   "label": "Exit The First  Period",
-   "mandatory_depends_on": "thursday_different_times"
+   "label": "Exit The First  Period"
   },
   {
    "fieldname": "thursday_exit_the_second_period",
    "fieldtype": "Time",
-   "label": "Exit The Second  Period",
-   "mandatory_depends_on": "thursday_different_times"
+   "label": "Exit The Second  Period"
   },
   {
    "fieldname": "out3",
@@ -805,8 +943,7 @@
   {
    "fieldname": "saturday_entering_the_second_period",
    "fieldtype": "Time",
-   "label": "Entering Second  Period",
-   "mandatory_depends_on": "saturday_different_times"
+   "label": "Entering Second  Period"
   },
   {
    "fieldname": "out6",
@@ -816,14 +953,12 @@
   {
    "fieldname": "saturday_exit_the_first_period",
    "fieldtype": "Time",
-   "label": "Exit The First  Period",
-   "mandatory_depends_on": "saturday_different_times"
+   "label": "Exit The First  Period"
   },
   {
    "fieldname": "saturday_exit_the_second_period",
    "fieldtype": "Time",
-   "label": "Exit The Second  Period",
-   "mandatory_depends_on": "saturday_different_times"
+   "label": "Exit The Second  Period"
   },
   {
    "fieldname": "f7_h",
@@ -853,20 +988,17 @@
   {
    "fieldname": "friday_exit_the_first_period",
    "fieldtype": "Time",
-   "label": "Exit The First  Period",
-   "mandatory_depends_on": "friday_different_times"
+   "label": "Exit The First  Period"
   },
   {
    "fieldname": "friday_exit_the_second_period",
    "fieldtype": "Time",
-   "label": "Exit The Second  Period",
-   "mandatory_depends_on": "friday_different_times"
+   "label": "Exit The Second  Period"
   },
   {
    "fieldname": "friday_entering_the_second_period",
    "fieldtype": "Time",
-   "label": "Entering Second  Period",
-   "mandatory_depends_on": "friday_different_times"
+   "label": "Entering Second  Period"
   },
   {
    "allow_on_submit": 1,
@@ -1159,12 +1291,1112 @@
    "label": "Shift Type link",
    "options": "Shift Type",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_break",
+   "fieldtype": "Check",
+   "label": "Enable Break"
+  },
+  {
+   "depends_on": "eval:doc.enable_break",
+   "fieldname": "break_type",
+   "fieldtype": "Select",
+   "label": "Break Type",
+   "mandatory_depends_on": "eval:doc.enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "eval:doc.break_type ===\"Fixed\" && doc.enable_break",
+   "fieldname": "in_break",
+   "fieldtype": "Time",
+   "label": "In Break",
+   "mandatory_depends_on": "eval:doc.break_type ===\"Fixed\" && doc.enable_break"
+  },
+  {
+   "depends_on": "eval:doc.break_type ===\"Fixed\" && doc.enable_break",
+   "fieldname": "out_break",
+   "fieldtype": "Time",
+   "label": "Out Break",
+   "mandatory_depends_on": "eval:doc.break_type ===\"Fixed\" && doc.enable_break"
+  },
+  {
+   "depends_on": "eval:doc.break_type ===\"Flexible\"",
+   "fieldname": "break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Break Duration",
+   "mandatory_depends_on": "eval:doc.break_type ===\"Flexible\" && doc.enable_break"
+  },
+  {
+   "default": "0",
+   "fieldname": "overwrite_employee",
+   "fieldtype": "Check",
+   "label": "Overwrite Employee"
+  },
+  {
+   "depends_on": "eval:doc.break_type",
+   "fieldname": "break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Break Late Grace Period",
+   "mandatory_depends_on": "eval:doc.break_type"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "overtime_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Overtime Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_overtime_policy",
+   "fieldtype": "Check",
+   "label": "Enable Overtime Policy"
+  },
+  {
+   "fieldname": "overtime",
+   "fieldtype": "Link",
+   "label": "Overtime",
+   "options": "Salary Component"
+  },
+  {
+   "fieldname": "overtime_starts_after",
+   "fieldtype": "Int",
+   "label": "Overtime Starts After"
+  },
+  {
+   "fieldname": "column_break_jaccq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_holidays_overtime",
+   "fieldtype": "Check",
+   "label": "Enable Holidays Overtime"
+  },
+  {
+   "fieldname": "holidays_overtime_component",
+   "fieldtype": "Link",
+   "label": "Holidays Overtime Component",
+   "options": "Salary Component"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "payroll_period_section",
+   "fieldtype": "Section Break",
+   "label": "Payroll Period"
+  },
+  {
+   "fieldname": "month_start_in",
+   "fieldtype": "Int",
+   "label": "Month Start In"
+  },
+  {
+   "fieldname": "column_break_jpkoz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "month_end_in",
+   "fieldtype": "Int",
+   "label": "Month End In"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.shift_type != \"Flexible Work Schedule\"",
+   "depends_on": "eval:doc.shift_type == \"Flexible Work Schedule\"",
+   "fieldname": "flexible_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Flexible Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_flexible_hours",
+   "fieldtype": "Check",
+   "label": "Is Flexible Hours"
+  },
+  {
+   "fieldname": "flexible_hours_policy",
+   "fieldtype": "Table",
+   "label": "Flexible Hours Policy",
+   "options": "Flexible Hours Policy"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "lateness_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Lateness Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_late_arrival_policy",
+   "fieldtype": "Check",
+   "label": "Enable Late Arrival Policy"
+  },
+  {
+   "fieldname": "late_table",
+   "fieldtype": "Table",
+   "label": "Late Table",
+   "options": "Late Table"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "early_leave_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Early Leave Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_early_leave_policy",
+   "fieldtype": "Check",
+   "label": "Enable Early Leave Policy"
+  },
+  {
+   "fieldname": "early_leave_table",
+   "fieldtype": "Table",
+   "label": "Early Leave Table",
+   "options": "Early Leave Table"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "missing_fingerprint_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Missing Fingerprint Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_missing_fingerprint_policy",
+   "fieldtype": "Check",
+   "label": "Enable Missing Fingerprint Policy"
+  },
+  {
+   "fieldname": "missing_fingerprint_policy",
+   "fieldtype": "Table",
+   "label": "Missing Fingerprint Policy",
+   "options": "Missing Fingerprint Policy"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "absence_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Absence Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_absent_policy",
+   "fieldtype": "Check",
+   "label": "Enable Absent Policy"
+  },
+  {
+   "fieldname": "absent_table",
+   "fieldtype": "Table",
+   "label": "Absent Table",
+   "options": "Absent Table"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "weekend_absent_penalty_section",
+   "fieldtype": "Section Break",
+   "label": "Weekend Absent Penalty"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_weekend_policy",
+   "fieldtype": "Check",
+   "label": "Enable weekend Policy"
+  },
+  {
+   "fieldname": "weekend_absent",
+   "fieldtype": "Int",
+   "label": "Weekend Absent"
+  },
+  {
+   "fieldname": "weekend_absent_component",
+   "fieldtype": "Link",
+   "label": "Weekend Absent Component",
+   "options": "Salary Component"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.enable_break",
+   "fieldname": "overtime_break",
+   "fieldtype": "Check",
+   "label": "Overtime Break"
+  },
+  {
+   "fieldname": "amount_overtime",
+   "fieldtype": "Data",
+   "label": "Amount Overtime"
+  },
+  {
+   "fieldname": "break_overtime_component",
+   "fieldtype": "Link",
+   "label": "Break Overtime Component",
+   "options": "Salary Component"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "break_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Break Policy"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_break_policy",
+   "fieldtype": "Check",
+   "label": "Enable Break Policy"
+  },
+  {
+   "fieldname": "late_break_policy",
+   "fieldtype": "Table",
+   "label": "Late Break Policy",
+   "options": "Late Break Policy"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.shift_type ==\"Double Shift Work Schedule\"",
+   "fieldname": "enable_break_frist_period",
+   "fieldtype": "Check",
+   "label": "Enable Break Frist Period"
+  },
+  {
+   "depends_on": "enable_break_frist_period",
+   "fieldname": "break_type_first_period",
+   "fieldtype": "Select",
+   "label": "Break Type First Period",
+   "mandatory_depends_on": "enable_break_frist_period",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "eval:doc.enable_break_frist_period",
+   "fieldname": "break_late_grace_period_first_period",
+   "fieldtype": "Int",
+   "label": "Break Late Grace Period First Period"
+  },
+  {
+   "depends_on": "eval:doc.break_type_first_period ===\"Flexible\"",
+   "fieldname": "break_duration_frist_period",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Break Duration Frist Period",
+   "mandatory_depends_on": "eval:doc.break_type_first_period ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.break_type_first_period ===\"Fixed\" && doc.enable_break_frist_period",
+   "fieldname": "in_break_frist_period",
+   "fieldtype": "Time",
+   "label": "In Break Frist Period",
+   "mandatory_depends_on": "eval:doc.break_type_first_period ===\"Fixed\" && doc.enable_break_frist_period"
+  },
+  {
+   "depends_on": "eval:doc.break_type_first_period ===\"Fixed\" && doc.enable_break_frist_period",
+   "fieldname": "out_break_frist_period",
+   "fieldtype": "Time",
+   "label": "Out Break Frist Period",
+   "mandatory_depends_on": "eval:doc.break_type_first_period ===\"Fixed\" && doc.enable_break_frist_period"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.enable_break_frist_period",
+   "fieldname": "overtime_break_frist_period",
+   "fieldtype": "Check",
+   "label": "Overtime Break Frist Period"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_break_second_period",
+   "fieldtype": "Check",
+   "label": "Enable Break Second Period"
+  },
+  {
+   "depends_on": "enable_break_second_period",
+   "fieldname": "break_type__second_period",
+   "fieldtype": "Select",
+   "label": "Break Type  Second Period",
+   "mandatory_depends_on": "enable_break_second_period",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "enable_break_second_period",
+   "fieldname": "break_late_grace_period__second_period",
+   "fieldtype": "Int",
+   "label": "Break Late Grace Period  Second Period"
+  },
+  {
+   "depends_on": "eval:doc.break_type__second_period ===\"Flexible\"",
+   "fieldname": "break_duration_second_period",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Break Duration Second Period",
+   "mandatory_depends_on": "eval:doc.break_type__second_period ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.break_type__second_period ===\"Fixed\" && doc.enable_break_second_period",
+   "fieldname": "in_break_second_period",
+   "fieldtype": "Time",
+   "label": "In Break Second Period",
+   "mandatory_depends_on": "eval:doc.break_type__second_period ===\"Fixed\" && doc.enable_break_second_period"
+  },
+  {
+   "depends_on": "eval:doc.break_type__second_period ===\"Fixed\" && doc.enable_break_second_period",
+   "fieldname": "out_break_second_period",
+   "fieldtype": "Time",
+   "label": "Out Break Second Period",
+   "mandatory_depends_on": "eval:doc.break_type__second_period ===\"Fixed\" && doc.enable_break_second_period"
+  },
+  {
+   "default": "0",
+   "depends_on": "enable_break_second_period",
+   "fieldname": "overtime_break_second_period",
+   "fieldtype": "Check",
+   "label": "Overtime Break Second Period"
+  },
+  {
+   "default": "0",
+   "fieldname": "sunday_enable_break",
+   "fieldtype": "Check",
+   "label": "Sunday Enable Break"
+  },
+  {
+   "fieldname": "sunday_entry_grace_period",
+   "fieldtype": "Int"
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Work Schedule with Different Times\"",
+   "fieldname": "break_differents_time_section",
+   "fieldtype": "Section Break",
+   "label": "Break differents Time"
+  },
+  {
+   "fieldname": "column_break_xuncc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "monday_enable_break",
+   "fieldtype": "Check",
+   "label": "Monday Enable Break"
+  },
+  {
+   "fieldname": "column_break_ulvy5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "tuesday_enable_break",
+   "fieldtype": "Check",
+   "label": "Tuesday Enable Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "wednesday_enable_break",
+   "fieldtype": "Check",
+   "label": "Wednesday Enable Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "saturday_enable_break",
+   "fieldtype": "Check",
+   "label": " Saturday Enable Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "thursday_enable_break",
+   "fieldtype": "Check",
+   "label": "Thursday Enable Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "friday_enable_break",
+   "fieldtype": "Check",
+   "label": "Friday Enable Break"
+  },
+  {
+   "depends_on": "sunday_enable_break",
+   "fieldname": "sunday_break_type",
+   "fieldtype": "Select",
+   "label": "Sunday Break Type",
+   "mandatory_depends_on": "sunday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "sunday_enable_break",
+   "fieldname": "sunday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Sunday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.sunday_break_type ===\"Flexible\"",
+   "fieldname": "sunday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Sunday Break Duration",
+   "mandatory_depends_on": "eval:doc.sunday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.sunday_break_type ===\"Fixed\"",
+   "fieldname": "sunday_in_break",
+   "fieldtype": "Time",
+   "label": "Sunday In Break",
+   "mandatory_depends_on": "eval:doc.sunday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.sunday_break_type ===\"Fixed\"",
+   "fieldname": "sunday_out_break",
+   "fieldtype": "Time",
+   "label": "Sunday Out Break",
+   "mandatory_depends_on": "eval:doc.sunday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "sunday_break_type",
+   "fieldname": "sunday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Sunday Overtime Break"
+  },
+  {
+   "depends_on": "wednesday_enable_break",
+   "fieldname": "wednesday_break_type",
+   "fieldtype": "Select",
+   "label": "Wednesday Break Type",
+   "mandatory_depends_on": "wednesday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "wednesday_enable_break",
+   "fieldname": "wednesday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Wednesday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.wednesday_break_type ===\"Flexible\"",
+   "fieldname": "wednesday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Wednesday Break Duration",
+   "mandatory_depends_on": "eval:doc.wednesday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.wednesday_break_type ===\"Fixed\"",
+   "fieldname": "wednesday_in_break",
+   "fieldtype": "Time",
+   "label": "Wednesday In Break",
+   "mandatory_depends_on": "eval:doc.wednesday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.wednesday_break_type ===\"Fixed\"",
+   "fieldname": "wednesday_out_break",
+   "fieldtype": "Time",
+   "label": "Wednesday Out Break",
+   "mandatory_depends_on": "eval:doc.wednesday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "wednesday_break_type",
+   "fieldname": "wednesday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Wednesday Overtime Break"
+  },
+  {
+   "depends_on": "saturday_enable_break",
+   "fieldname": "saturday_break_type",
+   "fieldtype": "Select",
+   "label": "Saturday Break Type",
+   "mandatory_depends_on": "saturday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "saturday_enable_break",
+   "fieldname": "saturday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Saturday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.saturday_break_type ===\"Flexible\"",
+   "fieldname": "saturday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Saturday Break Duration",
+   "mandatory_depends_on": "eval:doc.saturday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.saturday_break_type ===\"Fixed\"",
+   "fieldname": "saturday_in_break",
+   "fieldtype": "Time",
+   "label": "Saturday In Break",
+   "mandatory_depends_on": "eval:doc.saturday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.saturday_break_type ===\"Fixed\"",
+   "fieldname": "saturday_out_break",
+   "fieldtype": "Time",
+   "label": "Saturday Out Break",
+   "mandatory_depends_on": "eval:doc.saturday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "saturday_break_type",
+   "fieldname": "saturday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Saturday Overtime Break"
+  },
+  {
+   "depends_on": "monday_enable_break",
+   "fieldname": "monday_break_type",
+   "fieldtype": "Select",
+   "label": "Monday Break Type",
+   "mandatory_depends_on": "monday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "monday_enable_break",
+   "fieldname": "monday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Monday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.monday_break_type ===\"Flexible\"",
+   "fieldname": "monday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Monday Break Duration",
+   "mandatory_depends_on": "eval:doc.monday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.monday_break_type ===\"Fixed\"",
+   "fieldname": "monday_in_break",
+   "fieldtype": "Time",
+   "label": "Monday In Break",
+   "mandatory_depends_on": "eval:doc.monday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.monday_break_type ===\"Fixed\"",
+   "fieldname": "monday_out_break",
+   "fieldtype": "Time",
+   "label": "Monday Out Break",
+   "mandatory_depends_on": "eval:doc.monday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "monday_break_type",
+   "fieldname": "monday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Monday Overtime Break"
+  },
+  {
+   "depends_on": "thursday_enable_break",
+   "fieldname": "thursday_break_type",
+   "fieldtype": "Select",
+   "label": "Thursday Break Type",
+   "mandatory_depends_on": "thursday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "thursday_enable_break",
+   "fieldname": "thursday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Thursday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.thursday_break_type ===\"Flexible\"",
+   "fieldname": "thursday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Thursday Break Duration",
+   "mandatory_depends_on": "eval:doc.thursday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.thursday_break_type ===\"Fixed\"",
+   "fieldname": "thursday_in_break",
+   "fieldtype": "Time",
+   "label": "Thursday In Break",
+   "mandatory_depends_on": "eval:doc.thursday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.thursday_break_type ===\"Fixed\"",
+   "fieldname": "thursday_out_break",
+   "fieldtype": "Time",
+   "label": "Thursday Out Break",
+   "mandatory_depends_on": "eval:doc.thursday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "thursday_break_type",
+   "fieldname": "thursday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Thursday Overtime Break"
+  },
+  {
+   "depends_on": "tuesday_enable_break",
+   "fieldname": "tuesday_break_type",
+   "fieldtype": "Select",
+   "label": "Tuesday Break Type",
+   "mandatory_depends_on": "tuesday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "tuesday_break_type",
+   "fieldname": "tuesday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Tuesday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.tuesday_break_type ===\"Flexible\"",
+   "fieldname": "tuesday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Tuesday Break Duration",
+   "mandatory_depends_on": "eval:doc.tuesday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.tuesday_break_type ===\"Fixed\"",
+   "fieldname": "tuesday_in_break",
+   "fieldtype": "Time",
+   "label": "Tuesday In Break",
+   "mandatory_depends_on": "eval:doc.tuesday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.tuesday_break_type ===\"Fixed\"",
+   "fieldname": "tuesday_out_break",
+   "fieldtype": "Time",
+   "label": "Tuesday Out Break",
+   "mandatory_depends_on": "eval:doc.tuesday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "tuesday_break_type",
+   "fieldname": "tuesday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Tuesday Overtime Break"
+  },
+  {
+   "depends_on": "friday_enable_break",
+   "fieldname": "friday_break_type",
+   "fieldtype": "Select",
+   "label": "Friday Break Type",
+   "mandatory_depends_on": "friday_enable_break",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "friday_break_type",
+   "fieldname": "friday_break_late_grace_period",
+   "fieldtype": "Int",
+   "label": "Friday Break Late Grace Period"
+  },
+  {
+   "depends_on": "eval:doc.friday_break_type ===\"Flexible\"",
+   "fieldname": "friday_break_duration",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Friday Break Duration",
+   "mandatory_depends_on": "eval:doc.friday_break_type ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.friday_break_type ===\"Fixed\"",
+   "fieldname": "friday_in_break",
+   "fieldtype": "Time",
+   "label": "Friday In Break",
+   "mandatory_depends_on": "eval:doc.friday_break_type ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.friday_break_type ===\"Fixed\"",
+   "fieldname": "friday_out_break",
+   "fieldtype": "Time",
+   "label": "Friday Out Break",
+   "mandatory_depends_on": "eval:doc.friday_break_type ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "friday_break_type",
+   "fieldname": "friday_overtime_break",
+   "fieldtype": "Check",
+   "label": "Friday Overtime Break"
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Work Schedule with Different Times\"",
+   "fieldname": "break_second_period_difference_times_section",
+   "fieldtype": "Section Break",
+   "label": "Break Second Period Difference times"
+  },
+  {
+   "default": "0",
+   "fieldname": "sunday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Sunday Enable Break2"
+  },
+  {
+   "depends_on": "sunday_enable_break2",
+   "fieldname": "sunday_break_type2",
+   "fieldtype": "Select",
+   "label": "Sunday Break Type2",
+   "mandatory_depends_on": "sunday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "sunday_break_type2",
+   "fieldname": "sunday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": "Sunday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.sunday_break_type2 ===\"Flexible\"",
+   "fieldname": "sunday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": "Sunday Break Duration2",
+   "mandatory_depends_on": "eval:doc.sunday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.sunday_break_type2 ===\"Fixed\"",
+   "fieldname": "sunday_in_break2",
+   "fieldtype": "Time",
+   "label": "Sunday In Break2",
+   "mandatory_depends_on": "eval:doc.sunday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.sunday_break_type2 ===\"Fixed\"",
+   "fieldname": "sunday_out_break2",
+   "fieldtype": "Time",
+   "label": "Sunday Out Break2",
+   "mandatory_depends_on": "eval:doc.sunday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "sunday_break_type2",
+   "fieldname": "sunday_overtime_break2",
+   "fieldtype": "Check",
+   "label": "Sunday Overtime Break2"
+  },
+  {
+   "default": "0",
+   "fieldname": "wednesday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Wednesday Enable Break2"
+  },
+  {
+   "depends_on": "wednesday_enable_break2",
+   "fieldname": "wednesday_break_type2",
+   "fieldtype": "Select",
+   "label": "Wednesday Break Type2",
+   "mandatory_depends_on": "wednesday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "wednesday_break_type2",
+   "fieldname": "wednesday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": " Wednesday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.wednesday_break_type2 ===\"Flexible\"",
+   "fieldname": "wednesday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": " Wednesday Break Duration2",
+   "mandatory_depends_on": "eval:doc.wednesday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.wednesday_break_type2 ===\"Fixed\"",
+   "fieldname": "wednesday_in_break2",
+   "fieldtype": "Time",
+   "label": " Wednesday In Break2",
+   "mandatory_depends_on": "eval:doc.wednesday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.wednesday_break_type2 ===\"Fixed\"",
+   "fieldname": "wednesday_out_break2",
+   "fieldtype": "Time",
+   "label": " Wednesday Out Break2",
+   "mandatory_depends_on": "eval:doc.wednesday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "wednesday_break_type2",
+   "fieldname": "wednesday_overtime_break2",
+   "fieldtype": "Check",
+   "label": " Wednesday Overtime Break2"
+  },
+  {
+   "default": "0",
+   "fieldname": "saturday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Saturday Enable Break2"
+  },
+  {
+   "depends_on": "saturday_enable_break2",
+   "fieldname": "saturday_break_type2",
+   "fieldtype": "Select",
+   "label": "Saturday Break Type2",
+   "mandatory_depends_on": "saturday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "saturday_break_type2",
+   "fieldname": "saturday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": " Saturday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.saturday_break_type2 ===\"Flexible\"",
+   "fieldname": "saturday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": " Saturday Break Duration2",
+   "mandatory_depends_on": "eval:doc.saturday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.saturday_break_type2 ===\"Fixed\"",
+   "fieldname": "saturday_in_break2",
+   "fieldtype": "Time",
+   "label": " Saturday In Break2",
+   "mandatory_depends_on": "eval:doc.saturday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.saturday_break_type2 ===\"Fixed\"",
+   "fieldname": "saturday_out_break2",
+   "fieldtype": "Time",
+   "label": " Saturday Out Break2",
+   "mandatory_depends_on": "eval:doc.saturday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "saturday_break_type2",
+   "fieldname": "saturday_overtime_break2",
+   "fieldtype": "Check",
+   "label": " Saturday Overtime Break2",
+   "mandatory_depends_on": "saturday_break_type2"
+  },
+  {
+   "fieldname": "column_break_xg03v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "monday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Monday Enable Break2"
+  },
+  {
+   "depends_on": "monday_enable_break2",
+   "fieldname": "monday_break_type2",
+   "fieldtype": "Select",
+   "label": "Monday Break Type2",
+   "mandatory_depends_on": "monday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "monday_break_type2",
+   "fieldname": "monday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": " Monday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.monday_break_type2 ===\"Flexible\"",
+   "fieldname": "monday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": " Monday Break Duration2",
+   "mandatory_depends_on": "eval:doc.monday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.monday_break_type2 ===\"Fixed\"",
+   "fieldname": "monday_in_break2",
+   "fieldtype": "Time",
+   "label": " Monday In Break2",
+   "mandatory_depends_on": "eval:doc.monday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.monday_break_type2 ===\"Fixed\"",
+   "fieldname": "monday_out_break2",
+   "fieldtype": "Time",
+   "label": " Monday Out Break2",
+   "mandatory_depends_on": "eval:doc.monday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "monday_break_type2",
+   "fieldname": "monday_overtime_break2",
+   "fieldtype": "Check",
+   "label": " Monday Overtime Break2"
+  },
+  {
+   "default": "0",
+   "fieldname": "thursday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Thursday Enable Break2"
+  },
+  {
+   "depends_on": "thursday_enable_break2",
+   "fieldname": "thursday_break_type2",
+   "fieldtype": "Select",
+   "label": "Thursday Break Type2",
+   "mandatory_depends_on": "thursday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "thursday_break_type2",
+   "fieldname": "thursday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": " Thursday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.thursday_break_type2 ===\"Flexible\"",
+   "fieldname": "thursday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": " Thursday Break Duration2",
+   "mandatory_depends_on": "eval:doc.thursday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.thursday_break_type2 ===\"Fixed\"",
+   "fieldname": "thursday_in_break2",
+   "fieldtype": "Time",
+   "label": " Thursday In Break2",
+   "mandatory_depends_on": "eval:doc.thursday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.thursday_break_type2 ===\"Fixed\"",
+   "fieldname": "thursday_out_break2",
+   "fieldtype": "Time",
+   "label": " Thursday Out Break2",
+   "mandatory_depends_on": "eval:doc.thursday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "thursday_break_type2",
+   "fieldname": "thursday_overtime_break2",
+   "fieldtype": "Check",
+   "label": " Thursday Overtime Break2"
+  },
+  {
+   "fieldname": "column_break_iwr6j",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "tuesday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Tuesday Enable Break2"
+  },
+  {
+   "depends_on": "tuesday_enable_break2",
+   "fieldname": "tuesday_break_type2",
+   "fieldtype": "Select",
+   "label": "Tuesday Break Type2",
+   "mandatory_depends_on": "tuesday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "tuesday_break_type2",
+   "fieldname": "tuesday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": " Tuesday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.tuesday_break_type2 ===\"Flexible\"",
+   "fieldname": "tuesday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": " Tuesday Break Duration2",
+   "mandatory_depends_on": "eval:doc.tuesday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.tuesday_break_type2 ===\"Fixed\"",
+   "fieldname": "tuesday_in_break2",
+   "fieldtype": "Time",
+   "label": " Tuesday In Break2",
+   "mandatory_depends_on": "eval:doc.tuesday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.tuesday_break_type2 ===\"Fixed\"",
+   "fieldname": "tuesday_out_break2",
+   "fieldtype": "Time",
+   "label": " Tuesday Out Break2",
+   "mandatory_depends_on": "eval:doc.tuesday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "tuesday_break_type2",
+   "fieldname": "tuesday_overtime_break2",
+   "fieldtype": "Check",
+   "label": " Tuesday Overtime Break2"
+  },
+  {
+   "default": "0",
+   "fieldname": "friday_enable_break2",
+   "fieldtype": "Check",
+   "label": "Friday Enable Break2"
+  },
+  {
+   "depends_on": "friday_enable_break2",
+   "fieldname": "friday_break_type2",
+   "fieldtype": "Select",
+   "label": "Friday Break Type2",
+   "mandatory_depends_on": "friday_enable_break2",
+   "options": "\nFixed\nFlexible"
+  },
+  {
+   "depends_on": "friday_break_type2",
+   "fieldname": "friday_break_late_grace_period2",
+   "fieldtype": "Int",
+   "label": " Friday Break Late Grace Period2"
+  },
+  {
+   "depends_on": "eval:doc.friday_break_type2 ===\"Flexible\"",
+   "fieldname": "friday_break_duration2",
+   "fieldtype": "Duration",
+   "hide_days": 1,
+   "label": " Friday Break Duration2",
+   "mandatory_depends_on": "eval:doc.friday_break_type2 ===\"Flexible\""
+  },
+  {
+   "depends_on": "eval:doc.friday_break_type2 ===\"Fixed\"",
+   "fieldname": "friday_in_break2",
+   "fieldtype": "Time",
+   "label": " Friday In Break2",
+   "mandatory_depends_on": "eval:doc.friday_break_type2 ===\"Fixed\""
+  },
+  {
+   "depends_on": "eval:doc.friday_break_type2 ===\"Fixed\"",
+   "fieldname": "friday_out_break2",
+   "fieldtype": "Time",
+   "label": " Friday Out Break2",
+   "mandatory_depends_on": "eval:doc.friday_break_type2 ===\"Fixed\""
+  },
+  {
+   "default": "0",
+   "depends_on": "friday_break_type2",
+   "fieldname": "friday_overtime_break2",
+   "fieldtype": "Check",
+   "label": " Friday Overtime Break2"
+  },
+  {
+   "depends_on": "eval:doc.shift_type == \"Flexible Work Schedule\" || doc.shift_type==\"Shift Type\"",
+   "fieldname": "section_break_foja7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "break_overtime_policy_section",
+   "fieldtype": "Section Break",
+   "label": "Break Overtime Policy"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "shift_type",
+   "fieldname": "ramadan_shift",
+   "fieldtype": "Check",
+   "label": "Ramadan Shift"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-24 10:03:50.515038",
+ "modified": "2023-12-10 22:02:19.261955",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Shift Builder",

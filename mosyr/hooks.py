@@ -126,7 +126,7 @@ override_doctype_class = {
 	"Salary Component": 			"mosyr.overrides.payrolls.CustomSalaryComponent",
 	"Salary Structure": 			"mosyr.overrides.payrolls.CustomSalaryStructure",
 	"Salary Structure Assignment": 	"mosyr.overrides.payrolls.CustomSalaryStructureAssignment",
-	"Salary Slip": 					"mosyr.overrides.payrolls.CustomSalarySlip",
+	# "Salary Slip": 					"mosyr.overrides.payrolls.CustomSalarySlip",
 	"Payroll Entry": 				"mosyr.overrides.payrolls.CustomPayrollEntry",
 
 	"Shift Assignment": 			"mosyr.overrides.shifts.CustomShiftAssignment",
@@ -212,6 +212,16 @@ doc_events = {
 			"mosyr.api.send_notification_and_email",
 		]
 	},
+	"Attendance": {
+		"before_submit": [
+			"mosyr.api.create_attendance",
+		]
+	},
+	"Employee Checkin": {
+		"validate": [
+			"mosyr.api.validate_employee_checkin",
+		]
+	},
 	"Leave Allocation": {
 		"before_submit": "mosyr.api.reset_unused_leaves",
 		"on_submit": "mosyr.api.calculate_leave_allocation"
@@ -222,9 +232,9 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"cron":{	
-		"0/5 * * * *" :[
-			"mosyr.tasks.process_auto_attendance_for_all_shifts"
-		],
+		# "0/5 * * * *" :[
+		# 	"mosyr.tasks.process_auto_attendance_for_all_shifts"
+		# ],
 		"0 7 * * *": [
 			"mosyr.tasks.check_expired_dates"
 		]

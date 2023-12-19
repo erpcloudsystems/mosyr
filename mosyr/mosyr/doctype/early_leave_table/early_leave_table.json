@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-11-30 16:50:59.237876",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "from_after_grace_period",
+  "to_after_grace_period",
+  "no_of_early_leave_0",
+  "no_of_early_leave_1",
+  "no_of_early_leave_2",
+  "no_of_early_leave_3",
+  "no_of_early_leave_4",
+  "salary_component"
+ ],
+ "fields": [
+  {
+   "default": "ELT-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "ELT-"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_early_leave_0",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "1st Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_early_leave_1",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "2nd Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_early_leave_2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "3rd Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_early_leave_3",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "4th Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_early_leave_4",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "5th Time"
+  },
+  {
+   "columns": 4,
+   "fieldname": "salary_component",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Salary Component",
+   "options": "Salary Component"
+  },
+  {
+   "fieldname": "from_after_grace_period",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "to_after_grace_period",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "To"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-11 02:38:01.388287",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Early Leave Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

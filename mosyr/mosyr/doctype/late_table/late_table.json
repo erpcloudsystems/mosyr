@@ -1,0 +1,101 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-11-30 16:48:38.649427",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_after_grace_period",
+  "to_after_grace_period",
+  "no_of_late_arrival_0",
+  "no_of_late_arrival_1",
+  "no_of_late_arrival_2",
+  "no_of_late_arrival_3",
+  "no_of_late_arrival_4",
+  "salary_component"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "from_after_grace_period",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "From"
+  },
+  {
+   "columns": 1,
+   "fieldname": "to_after_grace_period",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "To"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_late_arrival_0",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "1st Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_late_arrival_1",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "2nd Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_late_arrival_2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "3rd Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_late_arrival_3",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "4th Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "no_of_late_arrival_4",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "5th Time"
+  },
+  {
+   "columns": 3,
+   "fieldname": "salary_component",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Salary Component",
+   "options": "Salary Component"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-04 12:30:28.172812",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Late Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
