@@ -13,7 +13,7 @@ from frappe.utils import (
     flt,
 )
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
+from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 
 ############################################

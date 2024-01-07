@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from datetime import datetime,timedelta
-from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
+from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 
 def execute(filters=None):
