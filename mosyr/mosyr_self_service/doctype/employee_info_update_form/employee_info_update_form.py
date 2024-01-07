@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.utils import validate_active_employee
 
 class EmployeeInfoUpdateForm(Document):
 	def validate(self):

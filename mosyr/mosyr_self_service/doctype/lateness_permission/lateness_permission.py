@@ -8,7 +8,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, flt, formatdate, getdate
 
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.utils import validate_active_employee
 class OverlapError(frappe.ValidationError):
     pass
 

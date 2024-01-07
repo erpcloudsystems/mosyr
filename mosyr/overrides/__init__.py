@@ -12,8 +12,8 @@ from frappe.utils import (
     now_datetime,
     flt,
 )
-from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 
 ############################################

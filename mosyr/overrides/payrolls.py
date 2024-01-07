@@ -390,7 +390,7 @@ def custom_get_filter_condition(filters):
 
 
 def get_total_leaves_taken(employee, from_date, to_date):
-    from erpnext.hr.doctype.leave_application.leave_application import get_leaves_for_period
+    from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
     allocation_records = [lt.name for lt in frappe.db.sql("select name from `tabLeave Type`", as_dict=True)]
     total_leaves_taken = 0
 

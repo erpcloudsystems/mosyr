@@ -13,9 +13,9 @@ from frappe.utils import (
 	flt,
 )
 
-from erpnext.hr.utils import validate_active_employee
-from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
-from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.utils import validate_active_employee
+from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 
 ############################################
@@ -34,11 +34,11 @@ from mosyr.overrides import (
 	get_actual_start_end_datetime_of_shift,
 )
 
-from erpnext.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
-from erpnext.hr.doctype.shift_request.shift_request import ShiftRequest
-from erpnext.hr.doctype.attendance.attendance import Attendance
-from erpnext.hr.doctype.employee_checkin.employee_checkin import EmployeeCheckin
-from erpnext.hr.doctype.shift_type.shift_type import ShiftType
+from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
+from hrms.hr.doctype.shift_request.shift_request import ShiftRequest
+from hrms.hr.doctype.attendance.attendance import Attendance
+from hrms.hr.doctype.employee_checkin.employee_checkin import EmployeeCheckin
+from hrms.hr.doctype.shift_type.shift_type import ShiftType
 
 ############################################
 ############## Validation Error ############

@@ -1185,7 +1185,7 @@ def create_bank(title):
 #################
 ### Overrides ###
 #################
-from erpnext.hr.report.monthly_attendance_sheet import monthly_attendance_sheet
+from hrms.hr.report.monthly_attendance_sheet import monthly_attendance_sheet
 from mosyr.overrides.reports.monthly_attendance_sheet import execute
 
 monthly_attendance_sheet.execute = execute

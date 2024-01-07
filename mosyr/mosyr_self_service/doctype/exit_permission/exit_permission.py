@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.utils import validate_active_employee
 from frappe.utils import time_diff_in_seconds, get_datetime_str, time_diff_in_hours
 from mosyr.api import send_notification_and_email
 
@@ -50,7 +50,7 @@ class ExitPermission(Document):
                         create_checkin(self.employee, "OUT", shift_datetime_end_time)
                         
     def get_shift(self, employee):
-        from erpnext.hr.doctype.shift_assignment.shift_assignment import get_employee_shift
+        from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift
         shift_actual_timings = get_employee_shift(employee, frappe.utils.getdate(self.date), False, None)
         if shift_actual_timings:
             return shift_actual_timings.shift_type.name

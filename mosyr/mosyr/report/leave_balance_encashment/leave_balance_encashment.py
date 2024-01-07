@@ -4,8 +4,8 @@
 import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate, flt
-from erpnext.hr.doctype.leave_application.leave_application import get_leave_details
-from erpnext.hr.report.employee_leave_balance.employee_leave_balance import get_department_leave_approver_map
+from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+from hrms.hr.report.employee_leave_balance.employee_leave_balance import get_department_leave_approver_map
 from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import	get_assigned_salary_structure
 
 def execute(filters=None):
