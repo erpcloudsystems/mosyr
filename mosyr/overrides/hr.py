@@ -5,11 +5,11 @@ from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.utils.nestedset import NestedSet, rebuild_tree
 
 from erpnext.setup.doctype.company.company import Company, install_country_fixtures
-from hrms.hr.doctype.employee.employee import Employee
+from erpnext.setup.doctype.employee.employee import Employee
 from hrms.hr.doctype.department.department import Department
 from hrms.hr.doctype.travel_request.travel_request import TravelRequest
 from hrms.hr.doctype.expense_claim.expense_claim import ExpenseClaim
-from hrms.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
+from erpnext.setup.doctype.employee_advance.employee_advance import EmployeeAdvance
 from hrms.hr.doctype.expense_claim_type.expense_claim_type import ExpenseClaimType
 from hrms.hr.doctype.attendance_request.attendance_request import AttendanceRequest
 from hrms.hr.doctype.leave_application.leave_application import LeaveApplication
