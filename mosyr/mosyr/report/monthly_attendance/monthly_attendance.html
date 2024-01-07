@@ -1,0 +1,293 @@
+
+<style>
+    
+    * {
+            margin:0;
+            padding:0;
+font-family:Mudir MT;
+        }
+        .print-format {
+            padding:0in;
+            
+        }
+
+        
+    .header {
+        display:flex; 
+        flex-direction:column;
+        justify-content:center;
+    }
+    .under-header {
+        display: flex;
+    flex-direction: revert;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto 20px;
+    }
+    .esm-algeha {
+        margin-top:30px;
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+    }
+    .table1{
+        border: 2px solid black;
+        border-collapse:collapse;
+        text-align:center;
+
+    }
+    .table2{
+        border:3px solid black;
+        border-collapse:collapse;
+        text-align:center;
+
+
+    }
+    .table1 tr{
+        border-bottom:2px solid black;
+        border-top:2px solid black;
+        border-top:2px solid black;
+        border-collapse:collapse;
+        text-align:center;
+        white-space: nowrap;
+
+    }
+    .print-format th {
+        color:black;
+        text-align:center;
+        font-weight:bold;
+        white-space: nowrap;
+
+    
+    }
+    .print-format td {
+        padding: 0px !important;
+    }
+    .break {
+        flex-basis: 100%;
+        height: 0;
+      }
+      .column1 {
+        border-left: 2px solid black;
+      }
+    .table1 {
+        display:flex; 
+        flex-direction:column;
+		width: 100%;
+    }
+    .table2{
+        display:flex; 
+        flex-direction:column;
+		width: 100%;
+        border-collapse: collapse;  border-spacing: 0;
+    }
+
+.header-box {
+    justify-content: space-around;
+    display: flex;
+    align-items: center;
+    /* padding: 2px; */
+    border: 2px solid black;
+    /* width: 90%; */
+    /* margin-bottom: 20px; */
+    margin: 10px 20px;
+}
+.sec-three {
+    
+    /* border-right: 2px solid black; */
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    /* padding: 7pt; */
+
+
+}
+    </style>
+    
+{% let loopsNo = Math.ceil((data[0].lenght_emp.length)) %}
+{% let i =2 ; %}
+{% let index; %}
+{% for(var j=0, f=loopsNo; j<f; j++) { %}
+
+
+<div dir="rtl" class="sec-three" style=" font-weight:bold; margin: 1rem 0; font-size: 1.5rem; ">
+	<div>
+        {{data[0].lenght_emp[j].employee_name}}
+    </div>
+    <div>
+        من فترة 
+        {{data[0].lenght_emp[j].current_date}}
+        الى فترة 
+        {{data[0].lenght_emp[j].last_date}}
+    </div>
+</div>
+{%let lates = early_come = early_leave = overtime =entry_sum = leave_sum = sum_absent = sum_present= 0; %}
+
+<div class="table1">
+	<table style="font-family:Cairo" style="margin: 1rem;" dir="rtl">
+		<thead>
+			<tr>
+				<th>التاريخ </th>
+				<th>الفترة </th>
+				<th>دخول</th>
+				<th>خروج</th>
+				<th>تاخير </th>
+				<th>تقصير 
+				</th>
+				<th> مبكر </th>
+				<th> اضافى 
+				</th>
+	
+				<th>الفعلى </th>
+				<th>الحالة </th>
+			</tr>
+		</thead>
+		<tbody>
+            
+			{% for ( ; i < data.length; i++) { %}
+				{% let item = data[i]; %}
+				{% index = i; %}
+
+				{% if (item.code.startsWith("HR-") || item.code.startsWith("H") || item.code === "Summary") && (i != 0 || i != 1) %}
+                    {% i = index + 2; %}
+					{% break; %}
+				{% endif %}
+				<tr>
+					<th>{{ item.code }} </th>
+					<th>{{ item.employee_name }} </th>
+					<th>{{ item.in_time }}</th>
+					<th>{{ item.out_time }}</th>
+                    {% if (item.lates != "0:0:0") %}
+					<th style="color: red;">
+                        {{ item.lates }}
+                    </th>
+                    {% else %}
+                        <th >
+                            {{ item.lates }}
+                        </th>
+                    {% endif %}
+                    {% if (item.early_leave != "0:0:0") %}
+					<th style="color: red;">
+                        {{ item.early_leave }}
+                    </th>
+                    {% else %}
+                        <th >
+                            {{ item.early_leave }}
+                        </th>
+                    {% endif %}
+                    {% if (item.early_come != "0:0:0") %}
+					<th style="color: green;">
+                        {{ item.early_come }}
+                    </th>
+                    {% else %}
+                        <th >
+                            {{ item.early_come }}
+                        </th>
+                    {% endif %}
+                    {% if (item.overtime != "0:0:0") %}
+					<th style="color: green;">
+                        {{ item.overtime }}
+                    </th>
+                    {% else %}
+                        <th >
+                            {{ item.overtime }}
+                        </th>
+                    {% endif %}
+                    {% if (item.working_hours != "0:0:0") %}
+					<th style="color: green;">
+                        {{ item.working_hours }}
+                    </th>
+                    {% else %}
+                        <th >
+                            {{ item.working_hours }}
+                        </th>
+                    {% endif %}
+                    {% if (item.status == "Absent") %}
+					<th style="color: red;">
+                        {{ item.status }}
+                    </th>
+                    {% endif %}
+                    {% if (item.status == "Present") %}
+					<th style="color: green;">
+                        {{ item.status }}
+                    </th>
+                    {% endif %}
+                    {% if (item.status == "عطله" ||  item.status == "لا شيفت") %}
+					<th style="color: black;">
+                        {{ item.status }}
+                    </th>
+                    {% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+		
+		
+		
+	</table>
+    </div>
+<div class="table2" style="margin-top: 1rem;">
+    <table style="font-family:Cairo" dir="rtl" >
+        <tbody>
+            
+            <tr>
+                <th> </th>
+                <th>وقت </th>
+                <th>عدد</th>
+                <th></th>
+                <th>وقت </th>
+                <th>عدد</th>
+                <th></th>
+                <th>عدد</th>
+            </tr>
+            
+            <tr>
+                <th> دخول مبكر</th>
+                <th>{{data[0].lenght_emp[j].early_come}} </th>
+                <th>{{data[0].lenght_emp[j].count_early_come}}</th>
+                <th>تاخير</th>
+                <th>{{data[0].lenght_emp[j].lates}} </th>
+                <th>{{data[0].lenght_emp[j].count_lates}}</th>
+                <th>لم يبصم دخول</th>
+                <th>{{data[0].lenght_emp[j].missed_finger_print_entry}}</th>
+            </tr>
+            <tr>
+                <th> خروج اضافى</th>
+                <th>{{data[0].lenght_emp[j].overtime}}</th>
+                <th>{{data[0].lenght_emp[j].count_overtime}}</th>
+                <th>تقصير</th>
+                <th>{{data[0].lenght_emp[j].early_leave}} </th>
+                <th>{{data[0].lenght_emp[j].count_early_leave}}</th>
+                <th>لم يبصم خروج</th>
+                <th>{{data[0].lenght_emp[j].missed_finger_print}}</th>
+            </tr>
+            <tr>
+                <th>الاجمالى</th>
+                <th >{{data[0].lenght_emp[j].total2}}</th>
+                <th>{{data[0].lenght_emp[j].total_count2}}</th>
+                <th></th>
+                <th>{{data[0].lenght_emp[j].total1}} </th>
+                <th>{{data[0].lenght_emp[j].total_count1}}</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th> الحضور</th>
+                <th>{{data[0].lenght_emp[j].count_present}}</th>
+                <th>الغيابات</th>
+                <th>{{data[0].lenght_emp[j].count_absent}}</th>
+                <th colspan="2"> الاجازات الرسمية </th>
+                <th  colspan="2">{{data[0].lenght_emp[j].count_holiday}}</th>
+                <!-- <th>عدد الايام</th>
+                <th>{{data[0].lenght_emp[j].count_holiday + data[0].lenght_emp[j].count_absent + data[0].lenght_emp[j].count_present }}</th> -->
+            </tr>
+        </tbody>
+        
+        
+        
+    </table>
+    </div>
+
+<p style="page-break-after: always;">&nbsp;&nbsp;&nbsp;</p>
+
+{% } %}

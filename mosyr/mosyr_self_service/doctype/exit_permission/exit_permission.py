@@ -24,6 +24,7 @@ class ExitPermission(Document):
 
     def on_update(self):
         send_notification_and_email(self)
+        pass
     
     def on_submit(self):
         def create_checkin(employee, log_type, time ):

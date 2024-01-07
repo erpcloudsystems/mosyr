@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Summerize Employee Attendance"] = {
+frappe.query_reports["Monthly Attendance"] = {
 	"filters": [
 		{
 			fieldname: "from_date",
@@ -40,6 +40,7 @@ frappe.query_reports["Summerize Employee Attendance"] = {
 			fieldtype: "Link",
 			options:"Department",
 			// hidden:1
+
 		},
 	],
 	onload: function(){
@@ -80,8 +81,7 @@ frappe.query_reports["Summerize Employee Attendance"] = {
 			toggleSidebar();
 			$('[data-original-title="Refresh"]').click()
 	});
-	},
-	"formatter": function (value, row, column, data, default_formatter) {
+	},"formatter": function (value, row, column, data, default_formatter) {
 		value = default_formatter(value, row, column, data);
 
 		if (column.fieldname == "status" && data && data.status == "Present") {
@@ -91,49 +91,34 @@ frappe.query_reports["Summerize Employee Attendance"] = {
 			value = "<span style='color:red'>" + value + "</span>";
 		}
 
-		if (column.fieldname == "lates" && data && (data.lates != "0:0:0")) {
-				value = "<span style='color:red'>" + value + "</span>";
-			}
-
-		if (column.fieldname == "early_leave" && data && data.early_leave != "0:0:0") {
-				value = "<span style='color:red'>" + value + "</span>";
+		if (column.fieldname == "lates" && data && (data.lates == "تاخير")) {
+			value = "<span style='color:black'>" + value + "</span>";
 		}
 
-		if (column.fieldname == "overtime" && data && data.overtime != "0:0:0") {
-			value = "<span style='color:green'>" + value + "</span>";
-		}
-		if (column.fieldname == "early_come" && data && data.early_come != "0:0:0") {
-			value = "<span style='color:green'>" + value + "</span>";
+		else if (column.fieldname == "lates" && data && (data.lates != "0:0:0")) {
+			value = "<span style='color:red'>" + value + "</span>";
 		}
 
-		if (column.fieldname == "early_come" && data && data.early_come != "0:0:0") {
+		if (column.fieldname == "early_leave" && data && data.early_leave == "تقصير") {
+			value = "<span style='color:black'>" + value + "</span>";
+		}	
+		else if (column.fieldname == "early_leave" && data && data.early_leave != "0:0:0") {
+			value = "<span style='color:red'>" + value + "</span>";
+		}
+
+		if (column.fieldname == "overtime" && data && data.overtime == "اضافى") {
+			value = "<span style='color:black'>" + value + "</span>";
+		}
+		else if (column.fieldname == "overtime" && data && data.overtime != "0:0:0") {
 			value = "<span style='color:green'>" + value + "</span>";
 		}
-		if (column.fieldname == "count_absent" && data && value > 0 ) {
-			value = "<span style='color:red'>" + value + "</span>";
+		if (column.fieldname == "early_come" && data && data.early_come == "مبكر") {
+			value = "<span style='color:black'>" + value + "</span>";
 		}
-		if (column.fieldname == "count_present" && data && value > 0 ) {
-			value = "<span style='color:green'>" + value + "</span>";
-		}
-		if ((column.fieldname == "missed_finger_print_entry" && data && value > 0) ) {
-			value = "<span style='color:red'>" + value + "</span>";
-		}
-		if ((column.fieldname == "missed_finger_print" && data && value > 0) ) {
-			value = "<span style='color:red'>" + value + "</span>";
-		}
-		if ((column.fieldname == "records_with_early_leave" && data && value > 0) ) {
-			value = "<span style='color:red'>" + value + "</span>";
-		}
-		if ((column.fieldname == "records_with_early_come" && data && value > 0) ) {
+		else if (column.fieldname == "early_come" && data && data.early_come != "0:0:0") {
 			value = "<span style='color:green'>" + value + "</span>";
 		}
 
-		if ((column.fieldname == "records_with_lates" && data && value > 0 ) ) {
-			value = "<span style='color:red'>" + value + "</span>";
-		}
-		if ((column.fieldname == "records_with_overtime" && data && value > 0) ) {
-			value = "<span style='color:green'>" + value + "</span>";
-		}
 		return value;
 	}
 };

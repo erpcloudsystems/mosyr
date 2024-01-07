@@ -852,6 +852,11 @@ def create_doc_workflow_status(department, approvers, state_name, with_dep):
 
     return state_list
 
+def update_leave_application_status(doc, method):
+    if doc.workflow_state.split()[0] == "Approved":
+        doc.status= "Approved"
+    if doc.workflow_state.split()[0] == "Rejected":
+        doc.status= "Rejected"
 def create_doc_workflow_actions(department, state_list, with_dep):
     actions_list = []
     if state_list:
@@ -929,6 +934,8 @@ def validate_approver(doc, method):
         for row in workflow_doc.states:
             if row.state == doc.workflow_state:
                 if row.approver != frappe.session.user and doc.workflow_state != "Pending" :
+                    # frappe.throw(_(f"{row.approver != frappe.session.user}::: {doc.workflow_state != "Pending" }" ))
+
                     approver_name = frappe.get_value("User", row.approver, "full_name")
                     frappe.throw(_(f"Can't Approved this Application, Just <b>{approver_name}</b> Can Approved this Application"))
     else:
@@ -1186,8 +1193,8 @@ def validate_employee_checkin(doc, method):
         if last_log[0]['name'] == doc.name:
                 return
         minutes = _check_if_created_checkin_or_not(last_log[0]['time'], doc.time)
-        if minutes <= 5:
-            frappe.throw("لقد تم تسجيل البصمة بالفعل")
+        # if minutes <= 5:
+        #     frappe.throw("لقد تم تسجيل البصمة بالفعل")
     pass
 
 def _check_if_created_checkin_or_not(date1, date2):

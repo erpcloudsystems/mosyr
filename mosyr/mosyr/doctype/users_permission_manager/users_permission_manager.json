@@ -7,34 +7,124 @@
  "engine": "InnoDB",
  "field_order": [
   "user",
+  "section_break_5sgpf",
+  "read_system_management",
+  "column_break_1bcqn",
+  "write_system_management",
+  "column_break_iy0cu",
+  "create_system_management",
   "system_management_section",
   "system_management",
+  "section_break_q2kdv",
+  "read_user_management",
+  "column_break_mlshq",
+  "write_user_management",
+  "column_break_q2p1r",
+  "create_user_management",
   "user_management_section",
   "user_management",
+  "section_break_ozzk2",
+  "read_hr_mangement",
+  "column_break_9cuoa",
+  "write_hr_mangement",
+  "column_break_ieyd4",
+  "create_hr_mangement",
   "hr_management_section",
   "hr_management",
+  "section_break_epbpu",
+  "read_employees_list",
+  "column_break_tkoxw",
+  "write_employees_list",
+  "column_break_wkkws",
+  "create_employees_list",
   "employees_list_section",
   "employees_list",
+  "section_break_ylwzg",
+  "read_self_service",
+  "column_break_fslf2",
+  "write_self_service",
+  "column_break_roqrn",
+  "create_self_service",
   "self_service_section",
   "self_service",
+  "section_break_9enid",
+  "read_e_form",
+  "column_break_avvox",
+  "write_e_form",
+  "column_break_oqbay",
+  "create_e_form",
   "e_form_section",
   "e_form",
+  "section_break_3wfdf",
+  "read_timesheet_attendees_management",
+  "column_break_socyu",
+  "write_timesheet_attendees_management",
+  "column_break_kfctb",
+  "create_timesheet_attendees_management",
   "timesheet_attendees_management_section",
   "timesheet_attendees_management",
+  "section_break_oxzfp",
+  "read_payroll",
+  "column_break_0tk2y",
+  "write_payroll",
+  "column_break_rjuhx",
+  "create_payroll",
   "payroll_section",
   "payroll",
+  "section_break_2yvmn",
+  "read_employees_performance",
+  "column_break_01m0p",
+  "write_employees_performance",
+  "column_break_ozjcg",
+  "create_employees_performance",
   "employees_performance_section",
   "employees_performance",
+  "section_break_pvmjk",
+  "read_leave",
+  "column_break_52r4j",
+  "write_leave",
+  "column_break_5n5q4",
+  "create_leave",
   "leave_section",
   "leave",
+  "section_break_i4gzb",
+  "read_loans",
+  "column_break_v3xmr",
+  "write_loans",
+  "column_break_1wuc4",
+  "create_loans",
   "loans_section",
   "loans",
+  "section_break_xni1g",
+  "read_vehicle_management",
+  "column_break_6fnap",
+  "write_vehicle_management",
+  "column_break_cwowd",
+  "create_vehicle_management",
   "vehicle_management_section",
   "vehicle_management",
+  "section_break_yhs1y",
+  "read_documents_management",
+  "column_break_wbcyh",
+  "write_documents_management",
+  "column_break_rz1vb",
+  "create_documents_management",
   "documents_management_section",
   "documents_management",
+  "section_break_xidr0",
+  "read_custody_management",
+  "column_break_nxjz3",
+  "write_custody_management",
+  "column_break_rfu17",
+  "create_custody_management",
   "custody_management_section",
   "custody_management",
+  "section_break_a0ekp",
+  "read_page_or_report",
+  "column_break_7gkqz",
+  "write_page_or_report",
+  "column_break_nmmuo",
+  "create_page_or_report",
   "page_or_report_section",
   "page_or_report"
  ],
@@ -162,6 +252,7 @@
    "options": "User Permission Document Type"
   },
   {
+   "depends_on": "user",
    "fieldname": "hr_management",
    "fieldtype": "Table",
    "options": "User Permission Document Type"
@@ -212,6 +303,7 @@
    "options": "User Permission Document Type"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "documents_management",
    "fieldtype": "Table",
    "options": "User Permission Document Type"
@@ -227,12 +319,481 @@
    "fieldname": "page_or_report_section",
    "fieldtype": "Section Break",
    "label": "Page Or Report"
+  },
+  {
+   "fieldname": "column_break_9cuoa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ieyd4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "hr_management_section",
+   "depends_on": "user",
+   "fieldname": "section_break_ozzk2",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "read_hr_mangement",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_hr_mangement",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_hr_mangement",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_5sgpf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_system_management",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_1bcqn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_system_management",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_iy0cu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_system_management",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_q2kdv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_user_management",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_mlshq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_user_management",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_q2p1r",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_user_management",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_epbpu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_employees_list",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_tkoxw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_employees_list",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_wkkws",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_employees_list",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_ylwzg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_self_service",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_fslf2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_self_service",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_roqrn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_self_service",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_9enid",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_e_form",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_avvox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_e_form",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_oqbay",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_e_form",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_3wfdf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_timesheet_attendees_management",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_socyu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_timesheet_attendees_management",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_kfctb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_timesheet_attendees_management",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_oxzfp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_payroll",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_0tk2y",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_payroll",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_rjuhx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_payroll",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_2yvmn",
+   "fieldtype": "Section Break",
+   "mandatory_depends_on": "user"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_employees_performance",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_01m0p",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_employees_performance",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_ozjcg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_employees_performance",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_pvmjk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_leave",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_52r4j",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_leave",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_5n5q4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_leave",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_i4gzb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_loans",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_v3xmr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_loans",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_1wuc4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_loans",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_xni1g",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_vehicle_management",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_6fnap",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_vehicle_management",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_cwowd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_vehicle_management",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_yhs1y",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_documents_management",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_wbcyh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_documents_management",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_rz1vb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_documents_management",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_xidr0",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_custody_management",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_nxjz3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_custody_management",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_rfu17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_custody_management",
+   "fieldtype": "Check",
+   "label": "Create"
+  },
+  {
+   "depends_on": "user",
+   "fieldname": "section_break_a0ekp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_page_or_report",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "column_break_7gkqz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "write_page_or_report",
+   "fieldtype": "Check",
+   "label": "Write"
+  },
+  {
+   "fieldname": "column_break_nmmuo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_page_or_report",
+   "fieldtype": "Check",
+   "label": "Create"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-04-30 14:07:30.436986",
+ "modified": "2024-01-07 00:41:15.242441",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Users Permission Manager",

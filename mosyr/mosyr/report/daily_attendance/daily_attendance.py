@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 import datetime
+from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
 
 def execute(filters=None):
 	current_date = datetime.date.today()
@@ -161,6 +162,7 @@ def get_attendance_data(filters):
 			attendance_date as attendance_date,
 			attendance_request as attendance_request,
 			leave_application as leave_application,
+			(SELECT holiday_list FROM `tabShift Type` WHERE name = `tabAttendance`.shift ORDER BY creation DESC LIMIT 1) as holiday_list,
 
 		CASE
 			WHEN  ( TIME_TO_SEC(TIME(in_time)) - TIME_TO_SEC(( SELECT (start_time) from `tabShift Type` where name =  `tabAttendance`.shift  ORDER BY creation DESC LIMIT 1) )) < 0 THEN 0
@@ -189,7 +191,7 @@ def get_attendance_data(filters):
 			docstatus = 1 
 		AND
 			attendance_date = '{from_dates}'
-		ORDER BY code, attendance_date
+		ORDER BY code, attendance_date, shift
 		""".format(from_dates=from_dates, to_dates=to_dates)
 		
 	if conditions:
@@ -226,7 +228,7 @@ def get_attendance_data(filters):
 		pervious = row['code']
 		counter = 1
 		index += 1
-	employees = get_all_employee()
+	employees = get_all_employee(filters)
 	list_emp = []
 	for row in employees:
 		list_emp.append(row['name'])
@@ -237,8 +239,22 @@ def get_attendance_data(filters):
 		if emp not in attendace_list:
 			item_results.append({
 				"code": emp,
-				"employee_name": [item for item in employees if item.get('name') == emp][0].get('employee_name')
+				"employee_name": [item for item in employees if item.get('name') == emp][0].get('employee_name'),
+				"holiday_list":[item for item in employees if item.get('name') == emp][0].get('holiday_list') or None,
+				"status": None
 			})
+	
+	for res in item_results:
+		if res['status'] is None:
+			if res['holiday_list']:
+				if is_holiday(res['holiday_list'], from_dates):
+					res['status'] = "عطله"
+				else:
+					res['status'] = "لا شيفت"
+			else:
+				res['status'] = "لا شيفت"
+			
+				
 	return item_results
 
 def seconds_to_hms(seconds):
@@ -248,10 +264,19 @@ def seconds_to_hms(seconds):
 	hours, remainder = divmod(seconds, 3600)
 	minutes, seconds = divmod(remainder, 60)
 	return f"{int(hours)}:{int(minutes)}:{int(seconds)}"
-def get_all_employee():
+def get_all_employee(filters):
+	conditions = []
+	if 'employee' in filters:
+		conditions.append(
+			f"(employee = '{filters['employee']}' )")
+	if 'department' in filters:
+		conditions.append(
+			f"(department = '{filters['department']}' )")
 	query = """
-		SELECT name,employee_name  from `tabEmployee` where status ='Active'
+		SELECT name,employee_name, holiday_list  from `tabEmployee` where status ='Active'
 	"""
+	if conditions:
+			query += " AND " + " AND ".join(conditions)
 	return frappe.db.sql(query, as_dict = 1)
 	# frappe.msgprint(str(item_results))
 	# result = []

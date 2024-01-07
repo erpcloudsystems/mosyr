@@ -12,7 +12,7 @@ from frappe.utils import (
     flt,
 )
 from frappe.model.naming import make_autoname
-
+from datetime import datetime, timedelta
 
 class ShiftBuilder(Document):
     def is_ramadan_shift(self):
@@ -84,12 +84,22 @@ class ShiftBuilder(Document):
                     f"Second Period Start Time cannot be greater than Second Period End Time"
                 )
             )
+        initial_end_time_time2 = datetime.strptime( self.second_period_end_time, "%H:%M:%S")
+        second_period_end_time2 = initial_end_time_time2 + timedelta(seconds=(self.allow_exit_time    * 60))
+        initial_end_time_time1 = datetime.strptime( self.first_period_end_time, "%H:%M:%S")
+        first_period_end_time1 = initial_end_time_time1 + timedelta(seconds=(self.allow_exit_time * 60))
+
+        initial_start_time_time2 = datetime.strptime( self.second_period_start_time, "%H:%M:%S")
+        second_period_start_time2 = initial_start_time_time2 - timedelta(seconds=(self.allow_entry_time    * 60))
+        initial_start_time_time1 = datetime.strptime( self.first_period_start_time, "%H:%M:%S")
+        first_period_start_time1 = initial_start_time_time1 - timedelta(seconds=(self.allow_entry_time * 60))
         is_valid_interval = self.valid_interval_times(
-            self.first_period_start_time,
-            self.first_period_end_time,
-            self.second_period_start_time,
-            self.second_period_end_time,
+            first_period_start_time1.strftime("%H:%M:%S"),
+            first_period_end_time1.strftime("%H:%M:%S"),
+            second_period_start_time2.strftime("%H:%M:%S"),
+            (second_period_end_time2.strftime("%H:%M:%S")),
         )
+        # frappe.throw(f"{is_valid_interval}")
         if not is_valid_interval and  not self.is_ramadan_shift():
             frappe.throw(_("Shift 1 and Shift 2 are overlapping."))
 
@@ -464,6 +474,7 @@ class ShiftBuilder(Document):
 
     def valid_interval_times(self, time1_start, time1_end, time2_start, time2_end):
         interval_status = True
+       
         start1_overlap = (
             time_diff_in_seconds(time1_start, time2_start)
             * time_diff_in_seconds(time1_start, time2_end)
@@ -472,10 +483,12 @@ class ShiftBuilder(Document):
             time_diff_in_seconds(time1_end, time2_start)
             * time_diff_in_seconds(time1_end, time2_end)
         ) < 0
+        
         start2_overlap = (
             time_diff_in_seconds(time2_start, time1_start)
-            * time_diff_in_seconds(time2_start, time1_end)
-        ) < 0
+         * time_diff_in_seconds(time2_start, time1_end)
+            ) < 0
+
         end2_overlap = (
             time_diff_in_seconds(time2_end, time1_start)
             * time_diff_in_seconds(time2_end, time1_end)
@@ -824,7 +837,298 @@ class ShiftBuilder(Document):
         frappe.db.commit()
         shift_type.reload()
         return shift_type.name
+ 
+    def update_shift_type(
+        self,
+        newname,
+        start_time,
+        end_time,
+        late_grace,
+        early_grace,
+        enable_break,break_type,break_late_grace_period,break_duration,in_break,out_break,overtime_break,
+        flexible_shift=False,
+        shift_type_normal=False
+    ):
+        shift_type = frappe.new_doc("Shift Type")
+        
+        if not frappe.db.exists( "Shift Type",  newname):
+            shift_type = frappe.get_doc({"doctype": "Shift Type", "__newname": newname})
+        else:
+            shift_type = frappe.get_doc( "Shift Type",  newname)
+        shift_type.start_time = start_time
+        shift_type.end_time = end_time
+        shift_type.enable_auto_attendance = 1
+        shift_type.process_attendance_after = nowdate()
+        shift_type.last_sync_of_checkin = now_datetime()
+        shift_type.determine_check_in_and_check_out = (
+            self.determine_check_in_and_check_out
+        )
+        shift_type.working_hours_calculation_based_on = (
+            self.working_hours_calculation_based_on
+        )
+        shift_type.begin_check_in_before_shift_start_time = self.allow_entry_time
+        shift_type.allow_check_out_after_shift_end_time = self.allow_exit_time
+        shift_type.working_hours_threshold_for_half_day = (
+            self.working_hours_threshold_for_half_day
+        )
+        shift_type.working_hours_threshold_for_absent = (
+            self.working_hours_threshold_for_absent
+        )
 
+        if cint(late_grace) != 0:
+            shift_type.enable_entry_grace_period = 1
+            shift_type.late_entry_grace_period = cint(late_grace)
+        if cint(early_grace) != 0:
+            shift_type.enable_exit_grace_period = 1
+            shift_type.early_exit_grace_period = cint(early_grace)
+        if flexible_shift:
+            shift_type.max_working_hours = flt(self.required_hours_per_day)
+        if shift_type_normal:
+            shift_type.max_working_hours = flt(self.max_working_hours)
+        shift_type.enable_break = enable_break
+        shift_type.break_type = break_type
+        shift_type.break_late_grace_period = break_late_grace_period
+        shift_type.break_duration = break_duration
+        shift_type.in_break = in_break
+        shift_type.out_break = out_break
+        shift_type.overtime_break = overtime_break
+
+
+        shift_type.break_overtime_component = self.break_overtime_component
+        shift_type.amount_overtime = self.amount_overtime
+        shift_type.holiday_list = self.holiday_list
+        shift_type.enable_overtime_policy = self.enable_overtime_policy
+        shift_type.overtime = self.overtime
+        shift_type.overtime_starts_after = self.overtime_starts_after
+        shift_type.enable_holidays_overtime = self.enable_holidays_overtime
+        shift_type.holidays_overtime_component = self.holidays_overtime_component
+        shift_type.month_start_in = self.month_start_in
+        shift_type.month_end_in = self.month_end_in
+        shift_type.is_flexible_hours = self.is_flexible_hours
+        for x in self.flexible_hours_policy:
+            shift_type.append("flexible_hours_policy",{
+                    "hours":x.hours,
+                    "deduction":x.deduction,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_late_arrival_policy = self.enable_late_arrival_policy
+        for x in self.late_table:
+            shift_type.append("late_table",{
+                    "from_after_grace_period":x.from_after_grace_period,
+                    "to_after_grace_period":x.to_after_grace_period,
+                    "no_of_late_arrival_0":x.no_of_late_arrival_0,
+                    "no_of_late_arrival_1":x.no_of_late_arrival_1,
+                    "no_of_late_arrival_2":x.no_of_late_arrival_2,
+                    "no_of_late_arrival_3":x.no_of_late_arrival_3,
+                    "no_of_late_arrival_4":x.no_of_late_arrival_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_early_leave_policy = self.enable_early_leave_policy
+        for x in self.early_leave_table:
+            shift_type.append("early_leave_table",{
+                    "no_of_early_leave_0":x.no_of_early_leave_0,
+                    "no_of_early_leave_1":x.no_of_early_leave_1,
+                    "no_of_early_leave_2":x.no_of_early_leave_2,
+                    "no_of_early_leave_3":x.no_of_early_leave_3,
+                    "no_of_early_leave_4":x.no_of_early_leave_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_missing_fingerprint_policy = self.enable_missing_fingerprint_policy
+        for x in self.missing_fingerprint_policy:
+            shift_type.append("missing_fingerprint_policy",{
+                    "no_of_missing_fingerprint_0":x.no_of_missing_fingerprint_0,
+                    "no_of_missing_fingerprint_1":x.no_of_missing_fingerprint_1,
+                    "no_of_missing_fingerprint_2":x.no_of_missing_fingerprint_2,
+                    "no_of_missing_fingerprint_3":x.no_of_missing_fingerprint_3,
+                    "no_of_missing_fingerprint_4":x.no_of_missing_fingerprint_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_absent_policy = self.enable_absent_policy
+        for x in self.absent_table:
+            shift_type.append("absent_table",{
+                    "no_of_absent_0":x.no_of_absent_0,
+                    "no_of_absent_1":x.no_of_absent_1,
+                    "no_of_absent_2":x.no_of_absent_2,
+                    "no_of_absent_3":x.no_of_absent_3,
+                    "no_of_absent_4":x.no_of_absent_4,
+                    "salary_component":x.salary_component
+                }
+
+            )
+        shift_type.enable_weekend_policy = self.enable_weekend_policy
+        shift_type.weekend_absent = self.weekend_absent
+        shift_type.weekend_absent_component = self.weekend_absent_component
+
+        shift_type.enable_break_policy = self.enable_break_policy
+        for x in self.late_break_policy:
+            shift_type.append("late_break_policy",{
+                    "minutes":x.minutes,
+                    "deduction":x.deduction,
+                    "salary_component":x.salary_component
+                }
+
+            )
+
+        shift_type.save()
+        frappe.db.commit()
+        shift_type.reload()
+        return shift_type.name
+    
+    def update_shift_type_based_on_type(self, name):
+        if 'double_shift_1' == name:
+            self.update_shift_type(
+                    self.get(name),
+                    self.first_period_start_time,
+                    self.first_period_end_time,
+                    self.minutes_of_late_entry,
+                    self.minutes_of_early_exit,
+                    self.enable_break_frist_period,
+                    self.break_type_first_period,
+                    self.break_late_grace_period_first_period,
+                    self.break_duration_frist_period,
+                    self.in_break_frist_period,
+                    self.out_break_frist_period,
+                    self.overtime_break_frist_period
+                )
+        elif 'double_shift_2' == name:
+            self.update_shift_type(
+                    self.get(name),
+                    self.second_period_start_time,
+                    self.second_period_end_time,
+                    self.minutes_of_late_entry,
+                    self.minutes_of_early_exit,
+                    self.enable_break_second_period,
+                    self.break_type__second_period,
+                    self.break_late_grace_period__second_period,
+                    self.break_duration_second_period,
+                    self.in_break_second_period,
+                    self.out_break_second_period,
+                    self.overtime_break_second_period
+                                )
+        elif 'shift_type_link' == name:
+            self.update_shift_type(
+                    self.get(name),
+                    self.shift_start_time,
+                    self.shift_end_time,
+                    self.late_entry_grace_period,
+                    self.early_exit_grace_period,
+                    self.enable_break,
+                    self.break_type,
+                    self.break_late_grace_period,
+                    self.break_duration,
+                    self.in_break,
+                    self.out_break,
+                    self.overtime_break,
+                    shift_type_normal=True,
+                                )
+        elif 'flexible_shift_type' == name:
+            self.update_shift_type(
+                    self.get(name),
+                    self.attendance_from,
+                    self.attendance_to,
+                    self.flexible_grace_period,
+                    self.flexible_grace_period,
+                    self.enable_break,
+                    self.break_type,
+                    self.break_late_grace_period,
+                    self.break_duration,
+                    self.in_break,
+                    self.out_break,
+                    self.overtime_break,
+                    flexible_shift = True,
+                                )
+            
+
+    def update_different_times_shifts(self):
+        def get_data_for_selected_day(day_name, order):
+            start_time = self.get(f"{day_name}_entering_the_{order}_period")
+            end_time = self.get(f"{day_name}_exit_the_{order}_period")
+            entry_grace = self.get(f"{day_name}_entry_grace_period")
+            exit_grace = self.get(f"{day_name}_exit_grace_period")   
+            break_sec="" 
+            if order == "second":
+                break_sec = "2"
+            enable_break = self.get(f"{day_name}_enable_break{break_sec}")
+            break_type = self.get(f"{day_name}_break_type{break_sec}")
+            break_late_grace_period = self.get(f"{day_name}_break_late_grace_period{break_sec}")
+            break_duration = self.get(f"{day_name}_break_duration{break_sec}")
+            in_break = self.get(f"{day_name}_in_break{break_sec}")
+            out_break = self.get(f"{day_name}_out_break{break_sec}")
+            overtime_break = self.get(f"{day_name}_overtime_break{break_sec}")
+            
+            if order == "first":
+                order = "1"
+            if order == "second":
+                order = "2"
+
+            days = {
+                "sunday": "SU",
+                "monday": "MO",
+                "tuesday": "TU",
+                "wednesday": "WE",
+                "thursday": "TH",
+                "friday": "FR",
+                "saturday": "SA",
+            }
+            abbr = days.get(day_name, "")
+            shift_name = self.get(f"{day_name}_different_times_shift{order}") or make_autoname(f"MDST-.YYYY.-.MM.-.DD.-{abbr}{order}.####")
+            return shift_name, start_time, end_time, entry_grace, exit_grace, enable_break,break_type,break_late_grace_period,break_duration,in_break,out_break,overtime_break
+
+        shifts = []
+        work_days = [
+            "sunday",
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+        ]
+        for day in work_days:
+            if self.get(f"{day}_different_times") == 1:
+                    (
+                        _name1,
+                        _start_time1,
+                        _end_time1,
+                        _late_grace1,
+                        _early_grace1,
+                        _enable_break1,_break_type1,_break_late_grace_period1,_break_duration1,_in_break1,_out_break1,_overtime_break1
+                    ) = get_data_for_selected_day(day, "first")
+
+                    (
+                        _name2,
+                        _start_time2,
+                        _end_time2,
+                        _late_grace2,
+                        _early_grace2,
+                        _enable_break2,_break_type2,_break_late_grace_period2,_break_duration2,_in_break2,_out_break2,_overtime_break2
+                    ) = get_data_for_selected_day(day, "second")
+                    if _start_time1 and _end_time1:
+                        shift1_for_day = self.update_shift_type(
+                            _name1, _start_time1, _end_time1, _late_grace1, _early_grace1,
+                            _enable_break1,_break_type1,_break_late_grace_period1,_break_duration1,_in_break1,_out_break1,_overtime_break1
+
+                        )
+                    if _start_time2 and _end_time2:
+                        shift2_for_day = self.update_shift_type(
+                            _name2, _start_time2, _end_time2, _late_grace2, _early_grace2,
+                            _enable_break2,_break_type2,_break_late_grace_period2,_break_duration2,_in_break2,_out_break2,_overtime_break2
+                        )
+                    self.db_set(f"{day}_different_times_shift1", shift1_for_day)
+                    self.db_set(f"{day}_different_times_shift2", shift2_for_day)
+                   
+               
+            
+        return {"shifts":shifts}
+        
     def on_update_after_submit(self):
         shift_list = [
             "double_shift_1",
@@ -849,6 +1153,24 @@ class ShiftBuilder(Document):
         created_shifts = []
         for d in shift_list:
             if self.get(d):
+                if self.shift_type == "Double Shift Work Schedule":
+                    self.validate_employees()
+                    self.validate_double_shifts()
+                    self.update_shift_type_based_on_type(d)
+
+                elif self.shift_type == "Work Schedule with Different Times":
+                    self.validate_employees()
+                    self.validate_different_times_shifts()
+                    result = self.update_different_times_shifts()
+
+                elif self.shift_type == "Flexible Work Schedule":
+                    self.validate_employees()
+                    self.validate_flexible_shifts_times()
+                    self.update_shift_type_based_on_type(d)
+
+                elif self.shift_type == "Shift Type":
+                    self.update_shift_type_based_on_type(d)
+                    
                 created_shifts.append(self.get(d))
                 
         self.validate_employees()

@@ -44,7 +44,8 @@ doctype_js = {
 	"Company" : "public/js/company.js",
 	"Holiday List": "public/js/holiday_list.js",
 	"Salary Component": "public/js/salary_component.js",
-	"Employee Checkin": "public/js/employee_checkin.js"
+	"Employee Checkin": "public/js/employee_checkin.js",
+	"Department": "public/js/department.js",
 }
 
 doctype_list_js = {
@@ -187,12 +188,14 @@ doc_events = {
 		"validate": "mosyr.api.create_department_workflows"
 	},
 	"Leave Application": {
+		"validate" : "mosyr.api.update_leave_application_status",
 		"on_update": [
 			"mosyr.api.validate_approver",
 			"mosyr.api.send_notification_and_email",
 		]
 	},
 	"Shift Request": {
+		
 		"on_update": [
 			"mosyr.api.send_notification_and_email",
 		]
@@ -232,9 +235,9 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"cron":{	
-		# "0/5 * * * *" :[
-		# 	"mosyr.tasks.process_auto_attendance_for_all_shifts"
-		# ],
+		"0/5 * * * *" :[
+			"mosyr.tasks.process_auto_attendance_for_all_shifts"
+		],
 		"0 7 * * *": [
 			"mosyr.tasks.check_expired_dates"
 		]

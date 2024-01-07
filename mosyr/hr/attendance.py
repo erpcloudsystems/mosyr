@@ -208,3 +208,4 @@ class Attendance:
 
     def is_late_break(self):
         return self._late_break
+    
