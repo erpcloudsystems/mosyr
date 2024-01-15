@@ -11,7 +11,7 @@ from frappe.utils.user import add_role
 from erpnext.setup.install import create_custom_role, update_select_perm_after_install
 from frappe.permissions import add_permission, update_permission_property
 from frappe.utils import cint
-
+from frappe.utils import unique
 class UsersPermissionManager(Document):
     doctypes = {
         "system_management": [{"document_type": "Company"}],
@@ -128,10 +128,12 @@ class UsersPermissionManager(Document):
         if not frappe.db.exists("User", user):
             return {"doctypes": [], "repage": [], "permission": []}
         user = frappe.get_doc("User", user)
+
         if user.name in ["Administrator", "Guest", "support@mosyr.io"]:
             return {"doctypes": [], "repage": [], "permission": []}
 
-        user_roles = [f"'{role.role}'" for role in user.roles]
+        user_roles = []
+        user_roles.append(f"'{user.name}'")
         if len(user_roles) > 0:
             user_roles = ", ".join(user_roles)
         else:
@@ -158,7 +160,7 @@ class UsersPermissionManager(Document):
             as_dict=True,
         )
         roles += croles
-        for r in roles:
+        for r in croles:
             doctype = r.parent
             for k, v in self.doctypes.items():
                 for idx, d in enumerate(v):
@@ -175,6 +177,7 @@ class UsersPermissionManager(Document):
                             "cancel": r.cancel,
                             "amend": r.amend,
                             "delete": r.delete,
+                            "only_me": r.if_owner,
                         }
                         v[idx] = c
         
@@ -183,7 +186,16 @@ class UsersPermissionManager(Document):
                 self.append(f"{key}", doc)
                 
         return "done"
-
+    @frappe.whitelist()
+    def add_role_for_user(self, user):
+        user = frappe.get_doc("User", self.user)
+        if not frappe.db.exists("Role", user.name):
+            new_role = frappe.new_doc("Role")
+            new_role.role_name = user.name
+            new_role.insert()
+            new_role.save()
+            user = frappe.get_doc("User", self.user)
+            user.add_roles(user.name)
     @frappe.whitelist()
     def apply_permissions(self, user, perms, rps):
         # if not self.user:
@@ -210,21 +222,25 @@ class UsersPermissionManager(Document):
         #     role.role_name = self.user
         #     role.save()
         #     frappe.db.commit()
-        
+        self.add_role_for_user(self.user)
         user = frappe.get_doc("User", self.user)
-        role = user.role_profile_name
+        role_profile_name = user.role_profile_name
 
         for key in self.doctypes.keys():
             for doc in self.get(key, []):
+                frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{user.name}' and parent='{doc.document_type}'")
+                frappe.db.commit()
                 if (cint(doc.read) > 0 or cint(doc.write) > 0 or cint(doc.create) > 0 
                     or cint(doc.submit) > 0 or cint(doc.cancel) > 0 or cint(doc.amend) > 0 
                     or cint(doc.delete) > 0):
-                    frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role}' and parent='{doc.document_type}'")
+                    frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role_profile_name}' and parent='{doc.document_type}'")
+                    frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='Employee Self Service' and parent='{doc.document_type}'")
                     frappe.db.commit()
+                    
                     frappe.get_doc(
                         {
                             "doctype": "Custom DocPerm",
-                            "role": role,
+                            "role": user.name,
                             "read": doc.read,
                             "write": doc.write,
                             "create": doc.create,
@@ -233,6 +249,37 @@ class UsersPermissionManager(Document):
                             "cancel": doc.cancel,
                             "amend": doc.amend,
                             "parent": doc.document_type,
+                            "if_owner": doc.only_me
+                        }
+                    ).insert(ignore_permissions=True)
+                    frappe.get_doc(
+                        {
+                            "doctype": "Custom DocPerm",
+                            "role": role_profile_name,
+                            "read": doc.read,
+                            "write": doc.write,
+                            "create": doc.create,
+                            "delete": doc.delete,
+                            "submit": doc.submit,
+                            "cancel": doc.cancel,
+                            "amend": doc.amend,
+                            "parent": doc.document_type,
+                            "if_owner":1
+                        }
+                    ).insert(ignore_permissions=True)
+                    frappe.get_doc(
+                        {
+                            "doctype": "Custom DocPerm",
+                            "role": 'Employee Self Service',
+                            "read": doc.read,
+                            "write": doc.write,
+                            "create": doc.create,
+                            "delete": doc.delete,
+                            "submit": doc.submit,
+                            "cancel": doc.cancel,
+                            "amend": doc.amend,
+                            "parent": doc.document_type,
+                            "if_owner": 1
                         }
                     ).insert(ignore_permissions=True)
 
@@ -391,3 +438,11 @@ def create_role_permissions_for_doctype(doc, data):
             doc.append("user_doctypes", args)
     doc.save(ignore_permissions=True)
     frappe.db.commit()
+
+
+
+def check_user_role(user, role):
+    user_roles = frappe.get_roles(user)
+    for role in user_roles:
+        frappe.msgprint(f"{role}")
+    return role in user_roles

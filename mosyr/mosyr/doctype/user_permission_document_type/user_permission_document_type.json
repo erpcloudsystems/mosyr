@@ -51,6 +51,13 @@
    "label": "Read"
   },
   {
+    "default": "0",
+    "fieldname": "only_me",
+    "fieldtype": "Check",
+    "in_list_view": 1,
+    "label": "Only Me"
+   },
+  {
    "default": "0",
    "fieldname": "write",
    "fieldtype": "Check",

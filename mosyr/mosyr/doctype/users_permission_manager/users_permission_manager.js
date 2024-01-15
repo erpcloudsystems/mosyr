@@ -549,6 +549,24 @@ frappe.ui.form.on('Users Permission Manager', {
 				
 				d.show();
 			}).addClass("btn btn-primary")
+
+			frm.add_custom_button("Apply Role Permissions", ()=>{
+				frappe.call({
+					doc:frm.doc,
+					method: "add_role_for_user",
+					freeze: true,
+					freeze_message: __("Please Wait..."), 
+					args:{
+						user: frm.doc.user,
+					},
+					callback: function(r){
+						if(r.message) {
+							var msg = (__("Permission has been successfully released for user {0}", [frm.doc.user]));
+							frappe.show_alert({message: msg, indicator:'green'});
+						}
+					}
+				});
+			}).addClass("btn btn-primary")
 		}
 	}})
 
