@@ -192,10 +192,11 @@ class UsersPermissionManager(Document):
         if not frappe.db.exists("Role", user.name):
             new_role = frappe.new_doc("Role")
             new_role.role_name = user.name
-            new_role.insert()
-            new_role.save()
+            new_role.insert(ignore_permissions=True)
+            new_role.save(ignore_permissions=True)
             user = frappe.get_doc("User", self.user)
-            user.add_roles(user.name)
+            user.append_roles(user.name)
+            user.save(ignore_permissions=True)
     @frappe.whitelist()
     def apply_permissions(self, user, perms, rps):
         # if not self.user:
@@ -233,6 +234,7 @@ class UsersPermissionManager(Document):
                 if (cint(doc.read) > 0 or cint(doc.write) > 0 or cint(doc.create) > 0 
                     or cint(doc.submit) > 0 or cint(doc.cancel) > 0 or cint(doc.amend) > 0 
                     or cint(doc.delete) > 0):
+                    frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{user.name}' and parent='{doc.document_type}'")
                     frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role_profile_name}' and parent='{doc.document_type}'")
                     frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='Employee Self Service' and parent='{doc.document_type}'")
                     frappe.db.commit()

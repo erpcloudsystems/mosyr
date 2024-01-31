@@ -123,6 +123,24 @@ def after_install():
     set_home_page_login()
     
     frappe.db.commit()
+    add_permission_create_custom_field()
+
+def add_permission_create_custom_field():
+    frappe.get_doc(
+        {
+            "doctype": "Custom DocPerm",
+            "role": "SaaS Manager",
+            "read": 0,
+            "write": 0,
+            "create": 1,
+            "delete": 0,
+            "submit": 0,
+            "cancel": 0,
+            "amend": 0,
+            "parent": "Custom Field",
+            "if_owner": doc.only_me
+        }
+    ).insert(ignore_permissions=True)
 
 def add_permission_read():
     add_permission("Domain", "Saas Manager", permlevel=0, ptype=None)
