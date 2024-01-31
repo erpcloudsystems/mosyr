@@ -130,15 +130,30 @@ def add_permission_create_custom_field():
         {
             "doctype": "Custom DocPerm",
             "role": "SaaS Manager",
-            "read": 0,
-            "write": 0,
+            "read": 1,
+            "write": 1,
             "create": 1,
-            "delete": 0,
-            "submit": 0,
-            "cancel": 0,
+            "delete": 1,
+            "submit": 1,
+            "cancel": 1,
             "amend": 0,
             "parent": "Custom Field",
-            "if_owner": doc.only_me
+            "if_owner": 0
+        }
+    ).insert(ignore_permissions=True)
+    frappe.get_doc(
+        {
+            "doctype": "Custom DocPerm",
+            "role": "SaaS Manager",
+            "read": 1,
+            "write": 1,
+            "create": 1,
+            "delete": 1,
+            "submit": 1,
+            "cancel": 1,
+            "amend": 1,
+            "parent": "Role",
+            "if_owner": 0
         }
     ).insert(ignore_permissions=True)
 
