@@ -29,8 +29,7 @@ frappe.ui.form.on('Department', {
             frm.fields_dict[table].grid.get_field('approver').get_query = function (doc, cdt, cdn) {
                 const child = locals[cdt][cdn];
                 return {
-                    query: 'saas_manager.manager.user_query',
-                  "filters": {"role_profile_name": ["!=", "Self Service"]}
+                    query: "mosyr.api.get_users_2",
       
                 };
             };
