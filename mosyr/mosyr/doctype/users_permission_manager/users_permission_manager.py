@@ -256,7 +256,7 @@ class UsersPermissionManager(Document):
                             "cancel": doc.cancel,
                             "amend": doc.amend,
                             "parent": doc.document_type,
-                            "if_owner": 1 if doc.only_me else 0
+                            "if_owner":  1 if doc.only_me or role_profile_name == "Self Service" else 0
                         }
                     ).insert(ignore_permissions=True)
 
@@ -273,7 +273,7 @@ class UsersPermissionManager(Document):
                             "cancel": doc.cancel,
                             "amend": doc.amend,
                             "parent": doc.document_type,
-                            "if_owner": 1 if doc.only_me else 0
+                            "if_owner": 1 if doc.only_me or role_profile_name == "Self Service" else 0
                         }
                     ).insert(ignore_permissions=True)
                     frappe.get_doc(
@@ -289,7 +289,7 @@ class UsersPermissionManager(Document):
                             "cancel": doc.cancel,
                             "amend": doc.amend,
                             "parent": doc.document_type,
-                            "if_owner": 1 if doc.only_me else 0
+                            "if_owner": 1 if doc.only_me or role_profile_name == "Self Service" else 0
                         }
                     ).insert(ignore_permissions=True)
 
