@@ -25,9 +25,11 @@ frappe.ui.form.on('Department', {
         console.log(tables.length)
 
         tables.forEach(table =>{
+              
             frm.fields_dict[table].grid.get_field('approver').get_query = function (doc, cdt, cdn) {
                 const child = locals[cdt][cdn];
                 return {
+                    query: 'saas_manager.manager.user_query',
                   "filters": {"role_profile_name": ["!=", "Self Service"]}
       
                 };
