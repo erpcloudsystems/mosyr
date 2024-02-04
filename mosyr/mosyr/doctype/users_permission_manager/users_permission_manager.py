@@ -225,6 +225,113 @@ class UsersPermissionManager(Document):
         #     role.role_name = self.user
         #     role.save()
         #     frappe.db.commit()
+        # list_perm = [
+        #     "Holiday List":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":0,
+        #         "create":0,
+        #         "delete":0,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Employee":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":1,
+        #         "create":0,
+        #         "delete":0,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Company":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":0,
+        #         "create":0,
+        #         "delete":0,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Salary Slip":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":0,
+        #         "create":0,
+        #         "delete":0,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Employee Benefit Application":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":1,
+        #         "create":1,
+        #         "delete":1,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Expense Claim":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":1,
+        #         "create":1,
+        #         "delete":1,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Expense Claim Type":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":0,
+        #         "create":0,
+        #         "delete":0,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     "Employee Advance":[
+        #         "select":0,
+        #         "read":1,
+        #         "write":1,
+        #         "create":1,
+        #         "delete":1,
+        #         "print":1,
+        #         "email":1,
+        #         "report":0,
+        #         "import":0,
+        #         "export":1,
+        #         "share":1
+        #         ],
+        #     ]
+        
         self.add_role_for_user(self.user)
         frappe.db.commit()
         user = frappe.get_doc("User", self.user)
@@ -237,7 +344,6 @@ class UsersPermissionManager(Document):
                     or cint(doc.submit) > 0 or cint(doc.cancel) > 0 or cint(doc.amend) > 0 
                     or cint(doc.delete) > 0):
                     frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role_profile_name}' and parent='{doc.document_type}' and permlevel= 0")
-                    frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='Employee Self Service' and parent='{doc.document_type}' and permlevel= 0")
                     frappe.db.commit()
                     
                     frappe.get_doc(
@@ -256,7 +362,11 @@ class UsersPermissionManager(Document):
                             "if_owner":  1 if doc.only_me or role_profile_name == "Self Service" else 0
                         }
                     ).insert(ignore_permissions=True)
-
+                    custom_docperm_doc = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type})
+                    if custom_docperm_doc:
+                        doc = frappe.get_doc("Custom DocPerm",custom_docperm_doc.name)
+                        doc.if_owner = 1 if doc.only_me  else 0
+                        doc.save(ignore_permissions=True)
                     frappe.get_doc(
                         {
                             "doctype": "Custom DocPerm",
@@ -273,22 +383,7 @@ class UsersPermissionManager(Document):
                             "if_owner": 1 if doc.only_me  else 0
                         }
                     ).insert(ignore_permissions=True)
-                    frappe.get_doc(
-                        {
-                            "doctype": "Custom DocPerm",
-                            "role": 'Employee Self Service',
-                            "select": 1,
-                            "read": doc.read,
-                            "write": doc.write,
-                            "create": doc.create,
-                            "delete": doc.delete,
-                            "submit": doc.submit,
-                            "cancel": doc.cancel,
-                            "amend": doc.amend,
-                            "parent": doc.document_type,
-                            "if_owner": 1 if doc.only_me  else 0
-                        }
-                    ).insert(ignore_permissions=True)
+
 
 
             # for key in self.doctypes.keys():
