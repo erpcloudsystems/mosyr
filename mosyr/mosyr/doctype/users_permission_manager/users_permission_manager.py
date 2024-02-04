@@ -373,7 +373,7 @@ class UsersPermissionManager(Document):
                         new_doc.if_owner = 1 if doc.only_me  else 0
                         new_doc.save(ignore_permissions=True)
 
-                    role_profile_custom_perm = rappe.db.sql(f"""
+                    role_profile_custom_perm = frappe.db.sql(f"""
                             SELECT name from `tabCustom DocPerm` where parent ='{doc.document_type}' and role ='{role_profile_name}'
                         """, as_dict = 1)
                     # role_profile_custom_perm = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type, "role":role_profile_name})
