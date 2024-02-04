@@ -1,5 +1,11 @@
 frappe.ui.form.on('Employee', {
 	refresh: function(frm) {
+		frm.set_query( 'user_id', function(doc) {
+			return {
+				query: "mosyr.api.get_users_2",
+
+			};
+		});
 		frm.add_custom_button(__('Identity'), function() {
 			frm.scroll_to_field('identity');
 		}, __('Jump to'));
