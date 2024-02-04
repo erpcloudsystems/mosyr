@@ -364,15 +364,21 @@ class UsersPermissionManager(Document):
                             "if_owner":  1 if doc.only_me or role_profile_name == "Self Service" else 0
                         }
                     ).insert(ignore_permissions=True)
-                    emp_self_custom_perm = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type, "role":"Employee Self Service"})
+                    emp_self_custom_perm = frappe.db.sql(f"""
+                            SELECT name from `tabCustom DocPerm` where parent ='{doc.document_type}' and role ='Employee Self Service'
+                        """, as_dict = 1)
+                    # emp_self_custom_perm = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type, "role":"Employee Self Service"})
                     if emp_self_custom_perm:
-                        new_doc = frappe.get_doc("Custom DocPerm",emp_self_custom_perm.name)
+                        new_doc = frappe.get_doc("Custom DocPerm",emp_self_custom_perm[0]['name'])
                         new_doc.if_owner = 1 if doc.only_me  else 0
                         new_doc.save(ignore_permissions=True)
 
-                    role_profile_custom_perm = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type, "role":role_profile_name})
+                    role_profile_custom_perm = rappe.db.sql(f"""
+                            SELECT name from `tabCustom DocPerm` where parent ='{doc.document_type}' and role ='{role_profile_name}'
+                        """, as_dict = 1)
+                    # role_profile_custom_perm = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type, "role":role_profile_name})
                     if role_profile_custom_perm:
-                        role_profile_doc = frappe.get_doc("Custom DocPerm",role_profile_custom_perm.name)
+                        role_profile_doc = frappe.get_doc("Custom DocPerm",role_profile_custom_perm[0]['name'])
                         role_profile_doc.if_owner = 1 if doc.only_me  else 0
                         role_profile_doc.save(ignore_permissions=True)
                     # frappe.get_doc(
