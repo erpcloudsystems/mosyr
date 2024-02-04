@@ -364,9 +364,9 @@ class UsersPermissionManager(Document):
                     ).insert(ignore_permissions=True)
                     custom_docperm_doc = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type})
                     if custom_docperm_doc:
-                        doc = frappe.get_doc("Custom DocPerm",custom_docperm_doc.name)
-                        doc.if_owner = 1 if doc.only_me  else 0
-                        doc.save(ignore_permissions=True)
+                        new_doc = frappe.get_doc("Custom DocPerm",custom_docperm_doc.name)
+                        new_doc.if_owner = 1 if doc.only_me  else 0
+                        new_doc.save(ignore_permissions=True)
                     frappe.get_doc(
                         {
                             "doctype": "Custom DocPerm",
