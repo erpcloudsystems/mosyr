@@ -606,6 +606,7 @@ def create_user_permission_on_company_in_create_user(doc, method):
                 perm.for_value = row.company
                 perm.save()
             frappe.db.commit()
+    pass
             
 
 @frappe.whitelist()

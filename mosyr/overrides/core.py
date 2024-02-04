@@ -97,6 +97,7 @@ class CustomUser(User):
 					{"doctype": "Has Role", "role": "Administrator"},
 				],
 			)
+		
 			
 	def validate_roles(self):
 		if self.role_profile_name:
