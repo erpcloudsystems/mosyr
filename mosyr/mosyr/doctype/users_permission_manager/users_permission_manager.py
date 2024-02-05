@@ -368,7 +368,7 @@ class UsersPermissionManager(Document):
                     # custom_docperm_doc = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type})
                     custom_docperm_doc = frappe.db.sql(f"""
                         SELECT name from `tabCustom DocPerm` where role = 'Employee Self Service' and  parent ='{doc.document_type}'
-                    """)
+                    """, as_dict = 1)
                     if custom_docperm_doc:
                         docperm_doc = frappe.get_doc("Custom DocPerm", custom_docperm_doc[0]['name'])
                         docperm_doc.if_owner = doc.only_me
