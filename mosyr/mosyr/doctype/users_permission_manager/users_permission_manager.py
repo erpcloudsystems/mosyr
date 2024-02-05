@@ -345,6 +345,8 @@ class UsersPermissionManager(Document):
                     or cint(doc.submit) > 0 or cint(doc.cancel) > 0 or cint(doc.amend) > 0 
                     or cint(doc.delete) > 0):
                     frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='{role_profile_name}' and parent='{doc.document_type}' and permlevel= 0")
+                    # frappe.db.sql(f"DELETE FROM `tabCustom DocPerm` WHERE role='Employee Self Service' and parent='{doc.document_type}' and permlevel= 0")
+
                     frappe.db.commit()
                     
                     frappe.get_doc(
@@ -363,11 +365,14 @@ class UsersPermissionManager(Document):
                             "if_owner":  1 if doc.only_me or role_profile_name == "Self Service" else 0
                         }
                     ).insert(ignore_permissions=True)
-                    custom_docperm_doc = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type})
+                    # custom_docperm_doc = frappe.get_doc("Custom DocPerm", {"parent":doc.document_type})
+                    custom_docperm_doc = frappe.db.sql(f"""
+                        SELECT name from `tabCustom DocPerm` where role = 'Employee Self Service' and  parent ='{doc.document_type}'
+                    """)
                     if custom_docperm_doc:
-                        new_doc = frappe.get_doc("Custom DocPerm",custom_docperm_doc.name)
-                        new_doc.if_owner = 1 if doc.only_me  else 0
-                        new_doc.save(ignore_permissions=True)
+                        docperm_doc = frappe.get_doc("Custom DocPerm", custom_docperm_doc[0]['name'])
+                        docperm_doc.if_owner = doc.only_me
+                        docperm_doc.save()
                     frappe.get_doc(
                         {
                             "doctype": "Custom DocPerm",
