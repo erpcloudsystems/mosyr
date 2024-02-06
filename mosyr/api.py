@@ -820,7 +820,9 @@ def create_doc_workflow_status(department, approvers, state_name, with_dep):
                 # Create Status for every Approver
                 doc = frappe.new_doc("Workflow State")
                 doc.workflow_state_name = approve_state_name
-                doc.style = "Success"
+                doc.style = "Primary"
+                if row.approver == approvers[-1].approver:
+                    doc.style = "Success"
                 doc.save()
 
             state_list.append({
