@@ -683,7 +683,7 @@ def create_department_workflows(doc, method):
             "table_name": "educational_qualification_approver"
         },
         {
-            "name": "Emergency Contac",
+            "name": "Emergency Contact",
             "state_name": "Emergency",
             "table_name": "emergency_contact_approver"
         },
