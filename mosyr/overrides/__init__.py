@@ -668,13 +668,19 @@ def regenerate_repayment_schedule(repayment , loan, cancel=0):
     repayment_amount = self.amount_paid
     if repayment_schedule_length:
         for row in loan_doc.repayment_schedule:
-            if row.paid_amount >= row.principal_amount: continue
-            if repayment_amount > row.principal_amount-row.paid_amount:
-                diff = row.principal_amount - row.paid_amount
-                row.paid_amount = row.paid_amount + diff
-                repayment_amount = repayment_amount - diff
-            else:
-                row.paid_amount = row.paid_amount + repayment_amount 
-                repayment_amount = 0
-            if repayment_amount <= 0: break
+            # payment_date = datetime.datetime.strptime(str(row.payment_date), "%Y-%m-%d")
+            # posting_date = datetime.datetime.strptime(str(self.posting_date), "%Y-%m-%d")
+            if row.payment_date.month == self.posting_date.month and row.payment_date.year == self.posting_date.year:
+                # if row.paid_amount >= row.principal_amount: continue
+                row.paid_amount = repayment_amount
+                if cancel:
+                    row.paid_amount = 0    
+                # if repayment_amount > row.principal_amount-row.paid_amount:
+                #     diff = row.principal_amount - row.paid_amount
+                #     row.paid_amount = row.paid_amount + diff
+                #     repayment_amount = repayment_amount - diff
+                # else:
+                #     row.paid_amount = row.paid_amount + repayment_amount 
+                #     repayment_amount = 0
+                # if repayment_amount <= 0: break
         loan_doc.save(ignore_permissions=True)

@@ -364,10 +364,11 @@ def set_new_date_in_repayment(rows, doc_name):
                 errors_str += "Choose Date after {} in row {}".format(err.get("date", ""), err.get("idx", ""))+"<br>"
             frappe.msgprint(_(errors_str))
             return "err"
-        
+        # frappe.msgprint(f"{rows}")
         for tidx, row in enumerate(rows, 1):
             new_payment_date = row.get("new_date", "")
             repayment = frappe.get_doc("Repayment Schedule", row.get("row_name", ""))
+            frappe.msgprint(f"{row}")
             repayment.db_set("payment_date", new_payment_date, update_modified=False)
         reorder_payments_by_dates(loan_doc.name)
         
