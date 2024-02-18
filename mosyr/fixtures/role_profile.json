@@ -128,7 +128,26 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "All"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "HR Manager"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Loan Manager"
+   },
+   {
+    "parent": "SaaS Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Report Manager"
    }
+
   ]
  }
 ]
