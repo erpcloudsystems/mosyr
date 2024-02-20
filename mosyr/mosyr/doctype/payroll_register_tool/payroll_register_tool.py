@@ -13,6 +13,26 @@ from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assign
 
 
 class PayrollRegisterTool(Document):
+    def on_cancel(self):
+        # frappe.msgprint("helllo badr")
+        employees = []
+        for employee in self.employees:
+            employees.append(employee.employee)
+        formatted_employee_ids = ', '.join([f"'{emp_id}'" for emp_id in employees])
+        salary_stucture_assignments = frappe.db.sql( f"""
+            select * from `tabSalary Structure Assignment` where employee IN({formatted_employee_ids}) and docstatus= 1;
+        """,as_dict = 1)
+        salary_structures = []
+        for salary_stucture_assignment in salary_stucture_assignments:
+            salary_structures.append(salary_stucture_assignment.salary_structure)
+        # frappe.throw(f"{salary_structures}")
+        for salary_stucture_assignment in salary_stucture_assignments:
+            ssa = frappe.get_doc("Salary Structure Assignment", salary_stucture_assignment.name)
+            ssa.cancel()
+        for salary_structure in salary_structures:
+            ss = frappe.get_doc("Salary Structure", salary_structure)
+            ss.cancel()
+        pass
     def validate(self):
         if not self.from_date:
             frappe.throw(_("From Date is mandatory to prepare Salary Structures") + ".")
