@@ -1,13 +1,34 @@
 # Copyright (c) 2022, AnvilERP and contributors
 # For license information, please see license.txt
+from typing import Dict, List, Optional, Tuple
 
 import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate, flt
 from erpnext.hr.doctype.leave_application.leave_application import get_leave_details
-from erpnext.hr.report.employee_leave_balance.employee_leave_balance import get_department_leave_approver_map
 from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import	get_assigned_salary_structure
+def get_department_leave_approver_map(department: Optional[str] = None):
+	# get current department and all its child
+	department_list = frappe.get_list(
+		"Department",
+		filters={"disabled": 0},
+		or_filters={"name": department, "parent_department": department},
+		pluck="name",
+	)
+	# retrieve approvers list from current department and from its subsequent child departments
+	approver_list = frappe.get_all(
+		"Department Approver",
+		filters={"parentfield": "leave_approvers", "parent": ("in", department_list)},
+		fields=["parent", "approver"],
+		as_list=True,
+	)
 
+	approvers = {}
+
+	for k, v in approver_list:
+		approvers.setdefault(k, []).append(v)
+
+	return approvers
 def execute(filters=None):
     leave_types = frappe.db.sql_list("select name from `tabLeave Type` WHERE allow_encashment=1 AND is_annual_leave=1 order by name asc")
 

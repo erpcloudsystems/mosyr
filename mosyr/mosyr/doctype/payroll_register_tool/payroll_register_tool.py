@@ -29,9 +29,9 @@ class PayrollRegisterTool(Document):
         for salary_stucture_assignment in salary_stucture_assignments:
             ssa = frappe.get_doc("Salary Structure Assignment", salary_stucture_assignment.name)
             ssa.cancel()
-        for salary_structure in salary_structures:
-            ss = frappe.get_doc("Salary Structure", salary_structure)
-            ss.cancel()
+        # for salary_structure in salary_structures:
+        #     ss = frappe.get_doc("Salary Structure", salary_structure)
+        #     ss.cancel()
         pass
     def validate(self):
         if not self.from_date:
