@@ -45,13 +45,6 @@ def get_columns():
 			"width": 100,
 		},
 		{
-			"label": _("Penalty Amount"),
-			"fieldtype": "Currency",
-			"fieldname": "penalty",
-			"options": "currency",
-			"width": 100,
-		},
-		{
 			"label": _("Payable Amount"),
 			"fieldtype": "Currency",
 			"fieldname": "payable_amount",
