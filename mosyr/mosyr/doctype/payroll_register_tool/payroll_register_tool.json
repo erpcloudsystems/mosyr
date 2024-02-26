@@ -95,7 +95,7 @@
   {
    "fieldname": "from_date",
    "fieldtype": "Date",
-   "label": "From Date",
+   "label": "Contract Date",
    "reqd": 1
   },
   {
@@ -222,7 +222,7 @@
  "icon": "fa fa-file-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 14:24:20.213867",
+ "modified": "2024-02-26 13:53:23.098013",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
