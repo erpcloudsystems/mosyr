@@ -88,7 +88,7 @@ def get_columns():
 			"width": 150
 		},
 		{
-			"label": _("The number of working days"),
+			"label": _("Working Days"),
 			"fieldtype": "Int",
 			"fieldname": "working_days",
 			"width": 150,
@@ -100,9 +100,52 @@ def get_columns():
 			"width": 150,
 		},
 		{
-			"label": _("The amount due"),
+			"label": _("Amount Due"),
 			"fieldtype": "Currency",
 			"fieldname": "amount_due",
+			"width": 150,
+		},
+		{
+			"label": _("End of Service <br> Before 5 years"),
+			"fieldtype": "Currency",
+			"fieldname": "before_year",
+			"width": 150,
+		},
+		{
+			"label": _("End of Service <br> After 5 years"),
+			"fieldtype": "Currency",
+			"fieldname": "after_year",
+			"width": 150,
+		},
+
+		{
+			"label": _("Cash Custody"),
+			"fieldtype": "Currency",
+			"fieldname": "cash_custody",
+			"width": 150,
+		},
+		{
+			"label": _("Custody"),
+			"fieldtype": "Data",
+			"fieldname": "custody",
+			"width": 150,
+		},
+		{
+			"label": _("Custody Value"),
+			"fieldtype": "Currency",
+			"fieldname": "custody_value",
+			"width": 150,
+		},
+		{
+			"label": _("Loan"),
+			"fieldtype": "Currency",
+			"fieldname": "total_amount_remaining",
+			"width": 150,
+		},
+		{
+			"label": _("Total"),
+			"fieldtype": "Currency",
+			"fieldname": "total",
 			"width": 150,
 		},
 	]
@@ -135,6 +178,7 @@ def get_data(filters, leave_types):
 	ss_date = filters.get('date', getdate(nowdate())) or getdate(nowdate())
 	data = []
 	for employee in active_employees:
+		emp = frappe.get_doc("Employee",  employee.name)
 		leave_approvers = department_approver_map.get(employee.department_name, [])
 		salary_structure = get_assigned_salary_structure(employee['name'], ss_date)
 		per_day_encashment = frappe.db.get_value("Salary Structure", salary_structure[0], "leave_encashment_amount_per_day")
@@ -152,12 +196,21 @@ def get_data(filters, leave_types):
 			or (user in ["Administrator", employee.user_id])
 			or ("HR Manager" in frappe.get_roles(user))
 		):
-			row = {"employee": employee.name, "employee_name": employee.employee_name ,"date_of_joining" : employee.custom_date_of_joining,
-		  	"monthly_salary":monthly_salary,
+			row = {
+				"employee": employee.name, "employee_name": employee.employee_name ,"date_of_joining" : employee.custom_date_of_joining,
+				"nationality": emp.identity[0].nationality if emp.identity else _("No data to show"),
+				"monthly_salary":monthly_salary,
 		  		"holiday_balance": 0,
 		  		"amount_due": 0,
-				  "working_days":difference.days
+				"working_days":difference.days
 		  	}
+			diff_years = difference.days / 365
+			before_year = diff_years
+			after_year = 0
+			if diff_years >= 5:
+				before_year = 5
+				after_year = diff_years - before_year
+			
 			available_leave = get_leave_details(employee.name, filters.date)
 			total_leaves = 0
 			remaining = 0
@@ -165,8 +218,55 @@ def get_data(filters, leave_types):
 			for leave_type in leave_types:
 				if leave_type in available_leave["leave_allocation"]:
 					remaining = available_leave["leave_allocation"][leave_type]["remaining_leaves"]
+			salary_slip = frappe.db.sql(f"""
+				SELECT gross_pay From `tabSalary Slip` where employee = '{employee.name}'	and docstatus = 1 ORDER by  creation DESC LIMIT 1
+			""",as_dict = 1)
+		
+			# gross_pay = frappe.get_last_doc('Salary Slip', filters={"employee": employee.name}).gross_pay
+			row['before_year'] = 0
+			if salary_slip:
+				row['before_year'] = (salary_slip[0]['gross_pay']/ 2) * before_year
+			row['after_year'] = 0
+			if salary_slip:
+				row['after_year'] = salary_slip[0]['gross_pay'] * after_year
 			remaining_amount = flt(per_day_encashment) * remaining
 			row['holiday_balance'] += remaining
 			row['amount_due'] = remaining_amount
+			estimated_value = frappe.db.sql(f"""
+				SELECT estimated_value From `tabCash Custody` where recipient_employee = '{employee.name}'	
+			""",as_dict = 1)
+			row['cash_custody'] = 0
+			if estimated_value:
+				row['cash_custody'] = estimated_value[0]['estimated_value']
+			custody = frappe.db.sql(f"""
+				SELECT type, custody_value From `tabCustody` where recipient = '{employee.name}' and status != 'Returned'
+			""",as_dict = 1)
+			custody_devices= []
+			custody_value = 0
+			for type_device in custody:
+				custody_value += type_device['custody_value']
+				custody_devices.append(type_device['type'])
+			row['custody'] = _("No data to show")
+			row['custody_value'] = custody_value
+			if custody_devices:
+				row['custody'] = "/ ".join(custody_devices)
+			loans = frappe.db.sql(f"""
+				SELECT 	total_amount_remaining From `tabLoan` where applicant = '{employee.name}' and total_amount_remaining != 0
+			""",as_dict = 1)
+			total_amount_remaining = 0
+			for loan in loans:
+				total_amount_remaining += loan['total_amount_remaining']
+			row['total_amount_remaining'] = total_amount_remaining
+			monthly_salary = row['monthly_salary'] if row['monthly_salary'] is not None else 0.0
+			amount_due = row['amount_due'] if row['amount_due'] is not None else 0.0
+			cash_custody = row['cash_custody'] if row['cash_custody'] is not None else 0.0
+			custody_value = row['custody_value'] if row['custody_value'] is not None else 0.0
+			total_amount_remaining = row['total_amount_remaining'] if row['total_amount_remaining'] is not None else 0.0
+			
+			after_year = row['after_year'] if row['after_year'] is not None else 0.0
+			before_year = row['before_year'] if row['before_year'] is not None else 0.0
+			row['total'] = monthly_salary + after_year + before_year + amount_due - cash_custody  - total_amount_remaining
+
+		
 		data.append(row)
 	return data
