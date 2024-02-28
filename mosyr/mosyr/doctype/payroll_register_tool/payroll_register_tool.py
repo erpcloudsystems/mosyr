@@ -34,6 +34,8 @@ class PayrollRegisterTool(Document):
         #     ss.cancel()
         pass
     def validate(self):
+        if len(self.employees) == 1:
+            self.employee_name = self.employees[0].employee_name
         if not self.from_date:
             frappe.throw(_("From Date is mandatory to prepare Salary Structures") + ".")
             return

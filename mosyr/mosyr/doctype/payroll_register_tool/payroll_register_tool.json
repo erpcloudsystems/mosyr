@@ -11,6 +11,7 @@
   "department",
   "branch",
   "designation",
+  "employee_name",
   "show_employees",
   "override_existing_structures",
   "employees",
@@ -217,12 +218,18 @@
    "fieldtype": "Currency",
    "label": "Leave Encashment Amount Per Day",
    "precision": "2"
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name"
   }
  ],
  "icon": "fa fa-file-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-26 13:53:23.098013",
+ "modified": "2024-02-28 14:27:48.914835",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
