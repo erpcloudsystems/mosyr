@@ -223,13 +223,14 @@
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Employee Name"
+   "label": "Employee Name",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-28 14:27:48.914835",
+ "modified": "2024-02-28 16:52:50.280116",
  "modified_by": "Administrator",
  "module": "Mosyr",
  "name": "Payroll Register Tool",
