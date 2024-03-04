@@ -8,22 +8,55 @@ from frappe.model.document import Document
 
 class EmployeeDeduction(Document):
 	def on_submit(self):
-		eadd = frappe.new_doc('Additional Salary')
-		eadd.employee = self.employee
-		eadd.amount = flt(self.amount)
-		eadd.salary_component = 'Deduction'
-		eadd.payroll_date = self.payroll_month
-		eadd.reason = self.notes
-		eadd.employee_deduction = self.name
-		eadd.save()
-		eadd.submit()
+		query = """
+			SELECT name 
+			FROM `tabAdditional Salary` 
+			WHERE 
+				MONTH(payroll_date) = MONTH(%s) 
+				AND YEAR(payroll_date) = YEAR(%s) 
+				AND employee = %s 
+				AND salary_component = %s 
+				AND docstatus = 1
+		"""
+		exist_additional_salary = frappe.db.sql(query, (self.payroll_month, self.payroll_month, self.employee, 'Deduction'), as_dict=True)
+		if exist_additional_salary:
+			addtional_salary = frappe.get_doc('Additional Salary', exist_additional_salary[0]['name'])
+			addtional_salary.amount += flt(self.amount)
+			if self.notes:
+				addtional_salary.reason += "/ "+ self.notes
+			# addtional_salary.employee_benefit += "," + self.name
+			addtional_salary.save('update')
+		else:
+			eadd = frappe.new_doc('Additional Salary')
+			eadd.employee = self.employee
+			eadd.amount = flt(self.amount)
+			eadd.salary_component = 'Deduction'
+			eadd.payroll_date = self.payroll_month
+			eadd.reason = self.notes
+			eadd.employee_deduction = self.name
+			eadd.save()
+			eadd.submit()
 
 	def on_cancel(self):
-		eadd = frappe.get_list("Additional Salary", {"employee_deduction":self.name})
-		if eadd:
-			for ea in eadd:
+		query = """
+			SELECT name 
+			FROM `tabAdditional Salary` 
+			WHERE 
+				MONTH(payroll_date) = MONTH(%s) 
+				AND YEAR(payroll_date) = YEAR(%s) 
+				AND employee = %s 
+				AND salary_component = %s 
+				AND docstatus = 1
+		"""
+		exist_additional_salary = frappe.db.sql(query, (self.payroll_month, self.payroll_month, self.employee, 'Deduction'), as_dict=True)
+		# eadd = frappe.get_list("Additional Salary", {"employee_deduction":self.name})
+		if exist_additional_salary:
+			for ea in exist_additional_salary:
 				doc = frappe.get_doc("Additional Salary", ea["name"])
-				doc.cancel()
+				doc.amount -= flt(self.amount)
+				doc.save()
+				if doc.amount <= 0:
+					doc.cancel()
 
 	@frappe.whitelist()
 	def get_salary_per_day(self, employee):
