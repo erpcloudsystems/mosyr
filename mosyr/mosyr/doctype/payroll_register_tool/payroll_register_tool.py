@@ -298,7 +298,8 @@ class PayrollRegisterTool(Document):
                 }
             )
             if slip:
-                
+                total_e = 0
+                total_d = 0
                 total_loans = slip.total_loan_repayment
                 total_loans_sum += total_loans
                 for e in slip.earnings:
