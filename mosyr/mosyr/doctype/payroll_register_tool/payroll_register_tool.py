@@ -260,6 +260,8 @@ class PayrollRegisterTool(Document):
         ]
         zeros_earnings = [True for i in range(len(earnings))]
         zeros_deductions = [True for i in range(len(deductions))]
+        ernings_total = 0
+        deductions_total = 0
         total_e = 0
         total_d = 0
         total_loans = 0
@@ -305,6 +307,7 @@ class PayrollRegisterTool(Document):
                             zeros_earnings[idx] = False
                         emp_earnings[idx] = amount
                         total_e += amount
+                        ernings_total += amount
                     except:
                         pass
                 for d in slip.deductions:
@@ -315,6 +318,7 @@ class PayrollRegisterTool(Document):
                             zeros_deductions[idx] = False
                         emp_deductions[idx] = amount
                         total_d += amount
+                        deductions_total += amount
                     except:
                         pass
 
@@ -331,9 +335,9 @@ class PayrollRegisterTool(Document):
             zeros_earnings,
             zeros_deductions,
             earnings,
-            total_e,
+            ernings_total,
             deductions,
-            total_d,
+            deductions_total,
             data,
             total_loans
         )
@@ -361,28 +365,25 @@ class PayrollRegisterTool(Document):
             for idx, e in enumerate(ezeros):
                 if not e:
                     row.append(erns[idx])
-            # if total_e > 0:
-            #     row.append(total_e)
+            row.append(d.get("total_e", ""))
             dedcs = d.get("deductions", [])
             for idx, de in enumerate(dzeros):
                 if not de:
                     row.append(dedcs[idx])
             row.append(total_loans)
-
-            # if total_d > 0:
-            #     total_d += total_loans
-            #     row.append(total_d)
+            row.append(d.get("total_d", ""))
+            
             row.append(d.get("net_pay", 0))
             final_data.append(row)
         len_earnings = len(earnings)
-        if total_d > 0:
+        if len(earnings) > 0:
             len_earnings = len(earnings) + 1
 
         len_deductions = len(deductions)
         deductions.append("Loan")
         len_deductions += 1
 
-        if total_d > 0:
+        if len(deductions) > 0:
             len_deductions = len(deductions) + 1
         return {
             "earnings": earnings,
