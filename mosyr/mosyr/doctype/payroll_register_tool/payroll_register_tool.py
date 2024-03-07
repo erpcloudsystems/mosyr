@@ -294,9 +294,10 @@ class PayrollRegisterTool(Document):
                     "net_pay": 0,
                 }
             )
+            total_e = 0
+            total_d = 0
             if slip:
-                total_e = 0
-                total_d = 0
+                
                 total_loans = slip.total_loan_repayment
                 for e in slip.earnings:
                     try:
@@ -320,7 +321,7 @@ class PayrollRegisterTool(Document):
                         pass
 
                 net_pay = flt(slip.net_pay) - total_loans
-                result_dict.update({"net_pay": net_pay})
+                result_dict.update({"net_pay": net_pay,"total_e": total_e ,"total_d": total_d})
             result_dict.update(
                 {
                     "earnings": emp_earnings,
@@ -362,17 +363,17 @@ class PayrollRegisterTool(Document):
             for idx, e in enumerate(ezeros):
                 if not e:
                     row.append(erns[idx])
-            if total_e > 0:
-                row.append(total_e)
+            # if total_e > 0:
+            #     row.append(total_e)
             dedcs = d.get("deductions", [])
             for idx, de in enumerate(dzeros):
                 if not de:
                     row.append(dedcs[idx])
             row.append(total_loans)
 
-            if total_d > 0:
-                total_d += total_loans
-                row.append(total_d)
+            # if total_d > 0:
+            #     total_d += total_loans
+            #     row.append(total_d)
             row.append(d.get("net_pay", 0))
             final_data.append(row)
         len_earnings = len(earnings)
