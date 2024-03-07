@@ -309,9 +309,9 @@ class PayrollRegisterTool(Document):
                             zeros_earnings[idx] = False
                         emp_earnings[idx] = amount
                         total_e += amount
+                        ernings_total += amount
                     except:
                         pass
-                ernings_total += total_e
                 for d in slip.deductions:
                     try:
                         idx = deductions.index(d.salary_component)
@@ -320,11 +320,10 @@ class PayrollRegisterTool(Document):
                             zeros_deductions[idx] = False
                         emp_deductions[idx] = amount
                         total_d += amount
-                        
+                        deductions_total += amount
                     except:
                         pass
                 total_d += total_loans
-                deductions_total = total_d
                 net_pay = flt(slip.net_pay)
                 result_dict.update({"net_pay": net_pay,"total_e": total_e ,"total_d": total_d})
             result_dict.update(
