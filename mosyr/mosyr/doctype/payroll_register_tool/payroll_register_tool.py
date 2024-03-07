@@ -294,8 +294,6 @@ class PayrollRegisterTool(Document):
                     "net_pay": 0,
                 }
             )
-            total_e = 0
-            total_d = 0
             if slip:
                 
                 total_loans = slip.total_loan_repayment
