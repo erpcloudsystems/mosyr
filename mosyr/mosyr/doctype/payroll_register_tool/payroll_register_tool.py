@@ -325,6 +325,7 @@ class PayrollRegisterTool(Document):
                     except:
                         pass
                 total_d += total_loans
+                deductions_total += total_loans
                 net_pay = flt(slip.net_pay)
                 result_dict.update({"net_pay": net_pay,"total_e": total_e ,"total_d": total_d})
             result_dict.update(
