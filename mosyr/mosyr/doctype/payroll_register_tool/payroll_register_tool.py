@@ -265,8 +265,9 @@ class PayrollRegisterTool(Document):
         total_e = 0
         total_d = 0
         total_loans = 0
+        total_loans_sum = 0
         data = []
-
+        components_sum=[]
         payroll = frappe.get_doc("Payroll Entry", payroll)
 
         for sr, employee in enumerate(payroll.employees, 1):
@@ -299,6 +300,7 @@ class PayrollRegisterTool(Document):
             if slip:
                 
                 total_loans = slip.total_loan_repayment
+                total_loans_sum += total_loans
                 for e in slip.earnings:
                     try:
                         idx = earnings.index(e.salary_component)
@@ -307,9 +309,9 @@ class PayrollRegisterTool(Document):
                             zeros_earnings[idx] = False
                         emp_earnings[idx] = amount
                         total_e += amount
-                        ernings_total += amount
                     except:
                         pass
+                ernings_total += total_e
                 for d in slip.deductions:
                     try:
                         idx = deductions.index(d.salary_component)
@@ -318,11 +320,12 @@ class PayrollRegisterTool(Document):
                             zeros_deductions[idx] = False
                         emp_deductions[idx] = amount
                         total_d += amount
-                        deductions_total += amount
+                        
                     except:
                         pass
-
-                net_pay = flt(slip.net_pay) - total_loans
+                total_d += total_loans
+                deductions_total = total_d
+                net_pay = flt(slip.net_pay)
                 result_dict.update({"net_pay": net_pay,"total_e": total_e ,"total_d": total_d})
             result_dict.update(
                 {
@@ -331,6 +334,7 @@ class PayrollRegisterTool(Document):
                 }
             )
             data.append(result_dict)
+            
         return self.get_clean_data(
             zeros_earnings,
             zeros_deductions,
@@ -339,10 +343,11 @@ class PayrollRegisterTool(Document):
             deductions,
             deductions_total,
             data,
-            total_loans
+            total_loans,
+            total_loans_sum
         )
 
-    def get_clean_data(self, ezeros, dzeros, erns, total_e, dedcs, total_d, data, total_loans):
+    def get_clean_data(self, ezeros, dzeros, erns, total_e, dedcs, total_d, data, total_loans, total_loans_sum):
         earnings = []
         deductions = []
         for idx, e in enumerate(ezeros):
@@ -353,6 +358,7 @@ class PayrollRegisterTool(Document):
                 deductions.append(dedcs[idx])
 
         final_data = []
+        last_net_pay = 0
         for d in data:
             row = [
                 d.get("sr", "-"),
@@ -372,9 +378,10 @@ class PayrollRegisterTool(Document):
                     row.append(dedcs[idx])
             row.append(total_loans)
             row.append(d.get("total_d", ""))
-            
+            last_net_pay += d.get("net_pay", 0)
             row.append(d.get("net_pay", 0))
             final_data.append(row)
+        
         len_earnings = len(earnings)
         if len(earnings) > 0:
             len_earnings = len(earnings) + 1
@@ -385,6 +392,24 @@ class PayrollRegisterTool(Document):
 
         if len(deductions) > 0:
             len_deductions = len(deductions) + 1
+        total_row = [
+            "-",
+            "الاجمالى",
+            "",
+            "",
+            ""
+        ]
+        for i in earnings:
+            total_row.append("")
+        total_row.append(total_e)
+        for i in deductions:
+            total_row.append("")
+        total_row[-1]  = total_loans_sum
+        total_row.append(total_d)
+        total_row.append(last_net_pay)
+        final_data.append(
+            total_row
+        )
         return {
             "earnings": earnings,
             "len_earnings": len_earnings,
