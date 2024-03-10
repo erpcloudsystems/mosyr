@@ -27,6 +27,9 @@ render_employee_attendance = function (frm, data) {
 
 frappe.ui.form.on("Payroll Entry", {
     refresh: function (frm) {
+        $('[data-original-title="Print"]').on('click', function() {
+            window.location.reload();
+        });
         if (frm.doc.docstatus == 0) {
             frm.clear_custom_buttons();
             if (!frm.is_new()) {
