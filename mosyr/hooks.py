@@ -46,6 +46,7 @@ doctype_js = {
 	"Salary Component": "public/js/salary_component.js",
 	"Employee Checkin": "public/js/employee_checkin.js",
 	"Department": "public/js/department.js",
+	"Leave Policy Assignment": "public/js/leave_policy_assignment.js",
 }
 
 doctype_list_js = {
@@ -54,6 +55,7 @@ doctype_list_js = {
 	"Payroll Entry" : "public/js/payroll_entry_list.js",
 	"Retention Bonus" : "public/js/retention_bonus_list.js",
 	"Employee Incentive" : "public/js/employee_incentive_list.js",
+	"Leave Policy Assignment": "public/js/leave_policy_assignment_list.js",
 	}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

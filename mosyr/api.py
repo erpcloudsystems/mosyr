@@ -1220,3 +1220,5 @@ def _check_if_created_checkin_or_not(date1, date2):
         checkout_date = datetime.strptime(get_date(date2), DATE_FORMAT)
         minutes = (get_dates_different_in_minutes(checkout_date, checkin_date))
         return minutes
+
+

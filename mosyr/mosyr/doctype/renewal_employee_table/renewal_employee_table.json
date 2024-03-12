@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-11 16:12:27.483467",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "column_break_xtpbt",
+  "employee_name",
+  "column_break_wurh3",
+  "end_of_contract",
+  "column_break_0pwuq"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_xtpbt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.contract_end_date",
+   "fieldname": "end_of_contract",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "End Of Contract"
+  },
+  {
+   "fieldname": "column_break_0pwuq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "column_break_wurh3",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-12 12:30:49.573368",
+ "modified_by": "Administrator",
+ "module": "Mosyr",
+ "name": "Renewal Employee Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
