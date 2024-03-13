@@ -48,6 +48,12 @@ def export_query(date=frappe.utils.today()):
 			return
 		columns = get_columns_dict(data.columns)
 		from frappe.utils.xlsxutils import make_xlsx
+		
+		for x,d in enumerate(data.get("result")):
+			if x == 0:
+				continue
+			if d['payment_type'] in ["","نقدي", "شيك"]:
+				del data.get("result")[x]
 		data["result"] = handle_duration_fieldtype_values(data.get("result"), data.get("columns"))
 		xlsx_data, column_widths = build_xlsx_data(columns, data, visible_idx, include_indentation)
 		xlsx_data.pop(0)
@@ -945,6 +951,7 @@ def get_data_alaraby(filters):
 			sl.month_to_date,
 			IF(sl.gross_pay , sl.gross_pay,0) as gross_pay,
 			emp.bank_ac_no,
+			emp.payment_type_2 as payment_type,
 			IFNULL(emp.full_name_en , emp.first_name) as first_name,
 			b.swift_number as swift_number,
 			"salaries for {month} {year}" as month,
