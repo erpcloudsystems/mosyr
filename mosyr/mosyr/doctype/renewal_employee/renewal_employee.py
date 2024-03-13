@@ -48,10 +48,20 @@ class RenewalEmployee(Document):
 		for emp in employees:
 			emp.save()
 		for emp in employees:
-			leave_policy_assignment = frappe.db.get_list("Leave Policy Assignment", filters={"employee":emp.name, "assignment_based_on": "Joining Date"},
+			leave_policy = None
+			leave_policy_assignment = frappe.db.get_list("Leave Policy Assignment", filters={"employee":emp.name},
     			page_length=1)
-			for leave in leave_policy_assignment:
-				frappe.db.set_value("Leave Policy Assignment", leave.name, "effective_to", emp.contract_end_date)
+			if leave_policy_assignment:
+				leave_policy = leave_policy_assignment[0].leave_policy
+			new_leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
+			new_leave_policy_assignment.employee = emp.employee
+			new_leave_policy_assignment.leave_policy = leave_policy 
+			new_leave_policy_assignment.effective_from = emp_end_of_contract or getdate(emp_doc.contract_end_date)
+			new_leave_policy_assignment.effective_to = emp_doc.contract_end_date or getdate(emp_doc.contract_end_date)
+			new_leave_policy_assignment.carry_forward = 1
+			new_leave_policy_assignment.insert()
+			new_leave_policy_assignment.submit()
+	
 
 		pass
 	pass

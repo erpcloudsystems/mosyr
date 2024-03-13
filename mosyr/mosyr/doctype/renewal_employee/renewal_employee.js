@@ -7,6 +7,7 @@ frappe.ui.form.on('Renewal Employee', {
 	// }
 	refresh: async  function(frm){
 		frm.disable_save()
+		cur_frm.refresh_fields("employees");
 		await frappe.call({
 			doc:frm.doc,
 			method: "get_employee_will_be_expired",
@@ -40,6 +41,7 @@ frappe.ui.form.on('Renewal Employee', {
 	},
 	employee: async  function(frm){
 		cur_frm.clear_table("employees");
+		cur_frm.refresh_fields("employees");
 		await frappe.call({
 			doc:frm.doc,
 			method: "get_employee_will_be_expired",
@@ -60,6 +62,7 @@ frappe.ui.form.on('Renewal Employee', {
 	},
 	status: async  function(frm){
 		cur_frm.clear_table("employees");
+		cur_frm.refresh_fields("employees");
 		await frappe.call({
 			doc:frm.doc,
 			method: "get_employee_will_be_expired",
@@ -76,6 +79,7 @@ frappe.ui.form.on('Renewal Employee', {
 				cur_frm.refresh_fields("employees");
 			}
 		})
+		cur_frm.refresh_fields("employees");
 		
 	},
 });

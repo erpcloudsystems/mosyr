@@ -980,8 +980,7 @@ def get_data_alaraby(filters):
 		employee = frappe.get_doc("Employee", d.get("empname"))
 		if len(employee.identity):
 			for identity in employee.identity:
-				if identity.id_type == 'National ID':
-					id = identity.id_number
+				id = identity.id_number
 		d.update({"id_number":id})
 		del d['empname']
 	data.insert(0,
